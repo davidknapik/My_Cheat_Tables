@@ -1,0 +1,1402 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheatTable CheatEngineTableVersion="24">
+  <CheatEntries>
+    <CheatEntry>
+      <ID>7</ID>
+      <Description>"RESOURCES"</Description>
+      <Options moHideChildren="1" moAllowManualCollapseAndExpand="1"/>
+      <LastState/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>//Author: +METHOS
+//Target: Banished-x64.exe
+//Script: Resources
+
+[ENABLE]
+aobscan(resources,F7415C401C0000)
+alloc(newmem,2048,resources-6)
+label(returnhere)
+label(originalcode)
+registersymbol(resources)
+
+label(ale)
+label(apple)
+label(bean)
+label(_beef)
+label(blueberry)
+label(cabbage)
+label(cherry)
+label(chestnut)
+label(chicken)
+label(coal)
+label(corn)
+label(egg)
+label(firewood)
+label(fish)
+label(herb)
+label(iron)
+label(leather)
+label(leathercoat)
+label(mushroom)
+label(mutton)
+label(onion)
+label(peach)
+label(pear)
+label(pecan)
+label(pepper)
+label(plum)
+label(potato)
+label(pumpkin)
+label(root)
+label(squash)
+label(steeltool)
+label(stone)
+label(tool)
+label(venison)
+label(walnut)
+label(wheat)
+label(wintercoat)
+label(wood)
+label(wool)
+label(woolcoat)
+
+label(filter_be)
+label(filter_ch)
+label(filter_co)
+label(filter_fi)
+label(filter_le)
+label(filter_mu)
+label(filter_pe)
+label(filter_st)
+label(filter_wo)
+
+label(ale_value)
+label(apple_value)
+label(bean_value)
+label(_beef_value)
+label(blueberry_value)
+label(cabbage_value)
+label(cherry_value)
+label(chestnut_value)
+label(chicken_value)
+label(coal_value)
+label(corn_value)
+label(egg_value)
+label(firewood_value)
+label(fish_value)
+label(herb_value)
+label(iron_value)
+label(leather_value)
+label(leathercoat_value)
+label(mushroom_value)
+label(mutton_value)
+label(onion_value)
+label(peach_value)
+label(pear_value)
+label(pecan_value)
+label(pepper_value)
+label(plum_value)
+label(potato_value)
+label(pumpkin_value)
+label(root_value)
+label(squash_value)
+label(steeltool_value)
+label(stone_value)
+label(tool_value)
+label(venison_value)
+label(walnut_value)
+label(wheat_value)
+label(wintercoat_value)
+label(wood_value)
+label(wool_value)
+label(woolcoat_value)
+
+registersymbol(ale_value)
+registersymbol(apple_value)
+registersymbol(bean_value)
+registersymbol(_beef_value)
+registersymbol(blueberry_value)
+registersymbol(cabbage_value)
+registersymbol(cherry_value)
+registersymbol(chestnut_value)
+registersymbol(chicken_value)
+registersymbol(coal_value)
+registersymbol(corn_value)
+registersymbol(egg_value)
+registersymbol(firewood_value)
+registersymbol(fish_value)
+registersymbol(herb_value)
+registersymbol(iron_value)
+registersymbol(leather_value)
+registersymbol(leathercoat_value)
+registersymbol(mushroom_value)
+registersymbol(mutton_value)
+registersymbol(onion_value)
+registersymbol(peach_value)
+registersymbol(pear_value)
+registersymbol(pecan_value)
+registersymbol(pepper_value)
+registersymbol(plum_value)
+registersymbol(potato_value)
+registersymbol(pumpkin_value)
+registersymbol(root_value)
+registersymbol(squash_value)
+registersymbol(steeltool_value)
+registersymbol(stone_value)
+registersymbol(tool_value)
+registersymbol(venison_value)
+registersymbol(walnut_value)
+registersymbol(wheat_value)
+registersymbol(wintercoat_value)
+registersymbol(wood_value)
+registersymbol(wool_value)
+registersymbol(woolcoat_value)
+
+newmem:
+push rdi
+mov rdi,[r14+rbp+0]
+mov rdi,[rdi+28]
+mov rdi,[rdi+0]
+mov rdi,[rdi+8]
+mov rdi,[rdi+28]
+cmp rdi,006C0041
+pop rdi
+je ale
+push rdi
+mov rdi,[r14+rbp+0]
+mov rdi,[rdi+28]
+mov rdi,[rdi+0]
+mov rdi,[rdi+8]
+mov rdi,[rdi+28]
+cmp rdi,00700041
+pop rdi
+je apple
+push rdi
+mov rdi,[r14+rbp+0]
+mov rdi,[rdi+28]
+mov rdi,[rdi+0]
+mov rdi,[rdi+8]
+mov rdi,[rdi+28]
+cmp rdi,00650042
+pop rdi
+je filter_be
+push rdi
+mov rdi,[r14+rbp+0]
+mov rdi,[rdi+28]
+mov rdi,[rdi+0]
+mov rdi,[rdi+8]
+mov rdi,[rdi+28]
+cmp rdi,006C0042
+pop rdi
+je blueberry
+push rdi
+mov rdi,[r14+rbp+0]
+mov rdi,[rdi+28]
+mov rdi,[rdi+0]
+mov rdi,[rdi+8]
+mov rdi,[rdi+28]
+cmp rdi,00610043
+pop rdi
+je cabbage
+push rdi
+mov rdi,[r14+rbp+0]
+mov rdi,[rdi+28]
+mov rdi,[rdi+0]
+mov rdi,[rdi+8]
+mov rdi,[rdi+28]
+cmp rdi,00680043
+pop rdi
+je filter_ch
+push rdi
+mov rdi,[r14+rbp+0]
+mov rdi,[rdi+28]
+mov rdi,[rdi+0]
+mov rdi,[rdi+8]
+mov rdi,[rdi+28]
+cmp rdi,006F0043
+pop rdi
+je filter_co
+push rdi
+mov rdi,[r14+rbp+0]
+mov rdi,[rdi+28]
+mov rdi,[rdi+0]
+mov rdi,[rdi+8]
+mov rdi,[rdi+28]
+cmp rdi,00670045
+pop rdi
+je egg
+push rdi
+mov rdi,[r14+rbp+0]
+mov rdi,[rdi+28]
+mov rdi,[rdi+0]
+mov rdi,[rdi+8]
+mov rdi,[rdi+28]
+cmp rdi,00690046
+pop rdi
+je filter_fi
+push rdi
+mov rdi,[r14+rbp+0]
+mov rdi,[rdi+28]
+mov rdi,[rdi+0]
+mov rdi,[rdi+8]
+mov rdi,[rdi+28]
+cmp rdi,00650048
+pop rdi
+je herb
+push rdi
+mov rdi,[r14+rbp+0]
+mov rdi,[rdi+28]
+mov rdi,[rdi+0]
+mov rdi,[rdi+8]
+mov rdi,[rdi+28]
+cmp rdi,00720049
+pop rdi
+je iron
+push rdi
+mov rdi,[r14+rbp+0]
+mov rdi,[rdi+28]
+mov rdi,[rdi+0]
+mov rdi,[rdi+8]
+mov rdi,[rdi+28]
+cmp rdi,0065004C
+pop rdi
+je filter_le
+push rdi
+mov rdi,[r14+rbp+0]
+mov rdi,[rdi+28]
+mov rdi,[rdi+0]
+mov rdi,[rdi+8]
+mov rdi,[rdi+28]
+cmp rdi,0075004D
+pop rdi
+je filter_mu
+push rdi
+mov rdi,[r14+rbp+0]
+mov rdi,[rdi+28]
+mov rdi,[rdi+0]
+mov rdi,[rdi+8]
+mov rdi,[rdi+28]
+cmp rdi,006E004F
+pop rdi
+je onion
+push rdi
+mov rdi,[r14+rbp+0]
+mov rdi,[rdi+28]
+mov rdi,[rdi+0]
+mov rdi,[rdi+8]
+mov rdi,[rdi+28]
+cmp rdi,00650050
+pop rdi
+je filter_pe
+push rdi
+mov rdi,[r14+rbp+0]
+mov rdi,[rdi+28]
+mov rdi,[rdi+0]
+mov rdi,[rdi+8]
+mov rdi,[rdi+28]
+cmp rdi,006C0050
+pop rdi
+je plum
+push rdi
+mov rdi,[r14+rbp+0]
+mov rdi,[rdi+28]
+mov rdi,[rdi+0]
+mov rdi,[rdi+8]
+mov rdi,[rdi+28]
+cmp rdi,006F0050
+pop rdi
+je potato
+push rdi
+mov rdi,[r14+rbp+0]
+mov rdi,[rdi+28]
+mov rdi,[rdi+0]
+mov rdi,[rdi+8]
+mov rdi,[rdi+28]
+cmp rdi,00750050
+pop rdi
+je pumpkin
+push rdi
+mov rdi,[r14+rbp+0]
+mov rdi,[rdi+28]
+mov rdi,[rdi+0]
+mov rdi,[rdi+8]
+mov rdi,[rdi+28]
+cmp rdi,006F0052
+pop rdi
+je root
+push rdi
+mov rdi,[r14+rbp+0]
+mov rdi,[rdi+28]
+mov rdi,[rdi+0]
+mov rdi,[rdi+8]
+mov rdi,[rdi+28]
+cmp rdi,00710053
+pop rdi
+je squash
+push rdi
+mov rdi,[r14+rbp+0]
+mov rdi,[rdi+28]
+mov rdi,[rdi+0]
+mov rdi,[rdi+8]
+mov rdi,[rdi+28]
+cmp rdi,00740053
+pop rdi
+je filter_st
+push rdi
+mov rdi,[r14+rbp+0]
+mov rdi,[rdi+28]
+mov rdi,[rdi+0]
+mov rdi,[rdi+8]
+mov rdi,[rdi+28]
+cmp rdi,006F0054
+pop rdi
+je tool
+push rdi
+mov rdi,[r14+rbp+0]
+mov rdi,[rdi+28]
+mov rdi,[rdi+0]
+mov rdi,[rdi+8]
+mov rdi,[rdi+28]
+cmp rdi,00650056
+pop rdi
+je venison
+push rdi
+mov rdi,[r14+rbp+0]
+mov rdi,[rdi+28]
+mov rdi,[rdi+0]
+mov rdi,[rdi+8]
+mov rdi,[rdi+28]
+cmp rdi,00610057
+pop rdi
+je walnut
+push rdi
+mov rdi,[r14+rbp+0]
+mov rdi,[rdi+28]
+mov rdi,[rdi+0]
+mov rdi,[rdi+8]
+mov rdi,[rdi+28]
+cmp rdi,00680057
+pop rdi
+je wheat
+push rdi
+mov rdi,[r14+rbp+0]
+mov rdi,[rdi+28]
+mov rdi,[rdi+0]
+mov rdi,[rdi+8]
+mov rdi,[rdi+28]
+cmp rdi,00690057
+pop rdi
+je wintercoat
+push rdi
+mov rdi,[r14+rbp+0]
+mov rdi,[rdi+28]
+mov rdi,[rdi+0]
+mov rdi,[rdi+8]
+mov rdi,[rdi+28]
+cmp rdi,006F0057
+pop rdi
+je filter_wo
+jmp originalcode
+
+filter_be:
+push rdi
+mov rdi,[r14+rbp+0]
+mov rdi,[rdi+28]
+mov rdi,[rdi+0]
+mov rdi,[rdi+8]
+mov rdi,[rdi+2C]
+cmp rdi,006E0061
+pop rdi
+je bean
+push rdi
+mov rdi,[r14+rbp+0]
+mov rdi,[rdi+28]
+mov rdi,[rdi+0]
+mov rdi,[rdi+8]
+mov rdi,[rdi+2C]
+cmp rdi,00660065
+pop rdi
+je _beef
+jmp originalcode
+
+filter_ch:
+push rdi
+mov rdi,[r14+rbp+0]
+mov rdi,[rdi+28]
+mov rdi,[rdi+0]
+mov rdi,[rdi+8]
+mov rdi,[rdi+2C]
+cmp rdi,00720065
+pop rdi
+je cherry
+push rdi
+mov rdi,[r14+rbp+0]
+mov rdi,[rdi+28]
+mov rdi,[rdi+0]
+mov rdi,[rdi+8]
+mov rdi,[rdi+2C]
+cmp rdi,00730065
+pop rdi
+je chestnut
+push rdi
+mov rdi,[r14+rbp+0]
+mov rdi,[rdi+28]
+mov rdi,[rdi+0]
+mov rdi,[rdi+8]
+mov rdi,[rdi+2C]
+cmp rdi,00630069
+pop rdi
+je chicken
+jmp originalcode
+
+filter_co:
+push rdi
+mov rdi,[r14+rbp+0]
+mov rdi,[rdi+28]
+mov rdi,[rdi+0]
+mov rdi,[rdi+8]
+mov rdi,[rdi+2C]
+cmp rdi,006C0061
+pop rdi
+je coal
+push rdi
+mov rdi,[r14+rbp+0]
+mov rdi,[rdi+28]
+mov rdi,[rdi+0]
+mov rdi,[rdi+8]
+mov rdi,[rdi+2C]
+cmp rdi,006E0072
+pop rdi
+je corn
+jmp originalcode
+
+filter_fi:
+push rdi
+mov rdi,[r14+rbp+0]
+mov rdi,[rdi+28]
+mov rdi,[rdi+0]
+mov rdi,[rdi+8]
+mov rdi,[rdi+2C]
+cmp rdi,00650072
+pop rdi
+je firewood
+push rdi
+mov rdi,[r14+rbp+0]
+mov rdi,[rdi+28]
+mov rdi,[rdi+0]
+mov rdi,[rdi+8]
+mov rdi,[rdi+2C]
+cmp rdi,00680073
+pop rdi
+je fish
+jmp originalcode
+
+filter_le:
+push rdi
+mov rdi,[r14+rbp+0]
+mov rdi,[rdi+28]
+mov rdi,[rdi+0]
+mov rdi,[rdi+8]
+mov rdi,[rdi+34]
+cmp rdi,002E0072
+pop rdi
+je leather
+push rdi
+mov rdi,[r14+rbp+0]
+mov rdi,[rdi+28]
+mov rdi,[rdi+0]
+mov rdi,[rdi+8]
+mov rdi,[rdi+34]
+cmp rdi,00430072
+pop rdi
+je leathercoat
+jmp originalcode
+
+filter_mu:
+push rdi
+mov rdi,[r14+rbp+0]
+mov rdi,[rdi+28]
+mov rdi,[rdi+0]
+mov rdi,[rdi+8]
+mov rdi,[rdi+2C]
+cmp rdi,00680073
+pop rdi
+je mushroom
+push rdi
+mov rdi,[r14+rbp+0]
+mov rdi,[rdi+28]
+mov rdi,[rdi+0]
+mov rdi,[rdi+8]
+mov rdi,[rdi+2C]
+cmp rdi,00740074
+pop rdi
+je mutton
+jmp originalcode
+
+filter_pe:
+push rdi
+mov rdi,[r14+rbp+0]
+mov rdi,[rdi+28]
+mov rdi,[rdi+0]
+mov rdi,[rdi+8]
+mov rdi,[rdi+2C]
+cmp rdi,00630061
+pop rdi
+je peach
+push rdi
+mov rdi,[r14+rbp+0]
+mov rdi,[rdi+28]
+mov rdi,[rdi+0]
+mov rdi,[rdi+8]
+mov rdi,[rdi+2C]
+cmp rdi,00720061
+pop rdi
+je pear
+push rdi
+mov rdi,[r14+rbp+0]
+mov rdi,[rdi+28]
+mov rdi,[rdi+0]
+mov rdi,[rdi+8]
+mov rdi,[rdi+2C]
+cmp rdi,00610063
+pop rdi
+je pecan
+push rdi
+mov rdi,[r14+rbp+0]
+mov rdi,[rdi+28]
+mov rdi,[rdi+0]
+mov rdi,[rdi+8]
+mov rdi,[rdi+2C]
+cmp rdi,00700070
+pop rdi
+je pepper
+jmp originalcode
+
+filter_st:
+push rdi
+mov rdi,[r14+rbp+0]
+mov rdi,[rdi+28]
+mov rdi,[rdi+0]
+mov rdi,[rdi+8]
+mov rdi,[rdi+2C]
+cmp rdi,00650065
+pop rdi
+je steeltool
+push rdi
+mov rdi,[r14+rbp+0]
+mov rdi,[rdi+28]
+mov rdi,[rdi+0]
+mov rdi,[rdi+8]
+mov rdi,[rdi+2C]
+cmp rdi,006E006F
+pop rdi
+je stone
+jmp originalcode
+
+filter_wo:
+push rdi
+mov rdi,[r14+rbp+0]
+mov rdi,[rdi+28]
+mov rdi,[rdi+0]
+mov rdi,[rdi+8]
+mov rdi,[rdi+2C]
+cmp rdi,0064006F
+pop rdi
+je wood
+push rdi
+mov rdi,[r14+rbp+0]
+mov rdi,[rdi+28]
+mov rdi,[rdi+0]
+mov rdi,[rdi+8]
+mov rdi,[rdi+30]
+cmp rdi,0072002E
+pop rdi
+je wool
+push rdi
+mov rdi,[r14+rbp+0]
+mov rdi,[rdi+28]
+mov rdi,[rdi+0]
+mov rdi,[rdi+8]
+mov rdi,[rdi+30]
+cmp rdi,006F0043
+pop rdi
+je woolcoat
+jmp originalcode
+
+ale:
+cmp [ale_value],0
+je originalcode
+push rdi
+mov rdi,[ale_value]
+mov [r14+rbp+08],rdi
+pop rdi
+jmp originalcode
+
+apple:
+cmp [apple_value],0
+je originalcode
+push rdi
+mov rdi,[apple_value]
+mov [r14+rbp+08],rdi
+pop rdi
+jmp originalcode
+
+bean:
+cmp [bean_value],0
+je originalcode
+push rdi
+mov rdi,[bean_value]
+mov [r14+rbp+08],rdi
+pop rdi
+jmp originalcode
+
+_beef:
+cmp [_beef_value],0
+je originalcode
+push rdi
+mov rdi,[_beef_value]
+mov [r14+rbp+08],rdi
+pop rdi
+jmp originalcode
+
+blueberry:
+cmp [blueberry_value],0
+je originalcode
+push rdi
+mov rdi,[blueberry_value]
+mov [r14+rbp+08],rdi
+pop rdi
+jmp originalcode
+
+cabbage:
+cmp [cabbage_value],0
+je originalcode
+push rdi
+mov rdi,[cabbage_value]
+mov [r14+rbp+08],rdi
+pop rdi
+jmp originalcode
+
+cherry:
+cmp [cherry_value],0
+je originalcode
+push rdi
+mov rdi,[cherry_value]
+mov [r14+rbp+08],rdi
+pop rdi
+jmp originalcode
+
+chestnut:
+cmp [chestnut_value],0
+je originalcode
+push rdi
+mov rdi,[chestnut_value]
+mov [r14+rbp+08],rdi
+pop rdi
+jmp originalcode
+
+chicken:
+cmp [chicken_value],0
+je originalcode
+push rdi
+mov rdi,[chicken_value]
+mov [r14+rbp+08],rdi
+pop rdi
+jmp originalcode
+
+coal:
+cmp [coal_value],0
+je originalcode
+push rdi
+mov rdi,[coal_value]
+mov [r14+rbp+08],rdi
+pop rdi
+jmp originalcode
+
+corn:
+cmp [corn_value],0
+je originalcode
+push rdi
+mov rdi,[corn_value]
+mov [r14+rbp+08],rdi
+pop rdi
+jmp originalcode
+
+egg:
+cmp [egg_value],0
+je originalcode
+push rdi
+mov rdi,[egg_value]
+mov [r14+rbp+08],rdi
+pop rdi
+jmp originalcode
+
+firewood:
+cmp [firewood_value],0
+je originalcode
+push rdi
+mov rdi,[firewood_value]
+mov [r14+rbp+08],rdi
+pop rdi
+jmp originalcode
+
+fish:
+cmp [fish_value],0
+je originalcode
+push rdi
+mov rdi,[fish_value]
+mov [r14+rbp+08],rdi
+pop rdi
+jmp originalcode
+
+herb:
+cmp [herb_value],0
+je originalcode
+push rdi
+mov rdi,[herb_value]
+mov [r14+rbp+08],rdi
+pop rdi
+jmp originalcode
+
+iron:
+cmp [iron_value],0
+je originalcode
+push rdi
+mov rdi,[iron_value]
+mov [r14+rbp+08],rdi
+pop rdi
+jmp originalcode
+
+leather:
+cmp [leather_value],0
+je originalcode
+push rdi
+mov rdi,[leather_value]
+mov [r14+rbp+08],rdi
+pop rdi
+jmp originalcode
+
+leathercoat:
+cmp [leathercoat_value],0
+je originalcode
+push rdi
+mov rdi,[leathercoat_value]
+mov [r14+rbp+08],rdi
+pop rdi
+jmp originalcode
+
+mushroom:
+cmp [mushroom_value],0
+je originalcode
+push rdi
+mov rdi,[mushroom_value]
+mov [r14+rbp+08],rdi
+pop rdi
+jmp originalcode
+
+mutton:
+cmp [mutton_value],0
+je originalcode
+push rdi
+mov rdi,[mutton_value]
+mov [r14+rbp+08],rdi
+pop rdi
+jmp originalcode
+
+onion:
+cmp [onion_value],0
+je originalcode
+push rdi
+mov rdi,[onion_value]
+mov [r14+rbp+08],rdi
+pop rdi
+jmp originalcode
+
+peach:
+cmp [peach_value],0
+je originalcode
+push rdi
+mov rdi,[peach_value]
+mov [r14+rbp+08],rdi
+pop rdi
+jmp originalcode
+
+pear:
+cmp [pear_value],0
+je originalcode
+push rdi
+mov rdi,[pear_value]
+mov [r14+rbp+08],rdi
+pop rdi
+jmp originalcode
+
+pecan:
+cmp [pecan_value],0
+je originalcode
+push rdi
+mov rdi,[pecan_value]
+mov [r14+rbp+08],rdi
+pop rdi
+jmp originalcode
+
+pepper:
+cmp [pepper_value],0
+je originalcode
+push rdi
+mov rdi,[pepper_value]
+mov [r14+rbp+08],rdi
+pop rdi
+jmp originalcode
+
+plum:
+cmp [plum_value],0
+je originalcode
+push rdi
+mov rdi,[plum_value]
+mov [r14+rbp+08],rdi
+pop rdi
+jmp originalcode
+
+potato:
+cmp [potato_value],0
+je originalcode
+push rdi
+mov rdi,[potato_value]
+mov [r14+rbp+08],rdi
+pop rdi
+jmp originalcode
+
+pumpkin:
+cmp [pumpkin_value],0
+je originalcode
+push rdi
+mov rdi,[pumpkin_value]
+mov [r14+rbp+08],rdi
+pop rdi
+jmp originalcode
+
+root:
+cmp [root_value],0
+je originalcode
+push rdi
+mov rdi,[root_value]
+mov [r14+rbp+08],rdi
+pop rdi
+jmp originalcode
+
+squash:
+cmp [squash_value],0
+je originalcode
+push rdi
+mov rdi,[squash_value]
+mov [r14+rbp+08],rdi
+pop rdi
+jmp originalcode
+
+steeltool:
+cmp [steeltool_value],0
+je originalcode
+push rdi
+mov rdi,[steeltool_value]
+mov [r14+rbp+08],rdi
+pop rdi
+jmp originalcode
+
+stone:
+cmp [stone_value],0
+je originalcode
+push rdi
+mov rdi,[stone_value]
+mov [r14+rbp+08],rdi
+pop rdi
+jmp originalcode
+
+tool:
+cmp [tool_value],0
+je originalcode
+push rdi
+mov rdi,[tool_value]
+mov [r14+rbp+08],rdi
+pop rdi
+jmp originalcode
+
+venison:
+cmp [venison_value],0
+je originalcode
+push rdi
+mov rdi,[venison_value]
+mov [r14+rbp+08],rdi
+pop rdi
+jmp originalcode
+
+walnut:
+cmp [walnut_value],0
+je originalcode
+push rdi
+mov rdi,[walnut_value]
+mov [r14+rbp+08],rdi
+pop rdi
+jmp originalcode
+
+wheat:
+cmp [wheat_value],0
+je originalcode
+push rdi
+mov rdi,[wheat_value]
+mov [r14+rbp+08],rdi
+pop rdi
+jmp originalcode
+
+wintercoat:
+cmp [wintercoat_value],0
+je originalcode
+push rdi
+mov rdi,[wintercoat_value]
+mov [r14+rbp+08],rdi
+pop rdi
+jmp originalcode
+
+wood:
+cmp [wood_value],0
+je originalcode
+push rdi
+mov rdi,[wood_value]
+mov [r14+rbp+08],rdi
+pop rdi
+jmp originalcode
+
+wool:
+cmp [wool_value],0
+je originalcode
+push rdi
+mov rdi,[wool_value]
+mov [r14+rbp+08],rdi
+pop rdi
+jmp originalcode
+
+woolcoat:
+cmp [woolcoat_value],0
+je originalcode
+push rdi
+mov rdi,[woolcoat_value]
+mov [r14+rbp+08],rdi
+pop rdi
+jmp originalcode
+
+originalcode:
+imul eax,[r14+rbp+08]
+jmp returnhere
+
+ale_value:
+dd 0
+apple_value:
+dd 0
+bean_value:
+dd 0
+_beef_value:
+dd 0
+blueberry_value:
+dd 0
+cabbage_value:
+dd 0
+cherry_value:
+dd 0
+chestnut_value:
+dd 0
+chicken_value:
+dd 0
+coal_value:
+dd 0
+corn_value:
+dd 0
+egg_value:
+dd 0
+firewood_value:
+dd 0
+fish_value:
+dd 0
+herb_value:
+dd 0
+iron_value:
+dd 0
+leather_value:
+dd 0
+leathercoat_value:
+dd 0
+mushroom_value:
+dd 0
+mutton_value:
+dd 0
+onion_value:
+dd 0
+peach_value:
+dd 0
+pear_value:
+dd 0
+pecan_value:
+dd 0
+pepper_value:
+dd 0
+plum_value:
+dd 0
+potato_value:
+dd 0
+pumpkin_value:
+dd 0
+root_value:
+dd 0
+squash_value:
+dd 0
+steeltool_value:
+dd 0
+stone_value:
+dd 0
+tool_value:
+dd 0
+venison_value:
+dd 0
+walnut_value:
+dd 0
+wheat_value:
+dd 0
+wintercoat_value:
+dd 0
+wood_value:
+dd 0
+wool_value:
+dd 0
+woolcoat_value:
+dd 0
+
+resources-6:
+jmp newmem
+nop
+returnhere:
+
+[DISABLE]
+dealloc(newmem)
+resources-6:
+//"Banished-x64.exe"+BFE40:
+imul eax,[r14+rbp+08]
+
+unregistersymbol(ale_value)
+unregistersymbol(apple_value)
+unregistersymbol(bean_value)
+unregistersymbol(_beef_value)
+unregistersymbol(blueberry_value)
+unregistersymbol(cabbage_value)
+unregistersymbol(cherry_value)
+unregistersymbol(chestnut_value)
+unregistersymbol(chicken_value)
+unregistersymbol(coal_value)
+unregistersymbol(corn_value)
+unregistersymbol(egg_value)
+unregistersymbol(firewood_value)
+unregistersymbol(fish_value)
+unregistersymbol(herb_value)
+unregistersymbol(iron_value)
+unregistersymbol(leather_value)
+unregistersymbol(leathercoat_value)
+unregistersymbol(mushroom_value)
+unregistersymbol(mutton_value)
+unregistersymbol(onion_value)
+unregistersymbol(peach_value)
+unregistersymbol(pear_value)
+unregistersymbol(pecan_value)
+unregistersymbol(pepper_value)
+unregistersymbol(plum_value)
+unregistersymbol(potato_value)
+unregistersymbol(pumpkin_value)
+unregistersymbol(root_value)
+unregistersymbol(squash_value)
+unregistersymbol(steeltool_value)
+unregistersymbol(stone_value)
+unregistersymbol(tool_value)
+unregistersymbol(venison_value)
+unregistersymbol(walnut_value)
+unregistersymbol(wheat_value)
+unregistersymbol(wintercoat_value)
+unregistersymbol(wood_value)
+unregistersymbol(wool_value)
+unregistersymbol(woolcoat_value)
+
+unregistersymbol(resources)
+</AssemblerScript>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>23</ID>
+          <Description>"ALE"</Description>
+          <VariableType>4 Bytes</VariableType>
+          <Address>ale_value</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>47</ID>
+          <Description>"APPLE"</Description>
+          <VariableType>4 Bytes</VariableType>
+          <Address>apple_value</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>46</ID>
+          <Description>"BEAN"</Description>
+          <VariableType>4 Bytes</VariableType>
+          <Address>bean_value</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>45</ID>
+          <Description>"BEEF"</Description>
+          <VariableType>4 Bytes</VariableType>
+          <Address>_beef_value</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>44</ID>
+          <Description>"BLUEBERRY"</Description>
+          <VariableType>4 Bytes</VariableType>
+          <Address>blueberry_value</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>21</ID>
+          <Description>"CABBAGE"</Description>
+          <VariableType>4 Bytes</VariableType>
+          <Address>cabbage_value</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>43</ID>
+          <Description>"CHERRY"</Description>
+          <VariableType>4 Bytes</VariableType>
+          <Address>cherry_value</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>48</ID>
+          <Description>"CHESTNUT"</Description>
+          <VariableType>4 Bytes</VariableType>
+          <Address>chestnut_value</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>42</ID>
+          <Description>"CHICKEN"</Description>
+          <VariableType>4 Bytes</VariableType>
+          <Address>chicken_value</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>16</ID>
+          <Description>"COAL"</Description>
+          <VariableType>4 Bytes</VariableType>
+          <Address>coal_value</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>19</ID>
+          <Description>"CORN"</Description>
+          <VariableType>4 Bytes</VariableType>
+          <Address>corn_value</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>41</ID>
+          <Description>"EGG"</Description>
+          <VariableType>4 Bytes</VariableType>
+          <Address>egg_value</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>9</ID>
+          <Description>"FIREWOOD"</Description>
+          <VariableType>4 Bytes</VariableType>
+          <Address>firewood_value</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>15</ID>
+          <Description>"FISH"</Description>
+          <VariableType>4 Bytes</VariableType>
+          <Address>fish_value</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>17</ID>
+          <Description>"HERB"</Description>
+          <VariableType>4 Bytes</VariableType>
+          <Address>herb_value</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>13</ID>
+          <Description>"IRON"</Description>
+          <VariableType>4 Bytes</VariableType>
+          <Address>iron_value</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>40</ID>
+          <Description>"LEATHER"</Description>
+          <VariableType>4 Bytes</VariableType>
+          <Address>leather_value</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>11</ID>
+          <Description>"LEATHER COAT"</Description>
+          <VariableType>4 Bytes</VariableType>
+          <Address>leathercoat_value</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>39</ID>
+          <Description>"MUSHROOM"</Description>
+          <VariableType>4 Bytes</VariableType>
+          <Address>mushroom_value</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>18</ID>
+          <Description>"MUTTON"</Description>
+          <VariableType>4 Bytes</VariableType>
+          <Address>mutton_value</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>38</ID>
+          <Description>"ONION"</Description>
+          <VariableType>4 Bytes</VariableType>
+          <Address>onion_value</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>37</ID>
+          <Description>"PEACH"</Description>
+          <VariableType>4 Bytes</VariableType>
+          <Address>peach_value</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>36</ID>
+          <Description>"PEAR"</Description>
+          <VariableType>4 Bytes</VariableType>
+          <Address>pear_value</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>35</ID>
+          <Description>"PECAN"</Description>
+          <VariableType>4 Bytes</VariableType>
+          <Address>pecan_value</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>20</ID>
+          <Description>"PEPPER"</Description>
+          <VariableType>4 Bytes</VariableType>
+          <Address>pepper_value</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>22</ID>
+          <Description>"PLUM"</Description>
+          <VariableType>4 Bytes</VariableType>
+          <Address>plum_value</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>12</ID>
+          <Description>"POTATO"</Description>
+          <VariableType>4 Bytes</VariableType>
+          <Address>potato_value</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>34</ID>
+          <Description>"PUMPKIN"</Description>
+          <VariableType>4 Bytes</VariableType>
+          <Address>pumpkin_value</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>33</ID>
+          <Description>"ROOT"</Description>
+          <VariableType>4 Bytes</VariableType>
+          <Address>root_value</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>32</ID>
+          <Description>"SQUASH"</Description>
+          <VariableType>4 Bytes</VariableType>
+          <Address>squash_value</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>31</ID>
+          <Description>"STEEL TOOL"</Description>
+          <VariableType>4 Bytes</VariableType>
+          <Address>steeltool_value</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>14</ID>
+          <Description>"STONE"</Description>
+          <VariableType>4 Bytes</VariableType>
+          <Address>stone_value</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>8</ID>
+          <Description>"TOOL"</Description>
+          <VariableType>4 Bytes</VariableType>
+          <Address>tool_value</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>30</ID>
+          <Description>"VENISON"</Description>
+          <VariableType>4 Bytes</VariableType>
+          <Address>venison_value</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>29</ID>
+          <Description>"WALNUT"</Description>
+          <VariableType>4 Bytes</VariableType>
+          <Address>walnut_value</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>25</ID>
+          <Description>"WHEAT"</Description>
+          <VariableType>4 Bytes</VariableType>
+          <Address>wheat_value</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>28</ID>
+          <Description>"WINTER COAT"</Description>
+          <VariableType>4 Bytes</VariableType>
+          <Address>wintercoat_value</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>10</ID>
+          <Description>"WOOD"</Description>
+          <VariableType>4 Bytes</VariableType>
+          <Address>wood_value</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>26</ID>
+          <Description>"WOOL"</Description>
+          <VariableType>4 Bytes</VariableType>
+          <Address>wool_value</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>27</ID>
+          <Description>"WOOL COAT"</Description>
+          <VariableType>4 Bytes</VariableType>
+          <Address>woolcoat_value</Address>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+  </CheatEntries>
+  <UserdefinedSymbols>
+    <SymbolEntry>
+      <Name>tools_address</Name>
+      <Address>00FF003B</Address>
+    </SymbolEntry>
+    <SymbolEntry>
+      <Name>tool_address</Name>
+      <Address>00BE0126</Address>
+    </SymbolEntry>
+    <SymbolEntry>
+      <Name>potato_address</Name>
+      <Address>00BE012A</Address>
+    </SymbolEntry>
+    <SymbolEntry>
+      <Name>leathercoat_address</Name>
+      <Address>00BE012E</Address>
+    </SymbolEntry>
+    <SymbolEntry>
+      <Name>wood_address</Name>
+      <Address>00BE0132</Address>
+    </SymbolEntry>
+    <SymbolEntry>
+      <Name>firewood_address</Name>
+      <Address>00BE0136</Address>
+    </SymbolEntry>
+    <SymbolEntry>
+      <Name>stone_address</Name>
+      <Address>00BE013A</Address>
+    </SymbolEntry>
+    <SymbolEntry>
+      <Name>iron_address</Name>
+      <Address>00BE013E</Address>
+    </SymbolEntry>
+  </UserdefinedSymbols>
+</CheatTable>

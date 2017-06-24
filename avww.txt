@@ -1,0 +1,24 @@
+
+
+
+search for quantity of shards (4 byte)
+drop a shard
+next scan for new quantity
+find what writes to that address
+find address esi+0C
+
+
+
+
+## mana
+search for '0' 
+use mana, pause
+next scan for > 0
+unpause / refill mana
+next scan for '0'
+repeat
+
+build structure for mana address -7C
+
+Location 78 is health
+

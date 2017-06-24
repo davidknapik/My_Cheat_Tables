@@ -1,0 +1,43 @@
+[ENABLE]
+// Cancel out buff timer
+//code from here to '[DISABLE]' will be used to enable the cheat
+aobscan(_bufftmr,8B 47 0C 48 89 47 0C 8B 47 08 83 EC 0C)
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+_bufftmr:
+mov eax,[edi+0C]
+nop
+mov [edi+0C],eax
+mov eax,[edi+08]
+sub esp,0C
+
+returnhere:
+
+newmem:
+nop
+
+originalcode:
+// 28A10C1C - 8B 47 0C  - mov eax,[edi+0C]
+// 28A10C1F - 48 - dec eax
+// 28A10C20 - 89 47 0C  - mov [edi+0C],eax <<
+// 28A10C23 - 8B 47 08  - mov eax,[edi+08]
+// 28A10C26 - 83 EC 0C - sub esp,0C
+
+
+exit:
+jmp returnhere
+
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+aobscan(_bufftmr,8B 47 0C 90 89 47 0C 8B 47 08 83 EC 0C)
+dealloc(newmem)
+_bufftmr:
+mov eax,[edi+0C]
+dec eax
+mov [edi+0C],eax
+mov eax,[edi+08]
+sub esp,0C

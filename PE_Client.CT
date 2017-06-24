@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheatTable CheatEngineTableVersion="18">
+  <CheatEntries>
+    <CheatEntry>
+      <ID>2</ID>
+      <Description>"NoHunger"</Description>
+      <LastState Activated="0"/>
+      <Color>80000008</Color>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+aobscan(health, 48 8D 44 88 20 F2 44 0F5A F8 F3 44 0F11 38 48 83 C4 18 C3)
+label(_health)
+registersymbol(_health)
+
+health+a:
+_health:
+db 90 90 90 90 90
+
+/*
+
+originalcode:
+
+
+53B00D35 - 48 8D 44 88 20  - lea rax,[rax+rcx*4+20]
+53B00D3A - F2 44 0F5A F8  - cvtsd2ss xmm15,xmm0
+53B00D3F - F3 44 0F11 38  - movss [rax],xmm15 &lt;&lt;
+53B00D44 - 48 83 C4 18 - add rsp,18
+53B00D48 - C3 - ret
+
+*/
+
+
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+_health:
+db F3 44 0F11 38
+
+unregistersymbol(_health)
+
+</AssemblerScript>
+    </CheatEntry>
+  </CheatEntries>
+  <CheatCodes>
+    <CodeEntry>
+      <Description>Change of movss [rax],xmm15</Description>
+      <Address>53B00D3F</Address>
+      <ModuleName/>
+      <ModuleNameOffset>0</ModuleNameOffset>
+      <Before>
+        <Byte>F2</Byte>
+        <Byte>44</Byte>
+        <Byte>0F</Byte>
+        <Byte>5A</Byte>
+        <Byte>F8</Byte>
+      </Before>
+      <Actual>
+        <Byte>F3</Byte>
+        <Byte>44</Byte>
+        <Byte>0F</Byte>
+        <Byte>11</Byte>
+        <Byte>38</Byte>
+      </Actual>
+      <After>
+        <Byte>48</Byte>
+        <Byte>83</Byte>
+        <Byte>C4</Byte>
+        <Byte>18</Byte>
+        <Byte>C3</Byte>
+      </After>
+    </CodeEntry>
+  </CheatCodes>
+  <UserdefinedSymbols/>
+</CheatTable>

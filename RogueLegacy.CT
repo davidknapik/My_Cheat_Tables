@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheatTable CheatEngineTableVersion="16">
+  <Forms>
+    <UDF1 Class="TCEForm" Encoding="Ascii85">b7Ej%2nldAU:MM2b.}cxWeIh0Gi32eO*FtmU{W:1%{mcIVgA6t9Fkwa6v7(wnNpI$=7,zGoLEqjnV-i7R=ffx00</UDF1>
+  </Forms>
+  <CheatEntries>
+    <CheatEntry>
+      <ID>3</ID>
+      <Description>"Free Upgrades"</Description>
+      <Color>80000008</Color>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+aobscan(_health, 2B D8 89 9D C4 FE FF FF 89 5F 28)
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+_health:
+nop
+nop
+mov [ebp-0000013C],ebx
+mov [edi+28],ebx
+
+returnhere:
+
+newmem:
+
+
+originalcode:
+//09F2BD1E - 2B D8  - sub ebx,eax
+//09F2BD20 - 89 9D C4FEFFFF  - mov [ebp-0000013C],ebx
+//09F2BD26 - 89 5F 28  - mov [edi+28],ebx &lt;&lt;
+//09F2BD29 - 83 7F 28 00 - cmp dword ptr [edi+28],00
+//09F2BD2D - 7D 05 - jnl 09F2BD34
+
+exit:
+jmp returnhere
+
+
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+aobscan(_health, 90 90 89 9D C4 FE FF FF 89 5F 28)
+dealloc(newmem)
+_health:
+sub ebx,eax
+mov [ebp-0000013C],ebx
+mov [edi+28],ebx
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>4</ID>
+      <Description>"Free Equipment"</Description>
+      <Color>80000008</Color>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+aobscan(_health, 2B 42 20 89 45 9C 89 41 28 83 79 28 00 )
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+_health:
+nop
+nop
+nop
+mov [ebp-64],eax
+mov [ecx+28],eax
+cmp dword ptr [ecx+28],00
+
+returnhere:
+
+newmem:
+
+
+originalcode:
+//09F42247 - 2B 42 20  - sub eax,[edx+20]
+//09F4224A - 89 45 9C  - mov [ebp-64],eax
+//09F4224D - 89 41 28  - mov [ecx+28],eax &lt;&lt;
+//09F42250 - 83 79 28 00 - cmp dword ptr [ecx+28],00
+//09F42254 - 7D 05 - jnl 09F4225B
+
+exit:
+jmp returnhere
+
+
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+aobscan(_health, 90 90 90 89 45 9C 89 41 28 83 79 28 00 )
+dealloc(newmem)
+_health:
+sub eax,[edx+20]
+mov [ebp-64],eax
+mov [ecx+28],eax
+cmp dword ptr [ecx+28],00
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>5</ID>
+      <Description>"Free Enchantress"</Description>
+      <Color>80000008</Color>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+aobscan(_health, 8B 42 28 2B C6 89 42 28 83 7A 28 00)
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+_health:
+nop
+nop
+nop
+sub eax,esi
+mov [edx+28],eax
+cmp dword ptr [edx+28],00
+
+
+returnhere:
+
+newmem:
+
+
+originalcode:
+//0620C1C4 - 8B 42 28  - mov eax,[edx+28]
+//0620C1C7 - 2B C6  - sub eax,esi
+//0620C1C9 - 89 42 28  - mov [edx+28],eax &lt;&lt;
+//0620C1CC - 83 7A 28 00 - cmp dword ptr [edx+28],00
+//0620C1D0 - 7D 05 - jnl 0620C1D7
+
+exit:
+jmp returnhere
+
+
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+aobscan(_health, 90 90 90 2B C6 89 42 28 83 7A 28 00)
+dealloc(newmem)
+_health:
+mov eax,[edx+28]
+sub eax,esi
+mov [edx+28],eax
+cmp dword ptr [edx+28],00
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>0</ID>
+      <Description>"Health"</Description>
+      <Color>80000008</Color>
+      <VariableType>4 Bytes</VariableType>
+      <Address>03DFF8DC</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>6</ID>
+      <Description>"No description"</Description>
+      <Color>80000008</Color>
+      <VariableType>4 Bytes</VariableType>
+      <Address>29244524</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>7</ID>
+      <Description>"No description"</Description>
+      <Color>80000008</Color>
+      <VariableType>4 Bytes</VariableType>
+      <Address>29799510</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>8</ID>
+      <Description>"No description"</Description>
+      <Color>80000008</Color>
+      <VariableType>Float</VariableType>
+      <Address>03DFF964</Address>
+    </CheatEntry>
+  </CheatEntries>
+  <CheatCodes>
+    <CodeEntry>
+      <Description>Change of sub ebx,eax</Description>
+      <Address>09F2BD1E</Address>
+      <ModuleName/>
+      <ModuleNameOffset>0</ModuleNameOffset>
+      <Before>
+        <Byte>E8</Byte>
+        <Byte>92</Byte>
+        <Byte>EC</Byte>
+        <Byte>FF</Byte>
+        <Byte>FF</Byte>
+      </Before>
+      <Actual>
+        <Byte>2B</Byte>
+        <Byte>D8</Byte>
+      </Actual>
+      <After>
+        <Byte>89</Byte>
+        <Byte>9D</Byte>
+        <Byte>C4</Byte>
+        <Byte>FE</Byte>
+        <Byte>FF</Byte>
+      </After>
+    </CodeEntry>
+  </CheatCodes>
+  <UserdefinedSymbols/>
+</CheatTable>

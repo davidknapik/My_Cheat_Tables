@@ -1,0 +1,95 @@
+Health: user+00000128
+Mana: user+00000012C
+Rocket Boots (4 byte): user+190
+
+Large World Size: (0,0) - (134012,37990)
+User Horiz Location (float): user+00000208
+User Vert Location (float): user+000020C
+
+
+#monster damage
+0B0FC6F8 - F2 0F10 45 E8  - movsd xmm0,[ebp-18]
+0B0FC6FD - F2 0F2C C0  - cvttsd2si eax,xmm0
+>> 0B0FC701 - 29 86 28010000  - sub [esi+00000128],eax <<
+0B0FC707 - C6 86 C4010000 01 - mov byte ptr [esi+000001C4],01
+0B0FC70E - C7 46 70 28000000 - mov [esi+70],00000028
+
+#v1.1
+11CB5F8F - F2 0F10 45 E8  - movsd xmm0,[ebp-18]
+11CB5F94 - F2 0F2C C0  - cvttsd2si eax,xmm0
+>> 11CB5F98 - 29 86 54010000  - sub [esi+00000154],eax <<
+11CB5F9E - C6 86 06020000 01 - mov byte ptr [esi+00000206],01
+11CB5FA5 - C7 86 84000000 28000000 - mov [esi+00000084],00000028
+
+
+# water damage
+0B859D47 - 89 90 BC000000  - mov [eax+000000BC],edx
+0B859D4D - 8B 85 B8F8FFFF  - mov eax,[ebp-00000748]
+>> 0B859D53 - 83 80 28010000 FE - add dword ptr [eax+00000128],FE
+0B859D5A - 8B 85 B8F8FFFF  - mov eax,[ebp-00000748]
+0B859D60 - 83 B8 28010000 00 - cmp dword ptr [eax+00000128],00
+
+
+# fire damage
+0D113033 - 83 80 3C010000 78 - add dword ptr [eax+0000013C],78
+0D11303A - 8B 85 B8F8FFFF  - mov eax,[ebp-00000748]
+>> 0D113040 - FF 88 28010000  - dec [eax+00000128] <<
+0D113046 - 8B 85 B8F8FFFF  - mov eax,[ebp-00000748]
+0D11304C - 83 B8 28010000 00 - cmp dword ptr [eax+00000128],00
+
+
+# reduce mana
+F2 0F2C C0  - cvttsd2si eax,xmm0
+8B 95 A4FAFFFF  - mov edx,[ebp-0000055C]
+>> 29 82 2C010000  - sub [edx+0000012C],eax
+EB 05 - jmp 0B170CA7
+33 D2  - xor edx,edx
+
+
+# decrement item
+89 BD ACFEFFFF  - mov [ebp-00000154],edi
+8B 85 ACFEFFFF  - mov eax,[ebp-00000154]
+>> FF 48 40  - dec [eax+40] <<
+8B 85 A4FAFFFF  - mov eax,[ebp-0000055C]
+8B 80 94000000  - mov eax,[eax+00000094]
+
+
+# decrement ammo
+75 3B - jne 0D052FC4
+8B 45 A8  - mov eax,[ebp-58]
+>> FF 48 40  - dec [eax+40] <<
+8B 45 A8  - mov eax,[ebp-58]
+83 78 40 00 - cmp dword ptr [eax+40],00
+
+
+# Do not consume buffs
+80 BE CD000000 00 - cmp byte ptr [esi+000000CD],00
+74 28 - je 0B217BA3
+>> FF 4E 40  - dec [esi+40] <<
+83 7E 40 00 - cmp dword ptr [esi+40],00
+7F 1F - jg 0B217BA3
+
+# stop buffs timer (dec to nop)
+0FDC2B1F - 89 85 ACFDFFFF  - mov [ebp-00000254],eax
+0FDC2B25 - 8B 85 ACFDFFFF  - mov eax,[ebp-00000254]
+0FDC2B2B - FF 08  - dec [eax] <<
+0FDC2B2D - 8B 45 88  - mov eax,[ebp-78]
+0FDC2B30 - 8B 95 B8F8FFFF  - mov edx,[ebp-00000748]
+
+#Buff Structure: [User Structure + 02C]
+
+
+
+# Infiniate Rocket Boots (dec to nop)
+8B 85 B8F8FFFF  - mov eax,[ebp-00000748]
+FF 88 90010000  - dec [eax+00000190] <<
+8B 85 B8F8FFFF  - mov eax,[ebp-00000748]
+C7 80 98010000 0A000000 - mov [eax+00000198],0000000A
+
+# do not deduct items when right click change dec to inc
+89 85 6CF2FFFF  - mov [ebp-00000D94],eax
+8B 85 6CF2FFFF  - mov eax,[ebp-00000D94]
+FF 48 40  - dec [eax+40] <<
+8B 85 88FEFFFF  - mov eax,[ebp-00000178]
+8B 56 34  - mov edx,[esi+34]
+

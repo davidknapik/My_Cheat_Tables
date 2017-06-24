@@ -1,0 +1,44 @@
+[ENABLE]
+// Cancel out Energy usage
+//code from here to '[DISABLE]' will be used to enable the cheat
+aobscan(_bufftmr,8B 83 A0 00 00 00 2B 45 0C 89 83 A0 00 00 00 83 EC 08 6A 00)
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+_bufftmr:
+mov eax,[ebx+000000A0]
+nop
+nop
+nop
+mov [ebx+000000A0],eax
+sub esp,08
+push 00
+
+returnhere:
+
+newmem:
+nop
+
+originalcode:
+// 089A690B - 8B 83 A0000000  - mov eax,[ebx+000000A0]
+// 089A6911 - 2B 45 0C  - sub eax,[ebp+0C]
+// 089A6914 - 89 83 A0000000  - mov [ebx+000000A0],eax <<
+// 089A691A - 83 EC 08 - sub esp,08
+// 089A691D - 6A 00 - push 00
+
+exit:
+jmp returnhere
+
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+aobscan(_bufftmr,8B 83 A0 00 00 00 90 90 90 89 83 A0 00 00 00 83 EC 08 6A 00)
+dealloc(newmem)
+_bufftmr:
+mov eax,[ebx+000000A0]
+sub eax,[ebp+0C]
+mov [ebx+000000A0],eax
+sub esp,08
+push 00

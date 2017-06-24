@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheatTable CheatEngineTableVersion="18">
+  <CheatEntries>
+    <CheatEntry>
+      <ID>39</ID>
+      <Description>"Gauntlet Cheat Script v0.1"</Description>
+      <Options moHideChildren="1"/>
+      <LastState Activated="0"/>
+      <Color>80000008</Color>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>{
+  Game          : Gauntlet
+  GameVersion   :
+  Table Version : v0.1
+  Date          : 2014-09-25
+  Author        : Reaper79
+}
+
+[ENABLE]
+
+aobscanmodule(aobPlayerHealth,gauntlet.exe,8B 06 F6 40 04 03 74 0E) // should be unique
+alloc(newmem,$1000)
+
+label(PlayerHealthCode1_1)
+label(PlayerHealthCode1_2)
+label(PlayerHealthCode1_ret)
+
+label(pPlayerHealth)
+registersymbol(pPlayerHealth)
+
+label(iEnableInfiniteHealth)
+registersymbol(iEnableInfiniteHealth)
+
+newmem:
+iEnableInfiniteHealth:
+  dd 0
+pPlayerHealth:
+  dd 0
+
+PlayerHealthCode1_1:
+  mov eax,[esi]
+  cmp [eax+10],70746968
+  jne PlayerHealthCode1_2
+  cmp [eax+14],746E696F
+  jne PlayerHealthCode1_2
+  lea eax,[esi-08]
+  cmp [eax-08],eax
+  jne PlayerHealthCode1_2
+  mov [pPlayerHealth],eax
+  cmp [iEnableInfiniteHealth],0
+  je PlayerHealthCode1_2
+  mov [eax],00000000
+  mov [eax+04],408F4000
+
+PlayerHealthCode1_2:
+  mov eax,[esi]
+  test byte ptr [eax+04],03
+  jmp PlayerHealthCode1_ret
+
+aobPlayerHealth:
+  jmp PlayerHealthCode1_1
+  db 90
+PlayerHealthCode1_ret:
+registersymbol(aobPlayerHealth)
+
+[DISABLE]
+
+aobPlayerHealth:
+  db 8B 06 F6 40 04 03
+
+unregistersymbol(iEnableInfiniteHealth)
+unregistersymbol(pPlayerHealth)
+unregistersymbol(aobPlayerHealth)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: "gauntlet.exe"+185B9A
+
+"gauntlet.exe"+185B7F: 8D 78 01        -  lea edi,[eax+01]
+"gauntlet.exe"+185B82: 83 CD FF        -  or ebp,-01
+"gauntlet.exe"+185B85: 39 6E FC        -  cmp [esi-04],ebp
+"gauntlet.exe"+185B88: 74 4F           -  je gauntlet.exe+185BD9
+"gauntlet.exe"+185B8A: F6 C3 08        -  test bl,08
+"gauntlet.exe"+185B8D: 75 21           -  jne gauntlet.exe+185BB0
+"gauntlet.exe"+185B8F: 8B 46 04        -  mov eax,[esi+04]
+"gauntlet.exe"+185B92: 83 C0 04        -  add eax,04
+"gauntlet.exe"+185B95: 83 F8 F6        -  cmp eax,-0A
+"gauntlet.exe"+185B98: 76 16           -  jna gauntlet.exe+185BB0
+// ---------- INJECTING HERE ----------
+"gauntlet.exe"+185B9A: 8B 06           -  mov eax,[esi]
+"gauntlet.exe"+185B9C: F6 40 04 03     -  test byte ptr [eax+04],03
+// ---------- DONE INJECTING  ----------
+"gauntlet.exe"+185BA0: 74 0E           -  je gauntlet.exe+185BB0
+"gauntlet.exe"+185BA2: 8B 4C 24 14     -  mov ecx,[esp+14]
+"gauntlet.exe"+185BA6: 50              -  push eax
+"gauntlet.exe"+185BA7: 51              -  push ecx
+"gauntlet.exe"+185BA8: E8 93 FB FF FF  -  call gauntlet.exe+185740
+"gauntlet.exe"+185BAD: 83 C4 08        -  add esp,08
+"gauntlet.exe"+185BB0: 83 7C 24 18 00  -  cmp dword ptr [esp+18],00
+"gauntlet.exe"+185BB5: 75 22           -  jne gauntlet.exe+185BD9
+"gauntlet.exe"+185BB7: 8B 56 FC        -  mov edx,[esi-04]
+"gauntlet.exe"+185BBA: 83 C2 04        -  add edx,04
+}
+</AssemblerScript>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>42</ID>
+          <Description>"Infinite Health (Enable / Disable)"</Description>
+          <LastState Activated="0"/>
+          <Color>80000008</Color>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>[ENABLE]
+iEnableInfiniteHealth:
+  dd 1
+[DISABLE]
+iEnableInfiniteHealth:
+  dd 0
+</AssemblerScript>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+  </CheatEntries>
+  <CheatCodes>
+    <CodeEntry>
+      <Description>Code :mov [ecx+04],ebp (HP Write1)</Description>
+      <Address>00588E33</Address>
+      <ModuleName>gauntlet.exe</ModuleName>
+      <ModuleNameOffset>188E33</ModuleNameOffset>
+      <Before>
+        <Byte>C2</Byte>
+        <Byte>04</Byte>
+        <Byte>8B</Byte>
+        <Byte>04</Byte>
+        <Byte>C2</Byte>
+      </Before>
+      <Actual>
+        <Byte>89</Byte>
+        <Byte>69</Byte>
+        <Byte>04</Byte>
+      </Actual>
+      <After>
+        <Byte>89</Byte>
+        <Byte>01</Byte>
+        <Byte>8B</Byte>
+        <Byte>06</Byte>
+        <Byte>0F</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry>
+      <Description>Code :mov [ecx],eax (HP Write2)</Description>
+      <Address>00588E36</Address>
+      <ModuleName>gauntlet.exe</ModuleName>
+      <ModuleNameOffset>188E36</ModuleNameOffset>
+      <Before>
+        <Byte>04</Byte>
+        <Byte>C2</Byte>
+        <Byte>89</Byte>
+        <Byte>69</Byte>
+        <Byte>04</Byte>
+      </Before>
+      <Actual>
+        <Byte>89</Byte>
+        <Byte>01</Byte>
+      </Actual>
+      <After>
+        <Byte>8B</Byte>
+        <Byte>06</Byte>
+        <Byte>0F</Byte>
+        <Byte>B6</Byte>
+        <Byte>CC</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry>
+      <Description>Code :call CH.dll+1091</Description>
+      <Address>00585B9A</Address>
+      <ModuleName>gauntlet.exe</ModuleName>
+      <ModuleNameOffset>185B9A</ModuleNameOffset>
+      <Before>
+        <Byte>83</Byte>
+        <Byte>F8</Byte>
+        <Byte>F6</Byte>
+        <Byte>76</Byte>
+        <Byte>16</Byte>
+      </Before>
+      <Actual>
+        <Byte>E8</Byte>
+        <Byte>F2</Byte>
+        <Byte>B4</Byte>
+        <Byte>AD</Byte>
+        <Byte>10</Byte>
+      </Actual>
+      <After>
+        <Byte>90</Byte>
+        <Byte>74</Byte>
+        <Byte>0E</Byte>
+        <Byte>8B</Byte>
+        <Byte>4C</Byte>
+      </After>
+    </CodeEntry>
+  </CheatCodes>
+  <UserdefinedSymbols/>
+</CheatTable>
