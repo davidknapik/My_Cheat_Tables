@@ -43,7 +43,7 @@ unregistersymbol(_invqty)
       <AssemblerScript>[ENABLE]
 // Search for health "float"
 //code from here to '[DISABLE]' will be used to enable the cheat
-aobscan(mySearch, 48 8B CE E8 5C A1 FF FF 48 29 18  B0 01 48 8B 5C 24 30)
+aobscan(mySearch, 48 8B CE E8 ?? ?? FF FF 48 29 18  B0 01 48 8B 5C 24 30)
 label(_mySearch)
 registersymbol(_mySearch)
 
@@ -53,6 +53,13 @@ db 90 90 90
 
 
 /*
+
+7FF6037B4B2C - 48 8B CE  - mov rcx,rsi
+7FF6037B4B2F - E8 BCA0FFFF - call "starbound.Star::FlatHashMap&lt;Star::String,unsigned __int64,Star::hash&lt;Star::String,void&gt;,std::equal_to&lt;Star::String&gt;,std::allocator&lt;std::pair&lt;Star::String const ,unsigned __int64&gt; &gt; &gt;::operator[]"
+7FF6037B4B34 - 48 29 18  - sub [rax],rbx &lt;&lt;
+7FF6037B4B37 - B0 01 - mov al,01
+7FF6037B4B39 - 48 8B 5C 24 30  - mov rbx,[rsp+30]
+
 7FF7422E5D7C - 48 8B CE  - mov rcx,rsi
 7FF7422E5D7F - E8 5CA1FFFF - call "starbound.Star::FlatHashMap&lt;Star::String,unsigned __int64,Star::hash&lt;Star::String,void&gt;,std::equal_to&lt;Star::String&gt;,std::allocator&lt;std::pair&lt;Star::String const ,unsigned __int64&gt; &gt; &gt;::operator[]"
 7FF7422E5D84 - 48 29 18  - sub [rax],rbx &lt;&lt;
@@ -72,7 +79,7 @@ unregistersymbol(_mySearch)
     <CheatEntry>
       <ID>16</ID>
       <Description>"Duplicate Item"</Description>
-      <LastState Activated="1"/>
+      <LastState/>
       <VariableType>Auto Assembler Script</VariableType>
       <AssemblerScript>[ENABLE]
 // Search for health "float"
@@ -263,108 +270,5 @@ pop ebp
 </AssemblerScript>
     </CheatEntry>
   </CheatEntries>
-  <CheatCodes>
-    <CodeEntry>
-      <Description>Change of sub [rax],rbx</Description>
-      <Address>7FF7422E5D84</Address>
-      <ModuleName>starbound.exe</ModuleName>
-      <ModuleNameOffset>405D84</ModuleNameOffset>
-      <Before>
-        <Byte>E8</Byte>
-        <Byte>5C</Byte>
-        <Byte>A1</Byte>
-        <Byte>FF</Byte>
-        <Byte>FF</Byte>
-      </Before>
-      <Actual>
-        <Byte>48</Byte>
-        <Byte>29</Byte>
-        <Byte>18</Byte>
-      </Actual>
-      <After>
-        <Byte>B0</Byte>
-        <Byte>01</Byte>
-        <Byte>48</Byte>
-        <Byte>8B</Byte>
-        <Byte>5C</Byte>
-      </After>
-    </CodeEntry>
-    <CodeEntry>
-      <Description>Change of sub rdx,rax</Description>
-      <Address>7FF74213A83C</Address>
-      <ModuleName>starbound.exe</ModuleName>
-      <ModuleNameOffset>25A83C</ModuleNameOffset>
-      <Before>
-        <Byte>42</Byte>
-        <Byte>C1</Byte>
-        <Byte>48</Byte>
-        <Byte>8B</Byte>
-        <Byte>00</Byte>
-      </Before>
-      <Actual>
-        <Byte>48</Byte>
-        <Byte>2B</Byte>
-        <Byte>D0</Byte>
-      </Actual>
-      <After>
-        <Byte>49</Byte>
-        <Byte>89</Byte>
-        <Byte>41</Byte>
-        <Byte>60</Byte>
-        <Byte>48</Byte>
-      </After>
-    </CodeEntry>
-    <CodeEntry>
-      <Description>Change of mov [r9+60],rax</Description>
-      <Address>7FF74213A83F</Address>
-      <ModuleName>starbound.exe</ModuleName>
-      <ModuleNameOffset>25A83F</ModuleNameOffset>
-      <Before>
-        <Byte>8B</Byte>
-        <Byte>00</Byte>
-        <Byte>48</Byte>
-        <Byte>2B</Byte>
-        <Byte>D0</Byte>
-      </Before>
-      <Actual>
-        <Byte>49</Byte>
-        <Byte>89</Byte>
-        <Byte>41</Byte>
-        <Byte>60</Byte>
-      </Actual>
-      <After>
-        <Byte>48</Byte>
-        <Byte>8B</Byte>
-        <Byte>C2</Byte>
-        <Byte>C3</Byte>
-        <Byte>CC</Byte>
-      </After>
-    </CodeEntry>
-    <CodeEntry>
-      <Description>Change of sub [rdi],rdx</Description>
-      <Address>7FF74213B01A</Address>
-      <ModuleName>starbound.exe</ModuleName>
-      <ModuleNameOffset>25B01A</ModuleNameOffset>
-      <Before>
-        <Byte>24</Byte>
-        <Byte>A0</Byte>
-        <Byte>00</Byte>
-        <Byte>00</Byte>
-        <Byte>00</Byte>
-      </Before>
-      <Actual>
-        <Byte>48</Byte>
-        <Byte>29</Byte>
-        <Byte>17</Byte>
-      </Actual>
-      <After>
-        <Byte>48</Byte>
-        <Byte>89</Byte>
-        <Byte>94</Byte>
-        <Byte>24</Byte>
-        <Byte>B8</Byte>
-      </After>
-    </CodeEntry>
-  </CheatCodes>
   <UserdefinedSymbols/>
 </CheatTable>
