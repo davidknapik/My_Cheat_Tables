@@ -189,36 +189,27 @@ unregistersymbol(_health)
     <CheatEntry>
       <ID>10</ID>
       <Description>"Infinite Ammo **"</Description>
-      <LastState/>
+      <LastState Activated="1"/>
       <VariableType>Auto Assembler Script</VariableType>
       <AssemblerScript>[ENABLE]
 // Infinite Ammo
 //code from here to '[DISABLE]' will be used to enable the cheat
-aobscan(ammo, 80 B8 2D 01 00 00 00 74 36  8B 45 EC FF 88 80 00 00 00)
+aobscan(ammo, 80 BB 2D 01 00 00 00 74 1A FF 8B 80 00 00 00 83 BB 80 00 00 00 00)
 label(_ammo)
 registersymbol(_ammo)
 
-ammo+C:
+ammo+9:
 _ammo:
 db 90 90 90 90 90 90
 
 
 /*
 
-Terraria.Player::PickAmmo+6EB - 80 B8 2D010000 00     - cmp byte ptr [eax+0000012D],00
-4B7158F2 - 74 36 - je Terraria.Player::PickAmmo+72A
-4B7158F4 - 8B 45 EC  - mov eax,[ebp-14]
-4B7158F7 - FF 88 80000000  - dec [eax+00000080] &lt;&lt;
-4B7158FD - 8B 45 EC  - mov eax,[ebp-14]
-4B715900 - 83 B8 80000000 00 - cmp dword ptr [eax+00000080],00
-
-originalcode:
-
-401D5C6A - 80 BB 31010000 00 - cmp byte ptr [ebx+00000131],00
-401D5C71 - 74 1A - je Terraria.Player::PickAmmo+735
-401D5C73 - FF 8B 84000000  - dec [ebx+00000084] &lt;&lt;
-401D5C79 - 83 BB 84000000 00 - cmp dword ptr [ebx+00000084],00
-401D5C80 - 7F 0B - jg Terraria.Player::PickAmmo+735
+4E8361B2 - 80 BB 2D 01 00 00 00 - cmp byte ptr [ebx+0000012D],00
+4E8361B9 - 74 1A - je Terraria.Player::PickAmmo+725
+4E8361BB - FF 8B 80 00 00 00  - dec [ebx+00000080] &lt;&lt;
+4E8361C1 - 83 BB 80000000 00 - cmp dword ptr [ebx+00000080],00
+4E8361C8 - 7F 0B - jg Terraria.Player::PickAmmo+725
 
 */
 
@@ -228,7 +219,7 @@ originalcode:
 [DISABLE]
 //code from here till the end of the code will be used to disable the cheat
 _ammo:
-db FF 88 80 00 00 00
+db FF 8B 80 00 00 00
 
 unregistersymbol(_ammo)
 
@@ -363,6 +354,51 @@ unregistersymbol(_health1)
 </AssemblerScript>
     </CheatEntry>
     <CheatEntry>
+      <ID>24</ID>
+      <Description>"Negate Breath Damage II"</Description>
+      <LastState Activated="1"/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+// Negate Breath damage
+// search user structure for a pair of 200's
+//code from here to '[DISABLE]' will be used to enable the cheat
+aobscan(address,89 90 58 03 00 00 89 90 B4 02 00 00 83 80 40 03 00 00 FE 83 B8 40 03 00 00 00)
+label(_address)
+registersymbol(_address)
+
+address+C:
+_address:
+db 90 90 90 90 90 90 90
+
+/*
+
+
+1781EA71 - 89 90 58 03 00 00  - mov [eax+00000358],edx
+1781EA77 - 89 90 B4 02 00 00  - mov [eax+000002B4],edx
+1781EA7D - 83 80 40 03 00 00 FE - add dword ptr [eax+00000340],-02 &lt;&lt;
+1781EA84 - 83 B8 40030000 00 - cmp dword ptr [eax+00000340],00
+1781EA8B - 0F8F 85000000 - jg Terraria.Player::CheckDrowning+396
+
+
+originalcode:
+
+1138158A - 33 D2  - xor edx,edx
+1138158C - 89 90 AC020000  - mov [eax+000002AC],edx
+11381592 - FF 88 B4020000  - dec [eax+000002B4] &lt;&lt;
+11381598 - 83 B8 B4020000 00 - cmp dword ptr [eax+000002B4],00
+1138159F - 75 19 - jne Terraria.Player::CheckDrowning+302
+
+*/
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+_address:
+db 83 80 40 03 00 00 FE
+
+unregistersymbol(_address)
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
       <ID>52</ID>
       <Description>"Negate Alian damage"</Description>
       <LastState/>
@@ -399,43 +435,6 @@ _health:
 db FF 8B 18 03 00 00
 
 unregistersymbol(_health)
-</AssemblerScript>
-    </CheatEntry>
-    <CheatEntry>
-      <ID>24</ID>
-      <Description>"Negate Breath Damage II"</Description>
-      <LastState/>
-      <VariableType>Auto Assembler Script</VariableType>
-      <AssemblerScript>[ENABLE]
-// Negate Breath damage
-// search user structure for a pair of 200's
-//code from here to '[DISABLE]' will be used to enable the cheat
-aobscan(address,33 D2 89 90 AC 02 00 00 FF 88 B4 02 00 00 83 B8 B4 02 00 00 00)
-label(_address)
-registersymbol(_address)
-
-address+8:
-_address:
-db 90 90 90 90 90 90
-
-/*
-
-originalcode:
-
-1138158A - 33 D2  - xor edx,edx
-1138158C - 89 90 AC020000  - mov [eax+000002AC],edx
-11381592 - FF 88 B4020000  - dec [eax+000002B4] &lt;&lt;
-11381598 - 83 B8 B4020000 00 - cmp dword ptr [eax+000002B4],00
-1138159F - 75 19 - jne Terraria.Player::CheckDrowning+302
-
-*/
-
-[DISABLE]
-//code from here till the end of the code will be used to disable the cheat
-_address:
-db FF 88 B4 02 00 00
-
-unregistersymbol(_address)
 </AssemblerScript>
     </CheatEntry>
     <CheatEntry>
@@ -925,12 +924,7 @@ dec [eax]
       </After>
     </CodeEntry>
   </CheatCodes>
-  <UserdefinedSymbols>
-    <SymbolEntry>
-      <Name>_ammo</Name>
-      <Address>4B7158F7</Address>
-    </SymbolEntry>
-  </UserdefinedSymbols>
+  <UserdefinedSymbols/>
   <Structures StructVersion="2">
     <Structure Name="Terraria.Player" AutoFill="0" AutoCreate="1" DefaultHex="0" AutoDestroy="0" DoNotSaveLocal="0" RLECompression="0" AutoCreateStructsize="4096">
       <Elements>
