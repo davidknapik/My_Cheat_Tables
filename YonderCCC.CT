@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheatTable CheatEngineTableVersion="26">
+  <CheatEntries>
+    <CheatEntry>
+      <ID>1</ID>
+      <Description>"Infinate Craft"</Description>
+      <LastState Activated="1"/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+aobscan(health, 48 63 47 20 2B C6 89 47 20 48 63 47 20)
+label(_health)
+registersymbol(_health)
+
+health+4:
+_health:
+db 90 90
+
+/*
+22ABA80B - 48 63 47 20  - movsxd  rax,dword ptr [rdi+20]
+22ABA80F - 2B C6  - sub eax,esi
+22ABA811 - 89 47 20  - mov [rdi+20],eax &lt;&lt;
+22ABA814 - 48 63 47 20  - movsxd  rax,dword ptr [rdi+20]
+22ABA818 - 85 C0  - test eax,eax
+
+*/
+
+
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+_health:
+db 2B C6
+
+unregistersymbol(_health)
+</AssemblerScript>
+    </CheatEntry>
+  </CheatEntries>
+  <UserdefinedSymbols/>
+</CheatTable>
