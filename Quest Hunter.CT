@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheatTable CheatEngineTableVersion="26">
+  <CheatEntries>
+    <CheatEntry>
+      <ID>3</ID>
+      <Description>"Infinate Items"</Description>
+      <LastState Activated="1"/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+aobscan(health, 48 63 47 18 2B C6 89 47 18 85 C0 )
+label(_health)
+registersymbol(_health)
+
+health+4:
+_health:
+db 90 90
+
+/*
+
+originalcode:
+028E9440 - 48 63 47 18  - movsxd  rax,dword ptr [rdi+18]
+028E9444 - 2B C6  - sub eax,esi
+028E9446 - 89 47 18  - mov [rdi+18],eax &lt;&lt;
+028E9449 - 85 C0  - test eax,eax
+028E944B - 75 0F - jne 028E945C
+
+*/
+
+
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+_health:
+db 2B C6
+
+unregistersymbol(_health)
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>5</ID>
+      <Description>"Spend Points"</Description>
+      <LastState/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+aobscan(health, 48 63 87 BC 00 00 00 FF C8 89 87 BC 00 00 00 48 8D 4E 01 48 8B C1)
+label(_health)
+registersymbol(_health)
+
+health+7:
+_health:
+db 90 90
+
+/*
+
+originalcode:
+028F5503 - 48 63 87 BC000000  - movsxd  rax,dword ptr [rdi+000000BC]
+028F550A - FF C8  - dec eax
+028F550C - 89 87 BC000000  - mov [rdi+000000BC],eax &lt;&lt;
+028F5512 - 48 8D 4E 01  - lea rcx,[rsi+01]
+028F5516 - 48 8B C1  - mov rax,rcx
+
+*/
+
+
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+_health:
+db FF C8
+
+unregistersymbol(_health)
+</AssemblerScript>
+    </CheatEntry>
+  </CheatEntries>
+  <CheatCodes>
+    <CodeEntry>
+      <Description>Change of mov [r14+0000009C],eax</Description>
+      <Address>1E7EE3BF</Address>
+      <ModuleName/>
+      <ModuleNameOffset>0</ModuleNameOffset>
+      <Before>
+        <Byte>4C</Byte>
+        <Byte>C1</Byte>
+        <Byte>89</Byte>
+        <Byte>45</Byte>
+        <Byte>B8</Byte>
+      </Before>
+      <Actual>
+        <Byte>41</Byte>
+        <Byte>89</Byte>
+        <Byte>86</Byte>
+        <Byte>9C</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Actual>
+      <After>
+        <Byte>49</Byte>
+        <Byte>8B</Byte>
+        <Byte>46</Byte>
+        <Byte>28</Byte>
+        <Byte>48</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry>
+      <Description>Change of sub eax,esi</Description>
+      <Address>028E9444</Address>
+      <ModuleName/>
+      <ModuleNameOffset>0</ModuleNameOffset>
+      <Before>
+        <Byte>21</Byte>
+        <Byte>48</Byte>
+        <Byte>63</Byte>
+        <Byte>47</Byte>
+        <Byte>18</Byte>
+      </Before>
+      <Actual>
+        <Byte>2B</Byte>
+        <Byte>C6</Byte>
+      </Actual>
+      <After>
+        <Byte>89</Byte>
+        <Byte>47</Byte>
+        <Byte>18</Byte>
+        <Byte>85</Byte>
+        <Byte>C0</Byte>
+      </After>
+    </CodeEntry>
+  </CheatCodes>
+  <UserdefinedSymbols/>
+</CheatTable>
