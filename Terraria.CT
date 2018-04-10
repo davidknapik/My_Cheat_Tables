@@ -4,7 +4,7 @@
     <CheatEntry>
       <ID>1</ID>
       <Description>"Negate Monster Damage **"</Description>
-      <LastState/>
+      <LastState Activated="1"/>
       <VariableType>Auto Assembler Script</VariableType>
       <AssemblerScript>[ENABLE]
 //code from here to '[DISABLE]' will be used to enable the cheat
@@ -38,7 +38,7 @@ unregistersymbol(_health)
     <CheatEntry>
       <ID>17</ID>
       <Description>"Increment Stack Item **"</Description>
-      <LastState/>
+      <LastState Activated="1"/>
       <VariableType>Auto Assembler Script</VariableType>
       <AssemblerScript>[ENABLE]
 // Cancel out deduct items
@@ -75,7 +75,7 @@ unregistersymbol(_invqty)
     <CheatEntry>
       <ID>3</ID>
       <Description>"Infinite Items"</Description>
-      <LastState/>
+      <LastState Activated="1"/>
       <VariableType>Auto Assembler Script</VariableType>
       <AssemblerScript>[ENABLE]
 // Infinate Items
@@ -116,7 +116,7 @@ unregistersymbol(_health)
     <CheatEntry>
       <ID>6</ID>
       <Description>"Negate Mana"</Description>
-      <LastState/>
+      <LastState Activated="1"/>
       <VariableType>Auto Assembler Script</VariableType>
       <AssemblerScript>[ENABLE]
 // Negate Mana
@@ -139,6 +139,7 @@ db 90 90 90 90 90 90
 
 */
 
+
 [DISABLE]
 //code from here till the end of the code will be used to disable the cheat
 _address:
@@ -150,7 +151,7 @@ unregistersymbol(_address)
     <CheatEntry>
       <ID>35</ID>
       <Description>"Infinite Recipe **"</Description>
-      <LastState/>
+      <LastState Activated="1"/>
       <VariableType>Auto Assembler Script</VariableType>
       <AssemblerScript>[ENABLE]
 // Infinate Items
@@ -189,7 +190,7 @@ unregistersymbol(_health)
     <CheatEntry>
       <ID>10</ID>
       <Description>"Infinite Ammo **"</Description>
-      <LastState/>
+      <LastState Activated="1"/>
       <VariableType>Auto Assembler Script</VariableType>
       <AssemblerScript>[ENABLE]
 // Infinite Ammo
@@ -229,7 +230,7 @@ unregistersymbol(_ammo)
     <CheatEntry>
       <ID>26</ID>
       <Description>"Infinite Rocket Boots"</Description>
-      <LastState/>
+      <LastState Activated="1"/>
       <VariableType>Auto Assembler Script</VariableType>
       <AssemblerScript>[ENABLE]
 // Infinite Rocket Boots rocketTime
@@ -263,7 +264,7 @@ unregistersymbol(_boots)
     <CheatEntry>
       <ID>12</ID>
       <Description>"Infinite Buffs **"</Description>
-      <LastState/>
+      <LastState Activated="1"/>
       <VariableType>Auto Assembler Script</VariableType>
       <AssemblerScript>[ENABLE]
 // Infinite Buffs
@@ -306,7 +307,7 @@ unregistersymbol(_buffs)
     <CheatEntry>
       <ID>57</ID>
       <Description>"Negate Fire Damage"</Description>
-      <LastState/>
+      <LastState Activated="1"/>
       <VariableType>Auto Assembler Script</VariableType>
       <AssemblerScript>[ENABLE]
 //code from here to '[DISABLE]' will be used to enable the cheat
@@ -356,7 +357,7 @@ unregistersymbol(_health1)
     <CheatEntry>
       <ID>24</ID>
       <Description>"Negate Breath Damage II"</Description>
-      <LastState/>
+      <LastState Activated="1"/>
       <VariableType>Auto Assembler Script</VariableType>
       <AssemblerScript>[ENABLE]
 // Negate Breath damage
@@ -394,6 +395,41 @@ originalcode:
 //code from here till the end of the code will be used to disable the cheat
 _address:
 db 83 80 40 03 00 00 FE
+
+unregistersymbol(_address)
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>61</ID>
+      <Description>"Negate Mana II"</Description>
+      <LastState Activated="1"/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+// Negate Mana (used with last prisim)
+// search user structure for a pair of 200's
+//code from here to '[DISABLE]' will be used to enable the cheat
+aobscan(address,85 C0 74 06 29 BE 44 03 00 00 B8 01 00 00 00)
+label(_address)
+registersymbol(_address)
+
+address+4:
+_address:
+db 90 90 90 90 90 90
+
+/*
+196FCF0C - 85 C0  - test eax,eax
+196FCF0E - 74 06 - je Terraria.Player::CheckMana+3E
+196FCF10 - 29 BE 44030000  - sub [esi+00000344],edi &lt;&lt;
+196FCF16 - B8 01000000 - mov eax,00000001
+196FCF1B - 8D 65 F8  - lea esp,[ebp-08]
+
+*/
+
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+_address:
+db 29 BE 44 03 00 00
 
 unregistersymbol(_address)
 </AssemblerScript>
