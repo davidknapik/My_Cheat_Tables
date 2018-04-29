@@ -4,7 +4,7 @@
     <CheatEntry>
       <ID>1</ID>
       <Description>"Negate Monster Damage **"</Description>
-      <LastState Activated="1"/>
+      <LastState/>
       <VariableType>Auto Assembler Script</VariableType>
       <AssemblerScript>[ENABLE]
 //code from here to '[DISABLE]' will be used to enable the cheat
@@ -38,7 +38,7 @@ unregistersymbol(_health)
     <CheatEntry>
       <ID>17</ID>
       <Description>"Increment Stack Item **"</Description>
-      <LastState Activated="1"/>
+      <LastState/>
       <VariableType>Auto Assembler Script</VariableType>
       <AssemblerScript>[ENABLE]
 // Cancel out deduct items
@@ -75,7 +75,7 @@ unregistersymbol(_invqty)
     <CheatEntry>
       <ID>3</ID>
       <Description>"Infinite Items"</Description>
-      <LastState Activated="1"/>
+      <LastState/>
       <VariableType>Auto Assembler Script</VariableType>
       <AssemblerScript>[ENABLE]
 // Infinate Items
@@ -116,7 +116,7 @@ unregistersymbol(_health)
     <CheatEntry>
       <ID>6</ID>
       <Description>"Negate Mana"</Description>
-      <LastState Activated="1"/>
+      <LastState/>
       <VariableType>Auto Assembler Script</VariableType>
       <AssemblerScript>[ENABLE]
 // Negate Mana
@@ -151,7 +151,7 @@ unregistersymbol(_address)
     <CheatEntry>
       <ID>35</ID>
       <Description>"Infinite Recipe **"</Description>
-      <LastState Activated="1"/>
+      <LastState/>
       <VariableType>Auto Assembler Script</VariableType>
       <AssemblerScript>[ENABLE]
 // Infinate Items
@@ -190,7 +190,7 @@ unregistersymbol(_health)
     <CheatEntry>
       <ID>10</ID>
       <Description>"Infinite Ammo **"</Description>
-      <LastState Activated="1"/>
+      <LastState/>
       <VariableType>Auto Assembler Script</VariableType>
       <AssemblerScript>[ENABLE]
 // Infinite Ammo
@@ -230,7 +230,7 @@ unregistersymbol(_ammo)
     <CheatEntry>
       <ID>26</ID>
       <Description>"Infinite Rocket Boots"</Description>
-      <LastState Activated="1"/>
+      <LastState/>
       <VariableType>Auto Assembler Script</VariableType>
       <AssemblerScript>[ENABLE]
 // Infinite Rocket Boots rocketTime
@@ -264,7 +264,7 @@ unregistersymbol(_boots)
     <CheatEntry>
       <ID>12</ID>
       <Description>"Infinite Buffs **"</Description>
-      <LastState Activated="1"/>
+      <LastState/>
       <VariableType>Auto Assembler Script</VariableType>
       <AssemblerScript>[ENABLE]
 // Infinite Buffs
@@ -307,7 +307,7 @@ unregistersymbol(_buffs)
     <CheatEntry>
       <ID>57</ID>
       <Description>"Negate Fire Damage"</Description>
-      <LastState Activated="1"/>
+      <LastState/>
       <VariableType>Auto Assembler Script</VariableType>
       <AssemblerScript>[ENABLE]
 //code from here to '[DISABLE]' will be used to enable the cheat
@@ -357,7 +357,7 @@ unregistersymbol(_health1)
     <CheatEntry>
       <ID>24</ID>
       <Description>"Negate Breath Damage II"</Description>
-      <LastState Activated="1"/>
+      <LastState/>
       <VariableType>Auto Assembler Script</VariableType>
       <AssemblerScript>[ENABLE]
 // Negate Breath damage
@@ -402,7 +402,7 @@ unregistersymbol(_address)
     <CheatEntry>
       <ID>61</ID>
       <Description>"Negate Mana II"</Description>
-      <LastState Activated="1"/>
+      <LastState/>
       <VariableType>Auto Assembler Script</VariableType>
       <AssemblerScript>[ENABLE]
 // Negate Mana (used with last prisim)
@@ -929,6 +929,488 @@ mov eax,[ebp-00000860]
 dec [eax]
 </AssemblerScript>
     </CheatEntry>
+    <CheatEntry>
+      <ID>64</ID>
+      <Description>"TMOD"</Description>
+      <LastState Value="" RealAddress="00000000"/>
+      <GroupHeader>1</GroupHeader>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>63</ID>
+          <Description>"Negate Monster Damage - tmod"</Description>
+          <LastState Activated="1"/>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+aobscan(health, F2 0F 2C C0 8B 95 E4 FD FF FF 29 82 48 03 00 00)
+label(_health)
+registersymbol(_health)
+
+health+a:
+_health:
+db 90 90 90 90 90 90
+
+/*
+0CC67F1B - F2 0F2C C0  - cvttsd2si eax,xmm0
+0CC67F1F - 8B 95 E4FDFFFF  - mov edx,[ebp-0000021C]
+0CC67F25 - 29 82 48030000  - sub [edx+00000348],eax &lt;&lt;
+0CC67F2B - 83 7D 08 FF - cmp dword ptr [ebp+08],-01
+0CC67F2F - 0F85 95000000 - jne Terraria.Player::Hurt+EC2
+
+*/
+
+
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+_health:
+db 29 82 48 03 00 00
+
+unregistersymbol(_health)
+</AssemblerScript>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>67</ID>
+          <Description>"Increment Stack Item **"</Description>
+          <LastState Activated="1"/>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>[ENABLE]
+// Cancel out deduct items
+// Change dec (44) to inc (40)
+//code from here to '[DISABLE]' will be used to enable the cheat
+aobscan(invqty,8B 74 87 08 8B C6 FF 88 88 00 00 00)
+label(_invqty)
+registersymbol(_invqty)
+
+invqty+7:
+_invqty:
+db 80
+
+/*
+
+0CE4C2BF - 8B 74 87 08  - mov esi,[edi+eax*4+08]
+0CE4C2C3 - 8B C6  - mov eax,esi
+0CE4C2C5 - FF 88 88000000  - dec [eax+00000088] &lt;&lt;
+0CE4C2CB - 8B 45 08  - mov eax,[ebp+08]
+0CE4C2CE - 8B 74 87 08  - mov esi,[edi+eax*4+08]
+
+*/
+
+
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+_invqty:
+db 88
+
+unregistersymbol(_invqty)
+</AssemblerScript>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>66</ID>
+          <Description>"Infinite Items"</Description>
+          <LastState/>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>[ENABLE]
+// Infinate Items
+//code from here to '[DISABLE]' will be used to enable the cheat
+aobscan(health, 8B 80 88 00 00 00 89 45 E0 8B 45 E0 48 8B 95 E0 DC FF FF 89 82 88 00 00 00 8B 85 E4 DC FF FF)
+label(_health)
+registersymbol(_health)
+
+health+c:
+_health:
+db 90
+
+
+/*
+28B535E0 - 7E 0C - jle Terraria.Player::ItemCheck+235A6
+28B535E2 - 8B 85 D8DDFFFF  - mov eax,[ebp-00002228]
+28B535E8 - FF 88 80000000  - dec [eax+00000080] &lt;&lt;
+28B535EE - 8B 85 D8DDFFFF  - mov eax,[ebp-00002228]
+28B535F4 - 83 B8 80000000 00 - cmp dword ptr [eax+00000080],00
+
+
+Terraria.Player::ItemCheck+2589E - 8B 80 88000000        - mov eax,[eax+00000088]
+Terraria.Player::ItemCheck+258A4 - 89 45 E0              - mov [ebp-20],eax
+Terraria.Player::ItemCheck+258A7 - 8B 45 E0              - mov eax,[ebp-20]
+Terraria.Player::ItemCheck+258AA - 48                    - dec eax
+Terraria.Player::ItemCheck+258AB - 8B 95 E0DCFFFF        - mov edx,[ebp-00002320]
+Terraria.Player::ItemCheck+258B1 - 89 82 88000000        - mov [edx+00000088],eax
+Terraria.Player::ItemCheck+258B7 - 8B 85 E4DCFFFF        - mov eax,[ebp-0000231C]
+
+*/
+
+
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+_health:
+db 48
+
+unregistersymbol(_health)
+
+
+
+
+</AssemblerScript>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>69</ID>
+          <Description>"Infinite Recipe **"</Description>
+          <LastState Activated="1"/>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>[ENABLE]
+// Infinate Items
+//code from here to '[DISABLE]' will be used to enable the cheat
+aobscan(health,7E ?? 8B 45 D8 29 B8 88 00 00 00 )
+label(_health)
+registersymbol(_health)
+
+health+5:
+_health:
+db 90 90 90 90 90 90
+
+
+
+/*
+
+0D975390 - 7E 0D - jle Terraria.Recipe::Create+1E7
+0D975392 - 8B 45 D8  - mov eax,[ebp-28]
+0D975395 - 29 B8 88000000  - sub [eax+00000088],edi &lt;&lt;
+0D97539B - 33 FF  - xor edi,edi
+0D97539D - EB 25 - jmp Terraria.Recipe::Create+20C
+
+*/
+
+
+
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+_health:
+db 29 B8 88 00 00 00
+
+unregistersymbol(_health)
+</AssemblerScript>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>72</ID>
+          <Description>"Infinite Buffs **"</Description>
+          <LastState Activated="1"/>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>[ENABLE]
+// Infinite Buffs
+//code from here to '[DISABLE]' will be used to enable the cheat
+aobscan(buffs, 73 ?? 8B 7C 82 08 FF 8F 88 00 00 00)
+label(_buffs)
+registersymbol(_buffs)
+
+buffs+6:
+_buffs:
+db 90 90 90 90 90 90
+
+/*
+0D3BA2E5 - 73 6C - jae Terraria.Player::QuickBuff+43B
+0D3BA2E7 - 8B 7C 82 08  - mov edi,[edx+eax*4+08]
+0D3BA2EB - FF 8F 88000000  - dec [edi+00000088] &lt;&lt;
+0D3BA2F1 - 8B 45 F0  - mov eax,[ebp-10]
+0D3BA2F4 - 8B 55 D8  - mov edx,[ebp-28]
+
+
+*/
+
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+_buffs:
+db FF 8F 88 00 00 00
+
+unregistersymbol(_buffs)
+</AssemblerScript>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>73</ID>
+          <Description>"Negate Breath Damage II"</Description>
+          <LastState Activated="1"/>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>[ENABLE]
+// Negate Breath damage
+// search user structure for a pair of 200's
+//code from here to '[DISABLE]' will be used to enable the cheat
+aobscan(address,33 D2 89 90 B4 02 00 00 FF 88 BC 02 00 00 83 B8 BC 02 00 00 00)
+label(_address)
+registersymbol(_address)
+
+address+8:
+_address:
+db 90 90 90 90 90 90
+
+/*
+
+0CD1F9BE - 33 D2  - xor edx,edx
+0CD1F9C0 - 89 90 B4020000  - mov [eax+000002B4],edx
+0CD1F9C6 - FF 88 BC020000  - dec [eax+000002BC] &lt;&lt;
+0CD1F9CC - 83 B8 BC020000 00 - cmp dword ptr [eax+000002BC],00
+0CD1F9D3 - 75 18 - jne Terraria.Player::CheckDrowning+2DD
+
+
+*/
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+_address:
+db FF 88 BC 02 00 00
+
+unregistersymbol(_address)
+</AssemblerScript>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>76</ID>
+          <Description>"Negate Chilled"</Description>
+          <LastState Activated="1"/>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>[ENABLE]
+// Negate Chilled
+// search user structure slow
+//code from here to '[DISABLE]' will be used to enable the cheat
+aobscan(address,83 83 5C 03 00 00 78 FF 8B 48 03 00 00 8D 7D B4 0F 57 C0)
+label(_address)
+registersymbol(_address)
+
+address+7:
+_address:
+db 90 90 90 90 90 90
+
+/*
+Terraria.Player::UpdateLifeRegen+DEC - 83 83 5C030000 78     - add dword ptr [ebx+0000035C],78 { 120 }
+Terraria.Player::UpdateLifeRegen+DF3 - FF 8B 48030000        - dec [ebx+00000348]
+Terraria.Player::UpdateLifeRegen+DF9 - 8D 7D B4              - lea edi,[ebp-4C]
+Terraria.Player::UpdateLifeRegen+DFC - 0F57 C0               - xorps xmm0,xmm0
+Terraria.Player::UpdateLifeRegen+DFF - 66 0FD6 07            - movq [edi],xmm0
+
+*/
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+_address:
+db FF 8B 48 03 00 00
+
+unregistersymbol(_address)
+</AssemblerScript>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>78</ID>
+          <Description>"Infinite Ammo **"</Description>
+          <LastState Activated="1"/>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>[ENABLE]
+// Infinite Ammo
+//code from here to '[DISABLE]' will be used to enable the cheat
+aobscan(ammo, 90 8B 85 74 FF FF FF FF 88 88 00 00 00 90 90 )
+label(_ammo)
+registersymbol(_ammo)
+
+ammo+7:
+_ammo:
+db 90 90 90 90 90 90
+
+
+/*
+
+03CCA551 - 90 - nop
+03CCA552 - 8B 85 74FFFFFF  - mov eax,[ebp-0000008C]
+03CCA558 - FF 88 88000000  - dec [eax+00000088] &lt;&lt;
+03CCA55E - 90 - nop
+03CCA55F - 90 - nop
+
+*/
+
+
+
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+_ammo:
+db FF 88 88 00 00 00
+
+unregistersymbol(_ammo)
+
+
+</AssemblerScript>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
   </CheatEntries>
+  <CheatCodes>
+    <CodeEntry>
+      <Description>Change of dec eax</Description>
+      <Address>0D3B58F2</Address>
+      <ModuleName/>
+      <ModuleNameOffset>0</ModuleNameOffset>
+      <Before>
+        <Byte>45</Byte>
+        <Byte>E0</Byte>
+        <Byte>8B</Byte>
+        <Byte>45</Byte>
+        <Byte>E0</Byte>
+      </Before>
+      <Actual>
+        <Byte>48</Byte>
+      </Actual>
+      <After>
+        <Byte>8B</Byte>
+        <Byte>95</Byte>
+        <Byte>E0</Byte>
+        <Byte>DC</Byte>
+        <Byte>FF</Byte>
+      </After>
+    </CodeEntry>
+  </CheatCodes>
   <UserdefinedSymbols/>
+  <Structures StructVersion="2">
+    <Structure Name="unnamed structure" AutoFill="0" AutoCreate="1" DefaultHex="0" AutoDestroy="0" DoNotSaveLocal="0" RLECompression="1" AutoCreateStructsize="4096">
+      <Elements>
+        <Element Offset="0" Vartype="Pointer" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="4" Vartype="4 Bytes" Bytesize="4" RLECount="7" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="32" Vartype="Pointer" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="36" Vartype="Float" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="40" Vartype="4 Bytes" Bytesize="4" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="48" Vartype="Pointer" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="52" Vartype="Float" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="56" Vartype="4 Bytes" Bytesize="4" RLECount="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="88" Vartype="Pointer" Bytesize="4" RLECount="53" PointerSize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="300" Vartype="4 Bytes" Bytesize="4" RLECount="20" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="380" Vartype="Double" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="388" Vartype="4 Bytes" Bytesize="4" RLECount="7" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="416" Vartype="Float" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="420" Vartype="4 Bytes" Bytesize="4" RLECount="10" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="460" Vartype="Double" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="468" Vartype="4 Bytes" Bytesize="4" RLECount="38" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="620" Vartype="Float" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="624" Vartype="4 Bytes" Bytesize="4" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="632" Vartype="Double" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="640" Vartype="4 Bytes" Bytesize="4" RLECount="7" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="668" Vartype="Float" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="672" Vartype="4 Bytes" Bytesize="4" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="680" Vartype="Double" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="688" Vartype="4 Bytes" Bytesize="4" RLECount="7" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="716" Vartype="Double" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="724" Vartype="4 Bytes" Bytesize="4" RLECount="5" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="744" Vartype="Double" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="752" Vartype="4 Bytes" Bytesize="4" RLECount="13" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="804" Vartype="Double" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="812" Vartype="4 Bytes" Bytesize="4" RLECount="16" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="876" Vartype="Double" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="884" Vartype="4 Bytes" Bytesize="4" RLECount="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="916" Vartype="Double" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="924" Vartype="Float" Bytesize="4" RLECount="7" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="952" Vartype="Double" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="960" Vartype="Float" Bytesize="4" RLECount="3" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="972" Vartype="Double" Bytesize="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="980" Vartype="4 Bytes" Bytesize="4" RLECount="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="996" Vartype="Float" Bytesize="4" RLECount="3" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1008" Vartype="Pointer" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1012" Vartype="Float" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1016" Vartype="4 Bytes" Bytesize="4" RLECount="60" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1256" Vartype="Float" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1260" Vartype="4 Bytes" Bytesize="4" RLECount="28" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1372" Vartype="Pointer" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1376" Vartype="4 Bytes" Bytesize="4" RLECount="3" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1388" Vartype="4 Bytes" Bytesize="4" DisplayMethod="Hexadecimal"/>
+        <Element Offset="1392" Vartype="4 Bytes" Bytesize="4" RLECount="5" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1412" Vartype="Pointer" Bytesize="4" RLECount="4" PointerSize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1428" Vartype="4 Bytes" Bytesize="4" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1436" Vartype="Pointer" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1440" Vartype="4 Bytes" Bytesize="4" RLECount="30" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1560" Vartype="Pointer" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1564" Vartype="4 Bytes" Bytesize="4" DisplayMethod="Hexadecimal"/>
+        <Element Offset="1568" Vartype="4 Bytes" Bytesize="4" RLECount="11" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1612" Vartype="4 Bytes" Bytesize="4" DisplayMethod="Hexadecimal"/>
+        <Element Offset="1616" Vartype="4 Bytes" Bytesize="4" RLECount="9" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1652" Vartype="4 Bytes" Bytesize="4" DisplayMethod="Hexadecimal"/>
+        <Element Offset="1656" Vartype="4 Bytes" Bytesize="4" RLECount="15" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1716" Vartype="Pointer" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1720" Vartype="Float" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1724" Vartype="4 Bytes" Bytesize="4" RLECount="12" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1772" Vartype="Float" Bytesize="4" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1780" Vartype="4 Bytes" Bytesize="4" RLECount="20" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1860" Vartype="4 Bytes" Bytesize="4" RLECount="7" DisplayMethod="Hexadecimal"/>
+        <Element Offset="1888" Vartype="4 Bytes" Bytesize="4" RLECount="9" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1924" Vartype="Pointer" Bytesize="4" RLECount="2" PointerSize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1932" Vartype="4 Bytes" Bytesize="4" RLECount="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1948" Vartype="Pointer" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1952" Vartype="4 Bytes" Bytesize="4" RLECount="6" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1976" Vartype="Pointer" Bytesize="4" RLECount="2" PointerSize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1984" Vartype="4 Bytes" Bytesize="4" RLECount="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2000" Vartype="Pointer" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2004" Vartype="4 Bytes" Bytesize="4" RLECount="12" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2052" Vartype="Pointer" Bytesize="4" RLECount="2" PointerSize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2060" Vartype="4 Bytes" Bytesize="4" RLECount="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2076" Vartype="Pointer" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2080" Vartype="4 Bytes" Bytesize="4" RLECount="5" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2100" Vartype="Byte" Bytesize="1" RLECount="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2104" Vartype="4 Bytes" Bytesize="4" RLECount="6" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2128" Vartype="Pointer" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2132" Vartype="4 Bytes" Bytesize="4" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2140" Vartype="Pointer" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2144" Vartype="4 Bytes" Bytesize="4" RLECount="12" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2192" Vartype="Byte" Bytesize="1" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2193" Vartype="String" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2197" Vartype="Byte" Bytesize="1" RLECount="3" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2200" Vartype="4 Bytes" Bytesize="4" RLECount="148" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2792" Vartype="Pointer" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2796" Vartype="4 Bytes" Bytesize="4" RLECount="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2828" Vartype="Pointer" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2832" Vartype="4 Bytes" Bytesize="4" RLECount="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2864" Vartype="Pointer" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2868" Vartype="4 Bytes" Bytesize="4" RLECount="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2900" Vartype="Pointer" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2904" Vartype="4 Bytes" Bytesize="4" RLECount="8" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2936" Vartype="Pointer" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2940" Vartype="4 Bytes" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2944" Vartype="Float" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2948" Vartype="4 Bytes" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2952" Vartype="Float" Bytesize="4" RLECount="10" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2992" Vartype="Pointer" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="2996" Vartype="4 Bytes" Bytesize="4" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3004" Vartype="Pointer" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3008" Vartype="4 Bytes" Bytesize="4" RLECount="6" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3032" Vartype="Pointer" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3036" Vartype="4 Bytes" Bytesize="4" RLECount="6" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3060" Vartype="String" Bytesize="6" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3066" Vartype="Byte" Bytesize="1" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3068" Vartype="4 Bytes" Bytesize="4" RLECount="61" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3312" Vartype="Pointer" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3316" Vartype="4 Bytes" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3320" Vartype="Pointer" Bytesize="4" RLECount="20" PointerSize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3400" Vartype="4 Bytes" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3404" Vartype="Pointer" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3408" Vartype="4 Bytes" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3412" Vartype="Pointer" Bytesize="4" RLECount="10" PointerSize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3452" Vartype="4 Bytes" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3456" Vartype="Pointer" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3460" Vartype="4 Bytes" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3464" Vartype="Pointer" Bytesize="4" RLECount="5" PointerSize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3484" Vartype="4 Bytes" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3488" Vartype="Pointer" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3492" Vartype="4 Bytes" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3496" Vartype="Pointer" Bytesize="4" RLECount="5" PointerSize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3516" Vartype="4 Bytes" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3520" Vartype="Pointer" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3524" Vartype="4 Bytes" Bytesize="4" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3532" Vartype="Pointer" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3536" Vartype="4 Bytes" Bytesize="4" RLECount="24" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3632" Vartype="Pointer" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3636" Vartype="4 Bytes" Bytesize="4" RLECount="2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3644" Vartype="4 Bytes" Bytesize="4" DisplayMethod="Hexadecimal"/>
+        <Element Offset="3648" Vartype="4 Bytes" Bytesize="4" RLECount="21" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3732" Vartype="Byte" Bytesize="1" RLECount="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3736" Vartype="4 Bytes" Bytesize="4" RLECount="57" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3964" Vartype="Pointer" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3968" Vartype="4 Bytes" Bytesize="4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="3972" Vartype="Pointer" Bytesize="4" RLECount="31" PointerSize="4" DisplayMethod="Unsigned Integer"/>
+      </Elements>
+    </Structure>
+  </Structures>
 </CheatTable>
