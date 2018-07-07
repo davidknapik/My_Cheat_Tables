@@ -1,0 +1,2117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheatTable CheatEngineTableVersion="26">
+  <CheatEntries>
+    <CheatEntry>
+      <ID>123</ID>
+      <Description>"Active Cheat Table"</Description>
+      <Options moHideChildren="1"/>
+      <LastState Activated="1"/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+{$lua}
+LaunchMonoDataCollector()
+{$asm}
+LuaCall(function cycleFullCompact(sender,force) local state = not(compactmenuitem.Caption == 'Compact View Mode'); if force~=nil then state = not force end; compactmenuitem.Caption = state and 'Compact View Mode' or 'Full View Mode'; getMainForm().Splitter1.Visible = state; getMainForm().Panel4.Visible    = state; getMainForm().Panel5.Visible    = state; end; function addCompactMenu() if compactmenualreadyexists then return end; local parent = getMainForm().Menu.Items; compactmenuitem = createMenuItem(parent); parent.add(compactmenuitem); compactmenuitem.Caption = 'Compact View Mode'; compactmenuitem.OnClick = cycleFullCompact; compactmenualreadyexists = 'yes'; end; addCompactMenu(); cycleFullCompact(nil,true))
+[DISABLE]
+
+</AssemblerScript>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>121</ID>
+          <Description>"Scripts"</Description>
+          <Options moHideChildren="1"/>
+          <LastState Value="" Activated="1" RealAddress="00000000"/>
+          <GroupHeader>1</GroupHeader>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>33</ID>
+              <Description>"NoItemCraftingCostTime (another way to have instant crafting)"</Description>
+              <LastState Activated="1"/>
+              <Color>408000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>[ENABLE]
+AutomataItem:AddTime+8c+3:
+  db 5D
+//F3 41 0F 5D 4F 18
+//minss xmm1,[r15+18]
+
+[DISABLE]
+AutomataItem:AddTime+8c+3:
+  db 10
+//F3 41 0F 10 4F 18
+//movss xmm1,[r15+18]
+
+
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>32</ID>
+              <Description>"Instant Crafting"</Description>
+              <LastState Activated="1"/>
+              <Color>408000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>[ENABLE]
+AutomataItem:AddTime+25c+3:
+  db 5F
+//F3 41 0F 5F 47 1C
+//maxss xmm0,[r15+1C]
+
+[DISABLE]
+AutomataItem:AddTime+25c+3:
+  db 10
+//F3 41 0F 10 47 1C
+//movss xmm0,[r15+1C]
+
+
+{
+float value
+  *start value = 0
+  *end value = 1
+}
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>221</ID>
+              <Description>"FreeBuying (Npc_Store)"</Description>
+              <LastState Activated="1"/>
+              <Color>008000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>[ENABLE]
+//For stores that use money as spare currency
+Pathea.UISystemNs:Store_Npc_BuySell:ModifiedBuyPrice+1b:
+  db 74
+//74 07
+//je Pathea.UISystemNs:Store_Npc_BuySell:ModifiedBuyPrice+24
+
+//For stores that use items as spare currency
+Pathea.UISystemNs:Store_Npc_BuySell:ModifiedBuyByItem+14:
+  db 74
+//74 07
+//je Pathea.UISystemNs:Store_Npc_BuySell:ModifiedBuyByItem+1d
+
+[DISABLE]
+Pathea.UISystemNs:Store_Npc_BuySell:ModifiedBuyPrice+1b:
+  db 75
+//75 07
+//jne Pathea.UISystemNs:Store_Npc_BuySell:ModifiedBuyPrice+24
+
+Pathea.UISystemNs:Store_Npc_BuySell:ModifiedBuyByItem+14:
+  db 75
+//75 07
+//jne Pathea.UISystemNs:Store_Npc_BuySell:ModifiedBuyByItem+1d
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>30</ID>
+              <Description>"+Inf Stamina"</Description>
+              <LastState Activated="1"/>
+              <Color>408000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>[ENABLE]
+Pathea:Player:ChangeStamina:
+  db C3
+//ret
+
+[DISABLE]
+Pathea:Player:ChangeStamina:
+  db 55
+//push rbp
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>29</ID>
+              <Description>"+Inf Health"</Description>
+              <LastState Activated="1"/>
+              <Color>408000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>define(address,Pathea.ActorNS:Actor:ValidateValue+49)
+define(bytes,F3 0F 10 86 1C 04 00 00)
+
+[ENABLE]
+assert(address,bytes)
+alloc(newmem,$100)
+
+label(code)
+label(return)
+
+newmem:
+  cmp [rsi+00000430],#4000001   //player id
+  jne code
+  mov [rsi+0000041C],(float)99999
+  movss xmm0,[rsi+0000041C]
+  jmp return
+
+code:
+  movss xmm0,[rsi+000003D4]
+  jmp return
+
+address:
+  jmp newmem
+  nop
+  nop
+  nop
+return:
+
+[DISABLE]
+address:
+  db bytes
+  // movss xmm0,[rsi+0000041C]
+
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: 357FD459
+
+357FD42B: 0F 86 6A 04 00 00        -  jbe Pathea.ActorNs:Actor:ValidateValue+48b
+357FD431: 48 8D 44 88 20           -  lea rax,[rax+rcx*4+20]
+357FD436: F3 0F 10 00              -  movss xmm0,[rax]
+357FD43A: F3 0F 5A C0              -  cvtss2sd xmm0,xmm0
+357FD43E: F2 0F 5A E8              -  cvtsd2ss xmm5,xmm0
+357FD442: F3 0F 11 6D F4           -  movss [rbp-0C],xmm5
+357FD447: F3 0F 10 45 F4           -  movss xmm0,[rbp-0C]
+357FD44C: F3 0F 5A C0              -  cvtss2sd xmm0,xmm0
+357FD450: F2 0F 5A E8              -  cvtsd2ss xmm5,xmm0
+357FD454: F3 0F 11 6D F4           -  movss [rbp-0C],xmm5
+// ---------- INJECTING HERE ----------
+357FD459: F3 0F 10 86 1C 04 00 00  -  movss xmm0,[rsi+0000041C]
+// ---------- DONE INJECTING  ----------
+357FD461: F3 0F 5A C0              -  cvtss2sd xmm0,xmm0
+357FD465: 66 0F 57 C9              -  xorpd xmm1,xmm1
+357FD469: 48 8B 86 88 01 00 00     -  mov rax,[rsi+00000188]
+357FD470: 48 8B C8                 -  mov rcx,rax
+357FD473: 83 39 00                 -  cmp dword ptr [rcx],00
+357FD476: 48 8B 40 20              -  mov rax,[rax+20]
+357FD47A: 48 8B C8                 -  mov rcx,rax
+357FD47D: 83 39 00                 -  cmp dword ptr [rcx],00
+357FD480: 48 8B 40 10              -  mov rax,[rax+10]
+357FD484: B9 04 00 00 00           -  mov ecx,00000004
+}
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>31</ID>
+              <Description>"+Inf Endurance"</Description>
+              <LastState Activated="1"/>
+              <Color>408000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>[ENABLE]
+/** +Inf ConsumeFastRunVp **/
+Pathea:Player:UpdateVp+c+3:
+  db BE
+//0F B6 86 BE 01 00 00
+//movzx eax,byte ptr [rsi+000001BE]
+
+/** +Inf ConsumeRollVp **/
+Pathea:Player:ConsumeRollVp:
+  db C3
+//ret
+
+[DISABLE]
+/** +Inf ConsumeFastRunVp **/
+Pathea:Player:UpdateVp+c+3:
+  db CC
+//0F B6 86 BC 01 00 00
+//movzx eax,byte ptr [rsi+000001BC]
+
+/** +Inf ConsumeRollVp **/
+Pathea:Player:ConsumeRollVp:
+  db 55
+//push rbp
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>1</ID>
+              <Description>"+Inf Items"</Description>
+              <LastState/>
+              <Color>000080</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>[ENABLE]
+Pathea.ItemSystem:ItemObject:ChangeNumber+21+3:
+  db 20
+//48 63 40 20
+//movsxd  rax,dword ptr [rax+20]
+
+[DISABLE]
+Pathea.ItemSystem:ItemObject:ChangeNumber+21+3:
+  db 24
+//48 63 40 24
+//movsxd  rax,dword ptr [rax+24]
+
+</AssemblerScript>
+              <Hotkeys>
+                <Hotkey>
+                  <Action>Toggle Activation</Action>
+                  <Keys>
+                    <Key>114</Key>
+                  </Keys>
+                  <ID>0</ID>
+                </Hotkey>
+              </Hotkeys>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>24</ID>
+              <Description>"One Hit Kill"</Description>
+              <LastState Activated="1"/>
+              <Color>000080</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>define(address,Pathea.Behavior:BehaviorUtil:HasRemote+e2)
+define(bytes,48 8D 44 90 20)
+
+[ENABLE]
+assert(address,bytes)
+alloc(newmem,$100)
+
+label(code)
+label(return)
+
+newmem:
+
+code:
+  mov [rax+rdx*4+20],(float)0   // added part
+  lea rax,[rax+rdx*4+20]
+  jmp return
+
+address:
+  jmp newmem
+return:
+
+[DISABLE]
+address:
+  db bytes
+  // lea rax,[rax+rdx*4+20]
+
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: 25A06862
+
+25A06838: 48 8B 4D D8                    -  mov rcx,[rbp-28]
+25A0683C: 48 85 C9                       -  test rcx,rcx
+25A0683F: 0F 84 9C 02 00 00              -  je Pathea.Behavior:BehaviorUtil:HasRemote+361
+25A06845: 48 83 C1 14                    -  add rcx,14
+25A06849: 41 83 3F 00                    -  cmp dword ptr [r15],00
+25A0684D: 49 8B 87 98 01 00 00           -  mov rax,[r15+00000198]
+25A06854: 33 D2                          -  xor edx,edx
+25A06856: 48 63 D2                       -  movsxd  rdx,edx
+25A06859: 39 50 18                       -  cmp [rax+18],edx
+25A0685C: 0F 86 78 02 00 00              -  jbe Pathea.Behavior:BehaviorUtil:HasRemote+35a
+// ---------- INJECTING HERE ----------
+25A06862: 48 8D 44 90 20                 -  lea rax,[rax+rdx*4+20]
+// ---------- DONE INJECTING  ----------
+25A06867: F3 0F 10 00                    -  movss xmm0,[rax]
+25A0686B: F3 0F 5A C0                    -  cvtss2sd xmm0,xmm0
+25A0686F: F2 0F 5A E8                    -  cvtsd2ss xmm5,xmm0
+25A06873: F3 0F 11 6D D4                 -  movss [rbp-2C],xmm5
+25A06878: F3 0F 10 45 D4                 -  movss xmm0,[rbp-2C]
+25A0687D: F3 0F 5A C0                    -  cvtss2sd xmm0,xmm0
+25A06881: F2 0F 5A E8                    -  cvtsd2ss xmm5,xmm0
+25A06885: F3 0F 11 6D D4                 -  movss [rbp-2C],xmm5
+25A0688A: F3 0F 10 45 D4                 -  movss xmm0,[rbp-2C]
+25A0688F: F3 0F 5A C0                    -  cvtss2sd xmm0,xmm0
+}
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>28</ID>
+              <Description>"Clock Stop "</Description>
+              <LastState/>
+              <Color>000080</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>[ENABLE]
+TimeManager:get_TimeStoped+9+2:
+  db 56
+//0F B6 56 40
+//movzx edx,byte ptr [rsi+40]
+
+[DISABLE]
+TimeManager:get_TimeStoped+9+2:
+  db 46
+//0F B6 46 40
+//movzx eax,byte ptr [rsi+40]
+
+
+
+</AssemblerScript>
+              <Hotkeys>
+                <Hotkey>
+                  <Action>Toggle Activation</Action>
+                  <Keys>
+                    <Key>113</Key>
+                  </Keys>
+                  <ID>0</ID>
+                </Hotkey>
+              </Hotkeys>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>220</ID>
+              <Description>"NoMaterialRequirement"</Description>
+              <LastState/>
+              <Color>008000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>[ENABLE]
+Pathea.CompoundSystem:CompoundManager:GetItemCount:
+  ret
+
+[DISABLE]
+Pathea.CompoundSystem:CompoundManager:GetItemCount:
+  push rbp
+
+
+
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>219</ID>
+              <Description>"NoEquipmentLevelRequirement { Player }"</Description>
+              <LastState/>
+              <Color>008000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>[ENABLE]
+Pathea.UISystemNs.MainMenu.PackageUI:PackageUICtr:EquipOn+36:
+  db 74
+//74 07
+//je Pathea.UISystemNs.MainMenu.PackageUI:PackageUICtr:EquipOn+3f
+ 
+[DISABLE]
+Pathea.UISystemNs.MainMenu.PackageUI:PackageUICtr:EquipOn+36:
+  db 75
+//75 07
+//jne Pathea.UISystemNs.MainMenu.PackageUI:PackageUICtr:EquipOn+3f
+
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>222</ID>
+              <Description>"NoCostFarmBuying"</Description>
+              <LastState/>
+              <Color>008000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>[ENABLE]
+Pathea.FarmNs:FarmLevelUnlocker:CheckCanDo:
+  ret
+ 
+[DISABLE]
+Pathea.FarmNs:FarmLevelUnlocker:CheckCanDo:
+  push rbp
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>22</ID>
+              <Description>"Never Attacked"</Description>
+              <LastState/>
+              <Color>000080</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>define(address,Pathea.ActorNs:Actor:Pathea.SkillNs.ISkillable.PlayAnimation+c)
+define(bytes,0F B6 87 B4 03 00 00)
+
+[ENABLE]
+assert(address,bytes)
+alloc(newmem,$100)
+
+label(code)
+label(return)
+
+newmem:
+  cmp [rdi+00000430],#4000001   //player id
+  je code
+  mov [rdi+000003B4],0
+  movzx eax,byte ptr [rdi+000003B4]
+  jmp return
+
+code:
+  movzx eax,byte ptr [rdi+000003B4]
+  jmp return
+
+address:
+  jmp newmem
+  nop
+  nop
+return:
+
+[DISABLE]
+address:
+  db bytes
+  // movzx eax,byte ptr [rdi+000003B4]
+
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: 4833AC4C
+
+4833AC37: 00 00                          -  add [rax],al
+4833AC39: 00 00                          -  add [rax],al
+4833AC3B: 00 00                          -  add [rax],al
+4833AC3D: 00 00                          -  add [rax],al
+4833AC3F: 00 55 48                       -  add [rbp+48],dl
+4833AC42: 8B EC                          -  mov ebp,esp
+4833AC44: 56                             -  push rsi
+4833AC45: 57                             -  push rdi
+4833AC46: 48 8B F9                       -  mov rdi,rcx
+4833AC49: 48 8B F2                       -  mov rsi,rdx
+// ---------- INJECTING HERE ----------
+4833AC4C: 0F B6 87 B4 03 00 00           -  movzx eax,byte ptr [rdi+000003B4]
+// ---------- DONE INJECTING  ----------
+4833AC53: 85 C0                          -  test eax,eax
+4833AC55: 0F 84 7C 00 00 00              -  je Pathea.ActorNs:Actor:Pathea.SkillNs.ISkillable.PlayAnimation+97
+4833AC5B: 48 8B CE                       -  mov rcx,rsi
+4833AC5E: 48 83 EC 20                    -  sub rsp,20
+4833AC62: 49 BB 60 A0 E4 04 00 00 00 00  -  mov r11,0000000004E4A060
+4833AC6C: 41 FF D3                       -  call r11
+4833AC6F: 48 83 C4 20                    -  add rsp,20
+4833AC73: 85 C0                          -  test eax,eax
+4833AC75: 0F 85 5C 00 00 00              -  jne Pathea.ActorNs:Actor:Pathea.SkillNs.ISkillable.PlayAnimation+97
+4833AC7B: 48 8B CE                       -  mov rcx,rsi
+}
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>14</ID>
+              <Description>"All Slots Unlocked"</Description>
+              <LastState/>
+              <Color>000080</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>[ENABLE]
+Pathea.ItemSystem:ItemTable:IsSlotUnlocked+1e+3:
+  db 18
+//48 63 40 18
+//movsxd  rax,dword ptr [rax+18]
+
+[DISABLE]
+Pathea.ItemSystem:ItemTable:IsSlotUnlocked+1e+3:
+  db 20
+//48 63 40 20
+//movsxd  rax,dword ptr [rax+20]
+
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>223</ID>
+              <Description>"+Inf Tree Kick"</Description>
+              <LastState/>
+              <Color>000080</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>[ENABLE]
+Pathea.TreeNs:MyTreeInstance:CanKick+46+3:
+  db 90
+//4C 63 40 90
+//movsxd  r8,dword ptr [rax-70]
+
+[DISABLE]
+Pathea.TreeNs:MyTreeInstance:CanKick+46+3:
+  db 70
+//4C 63 40 70
+//movsxd  r8,dword ptr [rax+70]
+
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>12</ID>
+              <Description>"+Inf SP"</Description>
+              <LastState/>
+              <Color>000080</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>[ENABLE]
+Pathea.PlayerAbilityNs:PlayerAbilityModule:AssignPoint+15f+1:
+  db C0
+//FF C0
+//inc eax
+
+[DISABLE]
+Pathea.PlayerAbilityNs:PlayerAbilityModule:AssignPoint+15f+1:
+  db C8
+//FF C8
+//dec eax
+
+</AssemblerScript>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>122</ID>
+          <Description>"Pointers"</Description>
+          <Options moHideChildren="1"/>
+          <LastState Value="" Activated="1" RealAddress="00000000"/>
+          <GroupHeader>1</GroupHeader>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>167</ID>
+              <Description>"TimeManager Base Addresses"</Description>
+              <Options moHideChildren="1"/>
+              <LastState/>
+              <Color>004080</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>define(address,TimeManager:get_TimeStoped+15)
+define(bytes,48 8B 46 18 48 8B C8)
+
+[ENABLE]
+assert(address,bytes)
+alloc(newmem,$100)
+
+label(code)
+label(return)
+
+globalalloc(timeManager_ptr,8)
+
+newmem:
+  mov [timeManager_ptr],rsi
+
+code:
+  mov rax,[rsi+18]
+  mov rcx,rax
+  jmp return
+
+address:
+  jmp newmem
+  nop
+  nop
+return:
+
+[DISABLE]
+address:
+  db bytes
+  // mov rax,[rsi+18]
+  // mov rcx,rax
+
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: TimeManager:get_TimeStoped+15
+
+3FF774C1: 60                             -  pushad (invalid)
+3FF774C2: A1 00 3E E8 36 8B 98 C4 04     -  mov eax,[4C4988B36E83E00]
+3FF774CB: D8 A0 00 3E 00 55              -  fsub dword ptr [rax+55003E00]
+3FF774D1: 48 8B EC                       -  mov rbp,rsp
+3FF774D4: 56                             -  push rsi
+3FF774D5: 57                             -  push rdi
+3FF774D6: 48 8B F1                       -  mov rsi,rcx
+3FF774D9: 0F B6 46 40                    -  movzx eax,byte ptr [rsi+40]
+3FF774DD: 85 C0                          -  test eax,eax
+3FF774DF: 0F 84 43 00 00 00              -  je TimeManager:get_TimeStoped+58
+// ---------- INJECTING HERE ----------
+3FF774E5: 48 8B 46 18                    -  mov rax,[rsi+18]
+3FF774E9: 48 8B C8                       -  mov rcx,rax
+// ---------- DONE INJECTING  ----------
+3FF774EC: 83 39 00                       -  cmp dword ptr [rcx],00
+3FF774EF: 0F B6 40 18                    -  movzx eax,byte ptr [rax+18]
+3FF774F3: 85 C0                          -  test eax,eax
+3FF774F5: 75 31                          -  jne TimeManager:get_TimeStoped+58
+3FF774F7: 41 BA 50 7B 95 26              -  mov r10d,26957B50
+3FF774FD: 48 83 EC 20                    -  sub rsp,20
+3FF77501: 49 BB A0 4D DA 04 00 00 00 00  -  mov r11,Pathea:Singleton`1:get_Instance
+3FF7750B: 41 FF D3                       -  call r11
+3FF7750E: 48 83 C4 20                    -  add rsp,20
+3FF77512: 48 8B C8                       -  mov rcx,rax
+}
+</AssemblerScript>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>168</ID>
+                  <Description>"Base Address"</Description>
+                  <LastState RealAddress="00000000"/>
+                  <Color>BBBB00</Color>
+                  <VariableType>String</VariableType>
+                  <Length>0</Length>
+                  <Unicode>0</Unicode>
+                  <CodePage>0</CodePage>
+                  <ZeroTerminate>1</ZeroTerminate>
+                  <Address>timeManager_ptr</Address>
+                  <Offsets>
+                    <Offset>0</Offset>
+                  </Offsets>
+                  <CheatEntries>
+                    <CheatEntry>
+                      <ID>192</ID>
+                      <Description>"normalTimeScale"</Description>
+                      <DropDownList DescriptionOnly="1" DisplayValueAsItem="1">0:No
+1:Yes
+</DropDownList>
+                      <Color>400040</Color>
+                      <VariableType>Byte</VariableType>
+                      <Address>timeManager_ptr</Address>
+                      <Offsets>
+                        <Offset>41</Offset>
+                      </Offsets>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>191</ID>
+                      <Description>"enable"</Description>
+                      <DropDownList DescriptionOnly="1" DisplayValueAsItem="1">0:No
+1:Yes
+</DropDownList>
+                      <Color>400040</Color>
+                      <VariableType>Byte</VariableType>
+                      <Address>timeManager_ptr</Address>
+                      <Offsets>
+                        <Offset>40</Offset>
+                      </Offsets>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>193</ID>
+                      <Description>"dateTime"</Description>
+                      <DropDownList DescriptionOnly="1" DisplayValueAsItem="1">0:No
+1:Yes
+</DropDownList>
+                      <Color>400040</Color>
+                      <VariableType>8 Bytes</VariableType>
+                      <Address>timeManager_ptr</Address>
+                      <Offsets>
+                        <Offset>48</Offset>
+                      </Offsets>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>169</ID>
+                      <Description>"config"</Description>
+                      <LastState RealAddress="00000000"/>
+                      <Color>400040</Color>
+                      <VariableType>String</VariableType>
+                      <Length>0</Length>
+                      <Unicode>0</Unicode>
+                      <CodePage>0</CodePage>
+                      <ZeroTerminate>1</ZeroTerminate>
+                      <Address>timeManager_ptr</Address>
+                      <Offsets>
+                        <Offset>20</Offset>
+                      </Offsets>
+                      <CheatEntries>
+                        <CheatEntry>
+                          <ID>170</ID>
+                          <Description>"timeStandard"</Description>
+                          <LastState RealAddress="00000000"/>
+                          <Color>0000B9</Color>
+                          <VariableType>String</VariableType>
+                          <Length>0</Length>
+                          <Unicode>0</Unicode>
+                          <CodePage>0</CodePage>
+                          <ZeroTerminate>1</ZeroTerminate>
+                          <Address>timeManager_ptr</Address>
+                          <Offsets>
+                            <Offset>18</Offset>
+                            <Offset>20</Offset>
+                          </Offsets>
+                          <CheatEntries>
+                            <CheatEntry>
+                              <ID>177</ID>
+                              <Description>"secondPerMinute"</Description>
+                              <Color>C08000</Color>
+                              <VariableType>4 Bytes</VariableType>
+                              <Address>timeManager_ptr</Address>
+                              <Offsets>
+                                <Offset>24</Offset>
+                                <Offset>18</Offset>
+                                <Offset>20</Offset>
+                              </Offsets>
+                            </CheatEntry>
+                            <CheatEntry>
+                              <ID>171</ID>
+                              <Description>"month"</Description>
+                              <LastState RealAddress="00000000"/>
+                              <Color>C08000</Color>
+                              <VariableType>String</VariableType>
+                              <Length>0</Length>
+                              <Unicode>0</Unicode>
+                              <CodePage>0</CodePage>
+                              <ZeroTerminate>1</ZeroTerminate>
+                              <Address>timeManager_ptr</Address>
+                              <Offsets>
+                                <Offset>10</Offset>
+                                <Offset>18</Offset>
+                                <Offset>20</Offset>
+                              </Offsets>
+                              <CheatEntries>
+                                <CheatEntry>
+                                  <ID>172</ID>
+                                  <Description>"Item[2]"</Description>
+                                  <LastState RealAddress="00000000"/>
+                                  <Color>009500</Color>
+                                  <VariableType>String</VariableType>
+                                  <Length>0</Length>
+                                  <Unicode>0</Unicode>
+                                  <CodePage>0</CodePage>
+                                  <ZeroTerminate>1</ZeroTerminate>
+                                  <Address>timeManager_ptr</Address>
+                                  <Offsets>
+                                    <Offset>20</Offset>
+                                    <Offset>10</Offset>
+                                    <Offset>18</Offset>
+                                    <Offset>20</Offset>
+                                  </Offsets>
+                                  <CheatEntries>
+                                    <CheatEntry>
+                                      <ID>173</ID>
+                                      <Description>"dayCount"</Description>
+                                      <Color>0076EC</Color>
+                                      <VariableType>4 Bytes</VariableType>
+                                      <Address>timeManager_ptr</Address>
+                                      <Offsets>
+                                        <Offset>10</Offset>
+                                        <Offset>20</Offset>
+                                        <Offset>10</Offset>
+                                        <Offset>18</Offset>
+                                        <Offset>20</Offset>
+                                      </Offsets>
+                                    </CheatEntry>
+                                  </CheatEntries>
+                                </CheatEntry>
+                              </CheatEntries>
+                            </CheatEntry>
+                            <CheatEntry>
+                              <ID>176</ID>
+                              <Description>"minutePerHour"</Description>
+                              <Color>C08000</Color>
+                              <VariableType>4 Bytes</VariableType>
+                              <Address>timeManager_ptr</Address>
+                              <Offsets>
+                                <Offset>20</Offset>
+                                <Offset>18</Offset>
+                                <Offset>20</Offset>
+                              </Offsets>
+                            </CheatEntry>
+                            <CheatEntry>
+                              <ID>175</ID>
+                              <Description>"hourPerDay"</Description>
+                              <Color>C08000</Color>
+                              <VariableType>4 Bytes</VariableType>
+                              <Address>timeManager_ptr</Address>
+                              <Offsets>
+                                <Offset>1C</Offset>
+                                <Offset>18</Offset>
+                                <Offset>20</Offset>
+                              </Offsets>
+                            </CheatEntry>
+                            <CheatEntry>
+                              <ID>174</ID>
+                              <Description>"dayPerWeek"</Description>
+                              <Color>C08000</Color>
+                              <VariableType>4 Bytes</VariableType>
+                              <Address>timeManager_ptr</Address>
+                              <Offsets>
+                                <Offset>18</Offset>
+                                <Offset>18</Offset>
+                                <Offset>20</Offset>
+                              </Offsets>
+                            </CheatEntry>
+                          </CheatEntries>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>188</ID>
+                          <Description>"sleep"</Description>
+                          <LastState RealAddress="00000000"/>
+                          <Color>0000B9</Color>
+                          <VariableType>String</VariableType>
+                          <Length>0</Length>
+                          <Unicode>0</Unicode>
+                          <CodePage>0</CodePage>
+                          <ZeroTerminate>1</ZeroTerminate>
+                          <Address>timeManager_ptr</Address>
+                          <Offsets>
+                            <Offset>28</Offset>
+                            <Offset>20</Offset>
+                          </Offsets>
+                          <CheatEntries>
+                            <CheatEntry>
+                              <ID>190</ID>
+                              <Description>"endSleepHour"</Description>
+                              <Color>805600</Color>
+                              <VariableType>4 Bytes</VariableType>
+                              <Address>timeManager_ptr</Address>
+                              <Offsets>
+                                <Offset>14</Offset>
+                                <Offset>28</Offset>
+                                <Offset>20</Offset>
+                              </Offsets>
+                            </CheatEntry>
+                            <CheatEntry>
+                              <ID>189</ID>
+                              <Description>"beginSleepHour"</Description>
+                              <Color>805600</Color>
+                              <VariableType>4 Bytes</VariableType>
+                              <Address>timeManager_ptr</Address>
+                              <Offsets>
+                                <Offset>10</Offset>
+                                <Offset>28</Offset>
+                                <Offset>20</Offset>
+                              </Offsets>
+                            </CheatEntry>
+                          </CheatEntries>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>178</ID>
+                          <Description>"baseSetting"</Description>
+                          <LastState RealAddress="00000000"/>
+                          <Color>0000B9</Color>
+                          <VariableType>String</VariableType>
+                          <Length>0</Length>
+                          <Unicode>0</Unicode>
+                          <CodePage>0</CodePage>
+                          <ZeroTerminate>1</ZeroTerminate>
+                          <Address>timeManager_ptr</Address>
+                          <Offsets>
+                            <Offset>20</Offset>
+                            <Offset>20</Offset>
+                          </Offsets>
+                          <CheatEntries>
+                            <CheatEntry>
+                              <ID>187</ID>
+                              <Description>"timeScaleSpleedUp"</Description>
+                              <Color>805600</Color>
+                              <VariableType>Float</VariableType>
+                              <Address>timeManager_ptr</Address>
+                              <Offsets>
+                                <Offset>1C</Offset>
+                                <Offset>20</Offset>
+                                <Offset>20</Offset>
+                              </Offsets>
+                            </CheatEntry>
+                            <CheatEntry>
+                              <ID>186</ID>
+                              <Description>"timeScale"</Description>
+                              <Color>805600</Color>
+                              <VariableType>Float</VariableType>
+                              <Address>timeManager_ptr</Address>
+                              <Offsets>
+                                <Offset>18</Offset>
+                                <Offset>20</Offset>
+                                <Offset>20</Offset>
+                              </Offsets>
+                            </CheatEntry>
+                            <CheatEntry>
+                              <ID>179</ID>
+                              <Description>"originalDate"</Description>
+                              <LastState RealAddress="00000000"/>
+                              <Color>805600</Color>
+                              <VariableType>String</VariableType>
+                              <Length>0</Length>
+                              <Unicode>0</Unicode>
+                              <CodePage>0</CodePage>
+                              <ZeroTerminate>1</ZeroTerminate>
+                              <Address>timeManager_ptr</Address>
+                              <Offsets>
+                                <Offset>10</Offset>
+                                <Offset>20</Offset>
+                                <Offset>20</Offset>
+                              </Offsets>
+                              <CheatEntries>
+                                <CheatEntry>
+                                  <ID>182</ID>
+                                  <Description>"year"</Description>
+                                  <Color>0076EC</Color>
+                                  <VariableType>4 Bytes</VariableType>
+                                  <Address>timeManager_ptr</Address>
+                                  <Offsets>
+                                    <Offset>18</Offset>
+                                    <Offset>10</Offset>
+                                    <Offset>20</Offset>
+                                    <Offset>20</Offset>
+                                  </Offsets>
+                                </CheatEntry>
+                                <CheatEntry>
+                                  <ID>185</ID>
+                                  <Description>"second"</Description>
+                                  <Color>0076EC</Color>
+                                  <VariableType>4 Bytes</VariableType>
+                                  <Address>timeManager_ptr</Address>
+                                  <Offsets>
+                                    <Offset>24</Offset>
+                                    <Offset>10</Offset>
+                                    <Offset>20</Offset>
+                                    <Offset>20</Offset>
+                                  </Offsets>
+                                </CheatEntry>
+                                <CheatEntry>
+                                  <ID>180</ID>
+                                  <Description>"month"</Description>
+                                  <Color>0076EC</Color>
+                                  <VariableType>4 Bytes</VariableType>
+                                  <Address>timeManager_ptr</Address>
+                                  <Offsets>
+                                    <Offset>14</Offset>
+                                    <Offset>10</Offset>
+                                    <Offset>20</Offset>
+                                    <Offset>20</Offset>
+                                  </Offsets>
+                                </CheatEntry>
+                                <CheatEntry>
+                                  <ID>184</ID>
+                                  <Description>"minute"</Description>
+                                  <Color>0076EC</Color>
+                                  <VariableType>4 Bytes</VariableType>
+                                  <Address>timeManager_ptr</Address>
+                                  <Offsets>
+                                    <Offset>20</Offset>
+                                    <Offset>10</Offset>
+                                    <Offset>20</Offset>
+                                    <Offset>20</Offset>
+                                  </Offsets>
+                                </CheatEntry>
+                                <CheatEntry>
+                                  <ID>183</ID>
+                                  <Description>"hour"</Description>
+                                  <Color>0076EC</Color>
+                                  <VariableType>4 Bytes</VariableType>
+                                  <Address>timeManager_ptr</Address>
+                                  <Offsets>
+                                    <Offset>1C</Offset>
+                                    <Offset>10</Offset>
+                                    <Offset>20</Offset>
+                                    <Offset>20</Offset>
+                                  </Offsets>
+                                </CheatEntry>
+                                <CheatEntry>
+                                  <ID>181</ID>
+                                  <Description>"day"</Description>
+                                  <Color>0076EC</Color>
+                                  <VariableType>4 Bytes</VariableType>
+                                  <Address>timeManager_ptr</Address>
+                                  <Offsets>
+                                    <Offset>18</Offset>
+                                    <Offset>10</Offset>
+                                    <Offset>20</Offset>
+                                    <Offset>20</Offset>
+                                  </Offsets>
+                                </CheatEntry>
+                              </CheatEntries>
+                            </CheatEntry>
+                          </CheatEntries>
+                        </CheatEntry>
+                      </CheatEntries>
+                    </CheatEntry>
+                  </CheatEntries>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>126</ID>
+              <Description>"PlayerStats Base Addresses"</Description>
+              <Options moHideChildren="1"/>
+              <LastState/>
+              <Color>004080</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>define(address,Pathea:Player:ChangeStamina+33)
+define(bytes,48 8D 4C 91 20)
+
+[ENABLE]
+assert(address,bytes)
+alloc(newmem,$100)
+
+label(code)
+label(return)
+
+globalalloc(abilityStat_ptr,8)
+
+newmem:
+  mov [abilityStat_ptr],rcx
+
+code:
+  lea rcx,[rcx+rdx*4+20]
+  jmp return
+
+address:
+  jmp newmem
+return:
+
+[DISABLE]
+address:
+  db bytes
+  // lea rcx,[rcx+rdx*4+20]
+
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: Pathea:Player:ChangeStamina+33
+
+6642BD19: 48 8B F1                       -  mov rsi,rcx
+6642BD1C: F3 0F 11 4D E8                 -  movss [rbp-18],xmm1
+6642BD21: 48 8B 4E 20                    -  mov rcx,[rsi+20]
+6642BD25: 48 8B C1                       -  mov rax,rcx
+6642BD28: 83 39 00                       -  cmp dword ptr [rcx],00
+6642BD2B: 48 8B 89 78 01 00 00           -  mov rcx,[rcx+00000178]
+6642BD32: BA 01 00 00 00                 -  mov edx,00000001
+6642BD37: 48 63 D2                       -  movsxd  rdx,edx
+6642BD3A: 39 51 18                       -  cmp [rcx+18],edx
+6642BD3D: 0F 86 E8 00 00 00              -  jbe Pathea:Player:ChangeStamina+11b
+// ---------- INJECTING HERE ----------
+6642BD43: 48 8D 4C 91 20                 -  lea rcx,[rcx+rdx*4+20]
+// ---------- DONE INJECTING  ----------
+6642BD48: F3 0F 10 01                    -  movss xmm0,[rcx]
+6642BD4C: F3 0F 5A C0                    -  cvtss2sd xmm0,xmm0
+6642BD50: F2 0F 5A E8                    -  cvtsd2ss xmm5,xmm0
+6642BD54: F3 0F 11 6D F4                 -  movss [rbp-0C],xmm5
+6642BD59: F3 0F 10 45 F4                 -  movss xmm0,[rbp-0C]
+6642BD5E: F3 0F 5A C0                    -  cvtss2sd xmm0,xmm0
+6642BD62: F2 0F 5A E8                    -  cvtsd2ss xmm5,xmm0
+6642BD66: F3 0F 11 6D F4                 -  movss [rbp-0C],xmm5
+6642BD6B: F3 0F 10 45 F4                 -  movss xmm0,[rbp-0C]
+6642BD70: F3 0F 5A C0                    -  cvtss2sd xmm0,xmm0
+}
+</AssemblerScript>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>127</ID>
+                  <Description>"Base Address"</Description>
+                  <LastState RealAddress="00000000"/>
+                  <Color>BBBB00</Color>
+                  <VariableType>String</VariableType>
+                  <Length>0</Length>
+                  <Unicode>0</Unicode>
+                  <CodePage>0</CodePage>
+                  <ZeroTerminate>1</ZeroTerminate>
+                  <Address>abilityStat_ptr</Address>
+                  <Offsets>
+                    <Offset>0</Offset>
+                  </Offsets>
+                  <CheatEntries>
+                    <CheatEntry>
+                      <ID>162</ID>
+                      <Description>"currentStamina"</Description>
+                      <Color>400040</Color>
+                      <VariableType>Float</VariableType>
+                      <Address>+24</Address>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>128</ID>
+                      <Description>"currentHealth"</Description>
+                      <Color>400040</Color>
+                      <VariableType>Float</VariableType>
+                      <Address>+20</Address>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>163</ID>
+                      <Description>"currentEndurance"</Description>
+                      <Color>400040</Color>
+                      <VariableType>Float</VariableType>
+                      <Address>+28</Address>
+                    </CheatEntry>
+                  </CheatEntries>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>197</ID>
+              <Description>"PlayerAbilityModule Base Addresses"</Description>
+              <Options moHideChildren="1"/>
+              <LastState/>
+              <Color>004080</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>define(address,Pathea.UISystemNs.MainMenu:GridPlayerAbility:Fresh+23b)
+define(bytes,48 63 40 44 85 C0)
+
+[ENABLE]
+assert(address,bytes)
+alloc(newmem,$100)
+
+label(code)
+label(return)
+
+globalalloc(playerAbility_ptr,8)
+
+newmem:
+  mov [playerAbility_ptr],rax
+
+code:
+  movsxd  rax,dword ptr [rax+44]
+  test eax,eax
+  jmp return
+
+address:
+  jmp newmem
+  nop
+return:
+
+[DISABLE]
+address:
+  db bytes
+  // movsxd  rax,dword ptr [rax+44]
+  // test eax,eax
+
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: 4833B31B
+
+4833B2FA: 41 FF D3                       -  call r11
+4833B2FD: 48 83 C4 20                    -  add rsp,20
+4833B301: 4C 8B F8                       -  mov r15,rax
+4833B304: 85 FF                          -  test edi,edi
+4833B306: 75 2D                          -  jne Pathea.UISystemNs.MainMenu:GridPlayerAbility:Fresh+255
+4833B308: 45 85 FF                       -  test r15d,r15d
+4833B30B: 75 28                          -  jne Pathea.UISystemNs.MainMenu:GridPlayerAbility:Fresh+255
+4833B30D: 48 8B 04 25 E0 C0 55 00        -  mov rax,[0055C0E0]
+4833B315: 48 8B C8                       -  mov rcx,rax
+4833B318: 83 39 00                       -  cmp dword ptr [rcx],00
+// ---------- INJECTING HERE ----------
+4833B31B: 48 63 40 44                    -  movsxd  rax,dword ptr [rax+44]
+4833B31F: 85 C0                          -  test eax,eax
+// ---------- DONE INJECTING  ----------
+4833B321: 40 0F 94 C0                    -  sete al
+4833B325: 48 0F B6 C0                    -  movzx rax,al
+4833B329: 85 C0                          -  test eax,eax
+4833B32B: 41 0F 94 C4                    -  sete r12l
+4833B32F: 4D 0F B6 E4                    -  movzx r12,r12l
+4833B333: EB 03                          -  jmp Pathea.UISystemNs.MainMenu:GridPlayerAbility:Fresh+258
+4833B335: 45 33 E4                       -  xor r12d,r12d
+4833B338: 4D 8B F4                       -  mov r14,r12
+4833B33B: 48 8B 86 B8 00 00 00           -  mov rax,[rsi+000000B8]
+4833B342: 48 8B C8                       -  mov rcx,rax
+}
+</AssemblerScript>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>198</ID>
+                  <Description>"Base Address"</Description>
+                  <LastState RealAddress="00000000"/>
+                  <Color>BBBB00</Color>
+                  <VariableType>String</VariableType>
+                  <Length>0</Length>
+                  <Unicode>0</Unicode>
+                  <CodePage>0</CodePage>
+                  <ZeroTerminate>1</ZeroTerminate>
+                  <Address>playerAbility_ptr</Address>
+                  <Offsets>
+                    <Offset>0</Offset>
+                  </Offsets>
+                  <CheatEntries>
+                    <CheatEntry>
+                      <ID>199</ID>
+                      <Description>"totalPoint"</Description>
+                      <Color>400040</Color>
+                      <VariableType>4 Bytes</VariableType>
+                      <Address>playerAbility_ptr</Address>
+                      <Offsets>
+                        <Offset>40</Offset>
+                      </Offsets>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>201</ID>
+                      <Description>"resetTimes"</Description>
+                      <Color>400040</Color>
+                      <VariableType>4 Bytes</VariableType>
+                      <Address>playerAbility_ptr</Address>
+                      <Offsets>
+                        <Offset>48</Offset>
+                      </Offsets>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>200</ID>
+                      <Description>"point"</Description>
+                      <Color>400040</Color>
+                      <VariableType>4 Bytes</VariableType>
+                      <Address>playerAbility_ptr</Address>
+                      <Offsets>
+                        <Offset>44</Offset>
+                      </Offsets>
+                    </CheatEntry>
+                  </CheatEntries>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>69</ID>
+              <Description>"Player Base Addresses"</Description>
+              <Options moHideChildren="1"/>
+              <LastState/>
+              <Color>004080</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>define(address,Pathea:Player:Update+27)
+define(bytes,48 8B 4E 20 33 D2)
+
+[ENABLE]
+assert(address,bytes)
+alloc(newmem,$100)
+
+label(code)
+label(return)
+
+globalalloc(player_ptr,8)
+
+newmem:
+  mov [player_ptr],rsi
+
+code:
+  mov rcx,[rsi+20]
+  xor edx,edx
+  jmp return
+
+address:
+  jmp newmem
+  nop
+return:
+
+[DISABLE]
+address:
+  db bytes
+  // mov rcx,[rsi+20]
+  // xor edx,edx
+
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: Pathea:Player:Update+27
+
+3D65E8F5: 57                             -  push rdi
+3D65E8F6: 48 83 EC 60                    -  sub rsp,60
+3D65E8FA: 48 8B F1                       -  mov rsi,rcx
+3D65E8FD: 33 C0                          -  xor eax,eax
+3D65E8FF: 48 89 45 B0                    -  mov [rbp-50],rax
+3D65E903: 48 89 45 B8                    -  mov [rbp-48],rax
+3D65E907: 48 89 45 C0                    -  mov [rbp-40],rax
+3D65E90B: 48 89 45 C8                    -  mov [rbp-38],rax
+3D65E90F: 48 89 45 D0                    -  mov [rbp-30],rax
+3D65E913: 48 89 45 D8                    -  mov [rbp-28],rax
+// ---------- INJECTING HERE ----------
+3D65E917: 48 8B 4E 20                    -  mov rcx,[rsi+20]
+3D65E91B: 33 D2                          -  xor edx,edx
+// ---------- DONE INJECTING  ----------
+3D65E91B: 33 D2                          -  xor edx,edx
+3D65E91D: 48 83 EC 20                    -  sub rsp,20
+3D65E921: 49 BB 30 46 DC 04 00 00 00 00  -  mov r11,UnityEngine:Object:op_Equality
+3D65E92B: 41 FF D3                       -  call r11
+3D65E92E: 48 83 C4 20                    -  add rsp,20
+3D65E932: 85 C0                          -  test eax,eax
+3D65E934: 0F 85 E9 01 00 00              -  jne Pathea:Player:Update+233
+3D65E93A: 48 8B CE                       -  mov rcx,rsi
+3D65E93D: 48 83 EC 20                    -  sub rsp,20
+3D65E941: 49 BB 90 05 52 37 00 00 00 00  -  mov r11,Pathea:Player:UpdatePosMaintain
+3D65E94B: 41 FF D3                       -  call r11
+}
+</AssemblerScript>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>70</ID>
+                  <Description>"Base Address"</Description>
+                  <LastState RealAddress="00000000"/>
+                  <Color>BBBB00</Color>
+                  <VariableType>String</VariableType>
+                  <Length>0</Length>
+                  <Unicode>0</Unicode>
+                  <CodePage>0</CodePage>
+                  <ZeroTerminate>1</ZeroTerminate>
+                  <Address>player_ptr</Address>
+                  <Offsets>
+                    <Offset>0</Offset>
+                  </Offsets>
+                  <CheatEntries>
+                    <CheatEntry>
+                      <ID>114</ID>
+                      <Description>"playingActor"</Description>
+                      <LastState RealAddress="00000000"/>
+                      <Color>5A2E2E</Color>
+                      <VariableType>String</VariableType>
+                      <Length>0</Length>
+                      <Unicode>0</Unicode>
+                      <CodePage>0</CodePage>
+                      <ZeroTerminate>1</ZeroTerminate>
+                      <Address>player_ptr</Address>
+                      <Offsets>
+                        <Offset>20</Offset>
+                      </Offsets>
+                      <CheatEntries>
+                        <CheatEntry>
+                          <ID>124</ID>
+                          <Description>"minHpValue"</Description>
+                          <Color>00A600</Color>
+                          <VariableType>Float</VariableType>
+                          <Address>player_ptr</Address>
+                          <Offsets>
+                            <Offset>41C</Offset>
+                            <Offset>20</Offset>
+                          </Offsets>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>115</ID>
+                          <Description>"mLevel"</Description>
+                          <LastState RealAddress="00000000"/>
+                          <Color>29A600</Color>
+                          <VariableType>String</VariableType>
+                          <Length>0</Length>
+                          <Unicode>0</Unicode>
+                          <CodePage>0</CodePage>
+                          <ZeroTerminate>1</ZeroTerminate>
+                          <Address>player_ptr</Address>
+                          <Offsets>
+                            <Offset>20</Offset>
+                            <Offset>20</Offset>
+                          </Offsets>
+                          <CheatEntries>
+                            <CheatEntry>
+                              <ID>118</ID>
+                              <Description>"mNextLevelExp"</Description>
+                              <Color>004EF0</Color>
+                              <VariableType>4 Bytes</VariableType>
+                              <Address>player_ptr</Address>
+                              <Offsets>
+                                <Offset>20</Offset>
+                                <Offset>20</Offset>
+                                <Offset>20</Offset>
+                              </Offsets>
+                            </CheatEntry>
+                            <CheatEntry>
+                              <ID>116</ID>
+                              <Description>"mLevel"</Description>
+                              <Color>004EF0</Color>
+                              <VariableType>4 Bytes</VariableType>
+                              <Address>player_ptr</Address>
+                              <Offsets>
+                                <Offset>18</Offset>
+                                <Offset>20</Offset>
+                                <Offset>20</Offset>
+                              </Offsets>
+                            </CheatEntry>
+                            <CheatEntry>
+                              <ID>117</ID>
+                              <Description>"mExpTotal"</Description>
+                              <Color>004EF0</Color>
+                              <VariableType>4 Bytes</VariableType>
+                              <Address>player_ptr</Address>
+                              <Offsets>
+                                <Offset>14</Offset>
+                                <Offset>20</Offset>
+                                <Offset>20</Offset>
+                              </Offsets>
+                            </CheatEntry>
+                            <CheatEntry>
+                              <ID>125</ID>
+                              <Description>"mExp"</Description>
+                              <Color>004EF0</Color>
+                              <VariableType>4 Bytes</VariableType>
+                              <Address>player_ptr</Address>
+                              <Offsets>
+                                <Offset>1C</Offset>
+                                <Offset>20</Offset>
+                                <Offset>20</Offset>
+                              </Offsets>
+                            </CheatEntry>
+                          </CheatEntries>
+                        </CheatEntry>
+                      </CheatEntries>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>71</ID>
+                      <Description>"mBag"</Description>
+                      <LastState RealAddress="00000000"/>
+                      <Color>400040</Color>
+                      <VariableType>String</VariableType>
+                      <Length>0</Length>
+                      <Unicode>0</Unicode>
+                      <CodePage>0</CodePage>
+                      <ZeroTerminate>1</ZeroTerminate>
+                      <Address>player_ptr</Address>
+                      <Offsets>
+                        <Offset>18</Offset>
+                      </Offsets>
+                      <CheatEntries>
+                        <CheatEntry>
+                          <ID>104</ID>
+                          <Description>"money"</Description>
+                          <Color>0000B9</Color>
+                          <VariableType>4 Bytes</VariableType>
+                          <Address>player_ptr</Address>
+                          <Offsets>
+                            <Offset>58</Offset>
+                            <Offset>18</Offset>
+                          </Offsets>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>72</ID>
+                          <Description>"itemTables"</Description>
+                          <LastState RealAddress="00000000"/>
+                          <Color>0000B9</Color>
+                          <VariableType>String</VariableType>
+                          <Length>0</Length>
+                          <Unicode>0</Unicode>
+                          <CodePage>0</CodePage>
+                          <ZeroTerminate>1</ZeroTerminate>
+                          <Address>player_ptr</Address>
+                          <Offsets>
+                            <Offset>18</Offset>
+                            <Offset>18</Offset>
+                          </Offsets>
+                          <CheatEntries>
+                            <CheatEntry>
+                              <ID>73</ID>
+                              <Description>"Item[2]"</Description>
+                              <LastState RealAddress="00000000"/>
+                              <Color>58B000</Color>
+                              <VariableType>String</VariableType>
+                              <Length>0</Length>
+                              <Unicode>0</Unicode>
+                              <CodePage>0</CodePage>
+                              <ZeroTerminate>1</ZeroTerminate>
+                              <Address>player_ptr</Address>
+                              <Offsets>
+                                <Offset>20</Offset>
+                                <Offset>18</Offset>
+                                <Offset>18</Offset>
+                              </Offsets>
+                              <CheatEntries>
+                                <CheatEntry>
+                                  <ID>74</ID>
+                                  <Description>"unlockedCount (of slots)"</Description>
+                                  <Color>0076EC</Color>
+                                  <VariableType>4 Bytes</VariableType>
+                                  <Address>player_ptr</Address>
+                                  <Offsets>
+                                    <Offset>20</Offset>
+                                    <Offset>20</Offset>
+                                    <Offset>18</Offset>
+                                    <Offset>18</Offset>
+                                  </Offsets>
+                                </CheatEntry>
+                              </CheatEntries>
+                            </CheatEntry>
+                          </CheatEntries>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>75</ID>
+                          <Description>"itemBar"</Description>
+                          <LastState RealAddress="00000000"/>
+                          <Color>0000B9</Color>
+                          <VariableType>String</VariableType>
+                          <Length>0</Length>
+                          <Unicode>0</Unicode>
+                          <CodePage>0</CodePage>
+                          <ZeroTerminate>1</ZeroTerminate>
+                          <Address>player_ptr</Address>
+                          <Offsets>
+                            <Offset>20</Offset>
+                            <Offset>18</Offset>
+                          </Offsets>
+                          <CheatEntries>
+                            <CheatEntry>
+                              <ID>80</ID>
+                              <Description>"itemBarItems"</Description>
+                              <LastState RealAddress="00000000"/>
+                              <Color>805600</Color>
+                              <VariableType>String</VariableType>
+                              <Length>0</Length>
+                              <Unicode>0</Unicode>
+                              <CodePage>0</CodePage>
+                              <ZeroTerminate>1</ZeroTerminate>
+                              <Address>player_ptr</Address>
+                              <Offsets>
+                                <Offset>10</Offset>
+                                <Offset>20</Offset>
+                                <Offset>18</Offset>
+                              </Offsets>
+                              <CheatEntries>
+                                <CheatEntry>
+                                  <ID>101</ID>
+                                  <Description>"Item[9]"</Description>
+                                  <LastState RealAddress="00000000"/>
+                                  <Color>58B000</Color>
+                                  <VariableType>String</VariableType>
+                                  <Length>0</Length>
+                                  <Unicode>0</Unicode>
+                                  <CodePage>0</CodePage>
+                                  <ZeroTerminate>1</ZeroTerminate>
+                                  <Address>player_ptr</Address>
+                                  <Offsets>
+                                    <Offset>58</Offset>
+                                    <Offset>10</Offset>
+                                    <Offset>20</Offset>
+                                    <Offset>18</Offset>
+                                  </Offsets>
+                                  <CheatEntries>
+                                    <CheatEntry>
+                                      <ID>103</ID>
+                                      <Description>"number"</Description>
+                                      <Color>0076EC</Color>
+                                      <VariableType>4 Bytes</VariableType>
+                                      <Address>player_ptr</Address>
+                                      <Offsets>
+                                        <Offset>24</Offset>
+                                        <Offset>58</Offset>
+                                        <Offset>10</Offset>
+                                        <Offset>20</Offset>
+                                        <Offset>18</Offset>
+                                      </Offsets>
+                                    </CheatEntry>
+                                    <CheatEntry>
+                                      <ID>102</ID>
+                                      <Description>"maxNumber"</Description>
+                                      <Color>0076EC</Color>
+                                      <VariableType>4 Bytes</VariableType>
+                                      <Address>player_ptr</Address>
+                                      <Offsets>
+                                        <Offset>20</Offset>
+                                        <Offset>58</Offset>
+                                        <Offset>10</Offset>
+                                        <Offset>20</Offset>
+                                        <Offset>18</Offset>
+                                      </Offsets>
+                                    </CheatEntry>
+                                  </CheatEntries>
+                                </CheatEntry>
+                                <CheatEntry>
+                                  <ID>98</ID>
+                                  <Description>"Item[8]"</Description>
+                                  <LastState RealAddress="00000000"/>
+                                  <Color>58B000</Color>
+                                  <VariableType>String</VariableType>
+                                  <Length>0</Length>
+                                  <Unicode>0</Unicode>
+                                  <CodePage>0</CodePage>
+                                  <ZeroTerminate>1</ZeroTerminate>
+                                  <Address>player_ptr</Address>
+                                  <Offsets>
+                                    <Offset>50</Offset>
+                                    <Offset>10</Offset>
+                                    <Offset>20</Offset>
+                                    <Offset>18</Offset>
+                                  </Offsets>
+                                  <CheatEntries>
+                                    <CheatEntry>
+                                      <ID>100</ID>
+                                      <Description>"number"</Description>
+                                      <Color>0076EC</Color>
+                                      <VariableType>4 Bytes</VariableType>
+                                      <Address>player_ptr</Address>
+                                      <Offsets>
+                                        <Offset>24</Offset>
+                                        <Offset>50</Offset>
+                                        <Offset>10</Offset>
+                                        <Offset>20</Offset>
+                                        <Offset>18</Offset>
+                                      </Offsets>
+                                    </CheatEntry>
+                                    <CheatEntry>
+                                      <ID>99</ID>
+                                      <Description>"maxNumber"</Description>
+                                      <Color>0076EC</Color>
+                                      <VariableType>4 Bytes</VariableType>
+                                      <Address>player_ptr</Address>
+                                      <Offsets>
+                                        <Offset>20</Offset>
+                                        <Offset>50</Offset>
+                                        <Offset>10</Offset>
+                                        <Offset>20</Offset>
+                                        <Offset>18</Offset>
+                                      </Offsets>
+                                    </CheatEntry>
+                                  </CheatEntries>
+                                </CheatEntry>
+                                <CheatEntry>
+                                  <ID>95</ID>
+                                  <Description>"Item[7]"</Description>
+                                  <LastState RealAddress="00000000"/>
+                                  <Color>58B000</Color>
+                                  <VariableType>String</VariableType>
+                                  <Length>0</Length>
+                                  <Unicode>0</Unicode>
+                                  <CodePage>0</CodePage>
+                                  <ZeroTerminate>1</ZeroTerminate>
+                                  <Address>player_ptr</Address>
+                                  <Offsets>
+                                    <Offset>48</Offset>
+                                    <Offset>10</Offset>
+                                    <Offset>20</Offset>
+                                    <Offset>18</Offset>
+                                  </Offsets>
+                                  <CheatEntries>
+                                    <CheatEntry>
+                                      <ID>97</ID>
+                                      <Description>"number"</Description>
+                                      <Color>0076EC</Color>
+                                      <VariableType>4 Bytes</VariableType>
+                                      <Address>player_ptr</Address>
+                                      <Offsets>
+                                        <Offset>24</Offset>
+                                        <Offset>48</Offset>
+                                        <Offset>10</Offset>
+                                        <Offset>20</Offset>
+                                        <Offset>18</Offset>
+                                      </Offsets>
+                                    </CheatEntry>
+                                    <CheatEntry>
+                                      <ID>96</ID>
+                                      <Description>"maxNumber"</Description>
+                                      <Color>0076EC</Color>
+                                      <VariableType>4 Bytes</VariableType>
+                                      <Address>player_ptr</Address>
+                                      <Offsets>
+                                        <Offset>20</Offset>
+                                        <Offset>48</Offset>
+                                        <Offset>10</Offset>
+                                        <Offset>20</Offset>
+                                        <Offset>18</Offset>
+                                      </Offsets>
+                                    </CheatEntry>
+                                  </CheatEntries>
+                                </CheatEntry>
+                                <CheatEntry>
+                                  <ID>92</ID>
+                                  <Description>"Item[6]"</Description>
+                                  <LastState RealAddress="00000000"/>
+                                  <Color>58B000</Color>
+                                  <VariableType>String</VariableType>
+                                  <Length>0</Length>
+                                  <Unicode>0</Unicode>
+                                  <CodePage>0</CodePage>
+                                  <ZeroTerminate>1</ZeroTerminate>
+                                  <Address>player_ptr</Address>
+                                  <Offsets>
+                                    <Offset>40</Offset>
+                                    <Offset>10</Offset>
+                                    <Offset>20</Offset>
+                                    <Offset>18</Offset>
+                                  </Offsets>
+                                  <CheatEntries>
+                                    <CheatEntry>
+                                      <ID>94</ID>
+                                      <Description>"number"</Description>
+                                      <Color>0076EC</Color>
+                                      <VariableType>4 Bytes</VariableType>
+                                      <Address>player_ptr</Address>
+                                      <Offsets>
+                                        <Offset>24</Offset>
+                                        <Offset>40</Offset>
+                                        <Offset>10</Offset>
+                                        <Offset>20</Offset>
+                                        <Offset>18</Offset>
+                                      </Offsets>
+                                    </CheatEntry>
+                                    <CheatEntry>
+                                      <ID>93</ID>
+                                      <Description>"maxNumber"</Description>
+                                      <Color>0076EC</Color>
+                                      <VariableType>4 Bytes</VariableType>
+                                      <Address>player_ptr</Address>
+                                      <Offsets>
+                                        <Offset>20</Offset>
+                                        <Offset>40</Offset>
+                                        <Offset>10</Offset>
+                                        <Offset>20</Offset>
+                                        <Offset>18</Offset>
+                                      </Offsets>
+                                    </CheatEntry>
+                                  </CheatEntries>
+                                </CheatEntry>
+                                <CheatEntry>
+                                  <ID>89</ID>
+                                  <Description>"Item[5]"</Description>
+                                  <LastState RealAddress="00000000"/>
+                                  <Color>58B000</Color>
+                                  <VariableType>String</VariableType>
+                                  <Length>0</Length>
+                                  <Unicode>0</Unicode>
+                                  <CodePage>0</CodePage>
+                                  <ZeroTerminate>1</ZeroTerminate>
+                                  <Address>player_ptr</Address>
+                                  <Offsets>
+                                    <Offset>38</Offset>
+                                    <Offset>10</Offset>
+                                    <Offset>20</Offset>
+                                    <Offset>18</Offset>
+                                  </Offsets>
+                                  <CheatEntries>
+                                    <CheatEntry>
+                                      <ID>91</ID>
+                                      <Description>"number"</Description>
+                                      <Color>0076EC</Color>
+                                      <VariableType>4 Bytes</VariableType>
+                                      <Address>player_ptr</Address>
+                                      <Offsets>
+                                        <Offset>24</Offset>
+                                        <Offset>38</Offset>
+                                        <Offset>10</Offset>
+                                        <Offset>20</Offset>
+                                        <Offset>18</Offset>
+                                      </Offsets>
+                                    </CheatEntry>
+                                    <CheatEntry>
+                                      <ID>90</ID>
+                                      <Description>"maxNumber"</Description>
+                                      <Color>0076EC</Color>
+                                      <VariableType>4 Bytes</VariableType>
+                                      <Address>player_ptr</Address>
+                                      <Offsets>
+                                        <Offset>20</Offset>
+                                        <Offset>38</Offset>
+                                        <Offset>10</Offset>
+                                        <Offset>20</Offset>
+                                        <Offset>18</Offset>
+                                      </Offsets>
+                                    </CheatEntry>
+                                  </CheatEntries>
+                                </CheatEntry>
+                                <CheatEntry>
+                                  <ID>86</ID>
+                                  <Description>"Item[4]"</Description>
+                                  <LastState RealAddress="00000000"/>
+                                  <Color>58B000</Color>
+                                  <VariableType>String</VariableType>
+                                  <Length>0</Length>
+                                  <Unicode>0</Unicode>
+                                  <CodePage>0</CodePage>
+                                  <ZeroTerminate>1</ZeroTerminate>
+                                  <Address>player_ptr</Address>
+                                  <Offsets>
+                                    <Offset>30</Offset>
+                                    <Offset>10</Offset>
+                                    <Offset>20</Offset>
+                                    <Offset>18</Offset>
+                                  </Offsets>
+                                  <CheatEntries>
+                                    <CheatEntry>
+                                      <ID>88</ID>
+                                      <Description>"number"</Description>
+                                      <Color>0076EC</Color>
+                                      <VariableType>4 Bytes</VariableType>
+                                      <Address>player_ptr</Address>
+                                      <Offsets>
+                                        <Offset>24</Offset>
+                                        <Offset>30</Offset>
+                                        <Offset>10</Offset>
+                                        <Offset>20</Offset>
+                                        <Offset>18</Offset>
+                                      </Offsets>
+                                    </CheatEntry>
+                                    <CheatEntry>
+                                      <ID>87</ID>
+                                      <Description>"maxNumber"</Description>
+                                      <Color>0076EC</Color>
+                                      <VariableType>4 Bytes</VariableType>
+                                      <Address>player_ptr</Address>
+                                      <Offsets>
+                                        <Offset>20</Offset>
+                                        <Offset>30</Offset>
+                                        <Offset>10</Offset>
+                                        <Offset>20</Offset>
+                                        <Offset>18</Offset>
+                                      </Offsets>
+                                    </CheatEntry>
+                                  </CheatEntries>
+                                </CheatEntry>
+                                <CheatEntry>
+                                  <ID>83</ID>
+                                  <Description>"Item[3]"</Description>
+                                  <LastState RealAddress="00000000"/>
+                                  <Color>58B000</Color>
+                                  <VariableType>String</VariableType>
+                                  <Length>0</Length>
+                                  <Unicode>0</Unicode>
+                                  <CodePage>0</CodePage>
+                                  <ZeroTerminate>1</ZeroTerminate>
+                                  <Address>player_ptr</Address>
+                                  <Offsets>
+                                    <Offset>28</Offset>
+                                    <Offset>10</Offset>
+                                    <Offset>20</Offset>
+                                    <Offset>18</Offset>
+                                  </Offsets>
+                                  <CheatEntries>
+                                    <CheatEntry>
+                                      <ID>85</ID>
+                                      <Description>"number"</Description>
+                                      <Color>0076EC</Color>
+                                      <VariableType>4 Bytes</VariableType>
+                                      <Address>player_ptr</Address>
+                                      <Offsets>
+                                        <Offset>24</Offset>
+                                        <Offset>28</Offset>
+                                        <Offset>10</Offset>
+                                        <Offset>20</Offset>
+                                        <Offset>18</Offset>
+                                      </Offsets>
+                                    </CheatEntry>
+                                    <CheatEntry>
+                                      <ID>84</ID>
+                                      <Description>"maxNumber"</Description>
+                                      <Color>0076EC</Color>
+                                      <VariableType>4 Bytes</VariableType>
+                                      <Address>player_ptr</Address>
+                                      <Offsets>
+                                        <Offset>20</Offset>
+                                        <Offset>28</Offset>
+                                        <Offset>10</Offset>
+                                        <Offset>20</Offset>
+                                        <Offset>18</Offset>
+                                      </Offsets>
+                                    </CheatEntry>
+                                  </CheatEntries>
+                                </CheatEntry>
+                                <CheatEntry>
+                                  <ID>76</ID>
+                                  <Description>"Item[2]"</Description>
+                                  <LastState RealAddress="00000000"/>
+                                  <Color>58B000</Color>
+                                  <VariableType>String</VariableType>
+                                  <Length>0</Length>
+                                  <Unicode>0</Unicode>
+                                  <CodePage>0</CodePage>
+                                  <ZeroTerminate>1</ZeroTerminate>
+                                  <Address>player_ptr</Address>
+                                  <Offsets>
+                                    <Offset>20</Offset>
+                                    <Offset>10</Offset>
+                                    <Offset>20</Offset>
+                                    <Offset>18</Offset>
+                                  </Offsets>
+                                  <CheatEntries>
+                                    <CheatEntry>
+                                      <ID>82</ID>
+                                      <Description>"number"</Description>
+                                      <Color>0076EC</Color>
+                                      <VariableType>4 Bytes</VariableType>
+                                      <Address>player_ptr</Address>
+                                      <Offsets>
+                                        <Offset>24</Offset>
+                                        <Offset>20</Offset>
+                                        <Offset>10</Offset>
+                                        <Offset>20</Offset>
+                                        <Offset>18</Offset>
+                                      </Offsets>
+                                    </CheatEntry>
+                                    <CheatEntry>
+                                      <ID>81</ID>
+                                      <Description>"maxNumber"</Description>
+                                      <Color>0076EC</Color>
+                                      <VariableType>4 Bytes</VariableType>
+                                      <Address>player_ptr</Address>
+                                      <Offsets>
+                                        <Offset>20</Offset>
+                                        <Offset>20</Offset>
+                                        <Offset>10</Offset>
+                                        <Offset>20</Offset>
+                                        <Offset>18</Offset>
+                                      </Offsets>
+                                    </CheatEntry>
+                                  </CheatEntries>
+                                </CheatEntry>
+                              </CheatEntries>
+                            </CheatEntry>
+                          </CheatEntries>
+                        </CheatEntry>
+                      </CheatEntries>
+                    </CheatEntry>
+                  </CheatEntries>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>205</ID>
+              <Description>"AbilityItem Base Addresses"</Description>
+              <Options moHideChildren="1"/>
+              <LastState/>
+              <Color>004080</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>define(address,Pathea.UISystemNs.MainMenu:GridPlayerAbility:ShowLevelDetial+1d)
+define(bytes,48 63 40 20 85 C0)
+
+[ENABLE]
+assert(address,bytes)
+alloc(newmem,$100)
+
+label(code)
+label(return)
+
+globalalloc(abilityItem_ptr,8)
+
+newmem:
+  mov [abilityItem_ptr],rax
+
+code:
+  movsxd  rax,dword ptr [rax+20]
+  test eax,eax
+  jmp return
+
+address:
+  jmp newmem
+  nop
+return:
+
+[DISABLE]
+address:
+  db bytes
+  // movsxd  rax,dword ptr [rax+20]
+  // test eax,eax
+
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: Pathea.UISystemNs.MainMenu:GridPlayerAbility:ShowLevelDetial+1d
+
+07B1051F: 00 55 48                       -  add [rbp+48],dl
+07B10522: 8B EC                          -  mov ebp,esp
+07B10524: 56                             -  push rsi
+07B10525: 57                             -  push rdi
+07B10526: 48 83 EC 10                    -  sub rsp,10
+07B1052A: 48 8B F9                       -  mov rdi,rcx
+07B1052D: 49 8B F0                       -  mov rsi,r8
+07B10530: 48 8B 87 D8 00 00 00           -  mov rax,[rdi+000000D8]
+07B10537: 48 8B C8                       -  mov rcx,rax
+07B1053A: 83 39 00                       -  cmp dword ptr [rcx],00
+// ---------- INJECTING HERE ----------
+07B1053D: 48 63 40 20                    -  movsxd  rax,dword ptr [rax+20]
+07B10541: 85 C0                          -  test eax,eax
+// ---------- DONE INJECTING  ----------
+07B10543: 0F 85 FC 00 00 00              -  jne Pathea.UISystemNs.MainMenu:GridPlayerAbility:ShowLevelDetial+125
+07B10549: 48 8B 04 25 60 C1 79 04        -  mov rax,[0479C160]
+07B10551: 48 63 97 10 01 00 00           -  movsxd  rdx,dword ptr [rdi+00000110]
+07B10558: 4C 63 87 14 01 00 00           -  movsxd  r8,dword ptr [rdi+00000114]
+07B1055F: 48 8B C8                       -  mov rcx,rax
+07B10562: 48 83 EC 20                    -  sub rsp,20
+07B10566: 83 38 00                       -  cmp dword ptr [rax],00
+07B10569: 49 BB FC 04 B1 07 00 00 00 00  -  mov r11,0000000007B104FC
+07B10573: 41 FF D3                       -  call r11
+07B10576: 48 83 C4 20                    -  add rsp,20
+}
+</AssemblerScript>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>206</ID>
+                  <Description>"Base Address"</Description>
+                  <LastState RealAddress="00000000"/>
+                  <Color>BBBB00</Color>
+                  <VariableType>String</VariableType>
+                  <Length>0</Length>
+                  <Unicode>0</Unicode>
+                  <CodePage>0</CodePage>
+                  <ZeroTerminate>1</ZeroTerminate>
+                  <Address>abilityItem_ptr</Address>
+                  <Offsets>
+                    <Offset>0</Offset>
+                  </Offsets>
+                  <CheatEntries>
+                    <CheatEntry>
+                      <ID>207</ID>
+                      <Description>"refData"</Description>
+                      <LastState RealAddress="00000000"/>
+                      <Color>400040</Color>
+                      <VariableType>String</VariableType>
+                      <Length>0</Length>
+                      <Unicode>0</Unicode>
+                      <CodePage>0</CodePage>
+                      <ZeroTerminate>1</ZeroTerminate>
+                      <Address>abilityItem_ptr</Address>
+                      <Offsets>
+                        <Offset>10</Offset>
+                      </Offsets>
+                      <CheatEntries>
+                        <CheatEntry>
+                          <ID>218</ID>
+                          <Description>"nameTextID"</Description>
+                          <DropDownList ReadOnly="1" DescriptionOnly="1" DisplayValueAsItem="1">Battle:
+140046:Defense Posture
+140048:Aggressive Stance
+140050:Pain Dealer
+140052:Healer
+140054:Loot
+140056:Recovery
+140058:Resilience
+140060:Pummel
+140062:Guard
+140064:Strike
+140066:Dash
+140068:Evasive
+140070:Intensive Training
+
+Gather:
+140022:Lucky Miner
+140024:Lucky Lumberman
+140026:Fisherman
+140028:Advanced Mining
+140030:Advanced Lumbering
+140032:Master Miner
+140034:Master Lumberman
+140036:Lively
+140038:Mastery of Pickaxe
+140040:Mastery of Axe
+140042:Power Up
+140044:Toughness
+
+Social:
+140000:Martial Artist
+140002:Social Maniac
+140004:Pickpocket
+140006:Happy Camper
+140008:Big Player
+140010:Matchmaker
+140012:Happy Camper
+140014:Fair Fight
+140016:Business Mind
+140018:The Giver
+140020:Smooth Talk
+</DropDownList>
+                          <Color>400040</Color>
+                          <VariableType>4 Bytes</VariableType>
+                          <Address>abilityItem_ptr</Address>
+                          <Offsets>
+                            <Offset>34</Offset>
+                            <Offset>10</Offset>
+                          </Offsets>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>210</ID>
+                          <Description>"maxPoint"</Description>
+                          <Color>400040</Color>
+                          <VariableType>4 Bytes</VariableType>
+                          <Address>abilityItem_ptr</Address>
+                          <Offsets>
+                            <Offset>30</Offset>
+                            <Offset>10</Offset>
+                          </Offsets>
+                        </CheatEntry>
+                      </CheatEntries>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>208</ID>
+                      <Description>"point"</Description>
+                      <Color>400040</Color>
+                      <VariableType>4 Bytes</VariableType>
+                      <Address>abilityItem_ptr</Address>
+                      <Offsets>
+                        <Offset>20</Offset>
+                      </Offsets>
+                    </CheatEntry>
+                  </CheatEntries>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+  </CheatEntries>
+  <UserdefinedSymbols>
+    <SymbolEntry>
+      <Name>player_ptr</Name>
+      <Address>058B0000</Address>
+    </SymbolEntry>
+    <SymbolEntry>
+      <Name>timeManager_ptr</Name>
+      <Address>058B0040</Address>
+    </SymbolEntry>
+    <SymbolEntry>
+      <Name>playerStamina_ptr</Name>
+      <Address>05550020</Address>
+    </SymbolEntry>
+    <SymbolEntry>
+      <Name>playerStats_ptr</Name>
+      <Address>05550030</Address>
+    </SymbolEntry>
+    <SymbolEntry>
+      <Name>playerStats</Name>
+      <Address>03A00000</Address>
+    </SymbolEntry>
+    <SymbolEntry>
+      <Name>playerAbility_ptr</Name>
+      <Address>058B0010</Address>
+    </SymbolEntry>
+    <SymbolEntry>
+      <Name>gridPlayerAbility_ptr</Name>
+      <Address>038A0030</Address>
+    </SymbolEntry>
+    <SymbolEntry>
+      <Name>abilityName_ptr</Name>
+      <Address>038A0040</Address>
+    </SymbolEntry>
+    <SymbolEntry>
+      <Name>abilityItem_ptr</Name>
+      <Address>058B0030</Address>
+    </SymbolEntry>
+    <SymbolEntry>
+      <Name>abilityStat_ptr</Name>
+      <Address>058B0020</Address>
+    </SymbolEntry>
+  </UserdefinedSymbols>
+</CheatTable>
