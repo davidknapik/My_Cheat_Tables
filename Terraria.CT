@@ -1009,28 +1009,25 @@ unregistersymbol(_invqty)
         <CheatEntry>
           <ID>66</ID>
           <Description>"Infinite Items"</Description>
-          <LastState/>
+          <LastState Activated="1"/>
           <VariableType>Auto Assembler Script</VariableType>
           <AssemblerScript>[ENABLE]
 // Infinate Items
 //code from here to '[DISABLE]' will be used to enable the cheat
-aobscan(health, 8B 80 88 00 00 00 89 45 E0 8B 45 E0 48 8B 95 E0 DC FF FF 89 82 88 00 00 00 8B 85 E4 DC FF FF)
+aobscan(health, 7E ?? 8B 85 E4 DC FF FF 89 85 E0 DC FF FF 8B 85 E0 DC FF FF 8B 80 88 00 00 00 89 45 E0 8B 45 E0 48 8B 95 E0 DC FF FF 89 82 88 00 00 00 8B 85 E4 DC FF FF)
 label(_health)
 registersymbol(_health)
 
-health+c:
+health+20:
 _health:
 db 90
 
 
 /*
-28B535E0 - 7E 0C - jle Terraria.Player::ItemCheck+235A6
-28B535E2 - 8B 85 D8DDFFFF  - mov eax,[ebp-00002228]
-28B535E8 - FF 88 80000000  - dec [eax+00000080] &lt;&lt;
-28B535EE - 8B 85 D8DDFFFF  - mov eax,[ebp-00002228]
-28B535F4 - 83 B8 80000000 00 - cmp dword ptr [eax+00000080],00
-
-
+Terraria.Player::ItemCheck+2588A - 7E 2B                 - jle Terraria.Player::ItemCheck+258B7
+Terraria.Player::ItemCheck+2588C - 8B 85 E4DCFFFF        - mov eax,[ebp-0000231C]
+Terraria.Player::ItemCheck+25892 - 89 85 E0DCFFFF        - mov [ebp-00002320],eax
+Terraria.Player::ItemCheck+25898 - 8B 85 E0DCFFFF        - mov eax,[ebp-00002320]
 Terraria.Player::ItemCheck+2589E - 8B 80 88000000        - mov eax,[eax+00000088]
 Terraria.Player::ItemCheck+258A4 - 89 45 E0              - mov [ebp-20],eax
 Terraria.Player::ItemCheck+258A7 - 8B 45 E0              - mov eax,[ebp-20]
@@ -1239,13 +1236,147 @@ unregistersymbol(_ammo)
 
 </AssemblerScript>
         </CheatEntry>
+        <CheatEntry>
+          <ID>85</ID>
+          <Description>"Negate Burning"</Description>
+          <LastState Activated="1"/>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+aobscan(health1, 75 ?? C6 83 F4 05 00 00 01 )
+label(_health1)
+registersymbol(_health1)
+
+health1+8:
+_health1:
+db 00
+
+
+/*
+
+
+50EB9C3E - 83 7C 81 08 18 - cmp dword ptr [ecx+eax*4+08],18
+50EB9C43 - 75 0C - jne Terraria.Player::UpdateBuffs+4589
+50EB9C45 - C6 83 F4050000 01 - mov byte ptr [ebx+000005F4],01 &lt;&lt;
+50EB9C4C - E9 53060000 - jmp Terraria.Player::UpdateBuffs+4BDC
+50EB9C51 - 8B 45 EC  - mov eax,[ebp-14]
+
+originalcode:
+
+129E2330 - 0F8F 4F010000 - jg Terraria.Player::UpdateLifeRegen+D0D
+129E2336 - 81 83 48030000 58020000 - add [ebx+00000348],00000258
+129E2340 - 83 83 34030000 FB - add dword ptr [ebx+00000334],-05 &lt;&lt;
+129E2347 - 8D 7D C8  - lea edi,[ebp-38]
+129E234A - 0F57 C0  - xorps xmm0,xmm0
+
+*/
+
+
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+_health1:
+db 01
+unregistersymbol(_health1)
+</AssemblerScript>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>88</ID>
+          <Description>"Negate LavaWet"</Description>
+          <LastState Activated="1"/>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+aobscan(health1, 81 83 5C 03 00 00 F0 00 00 00 83 83 48 03 00 00 FE 8D 7D A4 )
+label(_health1)
+registersymbol(_health1)
+
+health1+10:
+_health1:
+db 00
+
+aobscan(health2, 81 83 5C 03 00 00 68 01 00 00 83 83 48 03 00 00 FD 8D 7D 94 )
+label(_health2)
+registersymbol(_health2)
+
+health2+10:
+_health2:
+db 00
+/*
+
+
+502F265D - 0F8F 91000000 - jg Terraria.Player::UpdateLifeRegen+DEC
+502F2663 - 81 83 5C030000 F0000000 - add [ebx+0000035C],000000F0
+502F266D - 83 83 48030000 FE - add dword ptr [ebx+00000348],-02 &lt;&lt;
+502F2674 - 8D 7D A4  - lea edi,[ebp-5C]
+502F2677 - 0F57 C0  - xorps xmm0,xmm0
+
+
+502F25BC - 0F8F 91000000 - jg Terraria.Player::UpdateLifeRegen+D4B
+502F25C2 - 81 83 5C030000 68010000 - add [ebx+0000035C],00000168
+502F25CC - 83 83 48030000 FD - add dword ptr [ebx+00000348],-03 &lt;&lt;
+502F25D3 - 8D 7D 94  - lea edi,[ebp-6C]
+502F25D6 - 0F57 C0  - xorps xmm0,xmm0
+
+
+*/
+
+
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+_health1:
+db FE
+unregistersymbol(_health1)
+
+_health2:
+db FD
+unregistersymbol(_health2)
+</AssemblerScript>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>89</ID>
+          <Description>"Infinite Rocket Boots"</Description>
+          <LastState Activated="1"/>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>[ENABLE]
+// Infinite Rocket Boots rocketTime
+//code from here to '[DISABLE]' will be used to enable the cheat
+aobscan(boots,48 8B 95 30 F1 FF FF 89 82 28 04 00 00 8B 85 30 F1 FF FF C7 80 30 04 00 00 0A 00 00 00 8B 85 30 F1 FF FF)
+label(_boots)
+registersymbol(_boots)
+
+boots+0:
+_boots:
+db 90
+
+/*
+
+5064E10A - 48 - dec eax
+5064E10B - 8B 95 30F1FFFF  - mov edx,[ebp-00000ED0]
+5064E111 - 89 82 28040000  - mov [edx+00000428],eax &lt;&lt;
+5064E117 - 8B 85 30F1FFFF  - mov eax,[ebp-00000ED0]
+5064E11D - C7 80 30040000 0A000000 - mov [eax+00000430],0000000A
+
+
+*/
+
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+_boots:
+db 48
+
+unregistersymbol(_boots)
+</AssemblerScript>
+        </CheatEntry>
       </CheatEntries>
     </CheatEntry>
   </CheatEntries>
   <CheatCodes>
     <CodeEntry>
       <Description>Change of dec eax</Description>
-      <Address>0D3B58F2</Address>
+      <Address>50A958F2</Address>
       <ModuleName/>
       <ModuleNameOffset>0</ModuleNameOffset>
       <Before>
@@ -1410,6 +1541,780 @@ unregistersymbol(_ammo)
         <Element Offset="3964" Vartype="Pointer" Bytesize="4" DisplayMethod="Unsigned Integer"/>
         <Element Offset="3968" Vartype="4 Bytes" Bytesize="4" DisplayMethod="Unsigned Integer"/>
         <Element Offset="3972" Vartype="Pointer" Bytesize="4" RLECount="31" PointerSize="4" DisplayMethod="Unsigned Integer"/>
+      </Elements>
+    </Structure>
+    <Structure Name="Terraria.Player" AutoFill="0" AutoCreate="1" DefaultHex="0" AutoDestroy="0" DoNotSaveLocal="0" RLECompression="1" AutoCreateStructsize="4096">
+      <Elements>
+        <Element Offset="0" Vartype="Pointer" Bytesize="4" Description="Vtable" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="4" Vartype="4 Bytes" Bytesize="4" Description="whoAmI" DisplayMethod="Signed Integer"/>
+        <Element Offset="8" Vartype="4 Bytes" Bytesize="4" Description="oldDirection" DisplayMethod="Signed Integer"/>
+        <Element Offset="12" Vartype="4 Bytes" Bytesize="4" Description="direction" DisplayMethod="Signed Integer"/>
+        <Element Offset="16" Vartype="4 Bytes" Bytesize="4" Description="width" DisplayMethod="Signed Integer"/>
+        <Element Offset="20" Vartype="4 Bytes" Bytesize="4" Description="height" DisplayMethod="Signed Integer"/>
+        <Element Offset="24" Vartype="Byte" Bytesize="1" Description="active" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="25" Vartype="Byte" Bytesize="1" Description="wet" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="26" Vartype="Byte" Bytesize="1" Description="honeyWet" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="27" Vartype="Byte" Bytesize="1" Description="wetCount" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="28" Vartype="Byte" Bytesize="1" Description="lavaWet" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="32" Vartype="Pointer" Bytesize="4" Description="position" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="36" Vartype="Pointer" Bytesize="4" Description="position_2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="40" Vartype="4 Bytes" Bytesize="4" Description="velocity" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="44" Vartype="4 Bytes" Bytesize="4" Description="velocity_2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="48" Vartype="Pointer" Bytesize="4" Description="oldPosition" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="52" Vartype="Pointer" Bytesize="4" Description="oldPosition_2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="56" Vartype="4 Bytes" Bytesize="4" Description="oldVelocity" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="60" Vartype="4 Bytes" Bytesize="4" Description="oldVelocity_2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="64" Vartype="Double" Bytesize="8" Description="headFrameCounter" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="72" Vartype="Double" Bytesize="8" Description="bodyFrameCounter" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="80" Vartype="Double" Bytesize="8" Description="legFrameCounter" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="88" Vartype="Pointer" Bytesize="4" Description="DpadRadial" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="92" Vartype="Pointer" Bytesize="4" Description="CircularRadial" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="96" Vartype="Pointer" Bytesize="4" Description="QuicksRadial" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="100" Vartype="Pointer" Bytesize="4" Description="hideInfo" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="104" Vartype="Pointer" Bytesize="4" Description="builderAccStatus" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="108" Vartype="Pointer" Bytesize="4" Description="lostCoinString" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="112" Vartype="Pointer" Bytesize="4" Description="name" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="116" Vartype="Pointer" Bytesize="4" Description="NPCBannerBuff" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="120" Vartype="Pointer" Bytesize="4" Description="solarShieldPos" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="124" Vartype="Pointer" Bytesize="4" Description="solarShieldVel" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="128" Vartype="Pointer" Bytesize="4" Description="beetlePos" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="132" Vartype="Pointer" Bytesize="4" Description="beetleVel" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="136" Vartype="Pointer" Bytesize="4" Description="itemFlamePos" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="140" Vartype="Pointer" Bytesize="4" Description="doubleTapCardinalTimer" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="144" Vartype="Pointer" Bytesize="4" Description="holdDownCardinalTimer" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="148" Vartype="Pointer" Bytesize="4" Description="speedSlice" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="152" Vartype="Pointer" Bytesize="4" Description="armor" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="156" Vartype="Pointer" Bytesize="4" Description="dye" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="160" Vartype="Pointer" Bytesize="4" Description="miscEquips" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="164" Vartype="Pointer" Bytesize="4" Description="miscDyes" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="168" Vartype="Pointer" Bytesize="4" Description="trashItem" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="172" Vartype="Pointer" Bytesize="4" Description="buffType" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="176" Vartype="Pointer" Bytesize="4" Description="buffTime" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="180" Vartype="Pointer" Bytesize="4" Description="buffImmune" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="184" Vartype="Pointer" Bytesize="4" Description="setBonus" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="188" Vartype="Pointer" Bytesize="4" Description="inventory" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="192" Vartype="Pointer" Bytesize="4" Description="inventoryChestStack" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="196" Vartype="Pointer" Bytesize="4" Description="bank" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="200" Vartype="Pointer" Bytesize="4" Description="bank2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="204" Vartype="Pointer" Bytesize="4" Description="bank3" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="208" Vartype="Pointer" Bytesize="4" Description="hitTile" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="212" Vartype="Pointer" Bytesize="4" Description="hideVisual" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="216" Vartype="Pointer" Bytesize="4" Description="showItemIconText" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="220" Vartype="Pointer" Bytesize="4" Description="shadowPos" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="224" Vartype="Pointer" Bytesize="4" Description="shadowRotation" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="228" Vartype="Pointer" Bytesize="4" Description="shadowOrigin" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="232" Vartype="Pointer" Bytesize="4" Description="shadowDirection" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="236" Vartype="Pointer" Bytesize="4" Description="mount" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="240" Vartype="Pointer" Bytesize="4" Description="spX" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="244" Vartype="Pointer" Bytesize="4" Description="spY" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="248" Vartype="Pointer" Bytesize="4" Description="spN" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="252" Vartype="Pointer" Bytesize="4" Description="spI" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="256" Vartype="Pointer" Bytesize="4" Description="_adjTile" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="260" Vartype="Pointer" Bytesize="4" Description="_oldAdjTile" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="264" Vartype="Pointer" Bytesize="4" Description="hermesStepSound" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="268" Vartype="Pointer" Bytesize="4" Description="displayedFishingInfo" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="272" Vartype="Pointer" Bytesize="4" Description="grappling" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="276" Vartype="Pointer" Bytesize="4" Description="ownedProjectileCounts" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="280" Vartype="Pointer" Bytesize="4" Description="npcTypeNoAggro" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="284" Vartype="Pointer" Bytesize="4" Description="TouchedTiles" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="288" Vartype="Pointer" Bytesize="4" Description="hurtCooldowns" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="292" Vartype="Pointer" Bytesize="4" Description="usedMods" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="296" Vartype="Pointer" Bytesize="4" Description="modPlayers" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="300" Vartype="4 Bytes" Bytesize="4" Description="HotbarOffset" DisplayMethod="Signed Integer"/>
+        <Element Offset="304" Vartype="4 Bytes" Bytesize="4" Description="lostCoins" DisplayMethod="Signed Integer"/>
+        <Element Offset="308" Vartype="4 Bytes" Bytesize="4" Description="soulDrain" DisplayMethod="Signed Integer"/>
+        <Element Offset="312" Vartype="Float" Bytesize="4" Description="drainBoost" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="316" Vartype="4 Bytes" Bytesize="4" Description="taxMoney" DisplayMethod="Signed Integer"/>
+        <Element Offset="320" Vartype="4 Bytes" Bytesize="4" Description="taxTimer" DisplayMethod="Signed Integer"/>
+        <Element Offset="324" Vartype="Float" Bytesize="4" Description="basiliskCharge" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="328" Vartype="4 Bytes" Bytesize="4" Description="extraAccessorySlots" DisplayMethod="Signed Integer"/>
+        <Element Offset="332" Vartype="4 Bytes" Bytesize="4" Description="tankPet" DisplayMethod="Signed Integer"/>
+        <Element Offset="336" Vartype="4 Bytes" Bytesize="4" Description="stringColor" DisplayMethod="Signed Integer"/>
+        <Element Offset="340" Vartype="4 Bytes" Bytesize="4" Description="counterWeight" DisplayMethod="Signed Integer"/>
+        <Element Offset="344" Vartype="4 Bytes" Bytesize="4" Description="beetleOrbs" DisplayMethod="Signed Integer"/>
+        <Element Offset="348" Vartype="Float" Bytesize="4" Description="beetleCounter" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="352" Vartype="4 Bytes" Bytesize="4" Description="beetleCountdown" DisplayMethod="Signed Integer"/>
+        <Element Offset="356" Vartype="4 Bytes" Bytesize="4" Description="solarShields" DisplayMethod="Signed Integer"/>
+        <Element Offset="360" Vartype="4 Bytes" Bytesize="4" Description="solarCounter" DisplayMethod="Signed Integer"/>
+        <Element Offset="364" Vartype="4 Bytes" Bytesize="4" Description="nebulaLevelLife" DisplayMethod="Signed Integer"/>
+        <Element Offset="368" Vartype="4 Bytes" Bytesize="4" Description="nebulaLevelMana" DisplayMethod="Signed Integer"/>
+        <Element Offset="372" Vartype="4 Bytes" Bytesize="4" Description="nebulaManaCounter" DisplayMethod="Signed Integer"/>
+        <Element Offset="376" Vartype="4 Bytes" Bytesize="4" Description="nebulaLevelDamage" DisplayMethod="Signed Integer"/>
+        <Element Offset="380" Vartype="Float" Bytesize="4" Description="flameRingRot" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="384" Vartype="Float" Bytesize="4" Description="flameRingScale" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="388" Vartype="4 Bytes" Bytesize="4" Description="netManaTime" DisplayMethod="Signed Integer"/>
+        <Element Offset="392" Vartype="4 Bytes" Bytesize="4" Description="netLifeTime" DisplayMethod="Signed Integer"/>
+        <Element Offset="396" Vartype="4 Bytes" Bytesize="4" Description="beetleFrame" DisplayMethod="Signed Integer"/>
+        <Element Offset="400" Vartype="4 Bytes" Bytesize="4" Description="beetleFrameCounter" DisplayMethod="Signed Integer"/>
+        <Element Offset="404" Vartype="Float" Bytesize="4" Description="manaSickReduction" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="408" Vartype="4 Bytes" Bytesize="4" Description="loadStatus" DisplayMethod="Signed Integer"/>
+        <Element Offset="412" Vartype="4 Bytes" Bytesize="4" Description="itemFlameCount" DisplayMethod="Signed Integer"/>
+        <Element Offset="416" Vartype="Float" Bytesize="4" Description="lifeSteal" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="420" Vartype="Float" Bytesize="4" Description="ghostDmg" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="424" Vartype="Float" Bytesize="4" Description="teleportTime" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="428" Vartype="4 Bytes" Bytesize="4" Description="teleportStyle" DisplayMethod="Signed Integer"/>
+        <Element Offset="432" Vartype="4 Bytes" Bytesize="4" Description="ropeCount" DisplayMethod="Signed Integer"/>
+        <Element Offset="436" Vartype="4 Bytes" Bytesize="4" Description="manaRegenBonus" DisplayMethod="Signed Integer"/>
+        <Element Offset="440" Vartype="4 Bytes" Bytesize="4" Description="manaRegenDelayBonus" DisplayMethod="Signed Integer"/>
+        <Element Offset="444" Vartype="4 Bytes" Bytesize="4" Description="dash" DisplayMethod="Signed Integer"/>
+        <Element Offset="448" Vartype="4 Bytes" Bytesize="4" Description="dashTime" DisplayMethod="Signed Integer"/>
+        <Element Offset="452" Vartype="4 Bytes" Bytesize="4" Description="dashDelay" DisplayMethod="Signed Integer"/>
+        <Element Offset="456" Vartype="4 Bytes" Bytesize="4" Description="eocDash" DisplayMethod="Signed Integer"/>
+        <Element Offset="460" Vartype="4 Bytes" Bytesize="4" Description="eocHit" DisplayMethod="Signed Integer"/>
+        <Element Offset="464" Vartype="Float" Bytesize="4" Description="accRunSpeed" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="468" Vartype="4 Bytes" Bytesize="4" Description="gem" DisplayMethod="Signed Integer"/>
+        <Element Offset="472" Vartype="4 Bytes" Bytesize="4" Description="gemCount" DisplayMethod="Signed Integer"/>
+        <Element Offset="476" Vartype="4 Bytes" Bytesize="4" Description="pulleyFrame" DisplayMethod="Signed Integer"/>
+        <Element Offset="480" Vartype="Float" Bytesize="4" Description="pulleyFrameCounter" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="484" Vartype="4 Bytes" Bytesize="4" Description="slideDir" DisplayMethod="Signed Integer"/>
+        <Element Offset="488" Vartype="4 Bytes" Bytesize="4" Description="launcherWait" DisplayMethod="Signed Integer"/>
+        <Element Offset="492" Vartype="4 Bytes" Bytesize="4" Description="spikedBoots" DisplayMethod="Signed Integer"/>
+        <Element Offset="496" Vartype="4 Bytes" Bytesize="4" Description="carpetFrame" DisplayMethod="Signed Integer"/>
+        <Element Offset="500" Vartype="Float" Bytesize="4" Description="carpetFrameCounter" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="504" Vartype="4 Bytes" Bytesize="4" Description="carpetTime" DisplayMethod="Signed Integer"/>
+        <Element Offset="508" Vartype="4 Bytes" Bytesize="4" Description="miscCounter" DisplayMethod="Signed Integer"/>
+        <Element Offset="512" Vartype="4 Bytes" Bytesize="4" Description="infernoCounter" DisplayMethod="Signed Integer"/>
+        <Element Offset="516" Vartype="Float" Bytesize="4" Description="endurance" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="520" Vartype="Float" Bytesize="4" Description="shadowDodgeCount" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="524" Vartype="4 Bytes" Bytesize="4" Description="petalTimer" DisplayMethod="Signed Integer"/>
+        <Element Offset="528" Vartype="4 Bytes" Bytesize="4" Description="shadowDodgeTimer" DisplayMethod="Signed Integer"/>
+        <Element Offset="532" Vartype="4 Bytes" Bytesize="4" Description="phantomPhoneixCounter" DisplayMethod="Signed Integer"/>
+        <Element Offset="536" Vartype="4 Bytes" Bytesize="4" Description="fishingSkill" DisplayMethod="Signed Integer"/>
+        <Element Offset="540" Vartype="4 Bytes" Bytesize="4" Description="maxMinions" DisplayMethod="Signed Integer"/>
+        <Element Offset="544" Vartype="4 Bytes" Bytesize="4" Description="numMinions" DisplayMethod="Signed Integer"/>
+        <Element Offset="548" Vartype="Float" Bytesize="4" Description="slotsMinions" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="552" Vartype="Float" Bytesize="4" Description="wingTime" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="556" Vartype="4 Bytes" Bytesize="4" Description="wings" DisplayMethod="Signed Integer"/>
+        <Element Offset="560" Vartype="4 Bytes" Bytesize="4" Description="wingsLogic" DisplayMethod="Signed Integer"/>
+        <Element Offset="564" Vartype="4 Bytes" Bytesize="4" Description="wingTimeMax" DisplayMethod="Signed Integer"/>
+        <Element Offset="568" Vartype="4 Bytes" Bytesize="4" Description="wingFrame" DisplayMethod="Signed Integer"/>
+        <Element Offset="572" Vartype="4 Bytes" Bytesize="4" Description="wingFrameCounter" DisplayMethod="Signed Integer"/>
+        <Element Offset="576" Vartype="4 Bytes" Bytesize="4" Description="skinVariant" DisplayMethod="Signed Integer"/>
+        <Element Offset="580" Vartype="4 Bytes" Bytesize="4" Description="ghostFrame" DisplayMethod="Signed Integer"/>
+        <Element Offset="584" Vartype="4 Bytes" Bytesize="4" Description="ghostFrameCounter" DisplayMethod="Signed Integer"/>
+        <Element Offset="588" Vartype="4 Bytes" Bytesize="4" Description="miscTimer" DisplayMethod="Signed Integer"/>
+        <Element Offset="592" Vartype="Float" Bytesize="4" Description="townNPCs" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="596" Vartype="4 Bytes" Bytesize="4" Description="netSkip" DisplayMethod="Signed Integer"/>
+        <Element Offset="600" Vartype="4 Bytes" Bytesize="4" Description="oldSelectItem" DisplayMethod="Signed Integer"/>
+        <Element Offset="604" Vartype="4 Bytes" Bytesize="4" Description="immuneTime" DisplayMethod="Signed Integer"/>
+        <Element Offset="608" Vartype="4 Bytes" Bytesize="4" Description="immuneAlphaDirection" DisplayMethod="Signed Integer"/>
+        <Element Offset="612" Vartype="4 Bytes" Bytesize="4" Description="immuneAlpha" DisplayMethod="Signed Integer"/>
+        <Element Offset="616" Vartype="4 Bytes" Bytesize="4" Description="team" DisplayMethod="Signed Integer"/>
+        <Element Offset="620" Vartype="Float" Bytesize="4" Description="maxRegenDelay" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="624" Vartype="4 Bytes" Bytesize="4" Description="sign" DisplayMethod="Signed Integer"/>
+        <Element Offset="628" Vartype="4 Bytes" Bytesize="4" Description="reuseDelay" DisplayMethod="Signed Integer"/>
+        <Element Offset="632" Vartype="4 Bytes" Bytesize="4" Description="aggro" DisplayMethod="Signed Integer"/>
+        <Element Offset="636" Vartype="Float" Bytesize="4" Description="activeNPCs" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="640" Vartype="4 Bytes" Bytesize="4" Description="noThrow" DisplayMethod="Signed Integer"/>
+        <Element Offset="644" Vartype="4 Bytes" Bytesize="4" Description="changeItem" DisplayMethod="Signed Integer"/>
+        <Element Offset="648" Vartype="4 Bytes" Bytesize="4" Description="selectedItem" DisplayMethod="Signed Integer"/>
+        <Element Offset="652" Vartype="4 Bytes" Bytesize="4" Description="itemAnimation" DisplayMethod="Signed Integer"/>
+        <Element Offset="656" Vartype="4 Bytes" Bytesize="4" Description="itemAnimationMax" DisplayMethod="Signed Integer"/>
+        <Element Offset="660" Vartype="4 Bytes" Bytesize="4" Description="itemTime" DisplayMethod="Signed Integer"/>
+        <Element Offset="664" Vartype="4 Bytes" Bytesize="4" Description="toolTime" DisplayMethod="Signed Integer"/>
+        <Element Offset="668" Vartype="Float" Bytesize="4" Description="itemRotation" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="672" Vartype="4 Bytes" Bytesize="4" Description="itemWidth" DisplayMethod="Signed Integer"/>
+        <Element Offset="676" Vartype="4 Bytes" Bytesize="4" Description="itemHeight" DisplayMethod="Signed Integer"/>
+        <Element Offset="680" Vartype="Float" Bytesize="4" Description="ghostFade" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="684" Vartype="Float" Bytesize="4" Description="ghostDir" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="688" Vartype="4 Bytes" Bytesize="4" Description="heldProj" DisplayMethod="Signed Integer"/>
+        <Element Offset="692" Vartype="4 Bytes" Bytesize="4" Description="breathCD" DisplayMethod="Signed Integer"/>
+        <Element Offset="696" Vartype="4 Bytes" Bytesize="4" Description="breathMax" DisplayMethod="Signed Integer"/>
+        <Element Offset="700" Vartype="4 Bytes" Bytesize="4" Description="breath" DisplayMethod="Signed Integer"/>
+        <Element Offset="704" Vartype="4 Bytes" Bytesize="4" Description="lavaCD" DisplayMethod="Signed Integer"/>
+        <Element Offset="708" Vartype="4 Bytes" Bytesize="4" Description="lavaMax" DisplayMethod="Signed Integer"/>
+        <Element Offset="712" Vartype="4 Bytes" Bytesize="4" Description="lavaTime" DisplayMethod="Signed Integer"/>
+        <Element Offset="716" Vartype="4 Bytes" Bytesize="4" Description="stealthTimer" DisplayMethod="Signed Integer"/>
+        <Element Offset="720" Vartype="Float" Bytesize="4" Description="stealth" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="724" Vartype="Float" Bytesize="4" Description="headRotation" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="728" Vartype="Float" Bytesize="4" Description="bodyRotation" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="732" Vartype="Float" Bytesize="4" Description="legRotation" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="736" Vartype="Float" Bytesize="4" Description="fullRotation" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="740" Vartype="4 Bytes" Bytesize="4" Description="nonTorch" DisplayMethod="Signed Integer"/>
+        <Element Offset="744" Vartype="Float" Bytesize="4" Description="gfxOffY" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="748" Vartype="Float" Bytesize="4" Description="stepSpeed" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="752" Vartype="4 Bytes" Bytesize="4" Description="respawnTimer" DisplayMethod="Signed Integer"/>
+        <Element Offset="756" Vartype="4 Bytes" Bytesize="4" Description="attackCD" DisplayMethod="Signed Integer"/>
+        <Element Offset="760" Vartype="4 Bytes" Bytesize="4" Description="potionDelay" DisplayMethod="Signed Integer"/>
+        <Element Offset="764" Vartype="4 Bytes" Bytesize="4" Description="jump" DisplayMethod="Signed Integer"/>
+        <Element Offset="768" Vartype="4 Bytes" Bytesize="4" Description="head" DisplayMethod="Signed Integer"/>
+        <Element Offset="772" Vartype="4 Bytes" Bytesize="4" Description="body" DisplayMethod="Signed Integer"/>
+        <Element Offset="776" Vartype="4 Bytes" Bytesize="4" Description="legs" DisplayMethod="Signed Integer"/>
+        <Element Offset="780" Vartype="4 Bytes" Bytesize="4" Description="altFunctionUse" DisplayMethod="Signed Integer"/>
+        <Element Offset="784" Vartype="4 Bytes" Bytesize="4" Description="leftTimer" DisplayMethod="Signed Integer"/>
+        <Element Offset="788" Vartype="4 Bytes" Bytesize="4" Description="rightTimer" DisplayMethod="Signed Integer"/>
+        <Element Offset="792" Vartype="4 Bytes" Bytesize="4" Description="showItemIcon2" DisplayMethod="Signed Integer"/>
+        <Element Offset="796" Vartype="4 Bytes" Bytesize="4" Description="runSoundDelay" DisplayMethod="Signed Integer"/>
+        <Element Offset="800" Vartype="Float" Bytesize="4" Description="shadow" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="804" Vartype="4 Bytes" Bytesize="4" Description="shadowCount" DisplayMethod="Signed Integer"/>
+        <Element Offset="808" Vartype="Float" Bytesize="4" Description="manaCost" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="812" Vartype="4 Bytes" Bytesize="4" Description="step" DisplayMethod="Signed Integer"/>
+        <Element Offset="816" Vartype="4 Bytes" Bytesize="4" Description="anglerQuestsFinished" DisplayMethod="Signed Integer"/>
+        <Element Offset="820" Vartype="4 Bytes" Bytesize="4" Description="bartenderQuestLog" DisplayMethod="Signed Integer"/>
+        <Element Offset="824" Vartype="4 Bytes" Bytesize="4" Description="armorPenetration" DisplayMethod="Signed Integer"/>
+        <Element Offset="828" Vartype="4 Bytes" Bytesize="4" Description="statDefense" DisplayMethod="Signed Integer"/>
+        <Element Offset="832" Vartype="4 Bytes" Bytesize="4" Description="statLifeMax" DisplayMethod="Signed Integer"/>
+        <Element Offset="836" Vartype="4 Bytes" Bytesize="4" Description="statLifeMax2" DisplayMethod="Signed Integer"/>
+        <Element Offset="840" Vartype="4 Bytes" Bytesize="4" Description="statLife" DisplayMethod="Signed Integer"/>
+        <Element Offset="844" Vartype="4 Bytes" Bytesize="4" Description="statMana" DisplayMethod="Signed Integer"/>
+        <Element Offset="848" Vartype="4 Bytes" Bytesize="4" Description="statManaMax" DisplayMethod="Signed Integer"/>
+        <Element Offset="852" Vartype="4 Bytes" Bytesize="4" Description="statManaMax2" DisplayMethod="Signed Integer"/>
+        <Element Offset="856" Vartype="4 Bytes" Bytesize="4" Description="lifeRegen" DisplayMethod="Signed Integer"/>
+        <Element Offset="860" Vartype="4 Bytes" Bytesize="4" Description="lifeRegenCount" DisplayMethod="Signed Integer"/>
+        <Element Offset="864" Vartype="4 Bytes" Bytesize="4" Description="lifeRegenTime" DisplayMethod="Signed Integer"/>
+        <Element Offset="868" Vartype="4 Bytes" Bytesize="4" Description="manaRegen" DisplayMethod="Signed Integer"/>
+        <Element Offset="872" Vartype="4 Bytes" Bytesize="4" Description="manaRegenCount" DisplayMethod="Signed Integer"/>
+        <Element Offset="876" Vartype="4 Bytes" Bytesize="4" Description="manaRegenDelay" DisplayMethod="Signed Integer"/>
+        <Element Offset="880" Vartype="Float" Bytesize="4" Description="gravDir" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="884" Vartype="4 Bytes" Bytesize="4" Description="stickyBreak" DisplayMethod="Signed Integer"/>
+        <Element Offset="888" Vartype="4 Bytes" Bytesize="4" Description="phantasmTime" DisplayMethod="Signed Integer"/>
+        <Element Offset="892" Vartype="4 Bytes" Bytesize="4" Description="yoraiz0rEye" DisplayMethod="Signed Integer"/>
+        <Element Offset="896" Vartype="4 Bytes" Bytesize="4" Description="cartRampTime" DisplayMethod="Signed Integer"/>
+        <Element Offset="900" Vartype="Float" Bytesize="4" Description="trackBoost" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="904" Vartype="4 Bytes" Bytesize="4" Description="meleeCrit" DisplayMethod="Signed Integer"/>
+        <Element Offset="908" Vartype="4 Bytes" Bytesize="4" Description="rangedCrit" DisplayMethod="Signed Integer"/>
+        <Element Offset="912" Vartype="4 Bytes" Bytesize="4" Description="magicCrit" DisplayMethod="Signed Integer"/>
+        <Element Offset="916" Vartype="4 Bytes" Bytesize="4" Description="thrownCrit" DisplayMethod="Signed Integer"/>
+        <Element Offset="920" Vartype="Float" Bytesize="4" Description="meleeDamage" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="924" Vartype="Float" Bytesize="4" Description="rangedDamage" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="928" Vartype="Float" Bytesize="4" Description="thrownDamage" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="932" Vartype="Float" Bytesize="4" Description="bulletDamage" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="936" Vartype="Float" Bytesize="4" Description="arrowDamage" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="940" Vartype="Float" Bytesize="4" Description="rocketDamage" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="944" Vartype="Float" Bytesize="4" Description="magicDamage" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="948" Vartype="Float" Bytesize="4" Description="minionDamage" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="952" Vartype="Float" Bytesize="4" Description="minionKB" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="956" Vartype="Float" Bytesize="4" Description="meleeSpeed" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="960" Vartype="Float" Bytesize="4" Description="thrownVelocity" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="964" Vartype="Float" Bytesize="4" Description="moveSpeed" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="968" Vartype="Float" Bytesize="4" Description="pickSpeed" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="972" Vartype="Float" Bytesize="4" Description="wallSpeed" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="976" Vartype="Float" Bytesize="4" Description="tileSpeed" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="980" Vartype="4 Bytes" Bytesize="4" Description="SpawnX" DisplayMethod="Signed Integer"/>
+        <Element Offset="984" Vartype="4 Bytes" Bytesize="4" Description="SpawnY" DisplayMethod="Signed Integer"/>
+        <Element Offset="988" Vartype="4 Bytes" Bytesize="4" Description="lastTileRangeX" DisplayMethod="Signed Integer"/>
+        <Element Offset="992" Vartype="4 Bytes" Bytesize="4" Description="lastTileRangeY" DisplayMethod="Signed Integer"/>
+        <Element Offset="996" Vartype="Float" Bytesize="4" Description="gravity" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1000" Vartype="Float" Bytesize="4" Description="maxFallSpeed" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1004" Vartype="Float" Bytesize="4" Description="maxRunSpeed" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1008" Vartype="Float" Bytesize="4" Description="runAcceleration" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1012" Vartype="Float" Bytesize="4" Description="runSlowdown" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1016" Vartype="Float" Bytesize="4" Description="hairDyeVar" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1020" Vartype="4 Bytes" Bytesize="4" Description="hair" DisplayMethod="Signed Integer"/>
+        <Element Offset="1024" Vartype="4 Bytes" Bytesize="4" Description="accCompass" DisplayMethod="Signed Integer"/>
+        <Element Offset="1028" Vartype="4 Bytes" Bytesize="4" Description="accWatch" DisplayMethod="Signed Integer"/>
+        <Element Offset="1032" Vartype="4 Bytes" Bytesize="4" Description="accDepthMeter" DisplayMethod="Signed Integer"/>
+        <Element Offset="1036" Vartype="4 Bytes" Bytesize="4" Description="lastCreatureHit" DisplayMethod="Signed Integer"/>
+        <Element Offset="1040" Vartype="4 Bytes" Bytesize="4" Description="bestOre" DisplayMethod="Signed Integer"/>
+        <Element Offset="1044" Vartype="4 Bytes" Bytesize="4" Description="dpsDamage" DisplayMethod="Signed Integer"/>
+        <Element Offset="1048" Vartype="Float" Bytesize="4" Description="jumpSpeedBoost" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1052" Vartype="4 Bytes" Bytesize="4" Description="extraFall" DisplayMethod="Signed Integer"/>
+        <Element Offset="1056" Vartype="4 Bytes" Bytesize="4" Description="blockRange" DisplayMethod="Signed Integer"/>
+        <Element Offset="1060" Vartype="4 Bytes" Bytesize="4" Description="grapCount" DisplayMethod="Signed Integer"/>
+        <Element Offset="1064" Vartype="4 Bytes" Bytesize="4" Description="rocketTime" DisplayMethod="Signed Integer"/>
+        <Element Offset="1068" Vartype="4 Bytes" Bytesize="4" Description="rocketTimeMax" DisplayMethod="Signed Integer"/>
+        <Element Offset="1072" Vartype="4 Bytes" Bytesize="4" Description="rocketDelay" DisplayMethod="Signed Integer"/>
+        <Element Offset="1076" Vartype="4 Bytes" Bytesize="4" Description="rocketDelay2" DisplayMethod="Signed Integer"/>
+        <Element Offset="1080" Vartype="4 Bytes" Bytesize="4" Description="rocketBoots" DisplayMethod="Signed Integer"/>
+        <Element Offset="1084" Vartype="4 Bytes" Bytesize="4" Description="swimTime" DisplayMethod="Signed Integer"/>
+        <Element Offset="1088" Vartype="Float" Bytesize="4" Description="thorns" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1092" Vartype="4 Bytes" Bytesize="4" Description="nebulaCD" DisplayMethod="Signed Integer"/>
+        <Element Offset="1096" Vartype="4 Bytes" Bytesize="4" Description="maxTurrets" DisplayMethod="Signed Integer"/>
+        <Element Offset="1100" Vartype="4 Bytes" Bytesize="4" Description="maxTurretsOld" DisplayMethod="Signed Integer"/>
+        <Element Offset="1104" Vartype="4 Bytes" Bytesize="4" Description="wireOperationsCooldown" DisplayMethod="Signed Integer"/>
+        <Element Offset="1108" Vartype="4 Bytes" Bytesize="4" Description="lastChest" DisplayMethod="Signed Integer"/>
+        <Element Offset="1112" Vartype="4 Bytes" Bytesize="4" Description="flyingPigChest" DisplayMethod="Signed Integer"/>
+        <Element Offset="1116" Vartype="4 Bytes" Bytesize="4" Description="chest" DisplayMethod="Signed Integer"/>
+        <Element Offset="1120" Vartype="4 Bytes" Bytesize="4" Description="chestX" DisplayMethod="Signed Integer"/>
+        <Element Offset="1124" Vartype="4 Bytes" Bytesize="4" Description="chestY" DisplayMethod="Signed Integer"/>
+        <Element Offset="1128" Vartype="4 Bytes" Bytesize="4" Description="talkNPC" DisplayMethod="Signed Integer"/>
+        <Element Offset="1132" Vartype="4 Bytes" Bytesize="4" Description="fallStart" DisplayMethod="Signed Integer"/>
+        <Element Offset="1136" Vartype="4 Bytes" Bytesize="4" Description="fallStart2" DisplayMethod="Signed Integer"/>
+        <Element Offset="1140" Vartype="4 Bytes" Bytesize="4" Description="potionDelayTime" DisplayMethod="Signed Integer"/>
+        <Element Offset="1144" Vartype="4 Bytes" Bytesize="4" Description="restorationDelayTime" DisplayMethod="Signed Integer"/>
+        <Element Offset="1148" Vartype="4 Bytes" Bytesize="4" Description="cHead" DisplayMethod="Signed Integer"/>
+        <Element Offset="1152" Vartype="4 Bytes" Bytesize="4" Description="cBody" DisplayMethod="Signed Integer"/>
+        <Element Offset="1156" Vartype="4 Bytes" Bytesize="4" Description="cLegs" DisplayMethod="Signed Integer"/>
+        <Element Offset="1160" Vartype="4 Bytes" Bytesize="4" Description="cHandOn" DisplayMethod="Signed Integer"/>
+        <Element Offset="1164" Vartype="4 Bytes" Bytesize="4" Description="cHandOff" DisplayMethod="Signed Integer"/>
+        <Element Offset="1168" Vartype="4 Bytes" Bytesize="4" Description="cBack" DisplayMethod="Signed Integer"/>
+        <Element Offset="1172" Vartype="4 Bytes" Bytesize="4" Description="cFront" DisplayMethod="Signed Integer"/>
+        <Element Offset="1176" Vartype="4 Bytes" Bytesize="4" Description="cShoe" DisplayMethod="Signed Integer"/>
+        <Element Offset="1180" Vartype="4 Bytes" Bytesize="4" Description="cWaist" DisplayMethod="Signed Integer"/>
+        <Element Offset="1184" Vartype="4 Bytes" Bytesize="4" Description="cShield" DisplayMethod="Signed Integer"/>
+        <Element Offset="1188" Vartype="4 Bytes" Bytesize="4" Description="cNeck" DisplayMethod="Signed Integer"/>
+        <Element Offset="1192" Vartype="4 Bytes" Bytesize="4" Description="cFace" DisplayMethod="Signed Integer"/>
+        <Element Offset="1196" Vartype="4 Bytes" Bytesize="4" Description="cBalloon" DisplayMethod="Signed Integer"/>
+        <Element Offset="1200" Vartype="4 Bytes" Bytesize="4" Description="cWings" DisplayMethod="Signed Integer"/>
+        <Element Offset="1204" Vartype="4 Bytes" Bytesize="4" Description="cCarpet" DisplayMethod="Signed Integer"/>
+        <Element Offset="1208" Vartype="4 Bytes" Bytesize="4" Description="cGrapple" DisplayMethod="Signed Integer"/>
+        <Element Offset="1212" Vartype="4 Bytes" Bytesize="4" Description="cMount" DisplayMethod="Signed Integer"/>
+        <Element Offset="1216" Vartype="4 Bytes" Bytesize="4" Description="cMinecart" DisplayMethod="Signed Integer"/>
+        <Element Offset="1220" Vartype="4 Bytes" Bytesize="4" Description="cPet" DisplayMethod="Signed Integer"/>
+        <Element Offset="1224" Vartype="4 Bytes" Bytesize="4" Description="cLight" DisplayMethod="Signed Integer"/>
+        <Element Offset="1228" Vartype="4 Bytes" Bytesize="4" Description="cYorai" DisplayMethod="Signed Integer"/>
+        <Element Offset="1232" Vartype="4 Bytes" Bytesize="4" Description="lastPortalColorIndex" DisplayMethod="Signed Integer"/>
+        <Element Offset="1236" Vartype="4 Bytes" Bytesize="4" Description="_portalPhysicsTime" DisplayMethod="Signed Integer"/>
+        <Element Offset="1240" Vartype="Float" Bytesize="4" Description="MountFishronSpecialCounter" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1244" Vartype="4 Bytes" Bytesize="4" Description="MinionAttackTargetNPC" DisplayMethod="Signed Integer"/>
+        <Element Offset="1248" Vartype="4 Bytes" Bytesize="4" Description="_funkytownCheckCD" DisplayMethod="Signed Integer"/>
+        <Element Offset="1252" Vartype="Float" Bytesize="4" Description="_stormShaderObstruction" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1256" Vartype="Float" Bytesize="4" Description="_shaderObstructionInternalValue" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1260" Vartype="4 Bytes" Bytesize="4" Description="_quickGrappleCooldown" DisplayMethod="Signed Integer"/>
+        <Element Offset="1264" Vartype="4 Bytes" Bytesize="4" Description="shieldParryTimeLeft" DisplayMethod="Signed Integer"/>
+        <Element Offset="1268" Vartype="4 Bytes" Bytesize="4" Description="shield_parry_cooldown" DisplayMethod="Signed Integer"/>
+        <Element Offset="1272" Vartype="Byte" Bytesize="1" Description="alchemyTable" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1273" Vartype="Byte" Bytesize="1" Description="GoingDownWithGrapple" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1274" Vartype="Byte" Bytesize="1" Description="spelunkerTimer" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1275" Vartype="Byte" Bytesize="1" Description="dd2Accessory" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1276" Vartype="Byte" Bytesize="1" Description="hasBanner" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1277" Vartype="Byte" Bytesize="1" Description="showLastDeath" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1278" Vartype="Byte" Bytesize="1" Description="extraAccessory" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1279" Vartype="Byte" Bytesize="1" Description="tankPetReset" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1280" Vartype="Byte" Bytesize="1" Description="yoyoString" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1281" Vartype="Byte" Bytesize="1" Description="yoyoGlove" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1282" Vartype="Byte" Bytesize="1" Description="beetleDefense" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1283" Vartype="Byte" Bytesize="1" Description="beetleOffense" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1284" Vartype="Byte" Bytesize="1" Description="beetleBuff" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1285" Vartype="Byte" Bytesize="1" Description="solarDashing" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1286" Vartype="Byte" Bytesize="1" Description="solarDashConsumedFlare" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1287" Vartype="Byte" Bytesize="1" Description="manaMagnet" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1288" Vartype="Byte" Bytesize="1" Description="lifeMagnet" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1289" Vartype="Byte" Bytesize="1" Description="lifeForce" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1290" Vartype="Byte" Bytesize="1" Description="calmed" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1291" Vartype="Byte" Bytesize="1" Description="inferno" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1292" Vartype="Byte" Bytesize="1" Description="flameRingFrame" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1293" Vartype="Byte" Bytesize="1" Description="flameRingAlpha" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1294" Vartype="Byte" Bytesize="1" Description="netMana" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1295" Vartype="Byte" Bytesize="1" Description="netLife" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1296" Vartype="Byte" Bytesize="1" Description="manaSick" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1297" Vartype="Byte" Bytesize="1" Description="stairFall" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1298" Vartype="Byte" Bytesize="1" Description="outOfRange" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1299" Vartype="Byte" Bytesize="1" Description="teleporting" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1300" Vartype="Byte" Bytesize="1" Description="sloping" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1301" Vartype="Byte" Bytesize="1" Description="chilled" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1302" Vartype="Byte" Bytesize="1" Description="dazed" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1303" Vartype="Byte" Bytesize="1" Description="frozen" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1304" Vartype="Byte" Bytesize="1" Description="stoned" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1305" Vartype="Byte" Bytesize="1" Description="lastStoned" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1306" Vartype="Byte" Bytesize="1" Description="ichor" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1307" Vartype="Byte" Bytesize="1" Description="webbed" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1308" Vartype="Byte" Bytesize="1" Description="noBuilding" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1309" Vartype="Byte" Bytesize="1" Description="cordage" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1310" Vartype="Byte" Bytesize="1" Description="meleeEnchant" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1311" Vartype="Byte" Bytesize="1" Description="pulleyDir" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1312" Vartype="Byte" Bytesize="1" Description="pulley" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1313" Vartype="Byte" Bytesize="1" Description="blackBelt" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1314" Vartype="Byte" Bytesize="1" Description="sliding" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1315" Vartype="Byte" Bytesize="1" Description="iceSkate" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1316" Vartype="Byte" Bytesize="1" Description="carpet" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1317" Vartype="Byte" Bytesize="1" Description="canCarpet" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1318" Vartype="Byte" Bytesize="1" Description="sandStorm" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1319" Vartype="Byte" Bytesize="1" Description="crimsonRegen" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1320" Vartype="Byte" Bytesize="1" Description="ghostHeal" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1321" Vartype="Byte" Bytesize="1" Description="ghostHurt" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1322" Vartype="Byte" Bytesize="1" Description="sticky" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1323" Vartype="Byte" Bytesize="1" Description="slippy" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1324" Vartype="Byte" Bytesize="1" Description="slippy2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1325" Vartype="Byte" Bytesize="1" Description="powerrun" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1326" Vartype="Byte" Bytesize="1" Description="flapSound" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1327" Vartype="Byte" Bytesize="1" Description="iceBarrier" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1328" Vartype="Byte" Bytesize="1" Description="dangerSense" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1329" Vartype="Byte" Bytesize="1" Description="loveStruck" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1330" Vartype="Byte" Bytesize="1" Description="stinky" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1331" Vartype="Byte" Bytesize="1" Description="resistCold" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1332" Vartype="Byte" Bytesize="1" Description="electrified" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1333" Vartype="Byte" Bytesize="1" Description="dryadWard" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1334" Vartype="Byte" Bytesize="1" Description="panic" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1335" Vartype="Byte" Bytesize="1" Description="brainOfConfusion" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1336" Vartype="Byte" Bytesize="1" Description="iceBarrierFrame" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1337" Vartype="Byte" Bytesize="1" Description="iceBarrierFrameCounter" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1338" Vartype="Byte" Bytesize="1" Description="shadowDodge" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1339" Vartype="Byte" Bytesize="1" Description="palladiumRegen" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1340" Vartype="Byte" Bytesize="1" Description="onHitDodge" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1341" Vartype="Byte" Bytesize="1" Description="onHitRegen" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1342" Vartype="Byte" Bytesize="1" Description="onHitPetal" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1343" Vartype="Byte" Bytesize="1" Description="cratePotion" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1344" Vartype="Byte" Bytesize="1" Description="sonarPotion" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1345" Vartype="Byte" Bytesize="1" Description="accFishingLine" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1346" Vartype="Byte" Bytesize="1" Description="accTackleBox" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1347" Vartype="Byte" Bytesize="1" Description="pygmy" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1348" Vartype="Byte" Bytesize="1" Description="raven" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1349" Vartype="Byte" Bytesize="1" Description="slime" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1350" Vartype="Byte" Bytesize="1" Description="hornetMinion" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1351" Vartype="Byte" Bytesize="1" Description="impMinion" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1352" Vartype="Byte" Bytesize="1" Description="twinsMinion" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1353" Vartype="Byte" Bytesize="1" Description="spiderMinion" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1354" Vartype="Byte" Bytesize="1" Description="pirateMinion" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1355" Vartype="Byte" Bytesize="1" Description="sharknadoMinion" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1356" Vartype="Byte" Bytesize="1" Description="UFOMinion" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1357" Vartype="Byte" Bytesize="1" Description="DeadlySphereMinion" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1358" Vartype="Byte" Bytesize="1" Description="stardustMinion" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1359" Vartype="Byte" Bytesize="1" Description="stardustGuardian" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1360" Vartype="Byte" Bytesize="1" Description="stardustDragon" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1361" Vartype="Byte" Bytesize="1" Description="ghost" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1362" Vartype="Byte" Bytesize="1" Description="pvpDeath" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1363" Vartype="Byte" Bytesize="1" Description="boneArmor" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1364" Vartype="Byte" Bytesize="1" Description="frostArmor" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1365" Vartype="Byte" Bytesize="1" Description="honey" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1366" Vartype="Byte" Bytesize="1" Description="crystalLeaf" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1367" Vartype="Byte" Bytesize="1" Description="defendedByPaladin" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1368" Vartype="Byte" Bytesize="1" Description="hasPaladinShield" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1369" Vartype="Byte" Bytesize="1" Description="immune" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1370" Vartype="Byte" Bytesize="1" Description="immuneNoBlink" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1371" Vartype="Byte" Bytesize="1" Description="hbLocked" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1372" Vartype="Byte" Bytesize="1" Description="editedChestName" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1373" Vartype="Byte" Bytesize="1" Description="mouseInterface" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1374" Vartype="Byte" Bytesize="1" Description="lastMouseInterface" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1375" Vartype="Byte" Bytesize="1" Description="poundRelease" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1376" Vartype="Byte" Bytesize="1" Description="ignoreWater" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1377" Vartype="Byte" Bytesize="1" Description="armorEffectDrawShadow" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1378" Vartype="Byte" Bytesize="1" Description="armorEffectDrawShadowSubtle" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1379" Vartype="Byte" Bytesize="1" Description="armorEffectDrawOutlines" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1380" Vartype="Byte" Bytesize="1" Description="armorEffectDrawShadowLokis" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1381" Vartype="Byte" Bytesize="1" Description="armorEffectDrawShadowBasilisk" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1382" Vartype="Byte" Bytesize="1" Description="armorEffectDrawOutlinesForbidden" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1383" Vartype="Byte" Bytesize="1" Description="armorEffectDrawShadowEOCShield" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1384" Vartype="Byte" Bytesize="1" Description="socialShadowRocketBoots" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1385" Vartype="Byte" Bytesize="1" Description="socialGhost" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1386" Vartype="Byte" Bytesize="1" Description="shroomiteStealth" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1387" Vartype="Byte" Bytesize="1" Description="socialIgnoreLight" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1388" Vartype="Byte" Bytesize="1" Description="dead" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1389" Vartype="Byte" Bytesize="1" Description="difficulty" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1390" Vartype="Byte" Bytesize="1" Description="wetSlime" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1391" Vartype="Byte" Bytesize="1" Description="handon" DisplayMethod="Signed Integer"/>
+        <Element Offset="1392" Vartype="Byte" Bytesize="1" Description="handoff" DisplayMethod="Signed Integer"/>
+        <Element Offset="1393" Vartype="Byte" Bytesize="1" Description="back" DisplayMethod="Signed Integer"/>
+        <Element Offset="1394" Vartype="Byte" Bytesize="1" Description="front" DisplayMethod="Signed Integer"/>
+        <Element Offset="1395" Vartype="Byte" Bytesize="1" Description="shoe" DisplayMethod="Signed Integer"/>
+        <Element Offset="1396" Vartype="Byte" Bytesize="1" Description="waist" DisplayMethod="Signed Integer"/>
+        <Element Offset="1397" Vartype="Byte" Bytesize="1" Description="shield" DisplayMethod="Signed Integer"/>
+        <Element Offset="1398" Vartype="Byte" Bytesize="1" Description="neck" DisplayMethod="Signed Integer"/>
+        <Element Offset="1399" Vartype="Byte" Bytesize="1" Description="face" DisplayMethod="Signed Integer"/>
+        <Element Offset="1400" Vartype="Byte" Bytesize="1" Description="balloon" DisplayMethod="Signed Integer"/>
+        <Element Offset="1401" Vartype="Byte" Bytesize="1" Description="controlLeft" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1402" Vartype="Byte" Bytesize="1" Description="controlRight" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1403" Vartype="Byte" Bytesize="1" Description="controlUp" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1404" Vartype="Byte" Bytesize="1" Description="controlDown" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1405" Vartype="Byte" Bytesize="1" Description="controlJump" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1406" Vartype="Byte" Bytesize="1" Description="controlUseItem" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1407" Vartype="Byte" Bytesize="1" Description="controlUseTile" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1408" Vartype="Byte" Bytesize="1" Description="controlThrow" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1409" Vartype="Byte" Bytesize="1" Description="controlInv" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1410" Vartype="Byte" Bytesize="1" Description="controlHook" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1411" Vartype="Byte" Bytesize="1" Description="controlTorch" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1412" Vartype="Byte" Bytesize="1" Description="controlMap" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1413" Vartype="Byte" Bytesize="1" Description="controlSmart" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1414" Vartype="Byte" Bytesize="1" Description="controlMount" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1415" Vartype="Byte" Bytesize="1" Description="releaseJump" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1416" Vartype="Byte" Bytesize="1" Description="releaseUp" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1417" Vartype="Byte" Bytesize="1" Description="releaseUseItem" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1418" Vartype="Byte" Bytesize="1" Description="releaseUseTile" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1419" Vartype="Byte" Bytesize="1" Description="releaseInventory" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1420" Vartype="Byte" Bytesize="1" Description="releaseHook" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1421" Vartype="Byte" Bytesize="1" Description="releaseThrow" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1422" Vartype="Byte" Bytesize="1" Description="releaseQuickMana" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1423" Vartype="Byte" Bytesize="1" Description="releaseQuickHeal" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1424" Vartype="Byte" Bytesize="1" Description="releaseLeft" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1425" Vartype="Byte" Bytesize="1" Description="releaseRight" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1426" Vartype="Byte" Bytesize="1" Description="releaseSmart" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1427" Vartype="Byte" Bytesize="1" Description="releaseMount" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1428" Vartype="Byte" Bytesize="1" Description="releaseDown" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1429" Vartype="Byte" Bytesize="1" Description="controlQuickMana" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1430" Vartype="Byte" Bytesize="1" Description="controlQuickHeal" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1431" Vartype="Byte" Bytesize="1" Description="tileInteractionHappened" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1432" Vartype="Byte" Bytesize="1" Description="tileInteractAttempted" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1433" Vartype="Byte" Bytesize="1" Description="mapZoomIn" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1434" Vartype="Byte" Bytesize="1" Description="mapZoomOut" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1435" Vartype="Byte" Bytesize="1" Description="mapAlphaUp" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1436" Vartype="Byte" Bytesize="1" Description="mapAlphaDown" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1437" Vartype="Byte" Bytesize="1" Description="mapFullScreen" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1438" Vartype="Byte" Bytesize="1" Description="mapStyle" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1439" Vartype="Byte" Bytesize="1" Description="releaseMapFullscreen" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1440" Vartype="Byte" Bytesize="1" Description="releaseMapStyle" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1441" Vartype="Byte" Bytesize="1" Description="delayUseItem" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1442" Vartype="Byte" Bytesize="1" Description="showItemIcon" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1443" Vartype="Byte" Bytesize="1" Description="showItemIconR" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1444" Vartype="Byte" Bytesize="1" Description="fireWalk" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1445" Vartype="Byte" Bytesize="1" Description="channel" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1446" Vartype="Byte" Bytesize="1" Description="downedDD2EventAnyDifficulty" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1447" Vartype="Byte" Bytesize="1" Description="manaRegenBuff" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1448" Vartype="Byte" Bytesize="1" Description="noKnockback" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1449" Vartype="Byte" Bytesize="1" Description="spaceGun" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1450" Vartype="Byte" Bytesize="1" Description="ammoCost80" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1451" Vartype="Byte" Bytesize="1" Description="ammoCost75" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1452" Vartype="Byte" Bytesize="1" Description="magicQuiver" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1453" Vartype="Byte" Bytesize="1" Description="magmaStone" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1454" Vartype="Byte" Bytesize="1" Description="lavaRose" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1455" Vartype="Byte" Bytesize="1" Description="ammoBox" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1456" Vartype="Byte" Bytesize="1" Description="ammoPotion" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1457" Vartype="Byte" Bytesize="1" Description="chaosState" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1458" Vartype="Byte" Bytesize="1" Description="strongBees" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1459" Vartype="Byte" Bytesize="1" Description="sporeSac" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1460" Vartype="Byte" Bytesize="1" Description="shinyStone" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1461" Vartype="Byte" Bytesize="1" Description="yoraiz0rDarkness" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1462" Vartype="Byte" Bytesize="1" Description="leinforsHair" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1463" Vartype="Byte" Bytesize="1" Description="suspiciouslookingTentacle" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1464" Vartype="Byte" Bytesize="1" Description="crimsonHeart" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1465" Vartype="Byte" Bytesize="1" Description="lightOrb" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1466" Vartype="Byte" Bytesize="1" Description="blueFairy" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1467" Vartype="Byte" Bytesize="1" Description="redFairy" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1468" Vartype="Byte" Bytesize="1" Description="greenFairy" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1469" Vartype="Byte" Bytesize="1" Description="bunny" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1470" Vartype="Byte" Bytesize="1" Description="turtle" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1471" Vartype="Byte" Bytesize="1" Description="eater" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1472" Vartype="Byte" Bytesize="1" Description="penguin" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1473" Vartype="Byte" Bytesize="1" Description="magicLantern" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1474" Vartype="Byte" Bytesize="1" Description="rabid" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1475" Vartype="Byte" Bytesize="1" Description="sunflower" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1476" Vartype="Byte" Bytesize="1" Description="wellFed" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1477" Vartype="Byte" Bytesize="1" Description="puppy" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1478" Vartype="Byte" Bytesize="1" Description="grinch" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1479" Vartype="Byte" Bytesize="1" Description="miniMinotaur" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1480" Vartype="Byte" Bytesize="1" Description="arcticDivingGear" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1481" Vartype="Byte" Bytesize="1" Description="wearsRobe" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1482" Vartype="Byte" Bytesize="1" Description="minecartLeft" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1483" Vartype="Byte" Bytesize="1" Description="onWrongGround" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1484" Vartype="Byte" Bytesize="1" Description="onTrack" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1485" Vartype="Byte" Bytesize="1" Description="cartFlip" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1486" Vartype="Byte" Bytesize="1" Description="blackCat" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1487" Vartype="Byte" Bytesize="1" Description="spider" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1488" Vartype="Byte" Bytesize="1" Description="squashling" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1489" Vartype="Byte" Bytesize="1" Description="petFlagDD2Gato" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1490" Vartype="Byte" Bytesize="1" Description="petFlagDD2Ghost" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1491" Vartype="Byte" Bytesize="1" Description="petFlagDD2Dragon" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1492" Vartype="Byte" Bytesize="1" Description="companionCube" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1493" Vartype="Byte" Bytesize="1" Description="babyFaceMonster" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1494" Vartype="Byte" Bytesize="1" Description="magicCuffs" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1495" Vartype="Byte" Bytesize="1" Description="coldDash" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1496" Vartype="Byte" Bytesize="1" Description="sailDash" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1497" Vartype="Byte" Bytesize="1" Description="eyeSpring" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1498" Vartype="Byte" Bytesize="1" Description="snowman" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1499" Vartype="Byte" Bytesize="1" Description="scope" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1500" Vartype="Byte" Bytesize="1" Description="dino" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1501" Vartype="Byte" Bytesize="1" Description="skeletron" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1502" Vartype="Byte" Bytesize="1" Description="hornet" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1503" Vartype="Byte" Bytesize="1" Description="zephyrfish" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1504" Vartype="Byte" Bytesize="1" Description="tiki" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1505" Vartype="Byte" Bytesize="1" Description="parrot" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1506" Vartype="Byte" Bytesize="1" Description="truffle" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1507" Vartype="Byte" Bytesize="1" Description="sapling" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1508" Vartype="Byte" Bytesize="1" Description="cSapling" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1509" Vartype="Byte" Bytesize="1" Description="wisp" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1510" Vartype="Byte" Bytesize="1" Description="lizard" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1511" Vartype="Byte" Bytesize="1" Description="archery" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1512" Vartype="Byte" Bytesize="1" Description="poisoned" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1513" Vartype="Byte" Bytesize="1" Description="venom" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1514" Vartype="Byte" Bytesize="1" Description="blind" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1515" Vartype="Byte" Bytesize="1" Description="blackout" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1516" Vartype="Byte" Bytesize="1" Description="headcovered" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1517" Vartype="Byte" Bytesize="1" Description="frostBurn" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1518" Vartype="Byte" Bytesize="1" Description="onFrostBurn" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1519" Vartype="Byte" Bytesize="1" Description="burned" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1520" Vartype="Byte" Bytesize="1" Description="suffocating" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1521" Vartype="Byte" Bytesize="1" Description="suffocateDelay" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1522" Vartype="Byte" Bytesize="1" Description="dripping" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1523" Vartype="Byte" Bytesize="1" Description="drippingSlime" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1524" Vartype="Byte" Bytesize="1" Description="onFire" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1525" Vartype="Byte" Bytesize="1" Description="onFire2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1526" Vartype="Byte" Bytesize="1" Description="noItems" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1527" Vartype="Byte" Bytesize="1" Description="windPushed" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1528" Vartype="Byte" Bytesize="1" Description="wereWolf" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1529" Vartype="Byte" Bytesize="1" Description="wolfAcc" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1530" Vartype="Byte" Bytesize="1" Description="hideMerman" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1531" Vartype="Byte" Bytesize="1" Description="hideWolf" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1532" Vartype="Byte" Bytesize="1" Description="forceMerman" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1533" Vartype="Byte" Bytesize="1" Description="forceWerewolf" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1534" Vartype="Byte" Bytesize="1" Description="rulerGrid" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1535" Vartype="Byte" Bytesize="1" Description="rulerLine" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1536" Vartype="Byte" Bytesize="1" Description="bleed" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1537" Vartype="Byte" Bytesize="1" Description="confused" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1538" Vartype="Byte" Bytesize="1" Description="accMerman" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1539" Vartype="Byte" Bytesize="1" Description="merman" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1540" Vartype="Byte" Bytesize="1" Description="brokenArmor" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1541" Vartype="Byte" Bytesize="1" Description="silence" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1542" Vartype="Byte" Bytesize="1" Description="slow" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1543" Vartype="Byte" Bytesize="1" Description="gross" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1544" Vartype="Byte" Bytesize="1" Description="tongued" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1545" Vartype="Byte" Bytesize="1" Description="kbGlove" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1546" Vartype="Byte" Bytesize="1" Description="kbBuff" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1547" Vartype="Byte" Bytesize="1" Description="starCloak" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1548" Vartype="Byte" Bytesize="1" Description="longInvince" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1549" Vartype="Byte" Bytesize="1" Description="pStone" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1550" Vartype="Byte" Bytesize="1" Description="manaFlower" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1551" Vartype="Byte" Bytesize="1" Description="moonLeech" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1552" Vartype="Byte" Bytesize="1" Description="vortexDebuff" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1553" Vartype="Byte" Bytesize="1" Description="trapDebuffSource" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1554" Vartype="Byte" Bytesize="1" Description="witheredArmor" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1555" Vartype="Byte" Bytesize="1" Description="witheredWeapon" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1556" Vartype="Byte" Bytesize="1" Description="slowOgreSpit" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1557" Vartype="Byte" Bytesize="1" Description="parryDamageBuff" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1558" Vartype="Byte" Bytesize="1" Description="ballistaPanic" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1559" Vartype="Byte" Bytesize="1" Description="thrownCost50" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1560" Vartype="Byte" Bytesize="1" Description="thrownCost33" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1561" Vartype="Byte" Bytesize="1" Description="autoPaint" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1562" Vartype="Byte" Bytesize="1" Description="autoActuator" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1563" Vartype="Byte" Bytesize="1" Description="adjWater" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1564" Vartype="Byte" Bytesize="1" Description="adjHoney" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1565" Vartype="Byte" Bytesize="1" Description="adjLava" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1566" Vartype="Byte" Bytesize="1" Description="oldAdjWater" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1567" Vartype="Byte" Bytesize="1" Description="oldAdjHoney" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1568" Vartype="Byte" Bytesize="1" Description="oldAdjLava" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1569" Vartype="Byte" Bytesize="1" Description="hairDye" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1570" Vartype="Byte" Bytesize="1" Description="hostile" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1571" Vartype="Byte" Bytesize="1" Description="accFishFinder" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1572" Vartype="Byte" Bytesize="1" Description="accWeatherRadio" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1573" Vartype="Byte" Bytesize="1" Description="accJarOfSouls" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1574" Vartype="Byte" Bytesize="1" Description="accCalendar" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1575" Vartype="Byte" Bytesize="1" Description="accThirdEye" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1576" Vartype="Byte" Bytesize="1" Description="accThirdEyeCounter" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1577" Vartype="Byte" Bytesize="1" Description="accThirdEyeNumber" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1578" Vartype="Byte" Bytesize="1" Description="accStopwatch" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1579" Vartype="Byte" Bytesize="1" Description="accOreFinder" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1580" Vartype="Byte" Bytesize="1" Description="accCritterGuide" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1581" Vartype="Byte" Bytesize="1" Description="accCritterGuideCounter" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1582" Vartype="Byte" Bytesize="1" Description="accCritterGuideNumber" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1583" Vartype="Byte" Bytesize="1" Description="accDreamCatcher" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1584" Vartype="Byte" Bytesize="1" Description="ActuationRodLock" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1585" Vartype="Byte" Bytesize="1" Description="ActuationRodLockSetting" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1586" Vartype="Byte" Bytesize="1" Description="InfoAccMechShowWires" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1587" Vartype="Byte" Bytesize="1" Description="dpsStarted" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1588" Vartype="Byte" Bytesize="1" Description="discount" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1589" Vartype="Byte" Bytesize="1" Description="coins" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1590" Vartype="Byte" Bytesize="1" Description="goldRing" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1591" Vartype="Byte" Bytesize="1" Description="accDivingHelm" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1592" Vartype="Byte" Bytesize="1" Description="accFlipper" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1593" Vartype="Byte" Bytesize="1" Description="doubleJumpCloud" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1594" Vartype="Byte" Bytesize="1" Description="jumpAgainCloud" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1595" Vartype="Byte" Bytesize="1" Description="dJumpEffectCloud" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1596" Vartype="Byte" Bytesize="1" Description="doubleJumpSandstorm" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1597" Vartype="Byte" Bytesize="1" Description="jumpAgainSandstorm" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1598" Vartype="Byte" Bytesize="1" Description="dJumpEffectSandstorm" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1599" Vartype="Byte" Bytesize="1" Description="doubleJumpBlizzard" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1600" Vartype="Byte" Bytesize="1" Description="jumpAgainBlizzard" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1601" Vartype="Byte" Bytesize="1" Description="dJumpEffectBlizzard" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1602" Vartype="Byte" Bytesize="1" Description="doubleJumpFart" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1603" Vartype="Byte" Bytesize="1" Description="jumpAgainFart" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1604" Vartype="Byte" Bytesize="1" Description="dJumpEffectFart" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1605" Vartype="Byte" Bytesize="1" Description="doubleJumpSail" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1606" Vartype="Byte" Bytesize="1" Description="jumpAgainSail" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1607" Vartype="Byte" Bytesize="1" Description="dJumpEffectSail" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1608" Vartype="Byte" Bytesize="1" Description="doubleJumpUnicorn" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1609" Vartype="Byte" Bytesize="1" Description="jumpAgainUnicorn" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1610" Vartype="Byte" Bytesize="1" Description="dJumpEffectUnicorn" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1611" Vartype="Byte" Bytesize="1" Description="autoJump" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1612" Vartype="Byte" Bytesize="1" Description="justJumped" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1613" Vartype="Byte" Bytesize="1" Description="spawnMax" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1614" Vartype="Byte" Bytesize="1" Description="rocketRelease" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1615" Vartype="Byte" Bytesize="1" Description="rocketFrame" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1616" Vartype="Byte" Bytesize="1" Description="canRocket" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1617" Vartype="Byte" Bytesize="1" Description="jumpBoost" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1618" Vartype="Byte" Bytesize="1" Description="noFallDmg" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1619" Vartype="Byte" Bytesize="1" Description="killGuide" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1620" Vartype="Byte" Bytesize="1" Description="killClothier" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1621" Vartype="Byte" Bytesize="1" Description="lavaImmune" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1622" Vartype="Byte" Bytesize="1" Description="gills" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1623" Vartype="Byte" Bytesize="1" Description="slowFall" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1624" Vartype="Byte" Bytesize="1" Description="findTreasure" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1625" Vartype="Byte" Bytesize="1" Description="invis" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1626" Vartype="Byte" Bytesize="1" Description="detectCreature" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1627" Vartype="Byte" Bytesize="1" Description="nightVision" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1628" Vartype="Byte" Bytesize="1" Description="enemySpawns" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1629" Vartype="Byte" Bytesize="1" Description="turtleArmor" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1630" Vartype="Byte" Bytesize="1" Description="turtleThorns" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1631" Vartype="Byte" Bytesize="1" Description="spiderArmor" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1632" Vartype="Byte" Bytesize="1" Description="setSolar" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1633" Vartype="Byte" Bytesize="1" Description="setVortex" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1634" Vartype="Byte" Bytesize="1" Description="setNebula" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1635" Vartype="Byte" Bytesize="1" Description="setStardust" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1636" Vartype="Byte" Bytesize="1" Description="setForbidden" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1637" Vartype="Byte" Bytesize="1" Description="setForbiddenCooldownLocked" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1638" Vartype="Byte" Bytesize="1" Description="setSquireT3" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1639" Vartype="Byte" Bytesize="1" Description="setHuntressT3" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1640" Vartype="Byte" Bytesize="1" Description="setApprenticeT3" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1641" Vartype="Byte" Bytesize="1" Description="setMonkT3" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1642" Vartype="Byte" Bytesize="1" Description="setSquireT2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1643" Vartype="Byte" Bytesize="1" Description="setHuntressT2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1644" Vartype="Byte" Bytesize="1" Description="setApprenticeT2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1645" Vartype="Byte" Bytesize="1" Description="setMonkT2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1646" Vartype="Byte" Bytesize="1" Description="vortexStealthActive" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1647" Vartype="Byte" Bytesize="1" Description="waterWalk" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1648" Vartype="Byte" Bytesize="1" Description="waterWalk2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1649" Vartype="Byte" Bytesize="1" Description="gravControl" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1650" Vartype="Byte" Bytesize="1" Description="gravControl2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1651" Vartype="Byte" Bytesize="1" Description="bee" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1652" Vartype="Byte" Bytesize="1" Description="portalPhysicsFlag" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1653" Vartype="Byte" Bytesize="1" Description="makeStrongBee" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1654" Vartype="Byte" Bytesize="1" Description="behindBackWall" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1655" Vartype="Byte" Bytesize="1" Description="hasRaisableShield" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1656" Vartype="Byte" Bytesize="1" Description="shieldRaised" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1660" Vartype="4 Bytes" Bytesize="4" Description="chatOverhead" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1664" Vartype="4 Bytes" Bytesize="4" Description="chatOverhead_2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1668" Vartype="4 Bytes" Bytesize="4" Description="chatOverhead_3" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1672" Vartype="4 Bytes" Bytesize="4" Description="chatOverhead_4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1676" Vartype="4 Bytes" Bytesize="4" Description="chatOverhead_5" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1680" Vartype="4 Bytes" Bytesize="4" Description="lastDeathPostion" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1684" Vartype="4 Bytes" Bytesize="4" Description="lastDeathPostion_2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1688" Vartype="4 Bytes" Bytesize="4" Description="lastDeathTime" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1692" Vartype="4 Bytes" Bytesize="4" Description="lastDeathTime_2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1696" Vartype="4 Bytes" Bytesize="4" Description="ownedLargeGems" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1700" Vartype="4 Bytes" Bytesize="4" Description="zone1" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1704" Vartype="4 Bytes" Bytesize="4" Description="zone2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1708" Vartype="4 Bytes" Bytesize="4" Description="zone3" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1712" Vartype="4 Bytes" Bytesize="4" Description="zone4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1716" Vartype="Pointer" Bytesize="4" Description="itemLocation" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1720" Vartype="Pointer" Bytesize="4" Description="itemLocation_2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1724" Vartype="4 Bytes" Bytesize="4" Description="headPosition" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1728" Vartype="4 Bytes" Bytesize="4" Description="headPosition_2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1732" Vartype="4 Bytes" Bytesize="4" Description="bodyPosition" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1736" Vartype="4 Bytes" Bytesize="4" Description="bodyPosition_2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1740" Vartype="4 Bytes" Bytesize="4" Description="legPosition" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1744" Vartype="4 Bytes" Bytesize="4" Description="legPosition_2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1748" Vartype="4 Bytes" Bytesize="4" Description="headVelocity" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1752" Vartype="4 Bytes" Bytesize="4" Description="headVelocity_2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1756" Vartype="4 Bytes" Bytesize="4" Description="bodyVelocity" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1760" Vartype="4 Bytes" Bytesize="4" Description="bodyVelocity_2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1764" Vartype="4 Bytes" Bytesize="4" Description="legVelocity" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1768" Vartype="4 Bytes" Bytesize="4" Description="legVelocity_2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1772" Vartype="Float" Bytesize="4" Description="fullRotationOrigin" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1776" Vartype="Float" Bytesize="4" Description="fullRotationOrigin_2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1780" Vartype="4 Bytes" Bytesize="4" Description="hideMisc" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1784" Vartype="4 Bytes" Bytesize="4" Description="headFrame" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1788" Vartype="4 Bytes" Bytesize="4" Description="headFrame_2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1792" Vartype="4 Bytes" Bytesize="4" Description="headFrame_3" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1796" Vartype="4 Bytes" Bytesize="4" Description="headFrame_4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1800" Vartype="4 Bytes" Bytesize="4" Description="bodyFrame" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1804" Vartype="4 Bytes" Bytesize="4" Description="bodyFrame_2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1808" Vartype="4 Bytes" Bytesize="4" Description="bodyFrame_3" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1812" Vartype="4 Bytes" Bytesize="4" Description="bodyFrame_4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1816" Vartype="4 Bytes" Bytesize="4" Description="legFrame" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1820" Vartype="4 Bytes" Bytesize="4" Description="legFrame_2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1824" Vartype="4 Bytes" Bytesize="4" Description="legFrame_3" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1828" Vartype="4 Bytes" Bytesize="4" Description="legFrame_4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1832" Vartype="4 Bytes" Bytesize="4" Description="hairFrame" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1836" Vartype="4 Bytes" Bytesize="4" Description="hairFrame_2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1840" Vartype="4 Bytes" Bytesize="4" Description="hairFrame_3" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1844" Vartype="4 Bytes" Bytesize="4" Description="hairFrame_4" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1848" Vartype="4 Bytes" Bytesize="4" Description="lastBoost" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1852" Vartype="4 Bytes" Bytesize="4" Description="lastBoost_2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1856" Vartype="4 Bytes" Bytesize="4" Description="hairDyeColor" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1860" Vartype="4 Bytes" Bytesize="4" Description="hairColor" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1864" Vartype="4 Bytes" Bytesize="4" Description="skinColor" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1868" Vartype="4 Bytes" Bytesize="4" Description="eyeColor" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1872" Vartype="4 Bytes" Bytesize="4" Description="shirtColor" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1876" Vartype="4 Bytes" Bytesize="4" Description="underShirtColor" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1880" Vartype="4 Bytes" Bytesize="4" Description="pantsColor" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1884" Vartype="4 Bytes" Bytesize="4" Description="shoeColor" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1888" Vartype="4 Bytes" Bytesize="4" Description="dpsStart" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1892" Vartype="4 Bytes" Bytesize="4" Description="dpsStart_2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1896" Vartype="4 Bytes" Bytesize="4" Description="dpsEnd" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1900" Vartype="4 Bytes" Bytesize="4" Description="dpsEnd_2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1904" Vartype="4 Bytes" Bytesize="4" Description="dpsLastHit" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1908" Vartype="4 Bytes" Bytesize="4" Description="dpsLastHit_2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1912" Vartype="4 Bytes" Bytesize="4" Description="MinionRestTargetPoint" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1916" Vartype="4 Bytes" Bytesize="4" Description="MinionRestTargetPoint_2" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1920" Vartype="4 Bytes" Bytesize="4" Description="MinionRestTargetPoint_3" DisplayMethod="Unsigned Integer"/>
+        <Element Offset="1924" Vartype="4 Bytes" Bytesize="4" Description="MinionRestTargetPoint_4" DisplayMethod="Unsigned Integer"/>
       </Elements>
     </Structure>
   </Structures>

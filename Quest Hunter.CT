@@ -36,6 +36,15 @@ db 2B C6
 
 unregistersymbol(_health)
 </AssemblerScript>
+      <Hotkeys>
+        <Hotkey>
+          <Action>Toggle Activation</Action>
+          <Keys>
+            <Key>113</Key>
+          </Keys>
+          <ID>0</ID>
+        </Hotkey>
+      </Hotkeys>
     </CheatEntry>
     <CheatEntry>
       <ID>5</ID>
@@ -74,60 +83,5 @@ unregistersymbol(_health)
 </AssemblerScript>
     </CheatEntry>
   </CheatEntries>
-  <CheatCodes>
-    <CodeEntry>
-      <Description>Change of mov [r14+0000009C],eax</Description>
-      <Address>1E7EE3BF</Address>
-      <ModuleName/>
-      <ModuleNameOffset>0</ModuleNameOffset>
-      <Before>
-        <Byte>4C</Byte>
-        <Byte>C1</Byte>
-        <Byte>89</Byte>
-        <Byte>45</Byte>
-        <Byte>B8</Byte>
-      </Before>
-      <Actual>
-        <Byte>41</Byte>
-        <Byte>89</Byte>
-        <Byte>86</Byte>
-        <Byte>9C</Byte>
-        <Byte>00</Byte>
-        <Byte>00</Byte>
-        <Byte>00</Byte>
-      </Actual>
-      <After>
-        <Byte>49</Byte>
-        <Byte>8B</Byte>
-        <Byte>46</Byte>
-        <Byte>28</Byte>
-        <Byte>48</Byte>
-      </After>
-    </CodeEntry>
-    <CodeEntry>
-      <Description>Change of sub eax,esi</Description>
-      <Address>028E9444</Address>
-      <ModuleName/>
-      <ModuleNameOffset>0</ModuleNameOffset>
-      <Before>
-        <Byte>21</Byte>
-        <Byte>48</Byte>
-        <Byte>63</Byte>
-        <Byte>47</Byte>
-        <Byte>18</Byte>
-      </Before>
-      <Actual>
-        <Byte>2B</Byte>
-        <Byte>C6</Byte>
-      </Actual>
-      <After>
-        <Byte>89</Byte>
-        <Byte>47</Byte>
-        <Byte>18</Byte>
-        <Byte>85</Byte>
-        <Byte>C0</Byte>
-      </After>
-    </CodeEntry>
-  </CheatCodes>
   <UserdefinedSymbols/>
 </CheatTable>
