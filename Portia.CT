@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<CheatTable CheatEngineTableVersion="27">
+<CheatTable CheatEngineTableVersion="26">
   <CheatEntries>
     <CheatEntry>
       <ID>123</ID>
       <Description>"Active Cheat Table"</Description>
       <Options moHideChildren="1"/>
-      <LastState/>
+      <LastState Activated="1"/>
       <VariableType>Auto Assembler Script</VariableType>
       <AssemblerScript>[ENABLE]
 {$lua}
@@ -20,7 +20,7 @@ LuaCall(function cycleFullCompact(sender,force) local state = not(compactmenuite
           <ID>121</ID>
           <Description>"Scripts"</Description>
           <Options moHideChildren="1"/>
-          <LastState Value="" RealAddress="00000000"/>
+          <LastState Value="" Activated="1" RealAddress="00000000"/>
           <GroupHeader>1</GroupHeader>
           <CheatEntries>
             <CheatEntry>
@@ -96,7 +96,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>30</ID>
               <Description>"+Inf Stamina"</Description>
-              <LastState/>
+              <LastState Activated="1"/>
               <Color>408000</Color>
               <VariableType>Auto Assembler Script</VariableType>
               <AssemblerScript>[ENABLE]
@@ -113,7 +113,7 @@ Pathea:Player:ChangeStamina:
             <CheatEntry>
               <ID>31</ID>
               <Description>"+Inf Endurance"</Description>
-              <LastState/>
+              <LastState Activated="1"/>
               <Color>408000</Color>
               <VariableType>Auto Assembler Script</VariableType>
               <AssemblerScript>[ENABLE]
@@ -144,7 +144,7 @@ Pathea:Player:ConsumeRollVp:
             <CheatEntry>
               <ID>32</ID>
               <Description>"Instant Crafting"</Description>
-              <LastState/>
+              <LastState Activated="1"/>
               <Color>408000</Color>
               <VariableType>Auto Assembler Script</VariableType>
               <AssemblerScript>[ENABLE]
@@ -170,7 +170,7 @@ float value
             <CheatEntry>
               <ID>33</ID>
               <Description>"NoItemCraftingCostTime (another way to have instant crafting)"</Description>
-              <LastState/>
+              <LastState Activated="1"/>
               <Color>408000</Color>
               <VariableType>Auto Assembler Script</VariableType>
               <AssemblerScript>[ENABLE]
@@ -575,6 +575,15 @@ Pathea.ItemSystem:ItemObject:ChangeNumber+21+3:
 //movsxd  rax,dword ptr [rax+24]
 
 </AssemblerScript>
+              <Hotkeys>
+                <Hotkey>
+                  <Action>Toggle Activation</Action>
+                  <Keys>
+                    <Key>114</Key>
+                  </Keys>
+                  <ID>0</ID>
+                </Hotkey>
+              </Hotkeys>
             </CheatEntry>
             <CheatEntry>
               <ID>12</ID>
@@ -668,7 +677,7 @@ dealloc(newmem)
             <CheatEntry>
               <ID>28</ID>
               <Description>"Clock Stop "</Description>
-              <LastState/>
+              <LastState Activated="1"/>
               <Color>000080</Color>
               <VariableType>Auto Assembler Script</VariableType>
               <AssemblerScript>[ENABLE]
@@ -686,6 +695,15 @@ TimeManager:get_TimeStoped+9+2:
 
 
 </AssemblerScript>
+              <Hotkeys>
+                <Hotkey>
+                  <Action>Toggle Activation</Action>
+                  <Keys>
+                    <Key>113</Key>
+                  </Keys>
+                  <ID>0</ID>
+                </Hotkey>
+              </Hotkeys>
             </CheatEntry>
             <CheatEntry>
               <ID>24</ID>
@@ -763,7 +781,7 @@ dealloc(newmem)
               <ID>69</ID>
               <Description>"Player Base Addresses"</Description>
               <Options moHideChildren="1"/>
-              <LastState/>
+              <LastState Activated="1"/>
               <Color>004080</Color>
               <VariableType>Auto Assembler Script</VariableType>
               <AssemblerScript>define(address,Pathea:Player:Update+27)
@@ -833,7 +851,7 @@ dealloc(newmem)
                 <CheatEntry>
                   <ID>70</ID>
                   <Description>"Base Address"</Description>
-                  <LastState RealAddress="00000000"/>
+                  <LastState RealAddress="2AA2E041D48"/>
                   <Color>BBBB00</Color>
                   <VariableType>String</VariableType>
                   <Length>0</Length>
@@ -848,7 +866,7 @@ dealloc(newmem)
                     <CheatEntry>
                       <ID>71</ID>
                       <Description>"mBag"</Description>
-                      <LastState RealAddress="00000000"/>
+                      <LastState RealAddress="2AA2E041D60"/>
                       <Color>400040</Color>
                       <VariableType>String</VariableType>
                       <Length>0</Length>
@@ -863,7 +881,7 @@ dealloc(newmem)
                         <CheatEntry>
                           <ID>72</ID>
                           <Description>"itemTables"</Description>
-                          <LastState RealAddress="00000000"/>
+                          <LastState RealAddress="2AA2E056D38"/>
                           <Color>0000B9</Color>
                           <VariableType>String</VariableType>
                           <Length>0</Length>
@@ -879,7 +897,7 @@ dealloc(newmem)
                             <CheatEntry>
                               <ID>73</ID>
                               <Description>"Item[2]"</Description>
-                              <LastState RealAddress="00000000"/>
+                              <LastState RealAddress="2AA2E02C8F0"/>
                               <Color>58B000</Color>
                               <VariableType>String</VariableType>
                               <Length>0</Length>
@@ -896,6 +914,7 @@ dealloc(newmem)
                                 <CheatEntry>
                                   <ID>74</ID>
                                   <Description>"unlockedCount (of slots)"</Description>
+                                  <LastState Value="80" RealAddress="2AA2E066228"/>
                                   <Color>0076EC</Color>
                                   <VariableType>4 Bytes</VariableType>
                                   <Address>player_ptr</Address>
@@ -913,7 +932,7 @@ dealloc(newmem)
                         <CheatEntry>
                           <ID>75</ID>
                           <Description>"itemBar"</Description>
-                          <LastState RealAddress="00000000"/>
+                          <LastState RealAddress="2AA2E056D40"/>
                           <Color>0000B9</Color>
                           <VariableType>String</VariableType>
                           <Length>0</Length>
@@ -929,7 +948,7 @@ dealloc(newmem)
                             <CheatEntry>
                               <ID>80</ID>
                               <Description>"itemBarItems"</Description>
-                              <LastState RealAddress="00000000"/>
+                              <LastState RealAddress="2AA23018AF0"/>
                               <Color>805600</Color>
                               <VariableType>String</VariableType>
                               <Length>0</Length>
@@ -946,7 +965,7 @@ dealloc(newmem)
                                 <CheatEntry>
                                   <ID>76</ID>
                                   <Description>"Item[2]"</Description>
-                                  <LastState RealAddress="00000000"/>
+                                  <LastState RealAddress="2AA2CE0DB10"/>
                                   <Color>58B000</Color>
                                   <VariableType>String</VariableType>
                                   <Length>0</Length>
@@ -964,6 +983,7 @@ dealloc(newmem)
                                     <CheatEntry>
                                       <ID>81</ID>
                                       <Description>"maxNumber"</Description>
+                                      <LastState Value="1" RealAddress="2AA5B8EA390"/>
                                       <Color>0076EC</Color>
                                       <VariableType>4 Bytes</VariableType>
                                       <Address>player_ptr</Address>
@@ -978,6 +998,7 @@ dealloc(newmem)
                                     <CheatEntry>
                                       <ID>82</ID>
                                       <Description>"number"</Description>
+                                      <LastState Value="1" RealAddress="2AA5B8EA394"/>
                                       <Color>0076EC</Color>
                                       <VariableType>4 Bytes</VariableType>
                                       <Address>player_ptr</Address>
@@ -994,7 +1015,7 @@ dealloc(newmem)
                                 <CheatEntry>
                                   <ID>83</ID>
                                   <Description>"Item[3]"</Description>
-                                  <LastState RealAddress="00000000"/>
+                                  <LastState RealAddress="2AA2CE0DB18"/>
                                   <Color>58B000</Color>
                                   <VariableType>String</VariableType>
                                   <Length>0</Length>
@@ -1012,6 +1033,7 @@ dealloc(newmem)
                                     <CheatEntry>
                                       <ID>84</ID>
                                       <Description>"maxNumber"</Description>
+                                      <LastState Value="1" RealAddress="2AA5B8EA2C8"/>
                                       <Color>0076EC</Color>
                                       <VariableType>4 Bytes</VariableType>
                                       <Address>player_ptr</Address>
@@ -1026,6 +1048,7 @@ dealloc(newmem)
                                     <CheatEntry>
                                       <ID>85</ID>
                                       <Description>"number"</Description>
+                                      <LastState Value="1" RealAddress="2AA5B8EA2CC"/>
                                       <Color>0076EC</Color>
                                       <VariableType>4 Bytes</VariableType>
                                       <Address>player_ptr</Address>
@@ -1042,7 +1065,7 @@ dealloc(newmem)
                                 <CheatEntry>
                                   <ID>86</ID>
                                   <Description>"Item[4]"</Description>
-                                  <LastState RealAddress="00000000"/>
+                                  <LastState RealAddress="2AA2CE0DB20"/>
                                   <Color>58B000</Color>
                                   <VariableType>String</VariableType>
                                   <Length>0</Length>
@@ -1060,6 +1083,7 @@ dealloc(newmem)
                                     <CheatEntry>
                                       <ID>87</ID>
                                       <Description>"maxNumber"</Description>
+                                      <LastState Value="1" RealAddress="2AA5B8EA1D8"/>
                                       <Color>0076EC</Color>
                                       <VariableType>4 Bytes</VariableType>
                                       <Address>player_ptr</Address>
@@ -1074,6 +1098,7 @@ dealloc(newmem)
                                     <CheatEntry>
                                       <ID>88</ID>
                                       <Description>"number"</Description>
+                                      <LastState Value="1" RealAddress="2AA5B8EA1DC"/>
                                       <Color>0076EC</Color>
                                       <VariableType>4 Bytes</VariableType>
                                       <Address>player_ptr</Address>
@@ -1090,7 +1115,7 @@ dealloc(newmem)
                                 <CheatEntry>
                                   <ID>89</ID>
                                   <Description>"Item[5]"</Description>
-                                  <LastState RealAddress="00000000"/>
+                                  <LastState RealAddress="2AA2CE0DB28"/>
                                   <Color>58B000</Color>
                                   <VariableType>String</VariableType>
                                   <Length>0</Length>
@@ -1108,6 +1133,7 @@ dealloc(newmem)
                                     <CheatEntry>
                                       <ID>90</ID>
                                       <Description>"maxNumber"</Description>
+                                      <LastState Value="1" RealAddress="2AA5B8EA110"/>
                                       <Color>0076EC</Color>
                                       <VariableType>4 Bytes</VariableType>
                                       <Address>player_ptr</Address>
@@ -1122,6 +1148,7 @@ dealloc(newmem)
                                     <CheatEntry>
                                       <ID>91</ID>
                                       <Description>"number"</Description>
+                                      <LastState Value="1" RealAddress="2AA5B8EA114"/>
                                       <Color>0076EC</Color>
                                       <VariableType>4 Bytes</VariableType>
                                       <Address>player_ptr</Address>
@@ -1138,7 +1165,7 @@ dealloc(newmem)
                                 <CheatEntry>
                                   <ID>92</ID>
                                   <Description>"Item[6]"</Description>
-                                  <LastState RealAddress="00000000"/>
+                                  <LastState RealAddress="2AA2CE0DB30"/>
                                   <Color>58B000</Color>
                                   <VariableType>String</VariableType>
                                   <Length>0</Length>
@@ -1156,6 +1183,7 @@ dealloc(newmem)
                                     <CheatEntry>
                                       <ID>93</ID>
                                       <Description>"maxNumber"</Description>
+                                      <LastState Value="1" RealAddress="2AA5B8EA070"/>
                                       <Color>0076EC</Color>
                                       <VariableType>4 Bytes</VariableType>
                                       <Address>player_ptr</Address>
@@ -1170,6 +1198,7 @@ dealloc(newmem)
                                     <CheatEntry>
                                       <ID>94</ID>
                                       <Description>"number"</Description>
+                                      <LastState Value="1" RealAddress="2AA5B8EA074"/>
                                       <Color>0076EC</Color>
                                       <VariableType>4 Bytes</VariableType>
                                       <Address>player_ptr</Address>
@@ -1186,7 +1215,7 @@ dealloc(newmem)
                                 <CheatEntry>
                                   <ID>95</ID>
                                   <Description>"Item[7]"</Description>
-                                  <LastState RealAddress="00000000"/>
+                                  <LastState RealAddress="2AA2CE0DB38"/>
                                   <Color>58B000</Color>
                                   <VariableType>String</VariableType>
                                   <Length>0</Length>
@@ -1204,6 +1233,7 @@ dealloc(newmem)
                                     <CheatEntry>
                                       <ID>96</ID>
                                       <Description>"maxNumber"</Description>
+                                      <LastState Value="999" RealAddress="2AADC542548"/>
                                       <Color>0076EC</Color>
                                       <VariableType>4 Bytes</VariableType>
                                       <Address>player_ptr</Address>
@@ -1218,6 +1248,7 @@ dealloc(newmem)
                                     <CheatEntry>
                                       <ID>97</ID>
                                       <Description>"number"</Description>
+                                      <LastState Value="1" RealAddress="2AADC54254C"/>
                                       <Color>0076EC</Color>
                                       <VariableType>4 Bytes</VariableType>
                                       <Address>player_ptr</Address>
@@ -1234,7 +1265,7 @@ dealloc(newmem)
                                 <CheatEntry>
                                   <ID>98</ID>
                                   <Description>"Item[8]"</Description>
-                                  <LastState RealAddress="00000000"/>
+                                  <LastState RealAddress="2AA2CE0DB40"/>
                                   <Color>58B000</Color>
                                   <VariableType>String</VariableType>
                                   <Length>0</Length>
@@ -1282,7 +1313,7 @@ dealloc(newmem)
                                 <CheatEntry>
                                   <ID>101</ID>
                                   <Description>"Item[9]"</Description>
-                                  <LastState RealAddress="00000000"/>
+                                  <LastState RealAddress="2AA2CE0DB48"/>
                                   <Color>58B000</Color>
                                   <VariableType>String</VariableType>
                                   <Length>0</Length>
@@ -1300,6 +1331,7 @@ dealloc(newmem)
                                     <CheatEntry>
                                       <ID>102</ID>
                                       <Description>"maxNumber"</Description>
+                                      <LastState Value="999" RealAddress="2AA5B8EAC50"/>
                                       <Color>0076EC</Color>
                                       <VariableType>4 Bytes</VariableType>
                                       <Address>player_ptr</Address>
@@ -1314,6 +1346,7 @@ dealloc(newmem)
                                     <CheatEntry>
                                       <ID>103</ID>
                                       <Description>"number"</Description>
+                                      <LastState Value="981" RealAddress="2AA5B8EAC54"/>
                                       <Color>0076EC</Color>
                                       <VariableType>4 Bytes</VariableType>
                                       <Address>player_ptr</Address>
@@ -1334,6 +1367,7 @@ dealloc(newmem)
                         <CheatEntry>
                           <ID>104</ID>
                           <Description>"money"</Description>
+                          <LastState Value="567646" RealAddress="2AA2E056D78"/>
                           <Color>0000B9</Color>
                           <VariableType>4 Bytes</VariableType>
                           <Address>player_ptr</Address>
@@ -1347,7 +1381,7 @@ dealloc(newmem)
                     <CheatEntry>
                       <ID>114</ID>
                       <Description>"playingActor"</Description>
-                      <LastState RealAddress="00000000"/>
+                      <LastState RealAddress="2AA2E041D68"/>
                       <Color>5A2E2E</Color>
                       <VariableType>String</VariableType>
                       <Length>0</Length>
@@ -1362,7 +1396,7 @@ dealloc(newmem)
                         <CheatEntry>
                           <ID>115</ID>
                           <Description>"mLevel"</Description>
-                          <LastState RealAddress="00000000"/>
+                          <LastState RealAddress="00000020"/>
                           <Color>29A600</Color>
                           <VariableType>String</VariableType>
                           <Length>0</Length>
@@ -2298,9 +2332,14 @@ dealloc(newmem)
       </CheatEntries>
     </CheatEntry>
   </CheatEntries>
-  <UserdefinedSymbols/>
-  <Signature>
-    <SignedHash HashSize="132">0g3?uQpYqkKidUBEvFjSMm_ui(!oc%$BpJEhF^fgD--Ge9vR{DO(#bYB/}Nn5}gd6WhEP*xPIL4@c=*@tKa}.Q;G0}lFm,Pge%23fo^3ysr9lw%1dpRUozH6;ezf7y!8*;xB7+ye#SWAdSFHAO,}I7)N%j0k%dpF6HLn-</SignedHash>
-    <PublicKey Size="1630">5(!?IQ*y;zWn;@=c[3zCZgg+LVRMWC0suurQ#C;W0000clpc14@EkL1ZUH)FyDWEIM3o^@zHE:PK]0pw)J0{dR6pWng}Ip_$r^T#mP7By]qwjOIH7MA9ilt3h-*[?0b]._Yhlia,G-pj#]m[#(;z#y%}Tv7xVJSDN,nMYaqn5E;TEFB.fa^!nPZd+auo-Nijfkk.%QJcox6c8xUB@%1pokvP*/h.3K_Lk000e1NJLTq000.O000.W1@?s6.CDUv00006VoOIv0RI600RN!9r.]8x010qNS#tmY3ljhU3ljkVnw%H[000McNliru.R,NECI}}Eobmtw1h]2:K}zY]wUo[o9LEvGf8EnFJ2U%1a#u?oMOu/(NtOi%2w;zEAc%d+A.;=G_0uUybIaL4ZZTju1]Gr-a+(f*ax9wilFR+=C3ok0x,^m3DGA6aR@Fu:RY1R2uL]Ap[xnGHLLmsV+[;sv!il1*D*OS;;gtNTXvp*NJkJrawA+cVdOg}4M5i6mj$]6DB90/DamcUhb5@_{/SAx,]YmzP!HYb=ULUtuQa6@etVy$iG_kA%hAd4H6j}_DqF^_8?B@#]C+Yi.X(S?^r:NUG[3#6V+#,j-=YmfO5e2j571lY+vLq]C)kx?WNvW!asw)hI3#C1)szL/xDnTpoeNEsSbmWm%761O#ZwXo/*jfw9@miHbcM+XHw!zv+G]7K7N7GoErp7rzoI]sCtra4IQd=tNVMyTn7-I.-0OthX575T2+/_pqC+R2b3m4OwXr(bE@;akPS[;lNS(BG@h}Qqt/$R6,o6QChK{5+25*q-PDnu-,WCehT0BpN[cJf;^t53OebeC4_1OEK,pLqADk9hpoFDY9cjt{-)CsPiOj]^lOx7/2DVwGi;q9*4/j[:;+;6iZ=I+fU6[dct2!{R::Uw-r/WmTchCW$:z^5RYm9(,R7e=%$unu4OJ2+Ut=vMf/3nx-OZceqSeG{h8-cTq}nvW#{?@L#uZZue-nW7LyxPQ*v_BJexhxb-vs@2ulT-46NYioj?!yrI+HXmxum((H@+gQ.]q[K97_U@L:lGG:vE?ZP(]Q/WuW/0,lp9Ui^[6VzA#^8{D8d.oy6mg#K9/uV}]x7i.KS/L4s(oP@:8I6Ycp3h:Ar^C_RjZd.n7#$q2n9pdWB*O}?=seGd56Q9(!]2M_nx@6G/b,DMcx!LK/m8lfwt,yCrWLcPP-PZBfJ7/g@Evn4xyQxnb2j,}:LzY$rW@YVw4rHg3]$*S7-QIf;kgY[4z?sdd-Qu/y1kfeo#Vuzb^*zOxJnX6gFTk36_Fer(g}/^(%WoKw_k6@M%x**YP56qnxL,0R,kA]S]bGO%Vf#/[orM.E+PI)pn(OQ!uk1xAPiV66Qa.3EgI)21.,Q8EoRrN;UkboUa=4f8sF1srC2Q1w45XAMrhSyryG%FDb6XnyFHA8u*D];GN%(:b//GhDTg:r]Qr00m_V.d5sbXbAP}lFd?rE4w?0ouE*YULMynQ@qGEV;0KTE6gp:/k9Niq!-Pxr_E+TvjP+{%{^ULD{vQE=237oUcCkvDmoP2l6hadfdS25(u=2m3/zxVosmxY6ENQ*99=j=coeU6V0)Y}RdW(Btu1x8-kQ[nLTj1FF=9b8_^^{pvzW6H85djo0#tbp2%a!XKE7.7DMUH_ys1s/._#5t5wI241TL[2YBME!hSa)6GJo6a}i4M*2XS9y*$4Z-s=/LQ$5JRvL^CTnO10j4Z,n#OL.])gS(bS+Cv;c6{4BCqI$nx]9se_!%MR8Hv8VE+;@$1IZ#N@7+%h[iT{2Wor(5g]adJgq@4RvM*;#xrcPj8/R;TM/fYl,rjfzHjKpF.B*5^sZD:,;K;?FB_^;002ovPDHLkV1k4I0002*m}:Z?fAo=tCW%KPySvJt+WMr}C=][PmC*lpMVh)R?#fEFW[fe5jC$mfXHhr3QeYD422PbH*4%Xu:T7a80ghVAv#_vxsof0ipRm^Ej0T5$,u$2;jslnin_u!0nTn^-T?c385UgCi7=bTG,]r_*3{YW7oVZh{N?btxq5c</PublicKey>
-  </Signature>
+  <UserdefinedSymbols>
+    <SymbolEntry>
+      <Name>abilityStat_ptr</Name>
+      <Address>2AA032D0000</Address>
+    </SymbolEntry>
+    <SymbolEntry>
+      <Name>player_ptr</Name>
+      <Address>2AA032D0010</Address>
+    </SymbolEntry>
+  </UserdefinedSymbols>
 </CheatTable>
