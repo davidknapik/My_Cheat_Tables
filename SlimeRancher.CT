@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheatTable CheatEngineTableVersion="28">
+  <CheatEntries>
+    <CheatEntry>
+      <ID>2</ID>
+      <Description>"InfPower"</Description>
+      <LastState Activated="1"/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+aobscan(health, F3 0F 5A C0 F2 0F 5A E8 F3 0F 11 6E 54 48 8B 46 40 F2 0F10 40 50)
+label(_health)
+registersymbol(_health)
+
+health+8:
+_health:
+db 90 90 90 90 90
+
+/*
+29BCA6C0848 - F3 0F5A C0  - cvtss2sd xmm0,xmm0
+29BCA6C084C - F2 0F5A E8  - cvtsd2ss xmm5,xmm0
+29BCA6C0850 - F3 0F11 6E 54  - movss [rsi+54],xmm5 &lt;&lt;
+29BCA6C0855 - 48 8B 46 40  - mov rax,[rsi+40]
+29BCA6C0859 - F2 0F10 40 50  - movsd xmm0,[rax+50]
+
+*/
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+_health:
+db F3 0F 11 6E 54
+</AssemblerScript>
+    </CheatEntry>
+  </CheatEntries>
+  <CheatCodes>
+    <CodeEntry>
+      <Description>Change of movss [rsi+54],xmm5</Description>
+      <AddressString>29BCA6C0850</AddressString>
+      <Before>
+        <Byte>C0</Byte>
+        <Byte>F2</Byte>
+        <Byte>0F</Byte>
+        <Byte>5A</Byte>
+        <Byte>E8</Byte>
+      </Before>
+      <Actual>
+        <Byte>F3</Byte>
+        <Byte>0F</Byte>
+        <Byte>11</Byte>
+        <Byte>6E</Byte>
+        <Byte>54</Byte>
+      </Actual>
+      <After>
+        <Byte>48</Byte>
+        <Byte>8B</Byte>
+        <Byte>46</Byte>
+        <Byte>40</Byte>
+        <Byte>F2</Byte>
+      </After>
+    </CodeEntry>
+  </CheatCodes>
+  <UserdefinedSymbols/>
+</CheatTable>
