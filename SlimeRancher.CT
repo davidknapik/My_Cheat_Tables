@@ -8,12 +8,12 @@
       <VariableType>Auto Assembler Script</VariableType>
       <AssemblerScript>[ENABLE]
 //code from here to '[DISABLE]' will be used to enable the cheat
-aobscan(health, F3 0F 5A C0 F2 0F 5A E8 F3 0F 11 6E 54 48 8B 46 40 F2 0F10 40 50)
-label(_health)
-registersymbol(_health)
+aobscan(power, F3 0F 5A C0 F2 0F 5A E8 F3 0F 11 6E 54 48 8B 46 40 F2 0F10 40 50)
+label(_power)
+registersymbol(_power)
 
-health+8:
-_health:
+power+8:
+_power:
 db 90 90 90 90 90
 
 /*
@@ -28,9 +28,68 @@ db 90 90 90 90 90
  
 [DISABLE]
 //code from here till the end of the code will be used to disable the cheat
-_health:
+_power:
 db F3 0F 11 6E 54
 </AssemblerScript>
+      <Hotkeys>
+        <Hotkey>
+          <Action>Toggle Activation</Action>
+          <Keys>
+            <Key>90</Key>
+          </Keys>
+          <ID>0</ID>
+        </Hotkey>
+      </Hotkeys>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>3</ID>
+      <Description>"InfItems"</Description>
+      <LastState Activated="1"/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+aobscan(item, 48 63 49 1C 2B 4D F0 33 D2 3B CA 0F 4C CA )
+label(_item)
+registersymbol(_item)
+
+item+4:
+_item:
+db 90 90 90
+
+/*
+
+180837BDD50 - 3B CA  - cmp ecx,edx
+180837BDD52 - 0F4C CA  - cmovl ecx,edx
+180837BDD55 - 89 48 1C  - mov [rax+1C],ecx &lt;&lt;
+180837BDD58 - 48 8B 47 10  - mov rax,[rdi+10]
+180837BDD5C - 48 8B 40 10  - mov rax,[rax+10]
+
+1780FC25B3F - 48 8D 4C D1 20        - lea rcx,[rcx+rdx*8+20]
+1780FC25B44 - 48 8B 09              - mov rcx,[rcx]
+1780FC25B47 - 48 63 49 1C           - movsxd  rcx,dword ptr [rcx+1C]
+1780FC25B4B - 2B 4D F0              - sub ecx,[rbp-10] &lt;&lt;
+1780FC25B4E - 33 D2                 - xor edx,edx
+1780FC25B50 - 3B CA                 - cmp ecx,edx
+1780FC25B52 - 0F4C CA               - cmovl ecx,edx
+1780FC25B55 - 89 48 1C              - mov [rax+1C],ecx
+
+*/
+
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+_item:
+db 2B 4D F0
+</AssemblerScript>
+      <Hotkeys>
+        <Hotkey>
+          <Action>Toggle Activation</Action>
+          <Keys>
+            <Key>88</Key>
+          </Keys>
+          <ID>0</ID>
+        </Hotkey>
+      </Hotkeys>
     </CheatEntry>
   </CheatEntries>
   <CheatCodes>
@@ -57,6 +116,29 @@ db F3 0F 11 6E 54
         <Byte>46</Byte>
         <Byte>40</Byte>
         <Byte>F2</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry>
+      <Description>Change of sub ecx,[rbp-10]</Description>
+      <AddressString>1780FC25B4B</AddressString>
+      <Before>
+        <Byte>09</Byte>
+        <Byte>48</Byte>
+        <Byte>63</Byte>
+        <Byte>49</Byte>
+        <Byte>1C</Byte>
+      </Before>
+      <Actual>
+        <Byte>2B</Byte>
+        <Byte>4D</Byte>
+        <Byte>F0</Byte>
+      </Actual>
+      <After>
+        <Byte>33</Byte>
+        <Byte>D2</Byte>
+        <Byte>3B</Byte>
+        <Byte>CA</Byte>
+        <Byte>0F</Byte>
       </After>
     </CodeEntry>
   </CheatCodes>
