@@ -2,18 +2,63 @@
 <CheatTable CheatEngineTableVersion="28">
   <CheatEntries>
     <CheatEntry>
-      <ID>1</ID>
-      <Description>"No Cost"</Description>
+      <ID>6</ID>
+      <Description>"No Cost Craft"</Description>
       <LastState Activated="1"/>
       <VariableType>Auto Assembler Script</VariableType>
       <AssemblerScript>[ENABLE]
 //code from here to '[DISABLE]' will be used to enable the cheat
-aobscan(health, 48 89 55 F0 48 8B C2 89 87 84 00 00 00 )
-label(_health)
-registersymbol(_health)
+aobscan(cheat04, 0F AF D6 2B CA 89 48 74 )
+label(_cheat04)
+registersymbol(_cheat04)
 
-health+7:
-_health:
+cheat04+3:
+_cheat04:
+db 90 90
+
+/*
+1A304C270CE - 0FAF D6  - imul edx,esi
+1A304C270D1 - 2B CA  - sub ecx,edx
+1A304C270D3 - 89 48 74  - mov [rax+74],ecx &lt;&lt;
+1A304C270D6 - 48 63 4F 68  - movsxd  rcx,dword ptr [rdi+68]
+1A304C270DA - 48 8D 6D 00  - lea rbp,[rbp+00]
+
+
+*/
+
+
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+_cheat04:
+db 2B CA
+
+unregistersymbol(_cheat04)
+</AssemblerScript>
+      <Hotkeys>
+        <Hotkey>
+          <Action>Toggle Activation</Action>
+          <Keys>
+            <Key>113</Key>
+          </Keys>
+          <Description>No Cost</Description>
+          <ID>0</ID>
+        </Hotkey>
+      </Hotkeys>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>1</ID>
+      <Description>"No Cost Stores"</Description>
+      <LastState/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+aobscan(cheat02, 48 89 55 F0 48 8B C2 89 87 84 00 00 00 )
+label(_cheat02)
+registersymbol(_cheat02)
+
+cheat02+7:
+_cheat02:
 db 90 90 90 90 90 90
 
 /*
@@ -29,10 +74,54 @@ db 90 90 90 90 90 90
 
 [DISABLE]
 //code from here till the end of the code will be used to disable the cheat
-_health:
+_cheat02:
 db 89 87 84 00 00 00
 
-unregistersymbol(_health)
+unregistersymbol(_cheat02)
+</AssemblerScript>
+      <Hotkeys>
+        <Hotkey>
+          <Action>Toggle Activation</Action>
+          <Keys>
+            <Key>113</Key>
+          </Keys>
+          <Description>No Cost</Description>
+          <ID>0</ID>
+        </Hotkey>
+      </Hotkeys>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>8</ID>
+      <Description>"Infinate Split"</Description>
+      <LastState/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+aobscan(cheat01, 48 63 48 74 2B CE 89 48 74 49 8B CF  )
+label(_cheat01)
+registersymbol(_cheat01)
+
+cheat01+4:
+_cheat01:
+db 90 90
+
+/*
+1A35DF7D4AB - 48 63 48 74  - movsxd  rcx,dword ptr [rax+74]
+1A35DF7D4AF - 2B CE  - sub ecx,esi
+1A35DF7D4B1 - 89 48 74  - mov [rax+74],ecx &lt;&lt;
+1A35DF7D4B4 - 49 8B CF  - mov rcx,r15
+1A35DF7D4B7 - 48 8D AD 00000000  - lea rbp,[rbp+00000000]
+
+*/
+
+
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+_cheat01:
+db 2B CE
+
+unregistersymbol(_cheat01)
 </AssemblerScript>
       <Hotkeys>
         <Hotkey>
@@ -47,17 +136,17 @@ unregistersymbol(_health)
     </CheatEntry>
     <CheatEntry>
       <ID>3</ID>
-      <Description>"No Ammo"</Description>
+      <Description>"* No Ammo"</Description>
       <LastState/>
       <VariableType>Auto Assembler Script</VariableType>
       <AssemblerScript>[ENABLE]
 //code from here to '[DISABLE]' will be used to enable the cheat
-aobscan(health, 48 63 48 74 2B 4D D8 89 48 74 49 63 45 74 )
-label(_health)
-registersymbol(_health)
+aobscan(cheat03, 48 63 48 74 2B 4D D8 89 48 74 49 63 45 74 )
+label(_cheat03)
+registersymbol(_cheat03)
 
-health+4:
-_health:
+cheat03+4:
+_cheat03:
 db 90 90 90
 
 /*
@@ -73,10 +162,10 @@ db 90 90 90
 
 [DISABLE]
 //code from here till the end of the code will be used to disable the cheat
-_health:
+_cheat03:
 db 2B 4D D8
 
-unregistersymbol(_health)
+unregistersymbol(_cheat03)
 </AssemblerScript>
       <Hotkeys>
         <Hotkey>
@@ -145,6 +234,51 @@ unregistersymbol(_health)
         <Byte>74</Byte>
         <Byte>49</Byte>
         <Byte>63</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry>
+      <Description>Change of sub ecx,edx</Description>
+      <AddressString>1A304C270D1</AddressString>
+      <Before>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+        <Byte>0F</Byte>
+        <Byte>AF</Byte>
+        <Byte>D6</Byte>
+      </Before>
+      <Actual>
+        <Byte>2B</Byte>
+        <Byte>CA</Byte>
+      </Actual>
+      <After>
+        <Byte>89</Byte>
+        <Byte>48</Byte>
+        <Byte>74</Byte>
+        <Byte>48</Byte>
+        <Byte>63</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry>
+      <Description>Change of mov [rax+74],ecx</Description>
+      <AddressString>1A35DF7D4B1</AddressString>
+      <Before>
+        <Byte>63</Byte>
+        <Byte>48</Byte>
+        <Byte>74</Byte>
+        <Byte>2B</Byte>
+        <Byte>CE</Byte>
+      </Before>
+      <Actual>
+        <Byte>89</Byte>
+        <Byte>48</Byte>
+        <Byte>74</Byte>
+      </Actual>
+      <After>
+        <Byte>49</Byte>
+        <Byte>8B</Byte>
+        <Byte>CF</Byte>
+        <Byte>48</Byte>
+        <Byte>8D</Byte>
       </After>
     </CodeEntry>
   </CheatCodes>
