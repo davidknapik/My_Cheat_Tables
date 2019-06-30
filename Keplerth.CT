@@ -3,7 +3,7 @@
   <CheatEntries>
     <CheatEntry>
       <ID>6</ID>
-      <Description>"No Cost Craft"</Description>
+      <Description>"* No Cost Craft"</Description>
       <LastState Activated="1"/>
       <VariableType>Auto Assembler Script</VariableType>
       <AssemblerScript>[ENABLE]
@@ -47,9 +47,60 @@ unregistersymbol(_cheat04)
       </Hotkeys>
     </CheatEntry>
     <CheatEntry>
+      <ID>3</ID>
+      <Description>"* No Ammo"</Description>
+      <LastState Activated="1"/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+aobscan(cheat03, 48 63 48 74 2B 4D D8 89 48 74 49 63 45 74 )
+label(_cheat03)
+registersymbol(_cheat03)
+
+cheat03+4:
+_cheat03:
+db 90 90 90
+
+/*
+1ABD9B7E94E - 48 63 48 74  - movsxd  rcx,dword ptr [rax+74]
+1ABD9B7E952 - 2B 4D D8  - sub ecx,[rbp-28]
+1ABD9B7E955 - 89 48 74  - mov [rax+74],ecx &lt;&lt;
+1ABD9B7E958 - 49 63 45 74  - movsxd  rax,dword ptr [r13+74]
+1ABD9B7E95C - 85 C0  - test eax,eax
+
+*/
+
+
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+_cheat03:
+db 2B 4D D8
+
+unregistersymbol(_cheat03)
+</AssemblerScript>
+      <Hotkeys>
+        <Hotkey>
+          <Action>Toggle Activation</Action>
+          <Keys>
+            <Key>113</Key>
+          </Keys>
+          <Description>No Cost</Description>
+          <ID>0</ID>
+        </Hotkey>
+        <Hotkey>
+          <Action>Toggle Activation</Action>
+          <Keys>
+            <Key>114</Key>
+          </Keys>
+          <ID>1</ID>
+        </Hotkey>
+      </Hotkeys>
+    </CheatEntry>
+    <CheatEntry>
       <ID>1</ID>
       <Description>"No Cost Stores"</Description>
-      <LastState/>
+      <LastState Activated="1"/>
       <VariableType>Auto Assembler Script</VariableType>
       <AssemblerScript>[ENABLE]
 //code from here to '[DISABLE]' will be used to enable the cheat
@@ -131,57 +182,6 @@ unregistersymbol(_cheat01)
           </Keys>
           <Description>No Cost</Description>
           <ID>0</ID>
-        </Hotkey>
-      </Hotkeys>
-    </CheatEntry>
-    <CheatEntry>
-      <ID>3</ID>
-      <Description>"* No Ammo"</Description>
-      <LastState/>
-      <VariableType>Auto Assembler Script</VariableType>
-      <AssemblerScript>[ENABLE]
-//code from here to '[DISABLE]' will be used to enable the cheat
-aobscan(cheat03, 48 63 48 74 2B 4D D8 89 48 74 49 63 45 74 )
-label(_cheat03)
-registersymbol(_cheat03)
-
-cheat03+4:
-_cheat03:
-db 90 90 90
-
-/*
-1ABD9B7E94E - 48 63 48 74  - movsxd  rcx,dword ptr [rax+74]
-1ABD9B7E952 - 2B 4D D8  - sub ecx,[rbp-28]
-1ABD9B7E955 - 89 48 74  - mov [rax+74],ecx &lt;&lt;
-1ABD9B7E958 - 49 63 45 74  - movsxd  rax,dword ptr [r13+74]
-1ABD9B7E95C - 85 C0  - test eax,eax
-
-*/
-
-
-
-[DISABLE]
-//code from here till the end of the code will be used to disable the cheat
-_cheat03:
-db 2B 4D D8
-
-unregistersymbol(_cheat03)
-</AssemblerScript>
-      <Hotkeys>
-        <Hotkey>
-          <Action>Toggle Activation</Action>
-          <Keys>
-            <Key>113</Key>
-          </Keys>
-          <Description>No Cost</Description>
-          <ID>0</ID>
-        </Hotkey>
-        <Hotkey>
-          <Action>Toggle Activation</Action>
-          <Keys>
-            <Key>114</Key>
-          </Keys>
-          <ID>1</ID>
         </Hotkey>
       </Hotkeys>
     </CheatEntry>
