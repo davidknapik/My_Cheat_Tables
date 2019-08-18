@@ -2,20 +2,6 @@
 <CheatTable CheatEngineTableVersion="28">
   <CheatEntries>
     <CheatEntry>
-      <ID>1</ID>
-      <Description>"No description"</Description>
-      <LastState Value="40865" RealAddress="4DD0B6D8"/>
-      <VariableType>Float</VariableType>
-      <Address>4DD0B6D8</Address>
-    </CheatEntry>
-    <CheatEntry>
-      <ID>2</ID>
-      <Description>"Camping"</Description>
-      <LastState Value="5" RealAddress="4E352BF4"/>
-      <VariableType>4 Bytes</VariableType>
-      <Address>4E352BF4</Address>
-    </CheatEntry>
-    <CheatEntry>
       <ID>3</ID>
       <Description>"Rest without using camping equipment"</Description>
       <LastState Activated="1"/>
@@ -49,6 +35,40 @@ _cheat01:
 db 89 48 54
 </AssemblerScript>
     </CheatEntry>
+    <CheatEntry>
+      <ID>4</ID>
+      <Description>"Dont pay for anything"</Description>
+      <LastState Activated="1"/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+// Don't pay for anything in stores
+//code from here to '[DISABLE]' will be used to enable the cheat
+aobscan(cheat02, D9 45 BC DEE9 D9 58 08 8B 47 54 8B 40 48)
+label(_cheat02)
+registersymbol(_cheat02)
+
+cheat02+5:
+_cheat02:
+db 90 90 90
+
+
+/*
+
+1AF61CCF - D9 45 BC  - fld dword ptr [ebp-44]
+1AF61CD2 - DEE9 - fsubp st(1),st(0)
+1AF61CD4 - D9 58 08  - fstp dword ptr [eax+08] &lt;&lt;
+1AF61CD7 - 8B 47 54  - mov eax,[edi+54]
+1AF61CDA - 8B 40 48  - mov eax,[eax+48]
+
+*/
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+_cheat02:
+db D9 58 08
+</AssemblerScript>
+    </CheatEntry>
   </CheatEntries>
   <CheatCodes>
     <CodeEntry>
@@ -72,6 +92,29 @@ db 89 48 54
         <Byte>00</Byte>
         <Byte>00</Byte>
         <Byte>55</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry>
+      <Description>Change of fstp dword ptr [eax+08]</Description>
+      <AddressString>1AF61CD4</AddressString>
+      <Before>
+        <Byte>D9</Byte>
+        <Byte>45</Byte>
+        <Byte>BC</Byte>
+        <Byte>DE</Byte>
+        <Byte>E9</Byte>
+      </Before>
+      <Actual>
+        <Byte>D9</Byte>
+        <Byte>58</Byte>
+        <Byte>08</Byte>
+      </Actual>
+      <After>
+        <Byte>8B</Byte>
+        <Byte>47</Byte>
+        <Byte>54</Byte>
+        <Byte>8B</Byte>
+        <Byte>40</Byte>
       </After>
     </CodeEntry>
   </CheatCodes>
