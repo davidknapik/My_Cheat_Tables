@@ -1,0 +1,529 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheatTable CheatEngineTableVersion="29">
+  <CheatEntries>
+    <CheatEntry>
+      <ID>410</ID>
+      <Description>"Cube World"</Description>
+      <Options moHideChildren="1"/>
+      <LastState Activated="1"/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+{$lua}
+--- Credits To Geordan9 for the aobscan
+autoAssemble([[
+aobscanmodule(GameBase,cubeworld.exe,48 8B 0D * * * * F2 0F 5E C8 F2 0F)
+registersymbol(GameBase)
+]])
+local address = getAddress("GameBase") + 3
+address = address + readInteger(address) + 4
+unregisterSymbol("GameBase")
+registerSymbol("GameBase", address, true)
+unregisterSymbol("PlayerBase")
+registerSymbol("PlayerBase", "[[[[[GameBase]+8]+40]+0]+10]+0", true)
+unregisterSymbol("WorldBase")
+registerSymbol("WorldBase", "[GameBase]+0", true)
+{$asm}
+[DISABLE]
+unregistersymbol(GameBase)
+unregistersymbol(PlayerBase)
+unregistersymbol(WorldBase)
+</AssemblerScript>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>399</ID>
+          <Description>"Player"</Description>
+          <Options moHideChildren="1"/>
+          <LastState Activated="1"/>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>//for future update
+[ENABLE]
+[DISABLE]
+</AssemblerScript>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>393</ID>
+              <Description>"Name"</Description>
+              <LastState RealAddress="1A2DE74CA88"/>
+              <VariableType>String</VariableType>
+              <Length>15</Length>
+              <Unicode>0</Unicode>
+              <CodePage>0</CodePage>
+              <ZeroTerminate>1</ZeroTerminate>
+              <Address>PlayerBase+Name</Address>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>391</ID>
+              <Description>"Gold"</Description>
+              <LastState Value="1348" RealAddress="1A2DE74CBDC"/>
+              <VariableType>4 Bytes</VariableType>
+              <Address>PlayerBase+AAC</Address>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>1</ID>
+              <Description>"Health"</Description>
+              <LastState Value="199.8807068" RealAddress="1A2DE74C2B0"/>
+              <VariableType>Float</VariableType>
+              <Address>PlayerBase+Health</Address>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>2</ID>
+              <Description>"Mana"</Description>
+              <LastState Value="0" RealAddress="1A2DE74C2B8"/>
+              <VariableType>Float</VariableType>
+              <Address>PlayerBase+Mana</Address>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>398</ID>
+              <Description>"Stamina"</Description>
+              <LastState Value="1" RealAddress="1A2DE74CAD0"/>
+              <VariableType>Float</VariableType>
+              <Address>PlayerBase+Stamina</Address>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>397</ID>
+              <Description>"Block Power"</Description>
+              <LastState Value="1" RealAddress="1A2DE74C2B4"/>
+              <VariableType>Float</VariableType>
+              <Address>PlayerBase+BlockPower</Address>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>400</ID>
+              <Description>"Stealth"</Description>
+              <LastState Value="0" RealAddress="1A2DE74C2BC"/>
+              <VariableType>Float</VariableType>
+              <Address>PlayerBase+Stealth</Address>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>392</ID>
+              <Description>"Rotation"</Description>
+              <LastState Value="1318.070435" RealAddress="1A2DE74C160"/>
+              <VariableType>Float</VariableType>
+              <Address>PlayerBase+Rotation</Address>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>405</ID>
+              <Description>"Position"</Description>
+              <Options moManualExpandCollapse="1" moAllowManualCollapseAndExpand="1"/>
+              <LastState Value="" RealAddress="00000000"/>
+              <GroupHeader>1</GroupHeader>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>406</ID>
+                  <Description>"X"</Description>
+                  <LastState Value="1457553157552" RealAddress="1A2DE74C140"/>
+                  <ShowAsSigned>1</ShowAsSigned>
+                  <Color>0000FF</Color>
+                  <VariableType>8 Bytes</VariableType>
+                  <Address>PlayerBase+Position.x</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>407</ID>
+                  <Description>"Y"</Description>
+                  <LastState Value="-7466738577880" RealAddress="1A2DE74C148"/>
+                  <ShowAsSigned>1</ShowAsSigned>
+                  <Color>008000</Color>
+                  <VariableType>8 Bytes</VariableType>
+                  <Address>PlayerBase+Position.y</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>408</ID>
+                  <Description>"Z"</Description>
+                  <LastState Value="922746" RealAddress="1A2DE74C150"/>
+                  <ShowAsSigned>1</ShowAsSigned>
+                  <Color>FF0000</Color>
+                  <VariableType>8 Bytes</VariableType>
+                  <Address>PlayerBase+Position.z</Address>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>11</ID>
+              <Description>"Velocity"</Description>
+              <Options moManualExpandCollapse="1" moAllowManualCollapseAndExpand="1"/>
+              <LastState Value="" RealAddress="00000000"/>
+              <GroupHeader>1</GroupHeader>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>14</ID>
+                  <Description>"Z"</Description>
+                  <LastState Value="0" RealAddress="1A2DE74C16C"/>
+                  <Color>FF0000</Color>
+                  <VariableType>Float</VariableType>
+                  <Address>PlayerBase+Velocity.z</Address>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>375</ID>
+              <Description>"Flags"</Description>
+              <Options moManualExpandCollapse="1" moAllowManualCollapseAndExpand="1"/>
+              <LastState Value="" RealAddress="00000000"/>
+              <GroupHeader>1</GroupHeader>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>371</ID>
+                  <Description>"On Ground"</Description>
+                  <LastState Value="1" RealAddress="1A2DE74C18C"/>
+                  <VariableType>Binary</VariableType>
+                  <BitStart>0</BitStart>
+                  <BitLength>1</BitLength>
+                  <ShowAsBinary>0</ShowAsBinary>
+                  <Address>PlayerBase+Flag</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>376</ID>
+                  <Description>"In Water"</Description>
+                  <LastState Value="0" RealAddress="1A2DE74C18C"/>
+                  <VariableType>Binary</VariableType>
+                  <BitStart>1</BitStart>
+                  <BitLength>1</BitLength>
+                  <ShowAsBinary>0</ShowAsBinary>
+                  <Address>PlayerBase+Flag</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>373</ID>
+                  <Description>"Against a wall"</Description>
+                  <LastState Value="0" RealAddress="1A2DE74C18C"/>
+                  <VariableType>Binary</VariableType>
+                  <BitStart>2</BitStart>
+                  <BitLength>1</BitLength>
+                  <ShowAsBinary>0</ShowAsBinary>
+                  <Address>PlayerBase+Flag</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>379</ID>
+                  <Description>"?"</Description>
+                  <LastState Value="0" RealAddress="1A2DE74C18C"/>
+                  <VariableType>Binary</VariableType>
+                  <BitStart>3</BitStart>
+                  <BitLength>1</BitLength>
+                  <ShowAsBinary>0</ShowAsBinary>
+                  <Address>PlayerBase+Flag</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>377</ID>
+                  <Description>"Surfaced"</Description>
+                  <LastState Value="0" RealAddress="1A2DE74C18C"/>
+                  <VariableType>Binary</VariableType>
+                  <BitStart>4</BitStart>
+                  <BitLength>1</BitLength>
+                  <ShowAsBinary>0</ShowAsBinary>
+                  <Address>PlayerBase+Flag</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>374</ID>
+                  <Description>"Colliding"</Description>
+                  <LastState Value="0" RealAddress="1A2DE74C18C"/>
+                  <VariableType>Binary</VariableType>
+                  <BitStart>5</BitStart>
+                  <BitLength>1</BitLength>
+                  <ShowAsBinary>0</ShowAsBinary>
+                  <Address>PlayerBase+Flag</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>378</ID>
+                  <Description>"?"</Description>
+                  <LastState Value="0" RealAddress="1A2DE74C18C"/>
+                  <VariableType>Binary</VariableType>
+                  <BitStart>6</BitStart>
+                  <BitLength>1</BitLength>
+                  <ShowAsBinary>0</ShowAsBinary>
+                  <Address>PlayerBase+Flag</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>380</ID>
+                  <Description>"?"</Description>
+                  <LastState Value="0" RealAddress="1A2DE74C18C"/>
+                  <VariableType>Binary</VariableType>
+                  <BitStart>7</BitStart>
+                  <BitLength>1</BitLength>
+                  <ShowAsBinary>0</ShowAsBinary>
+                  <Address>PlayerBase+Flag</Address>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>412</ID>
+              <Description>"Script"</Description>
+              <Options moHideChildren="1" moManualExpandCollapse="1" moAllowManualCollapseAndExpand="1"/>
+              <LastState Value="" RealAddress="00000000"/>
+              <GroupHeader>1</GroupHeader>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>396</ID>
+                  <Description>"Bhop"</Description>
+                  <LastState/>
+                  <VariableType>Auto Assembler Script</VariableType>
+                  <AssemblerScript>[enable]
+{$lua}
+local fAdd = getAddress('PlayerBase+Flag')
+local vAdd = getAddress('PlayerBase+Velocity.z')
+local fVal = readBytes(fAdd, 1)
+--print('Flag :', fVal  &amp; 0x01)
+function Bhop(bhop)
+  if isKeyPressed(17) and isKeyPressed(112) then
+    bhop.destroy()
+  end
+  if isKeyPressed(32) and (readBytes(fAdd, 1)&amp; 0x01) == 1 then
+        writeFloat(vAdd, 12.0)
+  end
+end
+
+function ActivateBhop()
+  bhop=createTimer(nil)
+  bhop.OnTimer=Bhop
+  bhop.Interval=1
+  bhop.Enabled=true
+end
+{$asm}
+luacall(ActivateBhop())
+[disable]
+luacall(bhop.destroy())
+</AssemblerScript>
+                  <Hotkeys>
+                    <Hotkey>
+                      <Action>Deactivate</Action>
+                      <Keys>
+                        <Key>17</Key>
+                        <Key>112</Key>
+                      </Keys>
+                      <Description>EMERGENCY : DISABLE ALL THE SCRIPTS</Description>
+                      <ID>0</ID>
+                    </Hotkey>
+                  </Hotkeys>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>409</ID>
+                  <Description>"Fly"</Description>
+                  <LastState/>
+                  <VariableType>Auto Assembler Script</VariableType>
+                  <AssemblerScript>[enable]
+{$lua}
+local vAdd = getAddress('PlayerBase+Velocity.z')
+function Fly(fly)
+  if isKeyPressed(17) and isKeyPressed(112) then
+    fly.destroy()
+  end
+  if isKeyPressed(32) then
+    writeFloat(vAdd, 12.0)
+  end
+end
+
+function ActivateFly()
+  fly=createTimer(nil)
+  fly.OnTimer=Fly
+  fly.Interval=1
+  fly.Enabled=true
+end
+{$asm}
+luacall(ActivateFly())
+[disable]
+luacall(fly.destroy())
+</AssemblerScript>
+                  <Hotkeys>
+                    <Hotkey>
+                      <Action>Deactivate</Action>
+                      <Keys>
+                        <Key>17</Key>
+                        <Key>112</Key>
+                      </Keys>
+                      <Description>EMERGENCY : DISABLE ALL THE SCRIPTS</Description>
+                      <ID>0</ID>
+                    </Hotkey>
+                  </Hotkeys>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>12</ID>
+          <Description>"World"</Description>
+          <Options moHideChildren="1"/>
+          <LastState Activated="1"/>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>//for future update
+[ENABLE]
+[DISABLE]
+</AssemblerScript>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>401</ID>
+              <Description>"Time"</Description>
+              <DropDownList DescriptionOnly="1">0:Midnight
+43200000:Noon
+</DropDownList>
+              <LastState Value="43777144" RealAddress="1A2D4F3F66C"/>
+              <VariableType>Float</VariableType>
+              <Address>WorldBase+Time</Address>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>10</ID>
+          <Description>"DEBUG"</Description>
+          <Options moHideChildren="1"/>
+          <LastState Value="" Activated="1" RealAddress="00000000"/>
+          <Color>FF0000</Color>
+          <GroupHeader>1</GroupHeader>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>394</ID>
+              <Description>"VERY USELESS SCRIPT | YOU CAN DISABLE ALL THE SCRIPTS IN ANY CASE WITH CTRL+F1"</Description>
+              <Options moManualExpandCollapse="1" moAllowManualCollapseAndExpand="1"/>
+              <LastState Value="" RealAddress="00000000"/>
+              <Color>FF00FF</Color>
+              <GroupHeader>1</GroupHeader>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>395</ID>
+                  <Description>"Spin"</Description>
+                  <LastState/>
+                  <VariableType>Auto Assembler Script</VariableType>
+                  <AssemblerScript>[enable]
+{$lua}
+local rAdd = getAddress('PlayerBase+Rotation')
+local Rotation = readFloat(rAdd)
+local RotationMax = Rotation+360
+
+function Spin(spin)
+    if isKeyPressed(17) and isKeyPressed(112) then
+      spin.destroy()
+    end
+    if Rotation &lt; RotationMax then
+        Rotation = Rotation+10
+    else
+        Rotation = Rotation-360
+    end
+    writeFloat(rAdd, Rotation)
+end
+
+function ActivateSpin()
+  spin=createTimer(nil)
+  spin.OnTimer=Spin
+  spin.Interval=1
+  spin.Enabled=true
+end
+{$asm}
+luacall(ActivateSpin())
+[disable]
+luacall(spin.destroy())
+</AssemblerScript>
+                  <Hotkeys>
+                    <Hotkey>
+                      <Action>Deactivate</Action>
+                      <Keys>
+                        <Key>17</Key>
+                        <Key>112</Key>
+                      </Keys>
+                      <Description>EMERGENCY : DISABLE ALL THE SCRIPTS</Description>
+                      <ID>0</ID>
+                    </Hotkey>
+                  </Hotkeys>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>404</ID>
+              <Description>"Base Address"</Description>
+              <Options moManualExpandCollapse="1" moAllowManualCollapseAndExpand="1"/>
+              <LastState Value="" RealAddress="00000000"/>
+              <GroupHeader>1</GroupHeader>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>8</ID>
+                  <Description>"PlayerBase"</Description>
+                  <LastState Value="" RealAddress="1A2DE74C130"/>
+                  <ShowAsHex>1</ShowAsHex>
+                  <VariableType>Array of byte</VariableType>
+                  <ByteLength>0</ByteLength>
+                  <Address>PlayerBase</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>403</ID>
+                  <Description>"WorldBase"</Description>
+                  <LastState Value="" RealAddress="1A2D4F3EF70"/>
+                  <ShowAsHex>1</ShowAsHex>
+                  <VariableType>Array of byte</VariableType>
+                  <ByteLength>0</ByteLength>
+                  <Address>WorldBase</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>411</ID>
+                  <Description>"GameBase"</Description>
+                  <LastState Value="" RealAddress="7FF7FC330A80"/>
+                  <VariableType>Array of byte</VariableType>
+                  <ByteLength>0</ByteLength>
+                  <Address>GameBase</Address>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+  </CheatEntries>
+  <UserdefinedSymbols>
+    <SymbolEntry>
+      <Name>Time</Name>
+      <Address>6FC</Address>
+    </SymbolEntry>
+    <SymbolEntry>
+      <Name>Position.x</Name>
+      <Address>10</Address>
+    </SymbolEntry>
+    <SymbolEntry>
+      <Name>Position.y</Name>
+      <Address>18</Address>
+    </SymbolEntry>
+    <SymbolEntry>
+      <Name>Position.z</Name>
+      <Address>20</Address>
+    </SymbolEntry>
+    <SymbolEntry>
+      <Name>Rotation</Name>
+      <Address>30</Address>
+    </SymbolEntry>
+    <SymbolEntry>
+      <Name>Velocity.z</Name>
+      <Address>3C</Address>
+    </SymbolEntry>
+    <SymbolEntry>
+      <Name>Flag</Name>
+      <Address>5C</Address>
+    </SymbolEntry>
+    <SymbolEntry>
+      <Name>Health</Name>
+      <Address>180</Address>
+    </SymbolEntry>
+    <SymbolEntry>
+      <Name>BlockPower</Name>
+      <Address>184</Address>
+    </SymbolEntry>
+    <SymbolEntry>
+      <Name>Mana</Name>
+      <Address>188</Address>
+    </SymbolEntry>
+    <SymbolEntry>
+      <Name>Stealth</Name>
+      <Address>18C</Address>
+    </SymbolEntry>
+    <SymbolEntry>
+      <Name>Name</Name>
+      <Address>958</Address>
+    </SymbolEntry>
+    <SymbolEntry>
+      <Name>Stamina</Name>
+      <Address>9A0</Address>
+    </SymbolEntry>
+    <SymbolEntry>
+      <Name>Gold</Name>
+      <Address>AAC</Address>
+    </SymbolEntry>
+  </UserdefinedSymbols>
+  <Comments>Made for Beta 0.9.1-6
+27/09/2019
+By Zeper
+Thanks to Geordan9 and Salami
+</Comments>
+</CheatTable>
