@@ -268,23 +268,8 @@ unregistersymbol(_cheat06)
     <CheatEntry>
       <ID>13</ID>
       <Description>"No description"</Description>
-      <LastState Value="572" RealAddress="205802B6108"/>
       <VariableType>4 Bytes</VariableType>
-      <Address>205802B6108</Address>
-    </CheatEntry>
-    <CheatEntry>
-      <ID>14</ID>
-      <Description>"No description"</Description>
-      <LastState Value="119412" RealAddress="206C88F11C0"/>
-      <VariableType>4 Bytes</VariableType>
-      <Address>206C88F11C0</Address>
-    </CheatEntry>
-    <CheatEntry>
-      <ID>15</ID>
-      <Description>"No description"</Description>
-      <LastState Value="100" RealAddress="206C88F11B0"/>
-      <VariableType>4 Bytes</VariableType>
-      <Address>206C88F11B0</Address>
+      <Address>2218BF520A8</Address>
     </CheatEntry>
   </CheatEntries>
   <CheatCodes>
@@ -311,7 +296,7 @@ unregistersymbol(_cheat06)
         <Byte>0F</Byte>
       </After>
     </CodeEntry>
-    <CodeEntry Color="80000008">
+    <CodeEntry Color="20000000">
       <Description>Change of add [rbx],r14d</Description>
       <AddressString>NMS.exe+FE3BF6</AddressString>
       <Before>
