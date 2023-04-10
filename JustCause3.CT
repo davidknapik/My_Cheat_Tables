@@ -1,0 +1,1758 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheatTable CheatEngineTableVersion="27">
+  <CheatEntries>
+    <CheatEntry>
+      <ID>1139</ID>
+      <Description>"GEAR MODS (CUSTOM)"</Description>
+      <Options moHideChildren="1"/>
+      <LastState Value="" RealAddress="00000000"/>
+      <GroupHeader>1</GroupHeader>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>1138</ID>
+          <Description>"Increase Amount+ (Wingsuit)"</Description>
+          <LastState/>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>{ Game   : JustCause3.exe
+  Version: 
+  Date   : 2017-07-09
+  Author : Marcus101RR
+
+  Wingsuit Boost Usage (Default 0.01)
+}
+
+define(address,"JustCause3.exe"+451005F)
+define(bytes,F3 0F 5C C6 0F 2F C1)
+
+[ENABLE]
+
+assert(address,bytes)
+alloc(newmem,$1000,"JustCause3.exe"+451005F)
+
+label(code)
+label(return)
+
+newmem:
+
+code:
+  push eax
+  mov eax, (float)0.005
+  movd xmm6, eax
+  pop eax
+  subss xmm0,xmm6
+  comiss xmm0,xmm1
+  jmp return
+
+address:
+  jmp newmem
+  nop
+  nop
+return:
+
+[DISABLE]
+
+address:
+  db bytes
+  // subss xmm0,xmm6
+  // comiss xmm0,xmm1
+
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: "JustCause3.exe"+451005F
+
+"JustCause3.exe"+4510035: 74 14                    -  je JustCause3.exe+451004B
+"JustCause3.exe"+4510037: E8 C4 91 75 FF           -  call JustCause3.exe+3C69200
+"JustCause3.exe"+451003C: 48 8B 8B 30 0A 00 00     -  mov rcx,[rbx+00000A30]
+"JustCause3.exe"+4510043: 0F 28 F8                 -  movaps xmm7,xmm0
+"JustCause3.exe"+4510046: E8 05 92 75 FF           -  call JustCause3.exe+3C69250
+"JustCause3.exe"+451004B: 40 84 FF                 -  test dil,dil
+"JustCause3.exe"+451004E: 74 31                    -  je JustCause3.exe+4510081
+"JustCause3.exe"+4510050: F3 0F 10 83 94 2F 00 00  -  movss xmm0,[rbx+00002F94]
+"JustCause3.exe"+4510058: 0F 57 C9                 -  xorps xmm1,xmm1
+"JustCause3.exe"+451005B: F3 0F 5E F7              -  divss xmm6,xmm7
+// ---------- INJECTING HERE ----------
+"JustCause3.exe"+451005F: F3 0F 5C C6              -  subss xmm0,xmm6
+"JustCause3.exe"+4510063: 0F 2F C1                 -  comiss xmm0,xmm1
+// ---------- DONE INJECTING  ----------
+"JustCause3.exe"+4510066: 77 03                    -  ja JustCause3.exe+451006B
+"JustCause3.exe"+4510068: 0F 28 C1                 -  movaps xmm0,xmm1
+"JustCause3.exe"+451006B: 0F 2F C1                 -  comiss xmm0,xmm1
+"JustCause3.exe"+451006E: F3 0F 11 83 94 2F 00 00  -  movss [rbx+00002F94],xmm0
+"JustCause3.exe"+4510076: 76 4B                    -  jna JustCause3.exe+45100C3
+"JustCause3.exe"+4510078: 40 88 BB AC 2F 00 00     -  mov [rbx+00002FAC],dil
+"JustCause3.exe"+451007F: EB 55                    -  jmp JustCause3.exe+45100D6
+"JustCause3.exe"+4510081: 80 BB B0 2F 00 00 00     -  cmp byte ptr [rbx+00002FB0],00
+"JustCause3.exe"+4510088: 75 24                    -  jne JustCause3.exe+45100AE
+"JustCause3.exe"+451008A: F3 0F 5E F0              -  divss xmm6,xmm0
+}
+</AssemblerScript>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>146</ID>
+      <Description>"Wingsuit Challenge +500"</Description>
+      <LastState/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>{ Game   : JustCause3.exe
+  Version: 
+  Date   : 2017-06-28
+  Author : Marcus101RR
+
+  Wingsuit Challenge Ring +500
+}
+
+define(address,"JustCause3.exe"+3DECD78)
+define(bytes,48 01 48 18 48 83 C4 40)
+
+[ENABLE]
+
+assert(address,bytes)
+alloc(newmem,$1000,"JustCause3.exe"+3DECD78)
+
+label(code)
+label(return)
+
+newmem:
+
+code:
+  add [rax+18],rcx
+  add [rax+18],(int)250
+  add rsp,40
+  jmp return
+
+address:
+  jmp newmem
+  nop
+  nop
+  nop
+return:
+
+[DISABLE]
+
+address:
+  db bytes
+  // add [rax+18],rcx
+  // add rsp,40
+
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: "JustCause3.exe"+3DECD78
+
+"JustCause3.exe"+3DECD52: 49 89 C3                       -  mov r11,rax
+"JustCause3.exe"+3DECD55: 48 8B 43 08                    -  mov rax,[rbx+08]
+"JustCause3.exe"+3DECD59: 48 29 C1                       -  sub rcx,rax
+"JustCause3.exe"+3DECD5C: 48 83 F9 01                    -  cmp rcx,01
+"JustCause3.exe"+3DECD60: 73 24                          -  jae JustCause3.exe+3DECD86
+"JustCause3.exe"+3DECD62: 48 8D 0D 6F 3F 51 FE           -  lea rcx,[JustCause3.exe+2300CD8]
+"JustCause3.exe"+3DECD69: FF 15 A9 08 FD 01              -  call qword ptr [JustCause3.exe+5DBD618]
+"JustCause3.exe"+3DECD6F: CC                             -  int 3 
+"JustCause3.exe"+3DECD70: 48 8B 48 20                    -  mov rcx,[rax+20]
+"JustCause3.exe"+3DECD74: 49 0F AF C8                    -  imul rcx,r8
+// ---------- INJECTING HERE ----------
+"JustCause3.exe"+3DECD78: 48 01 48 18                    -  add [rax+18],rcx
+"JustCause3.exe"+3DECD7C: 48 83 C4 40                    -  add rsp,40
+// ---------- DONE INJECTING  ----------
+"JustCause3.exe"+3DECD80: 5B                             -  pop rbx
+"JustCause3.exe"+3DECD81: C3                             -  ret 
+"JustCause3.exe"+3DECD82: 53                             -  push rbx
+"JustCause3.exe"+3DECD83: 1A 2C 99                       -  sbb ch,byte ptr [rcx+rbx*4]
+"JustCause3.exe"+3DECD86: 48 FF C0                       -  inc rax
+"JustCause3.exe"+3DECD89: 48 89 43 08                    -  mov [rbx+08],rax
+"JustCause3.exe"+3DECD8D: 4C 89 5F 08                    -  mov [rdi+08],r11
+"JustCause3.exe"+3DECD91: 49 8B 43 08                    -  mov rax,[r11+08]
+"JustCause3.exe"+3DECD95: 48 8B 7C 24 50                 -  mov rdi,[rsp+50]
+"JustCause3.exe"+3DECD9A: 4C 89 18                       -  mov [rax],r11
+}
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>65</ID>
+      <Description>"Activate Player Scripts"</Description>
+      <Options moHideChildren="1"/>
+      <LastState/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+aobscanmodule(player,JustCause3.exe,4C 89 41 04 44 89 41 0C 66 0F 6E C8)
+alloc(newmem,$1000,player)
+
+label(code)
+label(return)
+label(player_ptr)
+
+newmem:
+
+code:
+  mov qword ptr [player_ptr],rdx
+  db 4C 89 41 04 44 89 41 0C
+  jmp return
+
+player_ptr:
+  dq 0
+
+player:
+  jmp code
+  nop
+  nop
+  nop
+return:
+registersymbol(player)
+registersymbol(player_ptr)
+
+[DISABLE]
+player:
+  db 4C 89 41 04 44 89 41 0C
+unregistersymbol(player)
+unregistersymbol(player_ptr)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: "JustCause3.exe"+39C0F6B
+
+"JustCause3.exe"+39C0F3F: CC                                            -  int 3 
+"JustCause3.exe"+39C0F40: CC                                            -  int 3 
+"JustCause3.exe"+39C0F41: 66 66 66 66 66 66 2E 0F 1F 84 00 00 00 00 00  -  nop cs:[rax+rax+00000000]
+"JustCause3.exe"+39C0F50: 45 31 C0                                      -  xor r8d,r8d
+"JustCause3.exe"+39C0F53: 48 85 D2                                      -  test rdx,rdx
+"JustCause3.exe"+39C0F56: 74 09                                         -  je JustCause3.exe+39C0F61
+"JustCause3.exe"+39C0F58: 48 81 C2 C0 FD FF FF                          -  add rdx,FFFFFDC0
+"JustCause3.exe"+39C0F5F: EB 03                                         -  jmp JustCause3.exe+39C0F64
+"JustCause3.exe"+39C0F61: 4C 89 C2                                      -  mov rdx,r8
+"JustCause3.exe"+39C0F64: 0F BF 82 2E 02 00 00                          -  movsx eax,word ptr [rdx+0000022E]
+// ---------- INJECTING HERE ----------
+"JustCause3.exe"+39C0F6B: 4C 89 41 04                                   -  mov [rcx+04],r8
+"JustCause3.exe"+39C0F6F: 44 89 41 0C                                   -  mov [rcx+0C],r8d
+// ---------- DONE INJECTING  ----------
+"JustCause3.exe"+39C0F73: 66 0F 6E C8                                   -  movd xmm1,eax
+"JustCause3.exe"+39C0F77: 0F BF 82 D0 01 00 00                          -  movsx eax,word ptr [rdx+000001D0]
+"JustCause3.exe"+39C0F7E: 0F 5B C9                                      -  cvtdq2ps xmm1,xmm1
+"JustCause3.exe"+39C0F81: 66 0F 6E C0                                   -  movd xmm0,eax
+"JustCause3.exe"+39C0F85: 48 89 C8                                      -  mov rax,rcx
+"JustCause3.exe"+39C0F88: 0F 5B C0                                      -  cvtdq2ps xmm0,xmm0
+"JustCause3.exe"+39C0F8B: F3 0F 5E C8                                   -  divss xmm1,xmm0
+"JustCause3.exe"+39C0F8F: F3 0F 11 09                                   -  movss [rcx],xmm1
+"JustCause3.exe"+39C0F93: C3                                            -  ret 
+"JustCause3.exe"+39C0F94: DA CC                                         -  fcmove st(0),st(4)
+}
+</AssemblerScript>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>64</ID>
+          <Description>"Unlimited Health"</Description>
+          <LastState/>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>[ENABLE]
+aobscanmodule(health,JustCause3.exe,66 29 EA 48 89 F9)
+alloc(newmem,$1000,health)
+
+label(code)
+label(return)
+
+newmem:
+  cmp rdi,qword ptr [player_ptr]
+  je code
+  sub dx,bp
+code:
+  mov rcx,rdi
+  jmp return
+
+health:
+  jmp newmem
+  nop
+return:
+registersymbol(health)
+
+[DISABLE]
+
+health:
+  db 66 29 EA 48 89 F9
+
+unregistersymbol(health)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: "JustCause3.exe"+3B12D22
+
+"JustCause3.exe"+3B12D01: 74 0B                                         -  je JustCause3.exe+3B12D0E
+"JustCause3.exe"+3B12D03: 48 8B 40 28                                   -  mov rax,[rax+28]
+"JustCause3.exe"+3B12D07: 0F B6 40 01                                   -  movzx eax,byte ptr [rax+01]
+"JustCause3.exe"+3B12D0B: EB 03                                         -  jmp JustCause3.exe+3B12D10
+"JustCause3.exe"+3B12D0D: C5 31                                         -  lds esi,[rcx]
+"JustCause3.exe"+3B12D0F: C0 38 41                                      -  sar byte ptr [rax],41
+"JustCause3.exe"+3B12D12: 1A 75 19                                      -  sbb dh,byte ptr [rbp+19]
+"JustCause3.exe"+3B12D15: 0F B7 97 2E 02 00 00                          -  movzx edx,word ptr [rdi+0000022E]
+"JustCause3.exe"+3B12D1C: 48 8B 07                                      -  mov rax,[rdi]
+"JustCause3.exe"+3B12D1F: 49 89 F0                                      -  mov r8,rsi
+// ---------- INJECTING HERE ----------
+"JustCause3.exe"+3B12D22: 66 29 EA                                      -  sub dx,bp
+"JustCause3.exe"+3B12D25: 48 89 F9                                      -  mov rcx,rdi
+// ---------- DONE INJECTING  ----------
+"JustCause3.exe"+3B12D28: FF 90 C8 00 00 00                             -  call qword ptr [rax+000000C8]
+"JustCause3.exe"+3B12D2E: 48 8B 74 24 58                                -  mov rsi,[rsp+58]
+"JustCause3.exe"+3B12D33: 0F B7 C5                                      -  movzx eax,bp
+"JustCause3.exe"+3B12D36: 48 8B 6C 24 50                                -  mov rbp,[rsp+50]
+"JustCause3.exe"+3B12D3B: 48 83 C4 30                                   -  add rsp,30
+"JustCause3.exe"+3B12D3F: 5F                                            -  pop rdi
+"JustCause3.exe"+3B12D40: C3                                            -  ret 
+"JustCause3.exe"+3B12D41: 66 66 66 66 66 66 2E 0F 1F 84 00 00 00 00 00  -  nop cs:[rax+rax+00000000]
+"JustCause3.exe"+3B12D50: 45 31 D2                                      -  xor r10d,r10d
+"JustCause3.exe"+3B12D53: 45 0F B7 CA                                   -  movzx r9d,r10w
+}
+</AssemblerScript>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>67</ID>
+          <Description>"Player Pointer"</Description>
+          <Options moHideChildren="1"/>
+          <LastState Value="" RealAddress="00000000"/>
+          <GroupHeader>1</GroupHeader>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>66</ID>
+              <Description>"Base Address"</Description>
+              <LastState RealAddress="116FF6160000000"/>
+              <VariableType>String</VariableType>
+              <Length>0</Length>
+              <Unicode>0</Unicode>
+              <CodePage>0</CodePage>
+              <ZeroTerminate>1</ZeroTerminate>
+              <Address>player_ptr</Address>
+              <Offsets>
+                <Offset>0</Offset>
+              </Offsets>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>68</ID>
+                  <Description>"Health"</Description>
+                  <VariableType>2 Bytes</VariableType>
+                  <Address>+22e</Address>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>147</ID>
+      <Description>"Freeze Timers [Hotkey: F4]"</Description>
+      <LastState/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+
+aobscanmodule(TIMER,JustCause3.exe,89 8B C8 00 00 00 48 8B) // should be unique
+alloc(newmem,$1000,"JustCause3.exe"+3D7660C)
+
+label(code)
+label(return)
+
+newmem:
+
+code:
+  mov ecx, [rbx+000000C8]
+  mov [rbx+000000C8],ecx
+  jmp return
+
+TIMER:
+  jmp code
+  nop
+return:
+registersymbol(TIMER)
+
+[DISABLE]
+
+TIMER:
+  db 89 8B C8 00 00 00
+
+unregistersymbol(TIMER)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: "JustCause3.exe"+3CD3BA3
+
+"JustCause3.exe"+3CD3B82: 48 89 D9                       -  mov rcx,rbx
+"JustCause3.exe"+3CD3B85: E8 16 A3 AA FF                 -  call JustCause3.exe+377DEA0
+"JustCause3.exe"+3CD3B8A: 4C 89 F2                       -  mov rdx,r14
+"JustCause3.exe"+3CD3B8D: 48 89 C1                       -  mov rcx,rax
+"JustCause3.exe"+3CD3B90: E8 BB DC AA FF                 -  call JustCause3.exe+3781850
+"JustCause3.exe"+3CD3B95: 0F 28 F0                       -  movaps xmm6,xmm0
+"JustCause3.exe"+3CD3B98: 45 84 FF                       -  test r15l,r15l
+"JustCause3.exe"+3CD3B9B: 74 06                          -  je JustCause3.exe+3CD3BA3
+"JustCause3.exe"+3CD3B9D: F3 0F 58 F7                    -  addss xmm6,xmm7
+"JustCause3.exe"+3CD3BA1: EB 04                          -  jmp JustCause3.exe+3CD3BA7
+// ---------- INJECTING HERE ----------
+"JustCause3.exe"+3CD3BA3: F3 0F 5C F7                    -  subss xmm6,xmm7
+"JustCause3.exe"+3CD3BA7: 48 89 D9                       -  mov rcx,rbx
+// ---------- DONE INJECTING  ----------
+"JustCause3.exe"+3CD3BAA: E8 F1 A2 AA FF                 -  call JustCause3.exe+377DEA0
+"JustCause3.exe"+3CD3BAF: 4C 89 F1                       -  mov rcx,r14
+"JustCause3.exe"+3CD3BB2: 48 89 C7                       -  mov rdi,rax
+"JustCause3.exe"+3CD3BB5: E8 B6 9F AA FF                 -  call JustCause3.exe+377DB70
+"JustCause3.exe"+3CD3BBA: 84 C0                          -  test al,al
+"JustCause3.exe"+3CD3BBC: 74 0F                          -  je JustCause3.exe+3CD3BCD
+"JustCause3.exe"+3CD3BBE: 4C 89 F2                       -  mov rdx,r14
+"JustCause3.exe"+3CD3BC1: 48 89 F9                       -  mov rcx,rdi
+"JustCause3.exe"+3CD3BC4: E8 A7 9E AA FF                 -  call JustCause3.exe+377DA70
+"JustCause3.exe"+3CD3BC9: F3 0F 11 30                    -  movss [rax],xmm6
+}
+</AssemblerScript>
+      <Hotkeys>
+        <Hotkey>
+          <Action>Toggle Activation</Action>
+          <Keys>
+            <Key>115</Key>
+          </Keys>
+          <ID>0</ID>
+        </Hotkey>
+      </Hotkeys>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>1125</ID>
+      <Description>"Freeze Timer Demolition [Hotkey: F6]"</Description>
+      <LastState/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[Enable]
+aobscanmodule(std_aob1,JustCause3.exe,F3 41 0F 11 85 5C 02 00 00 41 0F2E B5 5C020000)
+registersymbol(std_aob1)
+
+std_aob1:
+db 90 90 90 90 90 90 90 90 90
+
+[Disable]
+
+stg_aob1:
+db F3 41 0F 11 85 5C 02 00 00
+unregistersymbol(std_aob1)
+
+{
+JustCause3.PlatformAllocHook+BDCD07 - F3 41 0F11 85 5C020000  - movss [r13+0000025C],xmm0
+JustCause3.PlatformAllocHook+BDCD10 - 41 0F2E B5 5C020000   - ucomiss xmm6,[r13+0000025C]
+}
+</AssemblerScript>
+      <Hotkeys>
+        <Hotkey>
+          <Action>Toggle Activation</Action>
+          <Keys>
+            <Key>117</Key>
+          </Keys>
+          <ID>0</ID>
+        </Hotkey>
+      </Hotkeys>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>151</ID>
+      <Description>"Freeze Timers Gun Trials [Hotkey: F5]"</Description>
+      <LastState/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+aobscanmodule(ftg,JustCause3.exe,F3 0F 5C F7 48 89 D9)
+ftg:
+  db 90 90 90 90
+registersymbol(ftg)
+[DISABLE]
+ftg:
+  db F3 0F 5C F7
+unregistersymbol(ftg)
+
+{
+// ORIGINAL CODE - INJECTION POINT: "JustCause3.exe"+3CD3BA3
+
+"JustCause3.exe"+3CD3B82: 48 89 D9                       -  mov rcx,rbx
+"JustCause3.exe"+3CD3B85: E8 16 A3 AA FF                 -  call JustCause3.exe+377DEA0
+"JustCause3.exe"+3CD3B8A: 4C 89 F2                       -  mov rdx,r14
+"JustCause3.exe"+3CD3B8D: 48 89 C1                       -  mov rcx,rax
+"JustCause3.exe"+3CD3B90: E8 BB DC AA FF                 -  call JustCause3.exe+3781850
+"JustCause3.exe"+3CD3B95: 0F 28 F0                       -  movaps xmm6,xmm0
+"JustCause3.exe"+3CD3B98: 45 84 FF                       -  test r15l,r15l
+"JustCause3.exe"+3CD3B9B: 74 06                          -  je JustCause3.exe+3CD3BA3
+"JustCause3.exe"+3CD3B9D: F3 0F 58 F7                    -  addss xmm6,xmm7
+"JustCause3.exe"+3CD3BA1: EB 04                          -  jmp JustCause3.exe+3CD3BA7
+// ---------- INJECTING HERE ----------
+"JustCause3.exe"+3CD3BA3: F3 0F 5C F7                    -  subss xmm6,xmm7
+"JustCause3.exe"+3CD3BA7: 48 89 D9                       -  mov rcx,rbx
+// ---------- DONE INJECTING  ----------
+"JustCause3.exe"+3CD3BAA: E8 F1 A2 AA FF                 -  call JustCause3.exe+377DEA0
+"JustCause3.exe"+3CD3BAF: 4C 89 F1                       -  mov rcx,r14
+"JustCause3.exe"+3CD3BB2: 48 89 C7                       -  mov rdi,rax
+"JustCause3.exe"+3CD3BB5: E8 B6 9F AA FF                 -  call JustCause3.exe+377DB70
+"JustCause3.exe"+3CD3BBA: 84 C0                          -  test al,al
+"JustCause3.exe"+3CD3BBC: 74 0F                          -  je JustCause3.exe+3CD3BCD
+"JustCause3.exe"+3CD3BBE: 4C 89 F2                       -  mov rdx,r14
+"JustCause3.exe"+3CD3BC1: 48 89 F9                       -  mov rcx,rdi
+"JustCause3.exe"+3CD3BC4: E8 A7 9E AA FF                 -  call JustCause3.exe+377DA70
+"JustCause3.exe"+3CD3BC9: F3 0F 11 30                    -  movss [rax],xmm6
+}
+</AssemblerScript>
+      <Hotkeys>
+        <Hotkey>
+          <Action>Toggle Activation</Action>
+          <Keys>
+            <Key>116</Key>
+          </Keys>
+          <ID>0</ID>
+        </Hotkey>
+      </Hotkeys>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>5</ID>
+      <Description>"Full Ammo/Grenades"</Description>
+      <LastState/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+aobscanmodule(ammo,JustCause3.exe,41 39 E8 41 0F 4C E8)
+ammo+03:
+  db 90 90 90 90
+registersymbol(ammo)
+[DISABLE]
+ammo+03:
+  db 41 0F 4C E8
+unregistersymbol(ammo)
+
+{
+// ORIGINAL CODE - INJECTION POINT: "JustCause3.exe"+3B23CE9
+
+"JustCause3.exe"+3B23CC4: 41 54                       -  push r12
+"JustCause3.exe"+3B23CC6: 41 55                       -  push r13
+"JustCause3.exe"+3B23CC8: 41 56                       -  push r14
+"JustCause3.exe"+3B23CCA: 48 83 EC 20                 -  sub rsp,20
+"JustCause3.exe"+3B23CCE: 48 63 DA                    -  movsxd  rbx,edx
+"JustCause3.exe"+3B23CD1: 48 89 CF                    -  mov rdi,rcx
+"JustCause3.exe"+3B23CD4: 45 0F B6 E1                 -  movzx r12d,r9l
+"JustCause3.exe"+3B23CD8: 8B AC 99 F0 01 00 00        -  mov ebp,[rcx+rbx*4+000001F0]
+"JustCause3.exe"+3B23CDF: 8B B4 99 B0 01 00 00        -  mov esi,[rcx+rbx*4+000001B0]
+"JustCause3.exe"+3B23CE6: 45 89 C6                    -  mov r14d,r8d
+// ---------- INJECTING HERE ----------
+"JustCause3.exe"+3B23CE9: 41 39 E8                    -  cmp r8d,ebp
+"JustCause3.exe"+3B23CEC: 41 0F 4C E8                 -  cmovl ebp,r8d
+// ---------- DONE INJECTING  ----------
+"JustCause3.exe"+3B23CF0: 89 AC 99 B0 01 00 00        -  mov [rcx+rbx*4+000001B0],ebp
+"JustCause3.exe"+3B23CF7: 48 8B 89 C0 03 00 00        -  mov rcx,[rcx+000003C0]
+"JustCause3.exe"+3B23CFE: 48 85 C9                    -  test rcx,rcx
+"JustCause3.exe"+3B23D01: 74 73                       -  je JustCause3.exe+3B23D76
+"JustCause3.exe"+3B23D03: E8 18 79 EA FF              -  call JustCause3.exe+39CB620
+"JustCause3.exe"+3B23D08: 84 C0                       -  test al,al
+"JustCause3.exe"+3B23D0A: 74 6A                       -  je JustCause3.exe+3B23D76
+"JustCause3.exe"+3B23D0C: 48 8B 8F C0 03 00 00        -  mov rcx,[rdi+000003C0]
+"JustCause3.exe"+3B23D13: 89 DA                       -  mov edx,ebx
+"JustCause3.exe"+3B23D15: E8 06 71 EE FF              -  call JustCause3.exe+3A0AE20
+}
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>98</ID>
+      <Description>"Wingsuit Score"</Description>
+      <LastState/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+aobscanmodule(wingsuit,JustCause3.exe,F3 0F 58 B3 88 02 00 00)
+wingsuit:
+  db C7 83 88 02 00 00
+  dd (float)100000
+  db 90 90 90 90 90 90
+registersymbol(wingsuit)
+
+[DISABLE]
+wingsuit:
+  db F3 0F 58 B3 88 02 00 00 F3 0F 11 B3 88 02 00 00
+unregistersymbol(wingsuit)
+
+{
+// ORIGINAL CODE - INJECTION POINT: "JustCause3.exe"+3DBA4CD
+
+"JustCause3.exe"+3DBA492: F3 0F 10 40 04              -  movss xmm0,[rax+04]
+"JustCause3.exe"+3DBA497: 0F 2F 83 9C 02 00 00        -  comiss xmm0,[rbx+0000029C]
+"JustCause3.exe"+3DBA49E: 76 08                       -  jna JustCause3.exe+3DBA4A8
+"JustCause3.exe"+3DBA4A0: F3 0F 11 83 9C 02 00 00     -  movss [rbx+0000029C],xmm0
+"JustCause3.exe"+3DBA4A8: 48 83 C0 08                 -  add rax,08
+"JustCause3.exe"+3DBA4AC: 48 3B 83 68 02 00 00        -  cmp rax,[rbx+00000268]
+"JustCause3.exe"+3DBA4B3: 75 D8                       -  jne JustCause3.exe+3DBA48D
+"JustCause3.exe"+3DBA4B5: F3 0F 59 B3 84 02 00 00     -  mulss xmm6,[rbx+00000284]
+"JustCause3.exe"+3DBA4BD: F3 0F 59 B3 94 02 00 00     -  mulss xmm6,[rbx+00000294]
+"JustCause3.exe"+3DBA4C5: F3 0F 59 B3 9C 02 00 00     -  mulss xmm6,[rbx+0000029C]
+// ---------- INJECTING HERE ----------
+"JustCause3.exe"+3DBA4CD: F3 0F 58 B3 88 02 00 00     -  addss xmm6,[rbx+00000288]
+// ---------- DONE INJECTING  ----------
+"JustCause3.exe"+3DBA4D5: F3 0F 11 B3 88 02 00 00     -  movss [rbx+00000288],xmm6
+"JustCause3.exe"+3DBA4DD: 48 8B 4C 24 60              -  mov rcx,[rsp+60]
+"JustCause3.exe"+3DBA4E2: 48 31 E1                    -  xor rcx,rsp
+"JustCause3.exe"+3DBA4E5: E8 A6 DE A9 01              -  call JustCause3.exe+5858390
+"JustCause3.exe"+3DBA4EA: 48 8B 9C 24 A0 00 00 00     -  mov rbx,[rsp+000000A0]
+"JustCause3.exe"+3DBA4F2: 0F 28 74 24 70              -  movaps xmm6,[rsp+70]
+"JustCause3.exe"+3DBA4F7: 48 81 C4 80 00 00 00        -  add rsp,00000080
+"JustCause3.exe"+3DBA4FE: 5F                          -  pop rdi
+"JustCause3.exe"+3DBA4FF: C3                          -  ret 
+"JustCause3.exe"+3DBA500: D8 CC                       -  fmul st(0),st(4)
+}
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>80</ID>
+      <Description>"Challenge Points"</Description>
+      <LastState/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+aobscanmodule(EVENTPOINTS,JustCause3.exe,49 8B 4F 18 4C 39 E1)
+alloc(newmem,$1000,EVENTPOINTS)
+
+label(code)
+label(return)
+
+newmem:
+
+code:
+  mov [r15+18],#99999
+  mov rcx,[r15+18]
+  cmp rcx,r12
+  jmp return
+
+EVENTPOINTS:
+  jmp code
+  nop
+  nop
+return:
+registersymbol(EVENTPOINTS)
+
+[DISABLE]
+EVENTPOINTS:
+  db 49 8B 4F 18 4C 39 E1
+unregistersymbol(EVENTPOINTS)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: "JustCause3.exe"+4041179
+
+"JustCause3.exe"+4041151: 48 0F 49 C2           -  cmovns rax,rdx
+"JustCause3.exe"+4041155: 8B 00                 -  mov eax,[rax]
+"JustCause3.exe"+4041157: 89 43 0C              -  mov [rbx+0C],eax
+"JustCause3.exe"+404115A: 80 7B 18 00           -  cmp byte ptr [rbx+18],00
+"JustCause3.exe"+404115E: 74 0B                 -  je JustCause3.exe+404116B
+"JustCause3.exe"+4041160: 48 8B 41 08           -  mov rax,[rcx+08]
+"JustCause3.exe"+4041164: C6 80 78 01 00 00 01  -  mov byte ptr [rax+00000178],01
+"JustCause3.exe"+404116B: 48 83 C3 20           -  add rbx,20
+"JustCause3.exe"+404116F: 49 3B 5D 48           -  cmp rbx,[r13+48]
+"JustCause3.exe"+4041173: 0F 85 74 FE FF FF     -  jne JustCause3.exe+4040FED
+// ---------- INJECTING HERE ----------
+"JustCause3.exe"+4041179: 49 8B 4F 18           -  mov rcx,[r15+18]
+"JustCause3.exe"+404117D: 4C 39 E1              -  cmp rcx,r12
+// ---------- DONE INJECTING  ----------
+"JustCause3.exe"+4041180: 7E 0B                 -  jle JustCause3.exe+404118D
+"JustCause3.exe"+4041182: 49 8B 47 08           -  mov rax,[r15+08]
+"JustCause3.exe"+4041186: 48 89 88 F8 00 00 00  -  mov [rax+000000F8],rcx
+"JustCause3.exe"+404118D: 4D 8B 47 08           -  mov r8,[r15+08]
+"JustCause3.exe"+4041191: 4C 89 44 24 20        -  mov [rsp+20],r8
+"JustCause3.exe"+4041196: 41 B1 01              -  mov cl,01
+"JustCause3.exe"+4041199: 48 8D 54 24 70        -  lea rdx,[rsp+70]
+"JustCause3.exe"+404119E: 49 8B 4F 10           -  mov rcx,[r15+10]
+"JustCause3.exe"+40411A2: E8 49 1E FD FF        -  call JustCause3.exe+4012FF0
+"JustCause3.exe"+40411A7: 90                    -  nop 
+}
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>1241</ID>
+      <Description>"Wingsuit Boost"</Description>
+      <LastState Value="0.9750014544" RealAddress="913822F94"/>
+      <VariableType>Float</VariableType>
+      <Address>"JustCause3.exe"+02F181B0</Address>
+      <Offsets>
+        <Offset>2F94</Offset>
+        <Offset>110</Offset>
+        <Offset>130</Offset>
+        <Offset>20</Offset>
+        <Offset>50</Offset>
+      </Offsets>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>1147</ID>
+      <Description>"Challenge Score"</Description>
+      <VariableType>4 Bytes</VariableType>
+      <Address>"JustCause3.exe"+02F30D60</Address>
+      <Offsets>
+        <Offset>18</Offset>
+        <Offset>0</Offset>
+        <Offset>188</Offset>
+        <Offset>108</Offset>
+      </Offsets>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>1148</ID>
+      <Description>"Challenge Timer"</Description>
+      <VariableType>4 Bytes</VariableType>
+      <Address>"JustCause3.exe"+02F30D60</Address>
+      <Offsets>
+        <Offset>C8</Offset>
+        <Offset>258</Offset>
+        <Offset>108</Offset>
+      </Offsets>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>1146</ID>
+      <Description>"Frenzy Challenge"</Description>
+      <LastState Value="" RealAddress="00000000"/>
+      <GroupHeader>1</GroupHeader>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>1144</ID>
+          <Description>"Combo Multiplier"</Description>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F30D60</Address>
+          <Offsets>
+            <Offset>268</Offset>
+            <Offset>108</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1145</ID>
+          <Description>"Combo Timer"</Description>
+          <VariableType>Float</VariableType>
+          <Address>"JustCause3.exe"+02F30D60</Address>
+          <Offsets>
+            <Offset>26C</Offset>
+            <Offset>108</Offset>
+          </Offsets>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>1155</ID>
+      <Description>"Wingsuit Courses"</Description>
+      <Options moHideChildren="1"/>
+      <LastState Value="" Activated="1" RealAddress="00000000"/>
+      <GroupHeader>1</GroupHeader>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>1158</ID>
+          <Description>"Vista Plunge Tour"</Description>
+          <LastState Value="42589" RealAddress="1DC2692A0"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>0</Offset>
+            <Offset>100</Offset>
+            <Offset>140</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1174</ID>
+          <Description>"Olivo Bassa Tour"</Description>
+          <LastState Value="39040" RealAddress="1DC26B178"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>8</Offset>
+            <Offset>100</Offset>
+            <Offset>140</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1173</ID>
+          <Description>"Metropolis Tour"</Description>
+          <LastState Value="34771" RealAddress="1DC26CA70"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>10</Offset>
+            <Offset>100</Offset>
+            <Offset>140</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1172</ID>
+          <Description>"Hilltop Tour"</Description>
+          <LastState Value="44486" RealAddress="1DC26EAC0"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>18</Offset>
+            <Offset>100</Offset>
+            <Offset>140</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1171</ID>
+          <Description>"Rondella Tour"</Description>
+          <LastState Value="39433" RealAddress="1DC2742E0"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>20</Offset>
+            <Offset>100</Offset>
+            <Offset>140</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1167</ID>
+          <Description>"Undertown Tour"</Description>
+          <LastState Value="32152" RealAddress="1DC278C50"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>28</Offset>
+            <Offset>100</Offset>
+            <Offset>140</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1166</ID>
+          <Description>"Le Gratia Tour"</Description>
+          <LastState Value="29147" RealAddress="1DC27C710"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>30</Offset>
+            <Offset>100</Offset>
+            <Offset>140</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1165</ID>
+          <Description>"Fonte Grande Tour"</Description>
+          <LastState Value="79944" RealAddress="1DC27E5E8"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>38</Offset>
+            <Offset>100</Offset>
+            <Offset>140</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1164</ID>
+          <Description>"Pirate Tour"</Description>
+          <LastState Value="33220" RealAddress="1DC280AA0"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>40</Offset>
+            <Offset>100</Offset>
+            <Offset>140</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1163</ID>
+          <Description>"Tunnel Tour"</Description>
+          <LastState Value="49571" RealAddress="1DC280C18"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>48</Offset>
+            <Offset>100</Offset>
+            <Offset>140</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1175</ID>
+          <Description>"Darsena Dive Tour"</Description>
+          <LastState Value="29102" RealAddress="1DC2811F8"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>50</Offset>
+            <Offset>100</Offset>
+            <Offset>140</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1177</ID>
+          <Description>"Dragline Dive Tour"</Description>
+          <LastState Value="68800" RealAddress="1DC281DB8"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>58</Offset>
+            <Offset>100</Offset>
+            <Offset>140</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1159</ID>
+          <Description>"Manea Tour (27000)"</Description>
+          <LastState Value="28833" RealAddress="1DC2820A8"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>60</Offset>
+            <Offset>100</Offset>
+            <Offset>140</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1178</ID>
+          <Description>"Griphon Tour"</Description>
+          <LastState Value="47894" RealAddress="1DC285B68"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>68</Offset>
+            <Offset>100</Offset>
+            <Offset>140</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1179</ID>
+          <Description>"Via Compania Tour"</Description>
+          <LastState Value="50560" RealAddress="1DC2862C0"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>70</Offset>
+            <Offset>100</Offset>
+            <Offset>140</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1180</ID>
+          <Description>"Puncta Tour"</Description>
+          <LastState Value="37083" RealAddress="1DC288310"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>78</Offset>
+            <Offset>100</Offset>
+            <Offset>140</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1162</ID>
+          <Description>"Snowy Slopes Tour"</Description>
+          <LastState Value="98535" RealAddress="1DC291478"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>80</Offset>
+            <Offset>100</Offset>
+            <Offset>140</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1161</ID>
+          <Description>"Maxime Tour"</Description>
+          <LastState Value="73997" RealAddress="1DC2931D8"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>88</Offset>
+            <Offset>100</Offset>
+            <Offset>140</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1160</ID>
+          <Description>"Cavern Tour"</Description>
+          <LastState Value="36042" RealAddress="1DC293D98"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>90</Offset>
+            <Offset>100</Offset>
+            <Offset>140</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1181</ID>
+          <Description>"Sirocco Skies Tour"</Description>
+          <LastState Value="59005" RealAddress="1DC2963C8"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>98</Offset>
+            <Offset>100</Offset>
+            <Offset>140</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1182</ID>
+          <Description>"Cloudy Crevasse Tour"</Description>
+          <LastState Value="67813" RealAddress="1DC296E10"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>A0</Offset>
+            <Offset>100</Offset>
+            <Offset>140</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1183</ID>
+          <Description>"Aeroporto Tour"</Description>
+          <LastState Value="30598" RealAddress="1DC299E88"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>A8</Offset>
+            <Offset>100</Offset>
+            <Offset>140</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1184</ID>
+          <Description>"Mountain Marathon Tour"</Description>
+          <LastState Value="94353" RealAddress="1DC29B780"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>B0</Offset>
+            <Offset>100</Offset>
+            <Offset>140</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1185</ID>
+          <Description>"Badlands Tour"</Description>
+          <LastState Value="46770" RealAddress="1DC29DDB0"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>B8</Offset>
+            <Offset>100</Offset>
+            <Offset>140</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1186</ID>
+          <Description>"Canyon Tour"</Description>
+          <LastState Value="69181" RealAddress="1DC29F240"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>C0</Offset>
+            <Offset>100</Offset>
+            <Offset>140</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1187</ID>
+          <Description>"Hayfield Tour"</Description>
+          <LastState Value="61597" RealAddress="1DC2A09C0"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>C8</Offset>
+            <Offset>100</Offset>
+            <Offset>140</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1188</ID>
+          <Description>"Monte Dracon Tour"</Description>
+          <LastState Value="79442" RealAddress="1DC2A25A8"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>D0</Offset>
+            <Offset>100</Offset>
+            <Offset>140</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>1190</ID>
+      <Description>"Crash Bomb"</Description>
+      <Options moHideChildren="1"/>
+      <LastState Value="" Activated="1" RealAddress="00000000"/>
+      <GroupHeader>1</GroupHeader>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>1191</ID>
+          <Description>"Snowy Peak Blast"</Description>
+          <LastState Value="18234" RealAddress="1DC26E4E0"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>0</Offset>
+            <Offset>100</Offset>
+            <Offset>390</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1200</ID>
+          <Description>"Hayfield Blast"</Description>
+          <LastState Value="17609" RealAddress="1DC272B60"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>8</Offset>
+            <Offset>100</Offset>
+            <Offset>390</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1199</ID>
+          <Description>"Massos Bridge Blast"</Description>
+          <LastState Value="21035" RealAddress="1DC276798"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>10</Offset>
+            <Offset>100</Offset>
+            <Offset>390</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1198</ID>
+          <Description>"Mountain Bend Blast"</Description>
+          <LastState Value="18428" RealAddress="1DC27B570"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>18</Offset>
+            <Offset>100</Offset>
+            <Offset>390</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1197</ID>
+          <Description>"Lighthouse Blast"</Description>
+          <LastState Value="17291" RealAddress="1DC27BCC8"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>20</Offset>
+            <Offset>100</Offset>
+            <Offset>390</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1196</ID>
+          <Description>"Montana Bluff Blast"</Description>
+          <LastState Value="18918" RealAddress="1DC280348"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>28</Offset>
+            <Offset>100</Offset>
+            <Offset>390</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1195</ID>
+          <Description>"Incendiario Blast"</Description>
+          <LastState Value="21420" RealAddress="1DC289918"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>30</Offset>
+            <Offset>100</Offset>
+            <Offset>390</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1194</ID>
+          <Description>"Off Roader Bomb Blast"</Description>
+          <LastState Value="18631" RealAddress="1DC28A940"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>38</Offset>
+            <Offset>100</Offset>
+            <Offset>390</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1193</ID>
+          <Description>"Metro Outskirts Blast"</Description>
+          <LastState Value="23002" RealAddress="1DC28CB08"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>40</Offset>
+            <Offset>100</Offset>
+            <Offset>390</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1192</ID>
+          <Description>"Laguna Blast"</Description>
+          <LastState Value="20439" RealAddress="1DC296F88"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>48</Offset>
+            <Offset>100</Offset>
+            <Offset>390</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1202</ID>
+          <Description>"Round The Bend Blast"</Description>
+          <LastState Value="20085" RealAddress="1DC298708"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>50</Offset>
+            <Offset>100</Offset>
+            <Offset>390</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1201</ID>
+          <Description>"Celeta Seaside Blast"</Description>
+          <LastState Value="25807" RealAddress="1DC298880"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>58</Offset>
+            <Offset>100</Offset>
+            <Offset>390</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>1204</ID>
+      <Description>"Destruction Frenzy"</Description>
+      <Options moHideChildren="1"/>
+      <LastState Value="" Activated="1" RealAddress="00000000"/>
+      <GroupHeader>1</GroupHeader>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>1206</ID>
+          <Description>"Fow Frenzy"</Description>
+          <LastState Value="50075" RealAddress="1DC2732B8"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>0</Offset>
+            <Offset>100</Offset>
+            <Offset>18</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1214</ID>
+          <Description>"Stunt Hang Frenzy"</Description>
+          <LastState Value="42700" RealAddress="1DC273B88"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>8</Offset>
+            <Offset>100</Offset>
+            <Offset>18</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1213</ID>
+          <Description>"Jet Frenzy II"</Description>
+          <LastState Value="37950" RealAddress="1DC2748C0"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>10</Offset>
+            <Offset>100</Offset>
+            <Offset>18</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1212</ID>
+          <Description>"Boat Frenzy III"</Description>
+          <LastState Value="52925" RealAddress="1DC27C420"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>18</Offset>
+            <Offset>100</Offset>
+            <Offset>18</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1211</ID>
+          <Description>"Jet Frenzy I"</Description>
+          <LastState Value="39575" RealAddress="1DC27F030"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>20</Offset>
+            <Offset>100</Offset>
+            <Offset>18</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1210</ID>
+          <Description>"RPG Frenzy"</Description>
+          <LastState Value="24000" RealAddress="1DC27F900"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>28</Offset>
+            <Offset>100</Offset>
+            <Offset>18</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1209</ID>
+          <Description>"Support Vehicle Frenzy"</Description>
+          <LastState Value="20300" RealAddress="1DC282978"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>30</Offset>
+            <Offset>100</Offset>
+            <Offset>18</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1208</ID>
+          <Description>"Tank Frenzy II"</Description>
+          <LastState Value="62575" RealAddress="1DC284270"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>38</Offset>
+            <Offset>100</Offset>
+            <Offset>18</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1207</ID>
+          <Description>"Boat Frenzy I"</Description>
+          <LastState Value="32600" RealAddress="1DC285CE0"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>40</Offset>
+            <Offset>100</Offset>
+            <Offset>18</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1218</ID>
+          <Description>"Helicopter Frenzy II"</Description>
+          <LastState Value="25400" RealAddress="1DC285E58"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>48</Offset>
+            <Offset>100</Offset>
+            <Offset>18</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1217</ID>
+          <Description>"Grenade Launcher Frenzy I"</Description>
+          <LastState Value="31675" RealAddress="1DC289C08"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>50</Offset>
+            <Offset>100</Offset>
+            <Offset>18</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1216</ID>
+          <Description>"Tank Frenzy III"</Description>
+          <LastState Value="20150" RealAddress="1DC289D80"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>58</Offset>
+            <Offset>100</Offset>
+            <Offset>18</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1215</ID>
+          <Description>"Boat Frenzy II"</Description>
+          <LastState Value="20075" RealAddress="1DC28ADA8"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>60</Offset>
+            <Offset>100</Offset>
+            <Offset>18</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1219</ID>
+          <Description>"Grapple Frenzy"</Description>
+          <LastState Value="18500" RealAddress="1DC28C3B0"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>68</Offset>
+            <Offset>100</Offset>
+            <Offset>18</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1220</ID>
+          <Description>"Shotgun Frenzy"</Description>
+          <LastState Value="25625" RealAddress="1DC28FFE8"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>70</Offset>
+            <Offset>100</Offset>
+            <Offset>18</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1222</ID>
+          <Description>"Sniper Rifle Frenzy II"</Description>
+          <LastState Value="34150" RealAddress="1DC290450"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>78</Offset>
+            <Offset>100</Offset>
+            <Offset>18</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1205</ID>
+          <Description>"Helicopter Frenzy I"</Description>
+          <LastState Value="41200" RealAddress="1DC291BD0"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>80</Offset>
+            <Offset>100</Offset>
+            <Offset>18</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1223</ID>
+          <Description>"Mortar Frenzy"</Description>
+          <LastState Value="30600" RealAddress="1DC2924A0"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>88</Offset>
+            <Offset>100</Offset>
+            <Offset>18</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1224</ID>
+          <Description>"Grenade Launcher Frenzy II"</Description>
+          <LastState Value="33000" RealAddress="1DC294668"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>90</Offset>
+            <Offset>100</Offset>
+            <Offset>18</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1225</ID>
+          <Description>"Tank Frenzy"</Description>
+          <LastState Value="39650" RealAddress="1DC294958"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>98</Offset>
+            <Offset>100</Offset>
+            <Offset>18</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1226</ID>
+          <Description>"Sniper Rifle Frenzy I"</Description>
+          <LastState Value="32200" RealAddress="1DC298128"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>A0</Offset>
+            <Offset>100</Offset>
+            <Offset>18</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1227</ID>
+          <Description>"Machine Gun Frenzy"</Description>
+          <LastState Value="39950" RealAddress="1DC298FD8"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>A8</Offset>
+            <Offset>100</Offset>
+            <Offset>18</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1228</ID>
+          <Description>"RPG Frenzy III"</Description>
+          <LastState Value="42950" RealAddress="1DC29AD38"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>B0</Offset>
+            <Offset>100</Offset>
+            <Offset>18</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1229</ID>
+          <Description>"RPG Frenzy II"</Description>
+          <LastState Value="59575" RealAddress="1DC29E680"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>B8</Offset>
+            <Offset>100</Offset>
+            <Offset>18</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>1236</ID>
+      <Description>"Sky Fortress"</Description>
+      <Options moHideChildren="1"/>
+      <LastState Value="" Activated="1" RealAddress="00000000"/>
+      <GroupHeader>1</GroupHeader>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>1237</ID>
+          <Description>"Eden Airshop Master Tour III"</Description>
+          <LastState Value="47607" RealAddress="1DC26F970"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>0</Offset>
+            <Offset>100</Offset>
+            <Offset>5E0</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1239</ID>
+          <Description>"Eden Airshop Master Tour I"</Description>
+          <LastState Value="36735" RealAddress="1DC275308"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>8</Offset>
+            <Offset>100</Offset>
+            <Offset>5E0</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1238</ID>
+          <Description>"Sky Terror"</Description>
+          <LastState Value="46500" RealAddress="1DC285700"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>10</Offset>
+            <Offset>100</Offset>
+            <Offset>5E0</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1240</ID>
+          <Description>"Eden Airshop Master Tour III"</Description>
+          <LastState Value="54486" RealAddress="1DC29CA98"/>
+          <VariableType>4 Bytes</VariableType>
+          <Address>"JustCause3.exe"+02F371A8</Address>
+          <Offsets>
+            <Offset>F8</Offset>
+            <Offset>18</Offset>
+            <Offset>100</Offset>
+            <Offset>5E0</Offset>
+            <Offset>1B8</Offset>
+          </Offsets>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+  </CheatEntries>
+  <CheatCodes>
+    <CodeEntry>
+      <Description>Get Score</Description>
+      <Address>144512AA5</Address>
+      <ModuleName>JustCause3.exe</ModuleName>
+      <ModuleNameOffset>4512AA5</ModuleNameOffset>
+      <Before>
+        <Byte>83</Byte>
+        <Byte>FA</Byte>
+        <Byte>FF</Byte>
+        <Byte>75</Byte>
+        <Byte>07</Byte>
+      </Before>
+      <Actual>
+        <Byte>4C</Byte>
+        <Byte>8B</Byte>
+        <Byte>81</Byte>
+        <Byte>F8</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Actual>
+      <After>
+        <Byte>48</Byte>
+        <Byte>8B</Byte>
+        <Byte>89</Byte>
+        <Byte>D8</Byte>
+        <Byte>00</Byte>
+      </After>
+    </CodeEntry>
+  </CheatCodes>
+  <UserdefinedSymbols>
+    <SymbolEntry>
+      <Name>wingsuit</Name>
+      <Address>143DBA4CD</Address>
+    </SymbolEntry>
+    <SymbolEntry>
+      <Name>ammo</Name>
+      <Address>143B23CE9</Address>
+    </SymbolEntry>
+    <SymbolEntry>
+      <Name>reload</Name>
+      <Address>143C11A72</Address>
+    </SymbolEntry>
+    <SymbolEntry>
+      <Name>player</Name>
+      <Address>1439C0F6B</Address>
+    </SymbolEntry>
+    <SymbolEntry>
+      <Name>player_ptr</Name>
+      <Address>13FFE001D</Address>
+    </SymbolEntry>
+    <SymbolEntry>
+      <Name>health</Name>
+      <Address>143B12D22</Address>
+    </SymbolEntry>
+    <SymbolEntry>
+      <Name>mods</Name>
+      <Address>14479F469</Address>
+    </SymbolEntry>
+    <SymbolEntry>
+      <Name>std_aob1</Name>
+      <Address>143E721D7</Address>
+    </SymbolEntry>
+  </UserdefinedSymbols>
+</CheatTable>

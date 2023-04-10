@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheatTable CheatEngineTableVersion="34">
+  <CheatEntries>
+    <CheatEntry>
+      <ID>3</ID>
+      <Description>"FreeConsumerism"</Description>
+      <LastState/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+// don't consume treats
+//code from here to '[DISABLE]' will be used to enable the cheat
+aobscan(cheat01,48 8B C1 83 39 00 48 63 49 18 2B 4D 98 83 38 00 89 48 18)
+label(_cheat01)
+registersymbol(_cheat01)
+
+cheat01+a:
+_cheat01:
+db 90 90 90
+
+
+/*
+19805DCCBB2 - 48 8B C1              - mov rax,rcx
+19805DCCBB5 - 83 39 00              - cmp dword ptr [rcx],00
+19805DCCBB8 - 48 63 49 18           - movsxd  rcx,dword ptr [rcx+18]
+19805DCCBBC - 2B 4D 98              - sub ecx,[rbp-68]
+19805DCCBBF - 83 38 00              - cmp dword ptr [rax],00
+19805DCCBC2 - 89 48 18              - mov [rax+18],ecx
+19805DCCBC5 - 49 8B 46 18           - mov rax,[r14+18]
+19805DCCBC9 - 48 89 45 A8           - mov [rbp-58],rax
+19805DCCBCD - 44 89 6D A0           - mov [rbp-60],r13d
+
+*/
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+_cheat01:
+db 2B 4D 98
+
+unregistersymbol(_cheat01)
+</AssemblerScript>
+      <Hotkeys>
+        <Hotkey>
+          <Action>Toggle Activation</Action>
+          <Keys>
+            <Key>112</Key>
+          </Keys>
+          <Description>EnableConsumerism</Description>
+          <ID>0</ID>
+        </Hotkey>
+      </Hotkeys>
+    </CheatEntry>
+  </CheatEntries>
+  <CheatCodes>
+    <CodeEntry Color="80000008">
+      <Description>Change of movss [r14+00000120],xmm5</Description>
+      <AddressString>19829D44F7D</AddressString>
+      <Before>
+        <Byte>C0</Byte>
+        <Byte>F2</Byte>
+        <Byte>0F</Byte>
+        <Byte>5A</Byte>
+        <Byte>E8</Byte>
+      </Before>
+      <Actual>
+        <Byte>F3</Byte>
+        <Byte>41</Byte>
+        <Byte>0F</Byte>
+        <Byte>11</Byte>
+        <Byte>AE</Byte>
+        <Byte>20</Byte>
+        <Byte>01</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Actual>
+      <After>
+        <Byte>F3</Byte>
+        <Byte>0F</Byte>
+        <Byte>10</Byte>
+        <Byte>45</Byte>
+        <Byte>E8</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry Color="80000008">
+      <Description>Change of sub ecx,[rbp-68]</Description>
+      <AddressString>19805DCCBBC</AddressString>
+      <Before>
+        <Byte>00</Byte>
+        <Byte>48</Byte>
+        <Byte>63</Byte>
+        <Byte>49</Byte>
+        <Byte>18</Byte>
+      </Before>
+      <Actual>
+        <Byte>2B</Byte>
+        <Byte>4D</Byte>
+        <Byte>98</Byte>
+      </Actual>
+      <After>
+        <Byte>83</Byte>
+        <Byte>38</Byte>
+        <Byte>00</Byte>
+        <Byte>89</Byte>
+        <Byte>48</Byte>
+      </After>
+    </CodeEntry>
+  </CheatCodes>
+  <UserdefinedSymbols/>
+</CheatTable>

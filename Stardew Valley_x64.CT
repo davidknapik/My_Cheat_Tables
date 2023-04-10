@@ -1,0 +1,4811 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheatTable CheatEngineTableVersion="38">
+  <CheatEntries>
+    <CheatEntry>
+      <ID>8642</ID>
+      <Description>"L"</Description>
+      <Options moHideChildren="1"/>
+      <LastState Value="" RealAddress="00000000"/>
+      <GroupHeader>1</GroupHeader>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>8644</ID>
+          <Description>"Group"</Description>
+          <LastState Value="" RealAddress="00000000"/>
+          <Color>C08000</Color>
+          <GroupHeader>1</GroupHeader>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>8643</ID>
+          <Description>"Script"</Description>
+          <LastState Value="" RealAddress="00000000"/>
+          <Color>008000</Color>
+          <GroupHeader>1</GroupHeader>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>8735</ID>
+          <Description>"Game Memory Value"</Description>
+          <LastState Value="" RealAddress="00000000"/>
+          <Color>FF8080</Color>
+          <GroupHeader>1</GroupHeader>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>8930</ID>
+          <Description>"Game Memory Value (readonly)"</Description>
+          <LastState Value="" RealAddress="00000000"/>
+          <Color>808080</Color>
+          <GroupHeader>1</GroupHeader>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>8645</ID>
+          <Description>"Script Modifier/Config"</Description>
+          <LastState Value="" RealAddress="00000000"/>
+          <Color>800080</Color>
+          <GroupHeader>1</GroupHeader>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>8646</ID>
+          <Description>"WIP / Deprecated / Broken"</Description>
+          <LastState Value="" RealAddress="00000000"/>
+          <Color>4080FF</Color>
+          <GroupHeader>1</GroupHeader>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>18</ID>
+      <Description>"Enable"</Description>
+      <Options moHideChildren="1"/>
+      <LastState/>
+      <Color>008000</Color>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+{$lua}
+if syntaxcheck then
+	return
+end
+
+-- thanks to aSwedishMagyar
+function getStructureByName(structName)
+	local numStructs = getStructureCount() - 1
+	for i = 0,numStructs do
+		local struct = getStructure(i)
+		if struct.Name == structName then return struct end
+	end
+	return nil
+end
+
+function checkDotNetSymbol(hook)
+	errorOnLookupFailure(false)
+	if getAddress(hook)==0 then
+		reinitializeDotNetSymbolhandler()
+
+		if getAddress(hook)==0 then
+			showMessage(hook .. ' is not available yet. Please try again later')
+			error()
+			return false
+		end
+	end
+	return true
+end
+
+
+local function checkPointer(p)
+	local a = getAddressSafe(p)
+	if a == nil or a == 0 then
+		--print(p .. ' not found')
+		return -1
+	end
+
+	a = getAddressSafe('[' .. p .. ']')
+	if a == nil or a == 0 then
+		--print(p .. ' is 0')
+		return 0
+	end
+	return 1
+end
+
+
+local Offsetable = {}
+Offsetable.__index = Offsetable
+
+function Offsetable.get(s)
+	local r = s.extended
+	s.extended = s.base
+	return r
+end
+
+function Offsetable.add(s, m)
+	s.extended = '[' .. s.extended .. '+' .. m .. ']'
+	return s
+end
+
+function Offsetable.new(base)
+	local s = {}
+	s.base = '[' .. base .. ']'
+	s.extended = s.base
+	return setmetatable(s, Offsetable)
+end
+
+
+StructResolver 			= {}
+StructResolver.__index 	= StructResolver
+StructResolver.queue	= {}
+StructResolver.timer	= nil
+
+function StructResolver.resolve(_this)
+	if _this.done == true then
+		return true
+	end
+
+	if checkPointer(_this.base) ~= 1 then
+		return false
+	end
+
+	local o = Offsetable.new(_this.base)
+
+	for i=1,#_this.structs do
+		for j=1,#_this.structs[i].offsets do
+			o = o:add(_this.structs[i].offsets[j])
+		end
+
+		local a = getAddressSafe(o:get())
+
+		if a == nil or a == 0 then
+			return false
+		end
+
+		local struct = getStructureByName(_this.structs[i].name)
+
+		if struct then
+			struct.removeFromGlobalStructureList()
+		end
+
+		struct = createStructure(_this.structs[i].name)
+
+		struct.addToGlobalStructureList()
+		struct.fillFromDotNetAddress(a,false)
+		print('Updated struct ' .. _this.structs[i].name)
+	end
+
+	_this.done = true
+	return true
+end
+
+function StructResolver.resolveOrError(_this)
+	if _this:resolve() == false then
+		error()
+	end
+end
+
+function StructResolver.onTimer(timer)
+	for i=1,#StructResolver.queue do
+		StructResolver.queue[i]:resolve()
+	end
+
+	for i=1,#StructResolver.queue do
+		if StructResolver.queue[i].done == false then
+			return
+		end
+	end
+
+	writeBytes(getAddress('struct_update_status'), 1)
+	timer.destroy()
+	if StructResolver.timer ~= nil then
+		StructResolver.timer = nil
+	end
+	print('ok')
+end
+
+function StructResolver.async(base, structs)
+	for i=1,#StructResolver.queue do
+		if StructResolver.queue[i].base == base then
+			return false
+		end
+	end
+
+	table.insert(StructResolver.queue, StructResolver.new(base, structs))
+
+	if StructResolver.timer == nil then
+		StructResolver.timer = createTimer()
+		StructResolver.timer.Interval = 1000
+		StructResolver.timer.OnTimer = StructResolver.onTimer
+	end
+
+	return true
+end
+
+function StructResolver.clear()
+	while getStructureCount() &gt; 0 do
+		getStructure(0).removeFromGlobalStructureList()
+	end
+end
+
+function StructResolver.shutdown()
+	if StructResolver.timer ~= nil then
+		StructResolver.timer.destroy()
+		StructResolver.timer = nil
+		writeBytes(getAddress('struct_update_status'), -1)
+	end
+end
+
+function StructResolver.new(base, structs)
+	local r = {}
+
+	r.base = base
+	r.structs = structs
+	r.done = false
+
+	return setmetatable(r, StructResolver)
+end
+
+_subscripts = {
+	'_hook_game1_',
+	'_hook_chatbox_',
+    '_hook_melee_weapon_',
+}
+
+local symbols = {
+	'StardewValley.Game1::Update',
+	'StardewValley.Game1::get_player',
+	'StardewValley.Game1::UpdateChatBox',
+    'StardewValley.Tools.MeleeWeapon::tickUpdate',
+}
+
+for i=1,#symbols do
+	if not checkDotNetSymbol(symbols[i]) then
+		return
+	end
+end
+
+local al = getAddressList()
+if not al then
+	showMessage('Failed to get address list')
+	error()
+end
+
+for i=1,#_subscripts do
+	local mr = al.getMemoryRecordByDescription(_subscripts[i])
+	if not mr then
+		showMessage(string.format('failed to enable subscript %i (%s)', i, _subscripts[i]))
+		error()
+	end
+	mr.Active = true
+end
+
+StructResolver.async('game1_base_ptr', {
+	{ name = 'Game1',		offsets = {} },
+})
+
+StructResolver.async('farmer_base_ptr', {
+	{ name = 'Farmer',		offsets = {} },
+	{ name = 'teamRoot',	offsets = {'farmer.teamRoot'} },
+	{ name = 'Team',		offsets = {'farmer.teamRoot', 'teamRoot.value'} },
+	{ name = 'netInt',		offsets = {'farmer.netSpeed'} },
+	{ name = 'netIntList',	offsets = {'farmer.professions'} },
+	{ name = 'netDouble',	offsets = {'farmer.teamRoot', 'teamRoot.value', 'Team.sharedDailyLuck'} },
+	{ name = 'netBool',		offsets = {'farmer.Exhausted'} },
+	{ name = 'netString',	offsets = {'farmer.name'} },
+	{ name = 'String',		offsets = {'farmer.name', 'netString.value'} },
+	{ name = 'netFloat',	offsets = {'farmer.scale'} },
+})
+
+StructResolver.async('wateringcan_base_ptr', {
+	{ name = 'WateringCan',	offsets = {} },
+})
+
+StructResolver.async('chatbox_base_ptr', {
+	{ name = 'ChatBox',		offsets = {} },
+})
+
+StructResolver.async('abigailgame_base_ptr', {
+	{ name = 'AbigailGame',	offsets = {} },
+})
+
+StructResolver.async('minecartgame_base_ptr', {
+	{ name = 'MinecartGame',offsets = {} },
+})
+
+StructResolver.async('crop_base_ptr', {
+	{ name = 'Crop',		offsets = {} },
+})
+
+StructResolver.async('object_base_ptr', {
+	{ name = 'Object',		offsets = {} },
+})
+
+StructResolver.async('tool_base_ptr', {
+	{ name = 'Tool',		offsets = {} },
+})
+
+StructResolver.async('melee_weapon_base_ptr', {
+	{ name = 'Weapon',		offsets = {} },
+})
+
+{$asm}
+globalalloc(struct_update_status,1)
+
+struct_update_status:
+  db 0
+
+[DISABLE]
+{$lua}
+if syntaxcheck then return end
+StructResolver.shutdown()
+StructResolver.clear()
+
+local al = getAddressList()
+if al then
+	for i=1,#_subscripts do
+		local mr = al.getMemoryRecordByDescription(_subscripts[i])
+		if mr then
+			mr.Active = false
+		end
+	end
+end
+
+{$asm}
+
+</AssemblerScript>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>61</ID>
+          <Description>"Farmer"</Description>
+          <LastState Value="" RealAddress="00000000"/>
+          <Color>C08000</Color>
+          <GroupHeader>1</GroupHeader>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>91</ID>
+              <Description>"movement speed multiplier"</Description>
+              <Options moHideChildren="1"/>
+              <LastState/>
+              <Color>008000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>{ Game   : Stardew Valley.exe
+  Version: 
+  Date   : 2021-12-08
+  Author : sub1to
+
+  This script does blah blah blah
+}
+
+[ENABLE]
+{$lua}
+checkDotNetSymbol('StardewValley.Farmer::getMovementSpeed')
+
+{$asm}
+define(hook,StardewValley.Farmer::getMovementSpeed)
+assert(hook,56 48 83 EC)
+
+alloc(newmem,$1000,hook)
+
+label(code)
+label(returnhere)
+
+label(get_movement_speed_bytes)
+registersymbol(get_movement_speed_bytes)
+
+label(get_movement_speed_value)
+registersymbol(get_movement_speed_value)
+
+newmem:
+get_movement_speed_bytes:
+  readMem(hook,5)
+  jmp returnhere
+
+get_movement_speed_value:
+  dd (float)2.0
+
+code:
+  sub rsp, 28
+  call get_movement_speed_bytes
+  add rsp, 28
+  mulss xmm0, [get_movement_speed_value]
+  ret
+
+hook:
+  jmp code
+  returnhere:
+
+[DISABLE]
+hook:
+  readMem(get_movement_speed_bytes,5)
+
+unregistersymbol(get_movement_speed_bytes)
+unregistersymbol(get_movement_speed_value)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: StardewValley.Farmer::getMovementSpeed
+
+7FFB5151626F: 00 00              - add [rax],al
+7FFB51516271: 00 00              - add [rax],al
+7FFB51516273: 00 00              - add [rax],al
+7FFB51516275: 00 00              - add [rax],al
+7FFB51516277: 00 D0              - add al,dl
+7FFB51516279: 1F                 - pop ds
+7FFB5151627A: 72 51              - jb StardewValley.Farmer::getMovementSpeed+4D
+7FFB5151627C: FB                 - sti
+7FFB5151627D: 7F 00              - jg 7FFB5151627F
+7FFB5151627F: 00                 - db 00
+// ---------- INJECTING HERE ----------
+StardewValley.Farmer::getMovementSpeed: 56                 - push rsi
+// ---------- DONE INJECTING  ----------
+StardewValley.Farmer::getMovementSpeed+1: 48 83 EC 60        - sub rsp,60
+StardewValley.Farmer::getMovementSpeed+5: C5 F8 77           - vzeroupper
+StardewValley.Farmer::getMovementSpeed+8: C5 F8 29 74 24 50  - vmovaps [rsp+50],xmm6
+StardewValley.Farmer::getMovementSpeed+E: C5 F8 29 7C 24 40  - vmovaps [rsp+40],xmm7
+StardewValley.Farmer::getMovementSpeed+14: 33 C0              - xor eax,eax
+StardewValley.Farmer::getMovementSpeed+16: 48 89 44 24 38     - mov [rsp+38],rax
+StardewValley.Farmer::getMovementSpeed+1B: 48 8B F1           - mov rsi,rcx
+StardewValley.Farmer::getMovementSpeed+1E: E8 55 28 04 FF     - call 7FFB50558AF8
+StardewValley.Farmer::getMovementSpeed+23: 48 85 C0           - test rax,rax
+StardewValley.Farmer::getMovementSpeed+26: 74 12              - je StardewValley.Farmer::getMovementSpeed+3A
+}
+</AssemblerScript>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>92</ID>
+                  <Description>"Multiplier"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <Color>800080</Color>
+                  <VariableType>Float</VariableType>
+                  <Address>get_movement_speed_value</Address>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>54</ID>
+              <Description>"farmer_base_ptr"</Description>
+              <ShowAsHex>1</ShowAsHex>
+              <ShowAsSigned>0</ShowAsSigned>
+              <Color>808080</Color>
+              <VariableType>8 Bytes</VariableType>
+              <Address>farmer_base_ptr</Address>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>88</ID>
+              <Description>"Player Name"</Description>
+              <ShowAsSigned>0</ShowAsSigned>
+              <Color>808080</Color>
+              <VariableType>String</VariableType>
+              <Length>32</Length>
+              <Unicode>1</Unicode>
+              <CodePage>0</CodePage>
+              <ZeroTerminate>1</ZeroTerminate>
+              <Address>farmer_base_ptr</Address>
+              <Offsets>
+                <Offset>String._firstchar</Offset>
+                <Offset>netstring.value</Offset>
+                <Offset>Farmer.name</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>89</ID>
+              <Description>"Farm Name"</Description>
+              <ShowAsSigned>0</ShowAsSigned>
+              <Color>808080</Color>
+              <VariableType>String</VariableType>
+              <Length>32</Length>
+              <Unicode>1</Unicode>
+              <CodePage>0</CodePage>
+              <ZeroTerminate>1</ZeroTerminate>
+              <Address>farmer_base_ptr</Address>
+              <Offsets>
+                <Offset>String._firstchar</Offset>
+                <Offset>netstring.value</Offset>
+                <Offset>Farmer.farmname</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>90</ID>
+              <Description>"Horse Name"</Description>
+              <ShowAsSigned>0</ShowAsSigned>
+              <Color>808080</Color>
+              <VariableType>String</VariableType>
+              <Length>32</Length>
+              <Unicode>1</Unicode>
+              <CodePage>0</CodePage>
+              <ZeroTerminate>1</ZeroTerminate>
+              <Address>farmer_base_ptr</Address>
+              <Offsets>
+                <Offset>String._firstchar</Offset>
+                <Offset>netstring.value</Offset>
+                <Offset>Farmer.horsename</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>8935</ID>
+              <Description>"Days Left For Tool Upgrade"</Description>
+              <ShowAsSigned>0</ShowAsSigned>
+              <Color>FF8080</Color>
+              <VariableType>4 Bytes</VariableType>
+              <Address>farmer_base_ptr</Address>
+              <Offsets>
+                <Offset>netint.value</Offset>
+                <Offset>Farmer.daysLeftForToolUpgrade</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>78</ID>
+              <Description>"HP/SP"</Description>
+              <LastState Value="" RealAddress="00000000"/>
+              <Color>C08000</Color>
+              <GroupHeader>1</GroupHeader>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>65</ID>
+                  <Description>"Health"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <Color>FF8080</Color>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>farmer_base_ptr</Address>
+                  <Offsets>
+                    <Offset>Farmer.Health</Offset>
+                  </Offsets>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>56</ID>
+                  <Description>"Max Health"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <Color>808080</Color>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>farmer_base_ptr</Address>
+                  <Offsets>
+                    <Offset>Farmer.MaxHealth</Offset>
+                  </Offsets>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>57</ID>
+                  <Description>"Stamina"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <Color>FF8080</Color>
+                  <VariableType>Float</VariableType>
+                  <Address>farmer_base_ptr</Address>
+                  <Offsets>
+                    <Offset>NetInt.Value</Offset>
+                    <Offset>Farmer.netStamina</Offset>
+                  </Offsets>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>58</ID>
+                  <Description>"Max Stamina"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <Color>808080</Color>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>farmer_base_ptr</Address>
+                  <Offsets>
+                    <Offset>NetInt.Value</Offset>
+                    <Offset>Farmer.MaxStamina</Offset>
+                  </Offsets>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>86</ID>
+                  <Description>"Exhausted"</Description>
+                  <DropDownList DisplayValueAsItem="1">0:No
+1:Yes
+</DropDownList>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <Color>FF8080</Color>
+                  <VariableType>Byte</VariableType>
+                  <Address>farmer_base_ptr</Address>
+                  <Offsets>
+                    <Offset>NetBool.Value</Offset>
+                    <Offset>Farmer.Exhausted</Offset>
+                  </Offsets>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>79</ID>
+              <Description>"Currencies"</Description>
+              <LastState Value="" RealAddress="00000000"/>
+              <Color>C08000</Color>
+              <GroupHeader>1</GroupHeader>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>63</ID>
+                  <Description>"Money"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <Color>FF8080</Color>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>farmer_base_ptr</Address>
+                  <Offsets>
+                    <Offset>NetInt.Value</Offset>
+                    <Offset>team.money</Offset>
+                    <Offset>teamRoot.value</Offset>
+                    <Offset>Farmer.teamRoot</Offset>
+                  </Offsets>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>83</ID>
+                  <Description>"Money Earned"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <Color>FF8080</Color>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>farmer_base_ptr</Address>
+                  <Offsets>
+                    <Offset>NetInt.Value</Offset>
+                    <Offset>team.totalMoneyEarned</Offset>
+                    <Offset>teamRoot.value</Offset>
+                    <Offset>Farmer.teamRoot</Offset>
+                  </Offsets>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>59</ID>
+                  <Description>"Club Coins"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <Color>FF8080</Color>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>farmer_base_ptr</Address>
+                  <Offsets>
+                    <Offset>Farmer.clubCoins</Offset>
+                  </Offsets>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>60</ID>
+                  <Description>"Qi Gems"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <Color>FF8080</Color>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>farmer_base_ptr</Address>
+                  <Offsets>
+                    <Offset>NetInt.Value</Offset>
+                    <Offset>Farmer.netQiGems</Offset>
+                  </Offsets>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>80</ID>
+              <Description>"Modifiers"</Description>
+              <LastState Value="" RealAddress="00000000"/>
+              <Color>C08000</Color>
+              <GroupHeader>1</GroupHeader>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>71</ID>
+                  <Description>"Attack Increase Modifier"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <Color>FF8080</Color>
+                  <VariableType>Float</VariableType>
+                  <Address>farmer_base_ptr</Address>
+                  <Offsets>
+                    <Offset>Farmer.attackIncreaseModifier</Offset>
+                  </Offsets>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>72</ID>
+                  <Description>"Knockback Modifier"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <Color>FF8080</Color>
+                  <VariableType>Float</VariableType>
+                  <Address>farmer_base_ptr</Address>
+                  <Offsets>
+                    <Offset>farmer.KnockbackModifier</Offset>
+                  </Offsets>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>73</ID>
+                  <Description>"Weapon Speed Modifier"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <Color>FF8080</Color>
+                  <VariableType>Float</VariableType>
+                  <Address>farmer_base_ptr</Address>
+                  <Offsets>
+                    <Offset>Farmer.WeaponSpeedModifier</Offset>
+                  </Offsets>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>74</ID>
+                  <Description>"Crit Chance Modifier"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <Color>FF8080</Color>
+                  <VariableType>Float</VariableType>
+                  <Address>farmer_base_ptr</Address>
+                  <Offsets>
+                    <Offset>Farmer.CritChanceModifier</Offset>
+                  </Offsets>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>75</ID>
+                  <Description>"Crit Power Modifier"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <Color>FF8080</Color>
+                  <VariableType>Float</VariableType>
+                  <Address>farmer_base_ptr</Address>
+                  <Offsets>
+                    <Offset>Farmer.CritPowerModifier</Offset>
+                  </Offsets>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>76</ID>
+                  <Description>"Weapon Precision Modifier"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <Color>FF8080</Color>
+                  <VariableType>Float</VariableType>
+                  <Address>farmer_base_ptr</Address>
+                  <Offsets>
+                    <Offset>Farmer.WeaponPrecisionModifier</Offset>
+                  </Offsets>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>77</ID>
+              <Description>"Levels"</Description>
+              <LastState Value="" RealAddress="00000000"/>
+              <Color>C08000</Color>
+              <GroupHeader>1</GroupHeader>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>64</ID>
+                  <Description>"Farming Level"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <Color>FF8080</Color>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>farmer_base_ptr</Address>
+                  <Offsets>
+                    <Offset>NetInt.Value</Offset>
+                    <Offset>Farmer.FarmingLevel</Offset>
+                  </Offsets>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>66</ID>
+                  <Description>"Mining Level"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <Color>FF8080</Color>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>farmer_base_ptr</Address>
+                  <Offsets>
+                    <Offset>NetInt.Value</Offset>
+                    <Offset>Farmer.MiningLevel</Offset>
+                  </Offsets>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>67</ID>
+                  <Description>"Combat Level"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <Color>FF8080</Color>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>farmer_base_ptr</Address>
+                  <Offsets>
+                    <Offset>NetInt.Value</Offset>
+                    <Offset>Farmer.CombatLevel</Offset>
+                  </Offsets>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>68</ID>
+                  <Description>"Foraging Level"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <Color>FF8080</Color>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>farmer_base_ptr</Address>
+                  <Offsets>
+                    <Offset>NetInt.Value</Offset>
+                    <Offset>Farmer.ForagingLevel</Offset>
+                  </Offsets>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>69</ID>
+                  <Description>"Fishing Level"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <Color>FF8080</Color>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>farmer_base_ptr</Address>
+                  <Offsets>
+                    <Offset>NetInt.Value</Offset>
+                    <Offset>Farmer.FishingLevel</Offset>
+                  </Offsets>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>70</ID>
+                  <Description>"Luck Level"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <Color>FF8080</Color>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>farmer_base_ptr</Address>
+                  <Offsets>
+                    <Offset>NetInt.Value</Offset>
+                    <Offset>Farmer.LuckLevel</Offset>
+                  </Offsets>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>37</ID>
+          <Description>"Fishing"</Description>
+          <LastState Value="" RealAddress="00000000"/>
+          <Color>C08000</Color>
+          <GroupHeader>1</GroupHeader>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>82</ID>
+              <Description>"instant fish bite"</Description>
+              <LastState/>
+              <Color>008000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>{ Game   : Stardew Valley.exe
+  Version: 
+  Date   : 2021-12-06
+  Author : sub1to
+
+  This script does blah blah blah
+}
+
+[ENABLE]
+{$lua}
+checkDotNetSymbol('StardewValley.Tools.FishingRod::calculateTimeUntilFishingBite')
+
+{$asm}
+define(hook, StardewValley.Tools.FishingRod::calculateTimeUntilFishingBite)
+//assert(hook, 41 57 41 56 57)
+
+alloc(newmem,$1000,hook)
+
+label(code)
+
+label(calculate_time_fish_bite_bytes)
+registersymbol(calculate_time_fish_bite_bytes)
+
+
+newmem:
+calculate_time_fish_bite_bytes:
+  readMem(hook, 5)
+
+code:
+  xor rax, rax
+  movq xmm0, rax
+  ret
+
+hook:
+  jmp code
+
+
+
+[DISABLE]
+hook:
+  readMem(calculate_time_fish_bite_bytes, 5)
+
+unregistersymbol(calculate_time_fish_bite_bytes)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: StardewValley.Tools.FishingRod::calculateTimeUntilFishingBite
+
+7FFB0F10EDEE: 00 00              - add [rax],al
+7FFB0F10EDF0: 00 00              - add [rax],al
+7FFB0F10EDF2: 00 00              - add [rax],al
+7FFB0F10EDF4: 00 00              - add [rax],al
+7FFB0F10EDF6: 00 00              - add [rax],al
+7FFB0F10EDF8: 98                 - cwde 
+7FFB0F10EDF9: 44 28 0F           - sub [rdi],r9l
+7FFB0F10EDFC: FB                 - sti 
+7FFB0F10EDFD: 7F 00              - jg 7FFB0F10EDFF
+7FFB0F10EDFF: 00                 - db 00 
+// ---------- INJECTING HERE ----------
+StardewValley.Tools.FishingRod::calculateTimeUntilFishingBite: 41 57              - push r15
+// ---------- DONE INJECTING  ----------
+StardewValley.Tools.FishingRod::calculateTimeUntilFishingBite+2: 41 56              - push r14
+StardewValley.Tools.FishingRod::calculateTimeUntilFishingBite+4: 57                 - push rdi
+StardewValley.Tools.FishingRod::calculateTimeUntilFishingBite+5: 56                 - push rsi
+StardewValley.Tools.FishingRod::calculateTimeUntilFishingBite+6: 55                 - push rbp
+StardewValley.Tools.FishingRod::calculateTimeUntilFishingBite+7: 53                 - push rbx
+StardewValley.Tools.FishingRod::calculateTimeUntilFishingBite+8: 48 83 EC 38        - sub rsp,38
+StardewValley.Tools.FishingRod::calculateTimeUntilFishingBite+C: C5 F8 77           - vzeroupper 
+StardewValley.Tools.FishingRod::calculateTimeUntilFishingBite+F: C5 F8 29 74 24 20  - vmovaps [rsp+20],xmm6
+StardewValley.Tools.FishingRod::calculateTimeUntilFishingBite+15: 48 89 54 24 78     - mov [rsp+78],rdx
+StardewValley.Tools.FishingRod::calculateTimeUntilFishingBite+1A: 48 8B F1           - mov rsi,rcx
+}
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>17</ID>
+              <Description>"instant fish catch"</Description>
+              <LastState/>
+              <Color>008000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>{ Game   : Stardew Valley.exe
+  Version: 
+  Date   : 2021-12-06
+  Author : sub1to
+
+  This script does blah blah blah
+}
+
+[ENABLE]
+{$lua}
+checkDotNetSymbol('StardewValley.Menus.BobberBar::update')
+
+{$asm}
+define(hook,StardewValley.Menus.BobberBar::update+19B9)
+assert(hook,C5 FA 10 86 C8 00 00 00)
+
+alloc(newmem,$1000,hook)
+
+label(_value)
+label(code)
+label(returnhere)
+
+label(bobberbar_update_bytes)
+registersymbol(bobberbar_update_bytes)
+
+newmem:
+bobberbar_update_bytes:
+  readMem(hook, 8)
+  jmp returnhere
+
+_value:
+  dd (float)1.0
+
+code:
+  movd xmm0, [_value]
+  movd [rsi+000000C8], xmm0
+  jmp returnhere
+
+hook:
+  jmp code
+  nop
+  nop
+  nop
+  returnhere:
+
+[DISABLE]
+
+hook:
+  readMem(bobberbar_update_bytes, 8)
+
+unregistersymbol(bobberbar_update_bytes)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: StardewValley.Menus.BobberBar::update+19B9
+
+StardewValley.Menus.BobberBar::update+1978: 48 B9 00 60 09 B1 A2 01 00 00  - mov rcx,000001A2B1096000
+StardewValley.Menus.BobberBar::update+1982: 48 83 39 00                    - cmp qword ptr [rcx],00
+StardewValley.Menus.BobberBar::update+1986: 0F 84 C8 01 00 00              - je StardewValley.Menus.BobberBar::update+1B54
+StardewValley.Menus.BobberBar::update+198C: 48 B9 00 60 09 B1 A2 01 00 00  - mov rcx,000001A2B1096000
+StardewValley.Menus.BobberBar::update+1996: 48 8B 09                       - mov rcx,[rcx]
+StardewValley.Menus.BobberBar::update+1999: 49 BB A8 3B F0 0D FB 7F 00 00  - mov r11,00007FFB0DF03BA8
+StardewValley.Menus.BobberBar::update+19A3: BA 01 00 00 00                 - mov edx,00000001
+StardewValley.Menus.BobberBar::update+19A8: 48 B8 A8 3B F0 0D FB 7F 00 00  - mov rax,00007FFB0DF03BA8
+StardewValley.Menus.BobberBar::update+19B2: FF 10                          - call qword ptr [rax]
+StardewValley.Menus.BobberBar::update+19B4: E9 9B 01 00 00                 - jmp StardewValley.Menus.BobberBar::update+1B54
+// ---------- INJECTING HERE ----------
+StardewValley.Menus.BobberBar::update+19B9: C5 FA 10 86 C8 00 00 00        - vmovss xmm0,[rsi+000000C8]
+// ---------- DONE INJECTING  ----------
+StardewValley.Menus.BobberBar::update+19C1: C5 F8 2E 05 AB 05 00 00        - vucomiss xmm0,[7FFB0F131254]
+StardewValley.Menus.BobberBar::update+19C9: 0F 82 85 01 00 00              - jb StardewValley.Menus.BobberBar::update+1B54
+StardewValley.Menus.BobberBar::update+19CF: C5 FA 10 05 A1 05 00 00        - vmovss xmm0,[7FFB0F131258]
+StardewValley.Menus.BobberBar::update+19D7: C5 FA 11 86 84 00 00 00        - vmovss [rsi+00000084],xmm0
+StardewValley.Menus.BobberBar::update+19DF: 48 B9 60 7E 0B B1 A2 01 00 00  - mov rcx,000001A2B10B7E60
+StardewValley.Menus.BobberBar::update+19E9: 48 8B 09                       - mov rcx,[rcx]
+StardewValley.Menus.BobberBar::update+19EC: E8 0F 7F F0 FE                 - call 7FFB0E038BE0
+StardewValley.Menus.BobberBar::update+19F1: C6 86 CF 00 00 00 01           - mov byte ptr [rsi+000000CF],01
+StardewValley.Menus.BobberBar::update+19F8: C6 46 5A 01                    - mov byte ptr [rsi+5A],01
+StardewValley.Menus.BobberBar::update+19FC: 48 B9 08 60 09 B1 A2 01 00 00  - mov rcx,000001A2B1096008
+}
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>39</ID>
+              <Description>"fishing modifiers"</Description>
+              <Options moHideChildren="1"/>
+              <LastState/>
+              <Color>008000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>{ Game   : Stardew Valley.exe
+  Version: 
+  Date   : 2021-12-08
+  Author : sub1to
+
+  This script does blah blah blah
+
+
+000 02                                      ldarg.0
+000 11 04                                   ldloc.s  4
+000 7D 91 0F 00 04                          stfld    bool StardewValley.Tools.FishingRod::treasureCaught
+000 02                                      ldarg.0
+000 07                                      ldloc.1
+000 7D 99 0F 00 04                          stfld    int32 StardewValley.Tools.FishingRod::fishSize
+000 02                                      ldarg.0
+000 08                                      ldloc.2
+000 7D 9B 0F 00 04                          stfld    int32 StardewValley.Tools.FishingRod::fishQuality
+000 02                                      ldarg.0
+000 06                                      ldloc.0
+000 7D 9A 0F 00 04                          stfld    int32 StardewValley.Tools.FishingRod::whichFish
+000 02                                      ldarg.0
+000 11 06                                   ldloc.s  6
+000 7D 95 0F 00 04                          stfld    bool StardewValley.Tools.FishingRod::fromFishPond
+000 02                                      ldarg.0
+000 11 07                                   ldloc.s  7
+000 7D 96 0F 00 04                          stfld    bool StardewValley.Tools.FishingRod::caughtDoubleFish
+000 02                                      ldarg.0
+000 11 08                                   ldloc.s  8
+000 7D 9E 0F 00 04                          stfld    string StardewValley.Tools.FishingRod::itemCategory
+}
+
+[ENABLE]
+{$lua}
+checkDotNetSymbol('StardewValley.Tools.FishingRod::doPullFishFromWater')
+
+{$asm}
+define(hook,StardewValley.Tools.FishingRod::doPullFishFromWater+FE)
+assert(hook,44 88 AE ? ? ? ? 44 89 B6 ? ? ? ? 44 89 BE ? ? ? ? 89 9E ? ? ? ? 44 8B B5 ? ? ? ? 44 88 B6 ? ? ? ? 8B 95 54 FF FF FF)
+
+alloc(newmem,$1000,hook)
+
+label(code)
+label(returnhere)
+
+label(fishingrod_pull_bytes)
+registersymbol(fishingrod_pull_bytes)
+
+label(fishingrod_pull_value_treasure)
+registersymbol(fishingrod_pull_value_treasure)
+label(fishingrod_pull_value_double_catch)
+registersymbol(fishingrod_pull_value_double_catch)
+label(fishingrod_pull_value_quality)
+registersymbol(fishingrod_pull_value_quality)
+label(fishingrod_pull_value_fish)
+registersymbol(fishingrod_pull_value_fish)
+
+newmem:
+fishingrod_pull_bytes:
+  readMem(hook,7)
+  jmp returnhere
+
+fishingrod_pull_value_treasure:
+  db 0
+
+fishingrod_pull_value_double_catch:
+  db 0
+
+fishingrod_pull_value_quality:
+  dd 4
+
+fishingrod_pull_value_fish:
+  dd FFFFFFFF
+
+code:
+  mov r13l, [fishingrod_pull_value_double_catch]
+  mov [rbp-AC], r13l
+  mov r13l, [fishingrod_pull_value_treasure]
+  mov r15d, [fishingrod_pull_value_quality]
+  cmp [fishingrod_pull_value_fish], FFFFFFFF
+  jz fishingrod_pull_bytes
+  mov ebx, [fishingrod_pull_value_fish]
+  jmp fishingrod_pull_bytes
+
+hook:
+  jmp code
+  nop
+  nop
+  returnhere:
+
+[DISABLE]
+hook:
+  readMem(fishingrod_pull_bytes,7)
+
+unregistersymbol(fishingrod_pull_bytes)
+unregistersymbol(fishingrod_pull_value_treasure)
+unregistersymbol(fishingrod_pull_value_double_catch)
+unregistersymbol(fishingrod_pull_value_quality)
+unregistersymbol(fishingrod_pull_value_fish)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: StardewValley.Tools.FishingRod::doPullFishFromWater+FE
+
+StardewValley.Tools.FishingRod::doPullFishFromWater+DB: 48 8B CF              - mov rcx,rdi
+StardewValley.Tools.FishingRod::doPullFishFromWater+DE: 48 8B 17              - mov rdx,[rdi]
+StardewValley.Tools.FishingRod::doPullFishFromWater+E1: 48 8B 52 48           - mov rdx,[rdx+48]
+StardewValley.Tools.FishingRod::doPullFishFromWater+E5: FF 52 20              - call qword ptr [rdx+20]
+StardewValley.Tools.FishingRod::doPullFishFromWater+E8: 89 85 54 FF FF FF     - mov [rbp-000000AC],eax
+StardewValley.Tools.FishingRod::doPullFishFromWater+EE: 48 8B CF              - mov rcx,rdi
+StardewValley.Tools.FishingRod::doPullFishFromWater+F1: 48 8B 17              - mov rdx,[rdi]
+StardewValley.Tools.FishingRod::doPullFishFromWater+F4: 48 8B 52 50           - mov rdx,[rdx+50]
+StardewValley.Tools.FishingRod::doPullFishFromWater+F8: FF 52 38              - call qword ptr [rdx+38]
+StardewValley.Tools.FishingRod::doPullFishFromWater+FB: 48 8B F8              - mov rdi,rax
+// ---------- INJECTING HERE ----------
+StardewValley.Tools.FishingRod::doPullFishFromWater+FE: 44 88 AE 83 01 00 00  - mov [rsi+00000183],r13l     //treasure
+// ---------- DONE INJECTING  ----------
+StardewValley.Tools.FishingRod::doPullFishFromWater+105: 44 89 B6 5C 01 00 00  - mov [rsi+0000015C],r14d    //size
+StardewValley.Tools.FishingRod::doPullFishFromWater+10C: 44 89 BE 64 01 00 00  - mov [rsi+00000164],r15d    //quality
+StardewValley.Tools.FishingRod::doPullFishFromWater+113: 89 9E 60 01 00 00     - mov [rsi+00000160],ebx     //which fish
+StardewValley.Tools.FishingRod::doPullFishFromWater+119: 44 8B B5 58 FF FF FF  - mov r14d,[rbp-000000A8]
+StardewValley.Tools.FishingRod::doPullFishFromWater+120: 44 88 B6 87 01 00 00  - mov [rsi+00000187],r14l    //from pond
+StardewValley.Tools.FishingRod::doPullFishFromWater+127: 8B 95 54 FF FF FF     - mov edx,[rbp-000000AC]
+StardewValley.Tools.FishingRod::doPullFishFromWater+12D: 88 96 88 01 00 00     - mov [rsi+00000188],dl      //double catch
+StardewValley.Tools.FishingRod::doPullFishFromWater+133: 48 8D 8E F0 00 00 00  - lea rcx,[rsi+000000F0]
+StardewValley.Tools.FishingRod::doPullFishFromWater+13A: 48 8B D7              - mov rdx,rdi
+StardewValley.Tools.FishingRod::doPullFishFromWater+13D: E8 4E 61 AB 5E        - call coreclr.dll+149780
+}
+</AssemblerScript>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>40</ID>
+                  <Description>"Treasure"</Description>
+                  <DropDownList ReadOnly="1" DescriptionOnly="1" DisplayValueAsItem="1">0:Off
+1:On
+</DropDownList>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <Color>800080</Color>
+                  <VariableType>Byte</VariableType>
+                  <Address>fishingrod_pull_value_treasure</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>41</ID>
+                  <Description>"Double Catch"</Description>
+                  <DropDownList ReadOnly="1" DescriptionOnly="1" DisplayValueAsItem="1">0:Off
+1:On
+</DropDownList>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <Color>800080</Color>
+                  <VariableType>Byte</VariableType>
+                  <Address>fishingrod_pull_value_double_catch</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>42</ID>
+                  <Description>"Quality"</Description>
+                  <DropDownList ReadOnly="1" DescriptionOnly="1" DisplayValueAsItem="1">0:Regular
+1:Silver
+2:Gold
+4:Iridium
+</DropDownList>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <Color>800080</Color>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>fishingrod_pull_value_quality</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>43</ID>
+                  <Description>"Fishing Item"</Description>
+                  <DropDownList ReadOnly="1" DescriptionOnly="1" DisplayValueAsItem="1">-1:Disabled
+0:Weeds
+2:Stone
+4:Stone
+16:Wild Horseradish
+18:Daffodil
+20:Leek
+22:Dandelion
+24:Parsnip
+25:Stone
+30:Lumber
+60:Emerald
+62:Aquamarine
+64:Ruby
+66:Amethyst
+68:Topaz
+69:Banana Sapling
+70:Jade
+71:Trimmed Lucky Purple Shorts
+72:Diamond
+73:Golden Walnut
+74:Prismatic Shard
+75:Stone
+76:Stone
+77:Stone
+78:Cave Carrot
+79:Secret Note
+80:Quartz
+82:Fire Quartz
+84:Frozen Tear
+86:Earth Crystal
+88:Coconut
+90:Cactus Fruit
+91:Banana
+92:Sap
+93:Torch
+94:Spirit Torch
+95:Stone
+96:Dwarf Scroll I
+97:Dwarf Scroll II
+98:Dwarf Scroll III
+99:Dwarf Scroll IV
+100:Chipped Amphora
+101:Arrowhead
+102:Lost Book
+103:Ancient Doll
+104:Elvish Jewelry
+105:Chewing Stick
+106:Ornamental Fan
+107:Dinosaur Egg
+108:Rare Disc
+109:Ancient Sword
+110:Rusty Spoon
+111:Rusty Spur
+112:Rusty Cog
+113:Chicken Statue
+114:Ancient Seed
+115:Prehistoric Tool
+116:Dried Starfish
+117:Anchor
+118:Glass Shards
+119:Bone Flute
+120:Prehistoric Handaxe
+121:Dwarvish Helm
+122:Dwarf Gadget
+123:Ancient Drum
+124:Golden Mask
+125:Golden Relic
+126:Strange Doll
+127:Strange Doll
+128:Pufferfish
+129:Anchovy
+130:Tuna
+131:Sardine
+132:Bream
+136:Largemouth Bass
+137:Smallmouth Bass
+138:Rainbow Trout
+139:Salmon
+140:Walleye
+141:Perch
+142:Carp
+143:Catfish
+144:Pike
+145:Sunfish
+146:Red Mullet
+147:Herring
+148:Eel
+149:Octopus
+150:Red Snapper
+151:Squid
+152:Seaweed
+153:Green Algae
+154:Sea Cucumber
+155:Super Cucumber
+156:Ghostfish
+157:White Algae
+158:Stonefish
+159:Crimsonfish
+160:Angler
+161:Ice Pip
+162:Lava Eel
+163:Legend Fish
+164:Sandfish
+165:Scorpion Carp
+166:Treasure Chest
+167:Joja Cola
+168:Trash
+169:Driftwood
+170:Broken Glasses
+171:Broken CD
+172:Soggy Newspaper
+174:Large Egg
+176:Egg
+178:Hay
+180:Egg
+182:Large Egg
+184:Milk
+186:Large Milk
+188:Green Bean
+190:Cauliflower
+191:Ornate Necklace
+192:Potato
+194:Fried Egg
+195:Omelet
+196:Salad
+197:Cheese Cauliflower
+198:Baked Fish
+199:Parsnip Soup
+200:Vegetable Medley
+201:Complete Breakfast
+202:Fried Calamari
+203:Strange Bun
+204:Lucky Lunch
+205:Fried Mushroom
+206:Pizza
+207:Bean Hotpot
+208:Glazed Yams
+209:Carp Surprise
+210:Hashbrowns
+211:Pancakes
+212:Salmon Dinner
+213:Fish Taco
+214:Crispy Bass
+215:Pepper Poppers
+216:Bread
+218:Tom Kha Soup
+219:Trout Soup
+220:Chocolate Cake
+221:Pink Cake
+222:Rhubarb Pie
+223:Cookie
+224:Spaghetti
+225:Fried Eel
+226:Spicy Eel
+227:Sashimi
+228:Maki Roll
+229:Tortilla
+230:Red Plate
+231:Eggplant Parmesan
+232:Rice Pudding
+233:Ice Cream
+234:Blueberry Tart
+235:Autumn's Bounty
+236:Pumpkin Soup
+237:Super Meal
+238:Cranberry Sauce
+239:Stuffing
+240:Farmer's Lunch
+241:Survival Burger
+242:Dish O' The Sea
+243:Miner's Treat
+244:Roots Platter
+245:Sugar
+246:Wheat Flour
+247:Oil
+248:Garlic
+250:Kale
+251:Tea Sapling
+252:Rhubarb
+253:Triple Shot Espresso
+254:Melon
+256:Tomato
+257:Morel
+258:Blueberry
+259:Fiddlehead Fern
+260:Hot Pepper
+261:Warp Totem: Desert
+262:Wheat
+264:Radish
+265:Seafoam Pudding
+266:Red Cabbage
+267:Flounder
+268:Starfruit
+269:Midnight Carp
+270:Corn
+271:Unmilled Rice
+272:Eggplant
+273:Rice Shoot
+274:Artichoke
+275:Artifact Trove
+276:Pumpkin
+277:Wilted Bouquet
+278:Bok Choy
+279:Magic Rock Candy
+280:Yam
+281:Chanterelle
+282:Cranberries
+283:Holly
+284:Beet
+286:Cherry Bomb
+287:Bomb
+288:Mega Bomb
+289:Ostrich Egg
+290:Stone
+292:Mahogany Seed
+293:Brick Floor
+294:Twig
+295:Twig
+296:Salmonberry
+297:Grass Starter
+298:Hardwood Fence
+299:Amaranth Seeds
+300:Amaranth
+301:Grape Starter
+302:Hops Starter
+303:Pale Ale
+304:Hops
+305:Void Egg
+306:Mayonnaise
+307:Duck Mayonnaise
+308:Void Mayonnaise
+309:Acorn
+310:Maple Seed
+311:Pine Cone
+313:Weeds
+314:Weeds
+315:Weeds
+316:Weeds
+317:Weeds
+318:Weeds
+319:Weeds
+320:Weeds
+321:Weeds
+322:Wood Fence
+323:Stone Fence
+324:Iron Fence
+325:Gate
+326:Dwarvish Translation Guide
+328:Wood Floor
+329:Stone Floor
+330:Clay
+331:Weathered Floor
+333:Crystal Floor
+334:Copper Bar
+335:Iron Bar
+336:Gold Bar
+337:Iridium Bar
+338:Refined Quartz
+340:Honey
+341:Tea Set
+342:Pickles
+343:Stone
+344:Jelly
+346:Beer
+347:Rare Seed
+348:Wine
+349:Energy Tonic
+350:Juice
+351:Muscle Remedy
+368:Basic Fertilizer
+369:Quality Fertilizer
+370:Basic Retaining Soil
+371:Quality Retaining Soil
+372:Clam
+373:Golden Pumpkin
+376:Poppy
+378:Copper Ore
+380:Iron Ore
+382:Coal
+384:Gold Ore
+386:Iridium Ore
+388:Wood
+390:Stone
+392:Nautilus Shell
+393:Coral
+394:Rainbow Shell
+395:Coffee
+396:Spice Berry
+397:Sea Urchin
+398:Grape
+399:Spring Onion
+400:Strawberry
+401:Straw Floor
+402:Sweet Pea
+403:Field Snack
+404:Common Mushroom
+405:Wood Path
+406:Wild Plum
+407:Gravel Path
+408:Hazelnut
+409:Crystal Path
+410:Blackberry
+411:Cobblestone Path
+412:Winter Root
+413:Blue Slime Egg
+414:Crystal Fruit
+415:Stepping Stone Path
+416:Snow Yam
+417:Sweet Gem Berry
+418:Crocus
+419:Vinegar
+420:Red Mushroom
+421:Sunflower
+422:Purple Mushroom
+423:Rice
+424:Cheese
+425:Fairy Seeds
+426:Goat Cheese
+427:Tulip Bulb
+428:Cloth
+429:Jazz Seeds
+430:Truffle
+431:Sunflower Seeds
+432:Truffle Oil
+433:Coffee Bean
+434:Stardrop
+436:Goat Milk
+437:Red Slime Egg
+438:L. Goat Milk
+439:Purple Slime Egg
+440:Wool
+441:Explosive Ammo
+442:Duck Egg
+444:Duck Feather
+445:Caviar
+446:Rabbit's Foot
+447:Aged Roe
+449:Stone Base
+450:Stone
+452:Weeds
+453:Poppy Seeds
+454:Ancient Fruit
+455:Spangle Seeds
+456:Algae Soup
+457:Pale Broth
+458:Bouquet
+459:Mead
+460:Mermaid's Pendant
+461:Decorative Pot
+463:Drum Block
+464:Flute Block
+465:Speed-Gro
+466:Deluxe Speed-Gro
+472:Parsnip Seeds
+473:Bean Starter
+474:Cauliflower Seeds
+475:Potato Seeds
+476:Garlic Seeds
+477:Kale Seeds
+478:Rhubarb Seeds
+479:Melon Seeds
+480:Tomato Seeds
+481:Blueberry Seeds
+482:Pepper Seeds
+483:Wheat Seeds
+484:Radish Seeds
+485:Red Cabbage Seeds
+486:Starfruit Seeds
+487:Corn Seeds
+488:Eggplant Seeds
+489:Artichoke Seeds
+490:Pumpkin Seeds
+491:Bok Choy Seeds
+492:Yam Seeds
+493:Cranberry Seeds
+494:Beet Seeds
+495:Spring Seeds
+496:Summer Seeds
+497:Fall Seeds
+498:Winter Seeds
+499:Ancient Seeds
+516:Small Glow Ring
+517:Glow Ring
+518:Small Magnet Ring
+519:Magnet Ring
+520:Slime Charmer Ring
+521:Warrior Ring
+522:Vampire Ring
+523:Savage Ring
+524:Ring of Yoba
+525:Sturdy Ring
+526:Burglar's Ring
+527:Iridium Band
+528:Jukebox Ring
+529:Amethyst Ring
+530:Topaz Ring
+531:Aquamarine Ring
+532:Jade Ring
+533:Emerald Ring
+534:Ruby Ring
+535:Geode
+536:Frozen Geode
+537:Magma Geode
+538:Alamite
+539:Bixite
+540:Baryte
+541:Aerinite
+542:Calcite
+543:Dolomite
+544:Esperite
+545:Fluorapatite
+546:Geminite
+547:Helvite
+548:Jamborite
+549:Jagoite
+550:Kyanite
+551:Lunarite
+552:Malachite
+553:Neptunite
+554:Lemon Stone
+555:Nekoite
+556:Orpiment
+557:Petrified Slime
+558:Thunder Egg
+559:Pyrite
+560:Ocean Stone
+561:Ghost Crystal
+562:Tigerseye
+563:Jasper
+564:Opal
+565:Fire Opal
+566:Celestine
+567:Marble
+568:Sandstone
+569:Granite
+570:Basalt
+571:Limestone
+572:Soapstone
+573:Hematite
+574:Mudstone
+575:Obsidian
+576:Slate
+577:Fairy Stone
+578:Star Shards
+579:Prehistoric Scapula
+580:Prehistoric Tibia
+581:Prehistoric Skull
+582:Skeletal Hand
+583:Prehistoric Rib
+584:Prehistoric Vertebra
+585:Skeletal Tail
+586:Nautilus Fossil
+587:Amphibian Fossil
+588:Palm Fossil
+589:Trilobite
+590:Artifact Spot
+591:Tulip
+593:Summer Spangle
+595:Fairy Rose
+597:Blue Jazz
+599:Sprinkler
+604:Plum Pudding
+605:Artichoke Dip
+606:Stir Fry
+607:Roasted Hazelnuts
+608:Pumpkin Pie
+609:Radish Salad
+610:Fruit Salad
+611:Blackberry Cobbler
+612:Cranberry Candy
+613:Apple
+614:Green Tea
+618:Bruschetta
+621:Quality Sprinkler
+628:Cherry Sapling
+629:Apricot Sapling
+630:Orange Sapling
+631:Peach Sapling
+632:Pomegranate Sapling
+633:Apple Sapling
+634:Apricot
+635:Orange
+636:Peach
+637:Pomegranate
+638:Cherry
+645:Iridium Sprinkler
+648:Coleslaw
+649:Fiddlehead Risotto
+651:Poppyseed Muffin
+668:Stone
+670:Stone
+674:Weeds
+675:Weeds
+676:Weeds
+677:Weeds
+678:Weeds
+679:Weeds
+680:Green Slime Egg
+681:Rain Totem
+682:Mutant Carp
+684:Bug Meat
+685:Bait
+686:Spinner
+687:Dressed Spinner
+688:Warp Totem Farm
+689:Warp Totem Mountains
+690:Warp Totem Beach
+691:Barbed Hook
+692:Lead Bobber
+693:Treasure Hunter
+694:Trap Bobber
+695:Cork Bobber
+698:Sturgeon
+699:Tiger Trout
+700:Bullhead
+701:Tilapia
+702:Chub
+703:Magnet
+704:Dorado
+705:Albacore
+706:Shad
+707:Lingcod
+708:Halibut
+709:Hardwood
+710:Crab Pot
+715:Lobster
+716:Crayfish
+717:Crab
+718:Cockle
+719:Mussel
+720:Shrimp
+721:Snail
+722:Periwinkle
+723:Oyster
+724:Maple Syrup
+725:Oak Resin
+726:Pine Tar
+727:Chowder
+728:Fish Stew
+729:Escargot
+730:Lobster Bisque
+731:Maple Bar
+732:Crab Cakes
+733:Shrimp Cocktail
+734:Woodskip
+745:Strawberry Seeds
+746:Jack-O-Lantern
+747:Rotten Plant
+748:Rotten Plant
+749:Omni Geode
+750:Weeds
+751:Stone
+760:Stone
+762:Stone
+764:Stone
+765:Stone
+766:Slime
+767:Bat Wing
+768:Solar Essence
+769:Void Essence
+770:Mixed Seeds
+771:Fiber
+772:Oil of Garlic
+773:Life Elixir
+774:Wild Bait
+775:Glacierfish
+784:Weeds
+785:Weeds
+786:Weeds
+787:Battery Pack
+788:Lost Axe
+789:Lucky Purple Shorts
+790:Berry Basket
+791:Golden Coconut
+792:Weeds
+793:Weeds
+794:Weeds
+795:Void Salmon
+796:Slimejack
+797:Pearl
+798:Midnight Squid
+799:Spook Fish
+800:Blobfish
+801:Wedding Ring
+802:Cactus Seeds
+803:Iridium Milk
+805:Tree Fertilizer
+807:Dinosaur Mayonnaise
+808:Void Ghost Pendant
+809:Movie Ticket
+810:Crabshell Ring
+811:Napalm Ring
+812:Roe
+814:Squid Ink
+815:Tea Leaves
+816:Stone
+817:Stone
+818:Stone
+819:Stone
+820:Fossilized Skull
+821:Fossilized Spine
+822:Fossilized Tail
+823:Fossilized Leg
+824:Fossilized Ribs
+825:Snake Skull
+826:Snake Vertebrae
+827:Mummified Bat
+828:Mummified Frog
+829:Ginger
+830:Taro Root
+831:Taro Tuber
+832:Pineapple
+833:Pineapple Seeds
+834:Mango
+835:Mango Sapling
+836:Stingray
+837:Lionfish
+838:Blue Discus
+839:Thorns Ring
+840:Rustic Plank Floor
+841:Stone Walkway Floor
+842:Journal Scrap
+843:Stone
+844:Stone
+845:Stone
+846:Stone
+847:Stone
+848:Cinder Shard
+849:Stone
+850:Stone
+851:Magma Cap
+852:Dragon Tooth
+856:Curiosity Lure
+857:Tiger Slime Egg
+858:Qi Gem
+859:Lucky Ring
+860:Hot Java Ring
+861:Protection Ring
+862:Soul Sapper Ring
+863:Phoenix Ring
+864:War Memento
+865:Gourmet Tomato Salt
+866:Stardew Valley Rose
+867:Advanced TV Remote
+868:Arctic Shard
+869:Wriggling Worm
+870:Pirate's Locket
+872:Fairy Dust
+873:Pina Colada
+874:Bug Steak
+875:Ectoplasm
+876:Prismatic Jelly
+877:Quality Bobber
+879:Monster Musk
+880:Combined Ring
+881:Bone Fragment
+882:Weeds
+883:Weeds
+884:Weeds
+885:Fiber Seeds
+886:Warp Totem: Island
+887:Immunity Band
+888:Glowstone Ring
+889:Qi Fruit
+890:Qi Bean
+891:Mushroom Tree Seed
+892:Warp Totem: Qi's Arena
+893:Fireworks (Red)
+894:Fireworks (Purple)
+895:Fireworks (Green)
+896:Galaxy Soul
+897:Pierre's Missing Stocklist
+898:Son of Crimsonfish
+899:Ms. Angler
+900:Legend II
+901:Radioactive Carp
+902:Glacierfish Jr.
+903:Ginger Ale
+904:Banana Pudding
+905:Mango Sticky Rice
+906:Poi
+907:Tropical Curry
+908:Magic Bait
+909:Radioactive Ore
+910:Radioactive Bar
+911:Horse Flute
+913:Enricher
+915:Pressure Nozzle
+917:Qi Seasoning
+918:Hyper Speed-Gro
+919:Deluxe Fertilizer
+920:Deluxe Retaining Soil
+921:Squid Ink Ravioli
+922:SupplyCrate
+923:SupplyCrate
+924:SupplyCrate
+925:Slime Crate
+926:Cookout Kit
+927:Camping Stove
+928:Golden Egg
+929:Hedge
+</DropDownList>
+                  <ShowAsSigned>1</ShowAsSigned>
+                  <Color>800080</Color>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>fishingrod_pull_value_fish</Address>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>36</ID>
+          <Description>"Behaviour"</Description>
+          <Options moActivateChildrenAsWell="1" moDeactivateChildrenAsWell="1"/>
+          <LastState Value="" RealAddress="00000000"/>
+          <Color>C08000</Color>
+          <GroupHeader>1</GroupHeader>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>20</ID>
+              <Description>"cask anywhere"</Description>
+              <LastState/>
+              <Color>008000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>{ Game   : Stardew Valley.exe
+  Version: 
+  Date   : 2021-12-07
+  Author : sub1to
+
+  This script does blah blah blah
+}
+
+[ENABLE]
+{$lua}
+checkDotNetSymbol('StardewValley.Objects.Cask::IsValidCaskLocation')
+
+{$asm}
+define(hook,StardewValley.Objects.Cask::IsValidCaskLocation)
+
+alloc(newmem,$1000,hook)
+
+label(cask_location_bytes)
+registersymbol(cask_location_bytes)
+
+newmem:
+cask_location_bytes:
+  readMem(hook,5)
+
+hook:
+  db b0 01 c3 90 90
+
+[DISABLE]
+hook:
+  readMem(cask_location_bytes,5)
+
+unregistersymbol(cask_location_bytes)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: StardewValley.Objects.Cask::IsValidCaskLocation
+
+7FFB0F724709: 00 00                          - add [rax],al
+7FFB0F72470B: 00 00                          - add [rax],al
+7FFB0F72470D: 00 00                          - add [rax],al
+7FFB0F72470F: 00 00                          - add [rax],al
+7FFB0F724711: 00 00                          - add [rax],al
+7FFB0F724713: 00 00                          - add [rax],al
+7FFB0F724715: 00 00                          - add [rax],al
+7FFB0F724717: 00 98 89 89 0F FB              - add [rax-04F07677],bl
+7FFB0F72471D: 7F 00                          - jg 7FFB0F72471F
+7FFB0F72471F: 00                             - db 00 
+// ---------- INJECTING HERE ----------
+StardewValley.Objects.Cask::IsValidCaskLocation: 56                             - push rsi
+// ---------- DONE INJECTING  ----------
+StardewValley.Objects.Cask::IsValidCaskLocation+1: 48 83 EC 30                    - sub rsp,30
+StardewValley.Objects.Cask::IsValidCaskLocation+5: 33 C0                          - xor eax,eax
+StardewValley.Objects.Cask::IsValidCaskLocation+7: 48 89 44 24 28                 - mov [rsp+28],rax
+StardewValley.Objects.Cask::IsValidCaskLocation+C: 48 8B F2                       - mov rsi,rdx
+StardewValley.Objects.Cask::IsValidCaskLocation+F: 48 8B D6                       - mov rdx,rsi
+StardewValley.Objects.Cask::IsValidCaskLocation+12: 48 B9 D8 00 5D 0E FB 7F 00 00  - mov rcx,00007FFB0E5D00D8
+StardewValley.Objects.Cask::IsValidCaskLocation+1C: E8 3F 00 92 FE                 - call 7FFB0E044780
+StardewValley.Objects.Cask::IsValidCaskLocation+21: 48 85 C0                       - test rax,rax
+StardewValley.Objects.Cask::IsValidCaskLocation+24: 74 0B                          - je StardewValley.Objects.Cask::IsValidCaskLocation+31
+StardewValley.Objects.Cask::IsValidCaskLocation+26: B8 01 00 00 00                 - mov eax,00000001
+}
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>33</ID>
+              <Description>"junimo hut works during rain"</Description>
+              <LastState/>
+              <Color>008000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>{ Game   : Stardew Valley.exe
+  Version: 
+  Date   : 2021-12-08
+  Author : sub1to
+
+  This script does blah blah blah
+}
+
+[ENABLE]
+{$lua}
+checkDotNetSymbol('StardewValley.Buildings.JunimoHut::updateWhenFarmNotCurrentLocation')
+
+{$asm}
+define(hook,StardewValley.Buildings.JunimoHut::updateWhenFarmNotCurrentLocation+199)
+assert(hook,48 B9 ? ? ? ? ? ? ? ? 80 39)
+
+alloc(newmem,$1000,hook)
+
+label(code)
+label(returnhere)
+label(_dummy)
+
+label(junimohut_update_not_farm_bytes)
+registersymbol(junimohut_update_not_farm_bytes)
+
+newmem:
+junimohut_update_not_farm_bytes:
+  readMem(hook,10)
+
+_dummy:
+  db 0
+
+code:
+  lea rcx, [_dummy]
+  jmp returnhere
+
+hook:
+  jmp code
+  nop 5
+  returnhere:
+
+[DISABLE]
+hook:
+  readMem(junimohut_update_not_farm_bytes,10)
+
+unregistersymbol(junimohut_update_not_farm_bytes)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: StardewValley.Buildings.JunimoHut::updateWhenFarmNotCurrentLocation+199
+
+StardewValley.Buildings.JunimoHut::updateWhenFarmNotCurrentLocation+163: 0F 8D 73 03 00 00              - jnl StardewValley.Buildings.JunimoHut::updateWhenFarmNotCurrentLocation+4DC
+StardewValley.Buildings.JunimoHut::updateWhenFarmNotCurrentLocation+169: 48 B9 68 58 F3 9E 95 02 00 00  - mov rcx,000002959EF35868
+StardewValley.Buildings.JunimoHut::updateWhenFarmNotCurrentLocation+173: 48 8B 09                       - mov rcx,[rcx]
+StardewValley.Buildings.JunimoHut::updateWhenFarmNotCurrentLocation+176: 48 BA A8 74 F4 9E 95 02 00 00  - mov rdx,000002959EF474A8
+StardewValley.Buildings.JunimoHut::updateWhenFarmNotCurrentLocation+180: 48 8B 12                       - mov rdx,[rdx]
+StardewValley.Buildings.JunimoHut::updateWhenFarmNotCurrentLocation+183: 48 B8 58 71 BD D6 F8 7F 00 00  - mov rax,00007FF8D6BD7158
+StardewValley.Buildings.JunimoHut::updateWhenFarmNotCurrentLocation+18D: 39 09                          - cmp [rcx],ecx
+StardewValley.Buildings.JunimoHut::updateWhenFarmNotCurrentLocation+18F: FF 10                          - call qword ptr [rax]
+StardewValley.Buildings.JunimoHut::updateWhenFarmNotCurrentLocation+191: 85 C0                          - test eax,eax
+StardewValley.Buildings.JunimoHut::updateWhenFarmNotCurrentLocation+193: 0F 85 43 03 00 00              - jne StardewValley.Buildings.JunimoHut::updateWhenFarmNotCurrentLocation+4DC
+// ---------- INJECTING HERE ----------
+StardewValley.Buildings.JunimoHut::updateWhenFarmNotCurrentLocation+199: 48 B9 46 51 BF D6 F8 7F 00 00  - mov rcx,00007FF8D6BF5146
+// ---------- DONE INJECTING  ----------
+StardewValley.Buildings.JunimoHut::updateWhenFarmNotCurrentLocation+1A3: 80 39 00                       - cmp byte ptr [rcx],00
+StardewValley.Buildings.JunimoHut::updateWhenFarmNotCurrentLocation+1A6: 0F 85 30 03 00 00              - jne StardewValley.Buildings.JunimoHut::updateWhenFarmNotCurrentLocation+4DC
+StardewValley.Buildings.JunimoHut::updateWhenFarmNotCurrentLocation+1AC: 48 8B CE                       - mov rcx,rsi
+StardewValley.Buildings.JunimoHut::updateWhenFarmNotCurrentLocation+1AF: E8 C4 A2 4E FF                 - call 7FF8D7043808
+StardewValley.Buildings.JunimoHut::updateWhenFarmNotCurrentLocation+1B4: 85 C0                          - test eax,eax
+StardewValley.Buildings.JunimoHut::updateWhenFarmNotCurrentLocation+1B6: 0F 84 20 03 00 00              - je StardewValley.Buildings.JunimoHut::updateWhenFarmNotCurrentLocation+4DC
+StardewValley.Buildings.JunimoHut::updateWhenFarmNotCurrentLocation+1BC: 48 B9 78 5A F3 9E 95 02 00 00  - mov rcx,000002959EF35A78
+StardewValley.Buildings.JunimoHut::updateWhenFarmNotCurrentLocation+1C6: 48 83 39 00                    - cmp qword ptr [rcx],00
+StardewValley.Buildings.JunimoHut::updateWhenFarmNotCurrentLocation+1CA: 0F 85 0C 03 00 00              - jne StardewValley.Buildings.JunimoHut::updateWhenFarmNotCurrentLocation+4DC
+StardewValley.Buildings.JunimoHut::updateWhenFarmNotCurrentLocation+1D0: 48 8B CE                       - mov rcx,rsi
+}
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>32</ID>
+              <Description>"farm animals go outside during rain"</Description>
+              <LastState/>
+              <Color>008000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>{ Game   : Stardew Valley.exe
+  Version: 
+  Date   : 2021-12-08
+  Author : sub1to
+
+  This script does blah blah blah
+}
+
+[ENABLE]
+{$lua}
+checkDotNetSymbol('StardewValley.FarmAnimal::updateWhenNotCurrentLocation')
+
+{$asm}
+define(hook,StardewValley.FarmAnimal::updateWhenNotCurrentLocation+168)
+assert(hook,48 B9 ? ? ? ? ? ? ? ? 80 39)
+
+alloc(newmem,$1000,hook)
+
+label(code)
+label(returnhere)
+label(_dummy)
+
+label(farmanimal_update_not_farm_bytes)
+registersymbol(farmanimal_update_not_farm_bytes)
+
+newmem:
+farmanimal_update_not_farm_bytes:
+  readMem(hook,10)
+
+_dummy:
+  db 0
+
+code:
+  lea rcx, [_dummy]
+  jmp returnhere
+
+hook:
+  jmp code
+  nop 5
+  returnhere:
+
+[DISABLE]
+hook:
+  readMem(farmanimal_update_not_farm_bytes,10)
+
+unregistersymbol(farmanimal_update_not_farm_bytes)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: StardewValley.FarmAnimal::updateWhenNotCurrentLocation+172
+
+StardewValley.FarmAnimal::updateWhenNotCurrentLocation+12E: 0F 86 01 09 00 00              - jbe StardewValley.FarmAnimal::updateWhenNotCurrentLocation+A35
+StardewValley.FarmAnimal::updateWhenNotCurrentLocation+134: 48 8B 97 A0 00 00 00           - mov rdx,[rdi+000000A0]
+StardewValley.FarmAnimal::updateWhenNotCurrentLocation+13B: 48 B9 70 D5 F3 D6 F8 7F 00 00  - mov rcx,00007FF8D6F3D570
+StardewValley.FarmAnimal::updateWhenNotCurrentLocation+145: E8 A6 83 2A FF                 - call 7FF8D6DFDB20
+StardewValley.FarmAnimal::updateWhenNotCurrentLocation+14A: 85 C0                          - test eax,eax
+StardewValley.FarmAnimal::updateWhenNotCurrentLocation+14C: 0F 84 E3 08 00 00              - je StardewValley.FarmAnimal::updateWhenNotCurrentLocation+A35
+StardewValley.FarmAnimal::updateWhenNotCurrentLocation+152: 48 B9 08 50 BF D6 F8 7F 00 00  - mov rcx,00007FF8D6BF5008
+StardewValley.FarmAnimal::updateWhenNotCurrentLocation+15C: 81 39 5E 06 00 00              - cmp [rcx],0000065E
+StardewValley.FarmAnimal::updateWhenNotCurrentLocation+162: 0F 8D CD 08 00 00              - jnl StardewValley.FarmAnimal::updateWhenNotCurrentLocation+A35
+// ---------- INJECTING HERE ----------
+StardewValley.FarmAnimal::updateWhenNotCurrentLocation+168: 48 B9 46 51 BF D6 F8 7F 00 00  - mov rcx,00007FF8D6BF5146
+// ---------- DONE INJECTING  ----------
+StardewValley.FarmAnimal::updateWhenNotCurrentLocation+172: 80 39 00                       - cmp byte ptr [rcx],00
+StardewValley.FarmAnimal::updateWhenNotCurrentLocation+175: 0F 85 BA 08 00 00              - jne StardewValley.FarmAnimal::updateWhenNotCurrentLocation+A35
+StardewValley.FarmAnimal::updateWhenNotCurrentLocation+17B: 48 B9 68 58 F3 9E 95 02 00 00  - mov rcx,000002959EF35868
+StardewValley.FarmAnimal::updateWhenNotCurrentLocation+185: 48 8B 09                       - mov rcx,[rcx]
+StardewValley.FarmAnimal::updateWhenNotCurrentLocation+188: 48 BA A8 74 F4 9E 95 02 00 00  - mov rdx,000002959EF474A8
+StardewValley.FarmAnimal::updateWhenNotCurrentLocation+192: 48 8B 12                       - mov rdx,[rdx]
+StardewValley.FarmAnimal::updateWhenNotCurrentLocation+195: 48 B8 58 71 BD D6 F8 7F 00 00  - mov rax,00007FF8D6BD7158
+StardewValley.FarmAnimal::updateWhenNotCurrentLocation+19F: 39 09                          - cmp [rcx],ecx
+StardewValley.FarmAnimal::updateWhenNotCurrentLocation+1A1: FF 10                          - call qword ptr [rax]
+StardewValley.FarmAnimal::updateWhenNotCurrentLocation+1A3: 85 C0                          - test eax,eax
+StardewValley.FarmAnimal::updateWhenNotCurrentLocation+1A5: 0F 85 8A 08 00 00              - jne StardewValley.FarmAnimal::updateWhenNotCurrentLocation+A35
+}
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>35</ID>
+              <Description>"farm animals behaviour during rain (find truffles)"</Description>
+              <LastState/>
+              <Color>008000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>{ Game   : Stardew Valley.exe
+  Version: 
+  Date   : 2021-12-08
+  Author : sub1to
+
+  This script does blah blah blah
+}
+
+[ENABLE]
+{$lua}
+checkDotNetSymbol('StardewValley.FarmAnimal::behaviors')
+
+{$asm}
+define(hook,StardewValley.FarmAnimal::behaviors+B15)
+assert(hook,48 B9 ? ? ? ? ? ? ? ? 80 39)
+
+alloc(newmem,$1000,hook)
+
+label(code)
+label(returnhere)
+label(_dummy)
+
+label(farmanimal_behaviour_bytes)
+registersymbol(farmanimal_behaviour_bytes)
+
+newmem:
+farmanimal_behaviour_bytes:
+  readMem(hook,10)
+
+_dummy:
+  db 0
+
+code:
+  lea rcx, [_dummy]
+  jmp returnhere
+
+hook:
+  jmp code
+  nop 5
+  returnhere:
+
+[DISABLE]
+hook:
+  readMem(farmanimal_behaviour_bytes,10)
+
+unregistersymbol(farmanimal_behaviour_bytes)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: StardewValley.FarmAnimal::behaviors+B15
+
+StardewValley.FarmAnimal::behaviors+ADC: E8 4F 23 B5 5E                 - call coreclr.dll+149780
+StardewValley.FarmAnimal::behaviors+AE1: 33 D2                          - xor edx,edx
+StardewValley.FarmAnimal::behaviors+AE3: 48 89 93 90 02 00 00           - mov [rbx+00000290],rdx
+StardewValley.FarmAnimal::behaviors+AEA: 48 89 93 D0 02 00 00           - mov [rbx+000002D0],rdx
+StardewValley.FarmAnimal::behaviors+AF1: 89 93 D8 02 00 00              - mov [rbx+000002D8],edx
+StardewValley.FarmAnimal::behaviors+AF7: 48 8B 96 38 01 00 00           - mov rdx,[rsi+00000138]
+StardewValley.FarmAnimal::behaviors+AFE: 48 B9 70 D5 F3 D6 F8 7F 00 00  - mov rcx,00007FF8D6F3D570
+StardewValley.FarmAnimal::behaviors+B08: E8 C3 66 2A FF                 - call 7FF8D6DFDB20
+StardewValley.FarmAnimal::behaviors+B0D: 84 C0                          - test al,al
+StardewValley.FarmAnimal::behaviors+B0F: 0F 84 40 1C 00 00              - je StardewValley.FarmAnimal::behaviors+2755
+// ---------- INJECTING HERE ----------
+StardewValley.FarmAnimal::behaviors+B15: 48 B9 46 51 BF D6 F8 7F 00 00  - mov rcx,00007FF8D6BF5146
+// ---------- DONE INJECTING  ----------
+StardewValley.FarmAnimal::behaviors+B1F: 80 39 00                       - cmp byte ptr [rcx],00
+StardewValley.FarmAnimal::behaviors+B22: 0F 85 2D 1C 00 00              - jne StardewValley.FarmAnimal::behaviors+2755
+StardewValley.FarmAnimal::behaviors+B28: 48 B9 68 58 F3 9E 95 02 00 00  - mov rcx,000002959EF35868
+StardewValley.FarmAnimal::behaviors+B32: 48 8B 09                       - mov rcx,[rcx]
+StardewValley.FarmAnimal::behaviors+B35: 48 BA A8 74 F4 9E 95 02 00 00  - mov rdx,000002959EF474A8
+StardewValley.FarmAnimal::behaviors+B3F: 48 8B 12                       - mov rdx,[rdx]
+StardewValley.FarmAnimal::behaviors+B42: 48 B8 58 71 BD D6 F8 7F 00 00  - mov rax,00007FF8D6BD7158
+StardewValley.FarmAnimal::behaviors+B4C: 39 09                          - cmp [rcx],ecx
+StardewValley.FarmAnimal::behaviors+B4E: FF 10                          - call qword ptr [rax]
+StardewValley.FarmAnimal::behaviors+B50: 85 C0                          - test eax,eax
+}
+</AssemblerScript>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>38</ID>
+          <Description>"Combat"</Description>
+          <LastState Value="" RealAddress="00000000"/>
+          <Color>C08000</Color>
+          <GroupHeader>1</GroupHeader>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>19</ID>
+              <Description>"no damage (no collision)"</Description>
+              <LastState/>
+              <Color>008000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>{ Game   : Stardew Valley.exe
+  Version: 
+  Date   : 2021-12-06
+  Author : sub1to
+
+  This script does blah blah blah
+}
+
+[ENABLE]
+{$lua}
+checkDotNetSymbol('StardewValley.Farmer::checkDamage')
+
+{$asm}
+define(hook,StardewValley.Farmer::checkDamage)
+
+alloc(newmem,$1000,hook)
+
+label(code)
+
+label(check_damage_bytes)
+registersymbol(check_damage_bytes)
+
+newmem:
+check_damage_bytes:
+  readMem(hook,6)
+
+code:
+  xor rax, rax
+  ret
+
+hook:
+  jmp code
+  nop
+
+[DISABLE]
+hook:
+  readMem(check_damage_bytes,6)
+
+unregistersymbol(check_damage_bytes)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: StardewValley.Farmer::checkDamage
+
+7FFB0F077DDD: 00 00        - add [rax],al
+7FFB0F077DDF: 00 00        - add [rax],al
+7FFB0F077DE1: 00 00        - add [rax],al
+7FFB0F077DE3: 00 00        - add [rax],al
+7FFB0F077DE5: 00 00        - add [rax],al
+7FFB0F077DE7: 00 78 94     - add [rax-6C],bh
+7FFB0F077DEA: 24 0F        - and al,0F
+7FFB0F077DEC: FB           - sti 
+7FFB0F077DED: 7F 00        - jg 7FFB0F077DEF
+7FFB0F077DEF: 00           - db 00 
+// ---------- INJECTING HERE ----------
+StardewValley.Farmer::checkDamage: 41 57        - push r15
+// ---------- DONE INJECTING  ----------
+StardewValley.Farmer::checkDamage+2: 41 56        - push r14
+StardewValley.Farmer::checkDamage+4: 41 55        - push r13
+StardewValley.Farmer::checkDamage+6: 41 54        - push r12
+StardewValley.Farmer::checkDamage+8: 57           - push rdi
+StardewValley.Farmer::checkDamage+9: 56           - push rsi
+StardewValley.Farmer::checkDamage+A: 55           - push rbp
+StardewValley.Farmer::checkDamage+B: 53           - push rbx
+StardewValley.Farmer::checkDamage+C: 48 83 EC 28  - sub rsp,28
+StardewValley.Farmer::checkDamage+10: 48 8B F1     - mov rsi,rcx
+StardewValley.Farmer::checkDamage+13: 48 8B FA     - mov rdi,rdx
+}
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>21</ID>
+              <Description>"slingshot infinite ammo"</Description>
+              <LastState/>
+              <Color>008000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>{ Game   : Stardew Valley.exe
+  Version: 
+  Date   : 2021-12-07
+  Author : sub1to
+
+  This script does blah blah blah
+}
+
+[ENABLE]
+{$lua}
+checkDotNetSymbol('StardewValley.Tools.Slingshot::PerformFire')
+
+{$asm}
+define(hook,StardewValley.Tools.Slingshot::PerformFire+211)
+assert(hook,FF CA)
+
+alloc(newmem,$1000,hook)
+
+label(slingshot_ammo_dec_bytes)
+registersymbol(slingshot_ammo_dec_bytes)
+
+newmem:
+slingshot_ammo_dec_bytes:
+  readMem(hook,2)
+
+hook:
+  nop
+  nop
+
+[DISABLE]
+hook:
+  readMem(slingshot_ammo_dec_bytes,2)
+
+unregistersymbol(slingshot_ammo_dec_bytes)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: StardewValley.Tools.Slingshot::PerformFire+211
+
+StardewValley.Tools.Slingshot::PerformFire+1F0: 33 D2                          - xor edx,edx
+StardewValley.Tools.Slingshot::PerformFire+1F2: 48 B8 70 B2 67 0E FB 7F 00 00  - mov rax,00007FFB0E67B270
+StardewValley.Tools.Slingshot::PerformFire+1FC: 39 09                          - cmp [rcx],ecx
+StardewValley.Tools.Slingshot::PerformFire+1FE: FF 10                          - call qword ptr [rax]
+StardewValley.Tools.Slingshot::PerformFire+200: 4C 8B F8                       - mov r15,rax
+StardewValley.Tools.Slingshot::PerformFire+203: 49 8B CF                       - mov rcx,r15
+StardewValley.Tools.Slingshot::PerformFire+206: 49 8B 07                       - mov rax,[r15]
+StardewValley.Tools.Slingshot::PerformFire+209: 48 8B 40 68                    - mov rax,[rax+68]
+StardewValley.Tools.Slingshot::PerformFire+20D: FF 10                          - call qword ptr [rax]
+StardewValley.Tools.Slingshot::PerformFire+20F: 8B D0                          - mov edx,eax
+// ---------- INJECTING HERE ----------
+StardewValley.Tools.Slingshot::PerformFire+211: FF CA                          - dec edx
+// ---------- DONE INJECTING  ----------
+StardewValley.Tools.Slingshot::PerformFire+213: 49 8B CF                       - mov rcx,r15
+StardewValley.Tools.Slingshot::PerformFire+216: 49 8B 07                       - mov rax,[r15]
+StardewValley.Tools.Slingshot::PerformFire+219: 48 8B 40 68                    - mov rax,[rax+68]
+StardewValley.Tools.Slingshot::PerformFire+21D: FF 50 08                       - call qword ptr [rax+08]
+StardewValley.Tools.Slingshot::PerformFire+220: 48 8B 8E A8 00 00 00           - mov rcx,[rsi+000000A8]
+StardewValley.Tools.Slingshot::PerformFire+227: 33 D2                          - xor edx,edx
+StardewValley.Tools.Slingshot::PerformFire+229: 48 B8 70 B2 67 0E FB 7F 00 00  - mov rax,00007FFB0E67B270
+StardewValley.Tools.Slingshot::PerformFire+233: 39 09                          - cmp [rcx],ecx
+StardewValley.Tools.Slingshot::PerformFire+235: FF 10                          - call qword ptr [rax]
+StardewValley.Tools.Slingshot::PerformFire+237: 48 8B C8                       - mov rcx,rax
+}
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>22</ID>
+              <Description>"slingshot instant charge"</Description>
+              <LastState/>
+              <Color>008000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>{ Game   : Stardew Valley.exe
+  Version: 
+  Date   : 2021-12-07
+  Author : sub1to
+
+  This script does blah blah blah
+}
+
+[ENABLE]
+{$lua}
+checkDotNetSymbol('StardewValley.Tools.Slingshot::GetSlingshotChargeTime')
+
+{$asm}
+define(hook,StardewValley.Tools.Slingshot::GetSlingshotChargeTime)
+
+alloc(newmem,$1000,hook)
+
+label(code)
+label(_value)
+
+label(slingshot_charge_time_bytes)
+registersymbol(slingshot_charge_time_bytes)
+
+newmem:
+slingshot_charge_time_bytes:
+  readMem(hook,7)
+
+_value:
+  dd (float)1.0
+
+code:
+  movd xmm0, [_value]
+  ret
+
+hook:
+  jmp code
+  nop
+  nop
+
+[DISABLE]
+hook:
+  readMem(slingshot_charge_time_bytes,7)
+
+unregistersymbol(slingshot_charge_time_bytes)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: StardewValley.Tools.Slingshot::GetSlingshotChargeTime+48
+
+StardewValley.Tools.Slingshot::GetSlingshotChargeTime+19: C5 F8 57 C0                    - vxorps xmm0,xmm0,xmm0
+StardewValley.Tools.Slingshot::GetSlingshotChargeTime+1D: 48 83 C4 28                    - add rsp,28
+StardewValley.Tools.Slingshot::GetSlingshotChargeTime+21: C3                             - ret
+StardewValley.Tools.Slingshot::GetSlingshotChargeTime+22: 48 B8 A8 5A D0 B4 29 02 00 00  - mov rax,00000229B4D05AA8
+StardewValley.Tools.Slingshot::GetSlingshotChargeTime+2C: 48 8B 00                       - mov rax,[rax]
+StardewValley.Tools.Slingshot::GetSlingshotChargeTime+2F: 48 8B 40 10                    - mov rax,[rax+10]
+StardewValley.Tools.Slingshot::GetSlingshotChargeTime+33: C5 F8 57 C0                    - vxorps xmm0,xmm0,xmm0
+StardewValley.Tools.Slingshot::GetSlingshotChargeTime+37: C4 E1 FB 2A C0                 - vcvtsi2sd xmm0,rax,rax
+StardewValley.Tools.Slingshot::GetSlingshotChargeTime+3C: C5 FB 5E 05 3C 00 00 00        - divsd xmm0,xmm0,[7FFB0F663390]
+StardewValley.Tools.Slingshot::GetSlingshotChargeTime+44: C5 FB 5C C1                    - vsubsd xmm0,xmm0,xmm1
+// ---------- INJECTING HERE ----------
+StardewValley.Tools.Slingshot::GetSlingshotChargeTime+48: C5 FB 5E 05 40 00 00 00        - divsd xmm0,xmm0,[7FFB0F6633A0]
+// ---------- DONE INJECTING  ----------
+StardewValley.Tools.Slingshot::GetSlingshotChargeTime+50: C5 FB 5A C0                    - vcvtsd2ss xmm0,xmm0,xmm0
+StardewValley.Tools.Slingshot::GetSlingshotChargeTime+54: C5 F0 57 C9                    - vxorps xmm1,xmm1,xmm1
+StardewValley.Tools.Slingshot::GetSlingshotChargeTime+58: C5 FA 10 15 38 00 00 00        - vmovss xmm2,[7FFB0F6633A8]
+StardewValley.Tools.Slingshot::GetSlingshotChargeTime+60: E8 CB DE 9D FE                 - call 7FFB0E041240
+StardewValley.Tools.Slingshot::GetSlingshotChargeTime+65: 90                             - nop
+StardewValley.Tools.Slingshot::GetSlingshotChargeTime+66: 48 83 C4 28                    - add rsp,28
+StardewValley.Tools.Slingshot::GetSlingshotChargeTime+6A: C3                             - ret
+StardewValley.Tools.Slingshot::GetSlingshotChargeTime+6B: CC                             - int 3
+7FFB0F66337C: CC                             - int 3
+7FFB0F66337D: CC                             - int 3
+}
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>8936</ID>
+              <Description>"slingshot auto fire"</Description>
+              <LastState/>
+              <Color>008000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>{ Game   : Stardew Valley.exe
+  Version: 
+  Date   : 2021-12-14
+  Author : sub1to
+
+  This script does blah blah blah
+}
+
+[ENABLE]
+{$lua}
+checkDotNetSymbol('StardewValley.Tools.Slingshot::CanAutoFire')
+
+{$asm}
+define(hook,StardewValley.Tools.Slingshot::CanAutoFire)
+
+alloc(newmem,$1000,hook)
+
+label(slingshot_can_autofire_bytes)
+registersymbol(slingshot_can_autofire_bytes)
+
+newmem:
+slingshot_can_autofire_bytes:
+  readMem(hook,3)
+
+hook:
+  db b0 01 c3
+
+[DISABLE]
+hook:
+  readMem(slingshot_can_autofire_bytes,3)
+
+unregistersymbol(slingshot_can_autofire_bytes)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: StardewValley.Tools.Slingshot::CanAutoFire
+
+7FFEDCDA896D: 70 00     - jo 7FFEDCDA896F
+7FFEDCDA896F: 00 40 00  - add [rax+00],al
+7FFEDCDA8972: 00 00     - add [rax],al
+7FFEDCDA8974: 00 00     - add [rax],al
+7FFEDCDA8976: 00 00     - add [rax],al
+7FFEDCDA8978: 50        - push rax
+7FFEDCDA8979: DF F4     - fcomip st(0),st(4)
+7FFEDCDA897B: DC FE     - fdiv st(6),st(0)
+7FFEDCDA897D: 7F 00     - jg 7FFEDCDA897F
+7FFEDCDA897F: 00        - db 00 
+// ---------- INJECTING HERE ----------
+StardewValley.Tools.Slingshot::CanAutoFire: 33 C0     - xor eax,eax
+// ---------- DONE INJECTING  ----------
+StardewValley.Tools.Slingshot::CanAutoFire+2: C3        - ret 
+StardewValley.Tools.Slingshot::CanAutoFire+3: 00 19     - add [rcx],bl
+7FFEDCDA8985: 00 00     - add [rax],al
+7FFEDCDA8987: 00 40 00  - add [rax+00],al
+7FFEDCDA898A: 00 00     - add [rax],al
+7FFEDCDA898C: 00 00     - add [rax],al
+7FFEDCDA898E: 00 00     - add [rax],al
+7FFEDCDA8990: 00 00     - add [rax],al
+7FFEDCDA8992: 00 00     - add [rax],al
+7FFEDCDA8994: 00 00     - add [rax],al
+}
+</AssemblerScript>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>51</ID>
+          <Description>"Inventory"</Description>
+          <LastState Value="" RealAddress="00000000"/>
+          <Color>C08000</Color>
+          <GroupHeader>1</GroupHeader>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>46</ID>
+              <Description>"item editor (inventory hover)"</Description>
+              <Options moHideChildren="1"/>
+              <LastState/>
+              <Color>008000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>{ Game   : Stardew Valley.exe
+  Version: 
+  Date   : 2021-12-08
+  Author : sub1to
+
+  This script does blah blah blah
+}
+
+[ENABLE]
+{$lua}
+checkDotNetSymbol('StardewValley.Object::get_DisplayName')
+
+{$asm}
+define(hook,StardewValley.Object::get_DisplayName)
+
+alloc(newmem,$1000,hook)
+
+label(code)
+label(returnhere)
+
+label(object_get_displayname_bytes)
+registersymbol(object_get_displayname_bytes)
+
+label(object_base_ptr)
+registersymbol(object_base_ptr)
+
+newmem:
+object_get_displayname_bytes:
+  readMem(hook, 7)
+  jmp returnhere
+
+object_base_ptr:
+  dq 0
+
+code:
+  mov [object_base_ptr], rcx
+  jmp object_get_displayname_bytes
+
+hook:
+  jmp code
+  nop
+  nop
+  returnhere:
+
+[DISABLE]
+hook:
+  readMem(object_get_displayname_bytes,7)
+
+unregistersymbol(object_get_displayname_bytes)
+unregistersymbol(object_base_ptr)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: StardewValley.Object::get_DisplayName
+
+7FFC8976023D: 70 00                          - jo 7FFC8976023F
+7FFC8976023F: 00 40 00                       - add [rax+00],al
+7FFC89760242: 00 00                          - add [rax],al
+7FFC89760244: 00 00                          - add [rax],al
+7FFC89760246: 00 00                          - add [rax],al
+7FFC89760248: 58                             - pop rax
+7FFC89760249: 0D 92 89 FC 7F                 - or eax,7FFC8992
+7FFC8976024E: 00 00                          - add [rax],al
+StardewValley.Object::get_DisplayName: 57                             - push rdi
+StardewValley.Object::get_DisplayName+1: 56                             - push rsi
+// ---------- INJECTING HERE ----------
+StardewValley.Object::get_DisplayName+2: 53                             - push rbx
+// ---------- DONE INJECTING  ----------
+StardewValley.Object::get_DisplayName+3: 48 83 EC 40                    - sub rsp,40
+StardewValley.Object::get_DisplayName+7: 33 C0                          - xor eax,eax
+StardewValley.Object::get_DisplayName+9: 48 89 44 24 20                 - mov [rsp+20],rax
+StardewValley.Object::get_DisplayName+E: 48 89 44 24 28                 - mov [rsp+28],rax
+StardewValley.Object::get_DisplayName+13: 48 8B F1                       - mov rsi,rcx
+StardewValley.Object::get_DisplayName+16: 48 B9 28 59 49 43 FF 01 00 00  - mov rcx,000001FF43495928
+StardewValley.Object::get_DisplayName+20: 48 83 39 00                    - cmp qword ptr [rcx],00
+StardewValley.Object::get_DisplayName+24: 0F 84 7C 00 00 00              - je StardewValley.Object::get_DisplayName+A6
+StardewValley.Object::get_DisplayName+2A: 48 8B CE                       - mov rcx,rsi
+StardewValley.Object::get_DisplayName+2D: 48 8B 06                       - mov rax,[rsi]
+}
+</AssemblerScript>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>47</ID>
+                  <Description>"object_base_ptr"</Description>
+                  <ShowAsHex>1</ShowAsHex>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <Color>808080</Color>
+                  <VariableType>8 Bytes</VariableType>
+                  <Address>object_base_ptr</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>48</ID>
+                  <Description>"Name"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <Color>808080</Color>
+                  <VariableType>String</VariableType>
+                  <Length>256</Length>
+                  <Unicode>1</Unicode>
+                  <CodePage>0</CodePage>
+                  <ZeroTerminate>1</ZeroTerminate>
+                  <Address>object_base_ptr</Address>
+                  <Offsets>
+                    <Offset>String._FirstChar</Offset>
+                    <Offset>Object.DisplayName</Offset>
+                  </Offsets>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>50</ID>
+                  <Description>"Price"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <Color>FF8080</Color>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>object_base_ptr</Address>
+                  <Offsets>
+                    <Offset>NetInt.Value</Offset>
+                    <Offset>Object.Price</Offset>
+                  </Offsets>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>87</ID>
+                  <Description>"Stack"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <Color>FF8080</Color>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>object_base_ptr</Address>
+                  <Offsets>
+                    <Offset>NetInt.Value</Offset>
+                    <Offset>Object.Stack</Offset>
+                  </Offsets>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>49</ID>
+                  <Description>"Quality"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <Color>FF8080</Color>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>object_base_ptr</Address>
+                  <Offsets>
+                    <Offset>NetInt.Value</Offset>
+                    <Offset>Object.Quality</Offset>
+                  </Offsets>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>94</ID>
+              <Description>"tool editor (inventory hover)"</Description>
+              <Options moHideChildren="1"/>
+              <LastState/>
+              <Color>008000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>{ Game   : Stardew Valley.exe
+  Version: 
+  Date   : 2021-12-08
+  Author : sub1to
+
+  This script does blah blah blah
+}
+
+[ENABLE]
+{$lua}
+checkDotNetSymbol('StardewValley.Tool::get_DisplayName')
+
+{$asm}
+define(hook,StardewValley.Tool::get_DisplayName)
+
+alloc(newmem,$1000,hook)
+
+label(code)
+label(returnhere)
+
+label(tool_get_displayname_bytes)
+registersymbol(tool_get_displayname_bytes)
+
+label(tool_base_ptr)
+registersymbol(tool_base_ptr)
+
+newmem:
+tool_get_displayname_bytes:
+  readMem(hook, 5)
+  jmp returnhere
+
+tool_base_ptr:
+  dq 0
+
+code:
+  mov [tool_base_ptr], rcx
+  jmp tool_get_displayname_bytes
+
+hook:
+  jmp code
+  returnhere:
+
+[DISABLE]
+hook:
+  readMem(tool_get_displayname_bytes,5)
+
+unregistersymbol(tool_get_displayname_bytes)
+unregistersymbol(tool_base_ptr)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: StardewValley.Tool::get_DisplayName
+
+7FFC8975E616: 05 E0 03 F0 01        - add eax,01F003E0
+7FFC8975E61B: 50                    - push rax
+7FFC8975E61C: 40 00 00              - add [rax],al
+7FFC8975E61F: 00 00                 - add [rax],al
+7FFC8975E621: 00 00                 - add [rax],al
+7FFC8975E623: 00 00                 - add [rax],al
+7FFC8975E625: 00 00                 - add [rax],al
+7FFC8975E627: 00 B8 03 92 89 FC     - add [rax-03766DFD],bh
+7FFC8975E62D: 7F 00                 - jg 7FFC8975E62F
+7FFC8975E62F: 00                    - db 00
+// ---------- INJECTING HERE ----------
+StardewValley.Tool::get_DisplayName: 56                    - push rsi
+// ---------- DONE INJECTING  ----------
+StardewValley.Tool::get_DisplayName+1: 48 83 EC 20           - sub rsp,20
+StardewValley.Tool::get_DisplayName+5: 48 8B F1              - mov rsi,rcx
+StardewValley.Tool::get_DisplayName+8: 48 8B CE              - mov rcx,rsi
+StardewValley.Tool::get_DisplayName+B: 48 8B 06              - mov rax,[rsi]
+StardewValley.Tool::get_DisplayName+E: 48 8B 40 70           - mov rax,[rax+70]
+StardewValley.Tool::get_DisplayName+12: FF 50 08              - call qword ptr [rax+08]
+StardewValley.Tool::get_DisplayName+15: 48 8D 8E B0 00 00 00  - lea rcx,[rsi+000000B0]
+StardewValley.Tool::get_DisplayName+1C: 48 8B D0              - mov rdx,rax
+StardewValley.Tool::get_DisplayName+1F: E8 2C B1 B1 5E        - call coreclr.dll+149780
+StardewValley.Tool::get_DisplayName+24: 48 8B 96 90 00 00 00  - mov rdx,[rsi+00000090]
+}
+</AssemblerScript>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>96</ID>
+                  <Description>"tool_base_ptr"</Description>
+                  <ShowAsHex>1</ShowAsHex>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <Color>808080</Color>
+                  <VariableType>8 Bytes</VariableType>
+                  <Address>tool_base_ptr</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>97</ID>
+                  <Description>"Name"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <Color>808080</Color>
+                  <VariableType>String</VariableType>
+                  <Length>256</Length>
+                  <Unicode>1</Unicode>
+                  <CodePage>0</CodePage>
+                  <ZeroTerminate>1</ZeroTerminate>
+                  <Address>tool_base_ptr</Address>
+                  <Offsets>
+                    <Offset>String._FirstChar</Offset>
+                    <Offset>Tool.displayName</Offset>
+                  </Offsets>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>99</ID>
+                  <Description>"Is Efficient (uses no energy)"</Description>
+                  <DropDownList DisplayValueAsItem="1">0:No
+1:Yes
+</DropDownList>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <Color>FF8080</Color>
+                  <VariableType>Byte</VariableType>
+                  <Address>tool_base_ptr</Address>
+                  <Offsets>
+                    <Offset>NetBool.value</Offset>
+                    <Offset>Tool.isEfficient</Offset>
+                  </Offsets>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>100</ID>
+                  <Description>"Upgrade Level"</Description>
+                  <DropDownList DisplayValueAsItem="1">0:None
+1:Copper
+2:Steel
+3:Gold
+4:Iridium
+</DropDownList>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <Color>FF8080</Color>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>tool_base_ptr</Address>
+                  <Offsets>
+                    <Offset>NetInt.Value</Offset>
+                    <Offset>Tool.UpgradeLevel</Offset>
+                  </Offsets>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>8972</ID>
+                  <Description>"Weapon"</Description>
+                  <LastState Value="" RealAddress="00000000"/>
+                  <Color>C08000</Color>
+                  <GroupHeader>1</GroupHeader>
+                  <CheatEntries>
+                    <CheatEntry>
+                      <ID>8973</ID>
+                      <Description>"Min Damage"</Description>
+                      <ShowAsSigned>0</ShowAsSigned>
+                      <Color>FF8080</Color>
+                      <VariableType>4 Bytes</VariableType>
+                      <Address>tool_base_ptr</Address>
+                      <Offsets>
+                        <Offset>NetInt.Value</Offset>
+                        <Offset>Weapon.minDamage</Offset>
+                      </Offsets>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>8977</ID>
+                      <Description>"Max Damage"</Description>
+                      <ShowAsSigned>0</ShowAsSigned>
+                      <Color>FF8080</Color>
+                      <VariableType>4 Bytes</VariableType>
+                      <Address>tool_base_ptr</Address>
+                      <Offsets>
+                        <Offset>NetInt.Value</Offset>
+                        <Offset>Weapon.maxDamage</Offset>
+                      </Offsets>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>8978</ID>
+                      <Description>"Speed"</Description>
+                      <ShowAsSigned>0</ShowAsSigned>
+                      <Color>FF8080</Color>
+                      <VariableType>4 Bytes</VariableType>
+                      <Address>tool_base_ptr</Address>
+                      <Offsets>
+                        <Offset>NetInt.Value</Offset>
+                        <Offset>Weapon.speed</Offset>
+                      </Offsets>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>8979</ID>
+                      <Description>"Added Precision"</Description>
+                      <ShowAsSigned>0</ShowAsSigned>
+                      <Color>FF8080</Color>
+                      <VariableType>4 Bytes</VariableType>
+                      <Address>tool_base_ptr</Address>
+                      <Offsets>
+                        <Offset>NetInt.Value</Offset>
+                        <Offset>Weapon.addedPrecision</Offset>
+                      </Offsets>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>8980</ID>
+                      <Description>"Added Defense"</Description>
+                      <ShowAsSigned>0</ShowAsSigned>
+                      <Color>FF8080</Color>
+                      <VariableType>4 Bytes</VariableType>
+                      <Address>tool_base_ptr</Address>
+                      <Offsets>
+                        <Offset>NetInt.Value</Offset>
+                        <Offset>Weapon.addedDefense</Offset>
+                      </Offsets>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>8981</ID>
+                      <Description>"Added Area Of Effect"</Description>
+                      <ShowAsSigned>0</ShowAsSigned>
+                      <Color>FF8080</Color>
+                      <VariableType>4 Bytes</VariableType>
+                      <Address>tool_base_ptr</Address>
+                      <Offsets>
+                        <Offset>NetInt.Value</Offset>
+                        <Offset>Weapon.addedAreaOfEffect</Offset>
+                      </Offsets>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>8976</ID>
+                      <Description>"Knockback"</Description>
+                      <ShowAsSigned>0</ShowAsSigned>
+                      <Color>FF8080</Color>
+                      <VariableType>Float</VariableType>
+                      <Address>tool_base_ptr</Address>
+                      <Offsets>
+                        <Offset>NetFloat.Value</Offset>
+                        <Offset>Weapon.knockback</Offset>
+                      </Offsets>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>8974</ID>
+                      <Description>"Crit Chance"</Description>
+                      <ShowAsSigned>0</ShowAsSigned>
+                      <Color>FF8080</Color>
+                      <VariableType>Float</VariableType>
+                      <Address>tool_base_ptr</Address>
+                      <Offsets>
+                        <Offset>NetFloat.Value</Offset>
+                        <Offset>Weapon.critChance</Offset>
+                      </Offsets>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>8975</ID>
+                      <Description>"Crit Multiplier"</Description>
+                      <ShowAsSigned>0</ShowAsSigned>
+                      <Color>FF8080</Color>
+                      <VariableType>Float</VariableType>
+                      <Address>tool_base_ptr</Address>
+                      <Offsets>
+                        <Offset>NetFloat.Value</Offset>
+                        <Offset>Weapon.critMultiplier</Offset>
+                      </Offsets>
+                    </CheatEntry>
+                  </CheatEntries>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>8945</ID>
+              <Description>"watering can editor (use watering can)"</Description>
+              <Options moHideChildren="1"/>
+              <LastState/>
+              <Color>008000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>{ Game   : Stardew Valley.exe
+  Version: 
+  Date   : 2021-12-14
+  Author : sub1to
+
+  This script does blah blah blah
+}
+
+[ENABLE]
+{$lua}
+checkDotNetSymbol('StardewValley.Tools.WateringCan::DoFunction')
+
+{$asm}
+define(hook,StardewValley.Tools.WateringCan::DoFunction+248)
+assert(hook,83 BF ? ? 00 00 00)
+
+alloc(newmem,$1000,hook)
+
+label(code)
+label(end)
+label(returnhere)
+
+label(watering_can_do_func_bytes)
+registersymbol(watering_can_do_func_bytes)
+
+label(wateringcan_base_ptr)
+registersymbol(wateringcan_base_ptr)
+
+newmem:
+watering_can_do_func_bytes:
+  readMem(hook,7)
+  jmp returnhere
+
+wateringcan_base_ptr:
+  dq 0
+
+code:
+  mov [wateringcan_base_ptr], rdi
+
+/*  mov rax, [rdi+WateringCan.waterCanMax]
+  mov dword ptr [rdi+WateringCan.waterLeft], rax
+
+  mov rax, [rdi+WateringCan.isBottomless]
+  test rax, rax
+  jz end
+  mov byte ptr [rax+netBool.value], 1*/
+
+end:
+  jmp watering_can_do_func_bytes
+
+hook:
+  jmp code
+  nop
+  nop
+  returnhere:
+
+[DISABLE]
+hook:
+  readMem(watering_can_do_func_bytes,7)
+
+unregistersymbol(watering_can_do_func_bytes)
+unregistersymbol(wateringcan_base_ptr)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: StardewValley.Tools.WateringCan::DoFunction+248
+
+StardewValley.Tools.WateringCan::DoFunction+237: 48 8D 65 C8                    - lea rsp,[rbp-38]
+StardewValley.Tools.WateringCan::DoFunction+23B: 5B                             - pop rbx
+StardewValley.Tools.WateringCan::DoFunction+23C: 5E                             - pop rsi
+StardewValley.Tools.WateringCan::DoFunction+23D: 5F                             - pop rdi
+StardewValley.Tools.WateringCan::DoFunction+23E: 41 5C                          - pop r12
+StardewValley.Tools.WateringCan::DoFunction+240: 41 5D                          - pop r13
+StardewValley.Tools.WateringCan::DoFunction+242: 41 5E                          - pop r14
+StardewValley.Tools.WateringCan::DoFunction+244: 41 5F                          - pop r15
+StardewValley.Tools.WateringCan::DoFunction+246: 5D                             - pop rbp
+StardewValley.Tools.WateringCan::DoFunction+247: C3                             - ret 
+// ---------- INJECTING HERE ----------
+StardewValley.Tools.WateringCan::DoFunction+248: 83 BF D4 00 00 00 00           - cmp dword ptr [rdi+000000D4],00
+// ---------- DONE INJECTING  ----------
+StardewValley.Tools.WateringCan::DoFunction+24F: 7F 0D                          - jg StardewValley.Tools.WateringCan::DoFunction+25E
+StardewValley.Tools.WateringCan::DoFunction+251: 80 BB 38 07 00 00 00           - cmp byte ptr [rbx+00000738],00
+StardewValley.Tools.WateringCan::DoFunction+258: 0F 84 33 08 00 00              - je StardewValley.Tools.WateringCan::DoFunction+A91
+StardewValley.Tools.WateringCan::DoFunction+25E: 48 8B 57 78                    - mov rdx,[rdi+78]
+StardewValley.Tools.WateringCan::DoFunction+262: 48 B9 70 D5 14 DC FE 7F 00 00  - mov rcx,00007FFEDC14D570
+StardewValley.Tools.WateringCan::DoFunction+26C: E8 BF 16 FA FE                 - call 7FFEDC00D480
+StardewValley.Tools.WateringCan::DoFunction+271: 85 C0                          - test eax,eax
+StardewValley.Tools.WateringCan::DoFunction+273: 75 5E                          - jne StardewValley.Tools.WateringCan::DoFunction+2D3
+StardewValley.Tools.WateringCan::DoFunction+275: 48 8B 93 50 04 00 00           - mov rdx,[rbx+00000450]
+StardewValley.Tools.WateringCan::DoFunction+27C: 48 B9 90 EF 14 DC FE 7F 00 00  - mov rcx,00007FFEDC14EF90
+}
+</AssemblerScript>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>8947</ID>
+                  <Description>"watering_can_base_ptr"</Description>
+                  <ShowAsHex>1</ShowAsHex>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <Color>808080</Color>
+                  <VariableType>8 Bytes</VariableType>
+                  <Address>wateringcan_base_ptr</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>8948</ID>
+                  <Description>"Is Bottomless"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <Color>FF8080</Color>
+                  <VariableType>Byte</VariableType>
+                  <Address>wateringcan_base_ptr</Address>
+                  <Offsets>
+                    <Offset>netBool.value</Offset>
+                    <Offset>WateringCan.isBottomless</Offset>
+                  </Offsets>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>8949</ID>
+                  <Description>"Water Max"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <Color>FF8080</Color>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>wateringcan_base_ptr</Address>
+                  <Offsets>
+                    <Offset>WateringCan.waterCanMax</Offset>
+                  </Offsets>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>8950</ID>
+                  <Description>"Water Left"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <Color>FF8080</Color>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>wateringcan_base_ptr</Address>
+                  <Offsets>
+                    <Offset>WateringCan.waterLeft</Offset>
+                  </Offsets>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>62</ID>
+          <Description>"Misc"</Description>
+          <LastState Value="" RealAddress="00000000"/>
+          <Color>C08000</Color>
+          <GroupHeader>1</GroupHeader>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>12</ID>
+              <Description>"freeze time"</Description>
+              <LastState/>
+              <Color>008000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>{ Game   : Stardew Valley.exe
+  Version: 
+  Date   : 2021-12-06
+  Author : sub1to
+
+  This script does blah blah blah
+}
+
+
+[ENABLE]
+{$lua}
+checkDotNetSymbol('&lt;&gt;c::&lt;performTenMinuteClockUpdate&gt;b__673_0')
+
+{$asm}
+define(hook, &lt;&gt;c::&lt;performTenMinuteClockUpdate&gt;b__673_0+50)
+assert(hook,83 00 0A)
+
+alloc(newmem,$20,hook)
+
+label(clock_update_bytes)
+registersymbol(clock_update_bytes)
+
+newmem:
+clock_update_bytes:
+  readMem(hook, 3)
+
+hook:
+  nop
+  nop
+  nop
+
+
+[DISABLE]
+hook:
+  readMem(clock_update_bytes, 3)
+
+unregistersymbol(clock_update_bytes)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: &lt;&gt;c::&lt;performTenMinuteClockUpdate&gt;b__670_0+50
+
+&lt;&gt;c::&lt;performTenMinuteClockUpdate&gt;b__670_0+20: 48 89 65 90                    - mov [rbp-70],rsp
+&lt;&gt;c::&lt;performTenMinuteClockUpdate&gt;b__670_0+24: E8 5F 12 F7 FE                 - call 7FFB0E038D08
+&lt;&gt;c::&lt;performTenMinuteClockUpdate&gt;b__670_0+29: 8D B0 C8 00 00 00              - lea esi,[rax+000000C8]
+&lt;&gt;c::&lt;performTenMinuteClockUpdate&gt;b__670_0+2F: 48 B8 F0 4F 0D 0E FB 7F 00 00  - mov rax,00007FFB0E0D4FF0
+&lt;&gt;c::&lt;performTenMinuteClockUpdate&gt;b__670_0+39: 33 D2                          - xor edx,edx
+&lt;&gt;c::&lt;performTenMinuteClockUpdate&gt;b__670_0+3B: 89 10                          - mov [rax],edx
+&lt;&gt;c::&lt;performTenMinuteClockUpdate&gt;b__670_0+3D: E8 86 15 F7 FE                 - call 7FFB0E039048
+&lt;&gt;c::&lt;performTenMinuteClockUpdate&gt;b__670_0+42: 85 C0                          - test eax,eax
+&lt;&gt;c::&lt;performTenMinuteClockUpdate&gt;b__670_0+44: 74 0D                          - je &lt;&gt;c::&lt;performTenMinuteClockUpdate&gt;b__670_0+53
+&lt;&gt;c::&lt;performTenMinuteClockUpdate&gt;b__670_0+46: 48 B8 08 50 0D 0E FB 7F 00 00  - mov rax,00007FFB0E0D5008
+// ---------- INJECTING HERE ----------
+&lt;&gt;c::&lt;performTenMinuteClockUpdate&gt;b__670_0+50: 83 00 0A                       - add dword ptr [rax],0A
+// ---------- DONE INJECTING  ----------
+&lt;&gt;c::&lt;performTenMinuteClockUpdate&gt;b__670_0+53: 48 B8 08 50 0D 0E FB 7F 00 00  - mov rax,00007FFB0E0D5008
+&lt;&gt;c::&lt;performTenMinuteClockUpdate&gt;b__670_0+5D: 8B 08                          - mov ecx,[rax]
+&lt;&gt;c::&lt;performTenMinuteClockUpdate&gt;b__670_0+5F: 44 8B C1                       - mov r8d,ecx
+&lt;&gt;c::&lt;performTenMinuteClockUpdate&gt;b__670_0+62: BA 1F 85 EB 51                 - mov edx,51EB851F
+&lt;&gt;c::&lt;performTenMinuteClockUpdate&gt;b__670_0+67: 8B C2                          - mov eax,edx
+&lt;&gt;c::&lt;performTenMinuteClockUpdate&gt;b__670_0+69: 41 F7 E8                       - imul r8d
+&lt;&gt;c::&lt;performTenMinuteClockUpdate&gt;b__670_0+6C: 8B C2                          - mov eax,edx
+&lt;&gt;c::&lt;performTenMinuteClockUpdate&gt;b__670_0+6E: C1 E8 1F                       - shr eax,1F
+&lt;&gt;c::&lt;performTenMinuteClockUpdate&gt;b__670_0+71: C1 FA 05                       - sar edx,05
+&lt;&gt;c::&lt;performTenMinuteClockUpdate&gt;b__670_0+74: 03 C2                          - add eax,edx
+}
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>13</ID>
+              <Description>"max daily luck"</Description>
+              <LastState/>
+              <Color>008000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>{ Game   : Stardew Valley.exe
+  Version: 
+  Date   : 2021-12-06
+  Author : sub1to
+
+  This script does blah blah blah
+}
+
+[ENABLE]
+{$lua}
+checkDotNetSymbol('StardewValley.Farmer::get_DailyLuck')
+
+{$asm}
+define(hook,StardewValley.Farmer::get_DailyLuck)
+assert(hook,56 48 83 EC 20)
+
+alloc(newmem,$1000,hook)
+
+label(code)
+label(_value)
+
+label(get_dailyluck_bytes)
+registersymbol(get_dailyluck_bytes)
+
+newmem:
+get_dailyluck_bytes:
+  readMem(hook,5)
+
+_value:
+  dq (double)0.74 // any higher value will often hang the mines/dungeons
+
+code:
+  movq xmm0, [_value]
+  ret
+
+hook:
+  jmp code
+
+[DISABLE]
+
+hook:
+  readMem(get_dailyluck_bytes, 5)
+
+unregistersymbol(get_dailyluck_bytes)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: StardewValley.Farmer::get_DailyLuck
+
+7FFB0F10A54A: 00 00                 - add [rax],al
+7FFB0F10A54C: 40 00 00              - add [rax],al
+7FFB0F10A54F: 00 00                 - add [rax],al
+7FFB0F10A551: 00 00                 - add [rax],al
+7FFB0F10A553: 00 00                 - add [rax],al
+7FFB0F10A555: 00 00                 - add [rax],al
+7FFB0F10A557: 00 50 B4              - add [rax-4C],dl
+7FFB0F10A55A: 27                    - daa 
+7FFB0F10A55B: 0F FB 7F 00           - psubq mm7,[rdi+00]
+7FFB0F10A55F: 00                    - db 00 
+// ---------- INJECTING HERE ----------
+StardewValley.Farmer::get_DailyLuck: 56                    - push rsi
+// ---------- DONE INJECTING  ----------
+StardewValley.Farmer::get_DailyLuck+1: 48 83 EC 20           - sub rsp,20
+StardewValley.Farmer::get_DailyLuck+5: C5 F8 77              - vzeroupper 
+StardewValley.Farmer::get_DailyLuck+8: 48 8B F1              - mov rsi,rcx
+StardewValley.Farmer::get_DailyLuck+B: 48 8B CE              - mov rcx,rsi
+StardewValley.Farmer::get_DailyLuck+E: E8 B5 8B F4 FE        - call 7FFB0E053128
+StardewValley.Farmer::get_DailyLuck+13: 48 8B 80 E8 01 00 00  - mov rax,[rax+000001E8]
+StardewValley.Farmer::get_DailyLuck+1A: C5 FB 10 40 40        - vmovsd xmm0,[rax+40]
+StardewValley.Farmer::get_DailyLuck+1F: 80 BE 45 07 00 00 00  - cmp byte ptr [rsi+00000745],00
+StardewValley.Farmer::get_DailyLuck+26: 75 06                 - jne StardewValley.Farmer::get_DailyLuck+2E
+StardewValley.Farmer::get_DailyLuck+28: C5 F0 57 C9           - vxorps xmm1,xmm1,xmm1
+}
+</AssemblerScript>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>119</ID>
+          <Description>"Arcades"</Description>
+          <LastState Value="" RealAddress="00000000"/>
+          <Color>C08000</Color>
+          <GroupHeader>1</GroupHeader>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>103</ID>
+              <Description>"prairie king"</Description>
+              <Options moHideChildren="1"/>
+              <LastState/>
+              <Color>008000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>{ Game   : Stardew Valley.exe
+  Version: 
+  Date   : 2021-12-10
+  Author : sub1to
+
+  This script does blah blah blah
+}
+
+[ENABLE]
+{$lua}
+checkDotNetSymbol('StardewValley.Minigames.AbigailGame::tick')
+
+{$asm}
+define(hook,StardewValley.Minigames.AbigailGame::tick)
+
+alloc(newmem,$1000,hook)
+
+label(code)
+label(returnhere)
+
+label(abigailgame_tick_bytes)
+registersymbol(abigailgame_tick_bytes)
+
+label(abigailgame_base_ptr)
+registersymbol(abigailgame_base_ptr)
+
+newmem:
+abigailgame_tick_bytes:
+  readMem(hook,5)
+  jmp returnhere
+
+abigailgame_base_ptr:
+  dq 0
+
+code:
+  mov [abigailgame_base_ptr], rcx
+  jmp abigailgame_tick_bytes
+
+hook:
+  jmp code
+  returnhere:
+
+[DISABLE]
+hook:
+  readMem(abigailgame_tick_bytes,5)
+
+unregistersymbol(abigailgame_tick_bytes)
+unregistersymbol(abigailgame_base_ptr)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: StardewValley.Minigames.AbigailGame::tick
+
+7FFC897BCD88: 38 B4 94 89 FC 7F 00     - cmp [rsp+rdx*4+007FFC89],dh
+7FFC897BCD8F: 00 00                    - add [rax],al
+7FFC897BCD91: 00 00                    - add [rax],al
+7FFC897BCD93: 00 00                    - add [rax],al
+7FFC897BCD95: 00 00                    - add [rax],al
+7FFC897BCD97: 00 68 A7                 - add [rax-59],ch
+7FFC897BCD9A: 96                       - xchg eax,esi
+7FFC897BCD9B: 89 FC                    - mov esp,edi
+7FFC897BCD9D: 7F 00                    - jg 7FFC897BCD9F
+7FFC897BCD9F: 00                       - db 00 
+// ---------- INJECTING HERE ----------
+StardewValley.Minigames.AbigailGame::tick: 55                       - push rbp
+StardewValley.Minigames.AbigailGame::tick+1: 41 57                    - push r15
+StardewValley.Minigames.AbigailGame::tick+3: 41 56                    - push r14
+// ---------- DONE INJECTING  ----------
+StardewValley.Minigames.AbigailGame::tick+5: 41 55                    - push r13
+StardewValley.Minigames.AbigailGame::tick+7: 41 54                    - push r12
+StardewValley.Minigames.AbigailGame::tick+9: 57                       - push rdi
+StardewValley.Minigames.AbigailGame::tick+A: 56                       - push rsi
+StardewValley.Minigames.AbigailGame::tick+B: 53                       - push rbx
+StardewValley.Minigames.AbigailGame::tick+C: 48 81 EC 78 08 00 00     - sub rsp,00000878
+StardewValley.Minigames.AbigailGame::tick+13: C5 F8 77                 - vzeroupper 
+StardewValley.Minigames.AbigailGame::tick+16: 48 8D AC 24 B0 08 00 00  - lea rbp,[rsp+000008B0]
+}
+</AssemblerScript>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>101</ID>
+                  <Description>"player can't die"</Description>
+                  <LastState/>
+                  <Color>008000</Color>
+                  <VariableType>Auto Assembler Script</VariableType>
+                  <AssemblerScript>{ Game   : Stardew Valley.exe
+  Version: 
+  Date   : 2021-12-10
+  Author : sub1to
+
+  This script does blah blah blah
+}
+
+[ENABLE]
+{$lua}
+checkDotNetSymbol('StardewValley.Minigames.AbigailGame::playerDie')
+
+{$asm}
+define(hook,StardewValley.Minigames.AbigailGame::playerDie)
+
+alloc(newmem,$1000,hook)
+
+label(abigailgame_die_bytes)
+registersymbol(abigailgame_die_bytes)
+
+newmem:
+abigailgame_die_bytes:
+  readMem(hook,3)
+
+hook:
+  db b0 00 c3
+
+[DISABLE]
+hook:
+  readMem(abigailgame_die_bytes,3)
+
+unregistersymbol(abigailgame_die_bytes)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: StardewValley.Minigames.AbigailGame::playerDie
+
+7FFC897CBA19: 60                          - pushad (invalid) 
+7FFC897CBA1A: 02 70 01                    - add dh,[rax+01]
+7FFC897CBA1D: 50                          - push rax
+7FFC897CBA1E: 00 00                       - add [rax],al
+7FFC897CBA20: 40 00 00                    - add [rax],al
+7FFC897CBA23: 00 00                       - add [rax],al
+7FFC897CBA25: 00 00                       - add [rax],al
+7FFC897CBA27: 00 08                       - add [rax],cl
+7FFC897CBA29: 0A 97 89 FC 7F 00           - or dl,[rdi+007FFC89]
+7FFC897CBA2F: 00                          - db 00 
+// ---------- INJECTING HERE ----------
+StardewValley.Minigames.AbigailGame::playerDie: 55                          - push rbp
+// ---------- DONE INJECTING  ----------
+StardewValley.Minigames.AbigailGame::playerDie+1: 41 57                       - push r15
+StardewValley.Minigames.AbigailGame::playerDie+3: 41 56                       - push r14
+StardewValley.Minigames.AbigailGame::playerDie+5: 41 55                       - push r13
+StardewValley.Minigames.AbigailGame::playerDie+7: 41 54                       - push r12
+StardewValley.Minigames.AbigailGame::playerDie+9: 57                          - push rdi
+StardewValley.Minigames.AbigailGame::playerDie+A: 56                          - push rsi
+StardewValley.Minigames.AbigailGame::playerDie+B: 53                          - push rbx
+StardewValley.Minigames.AbigailGame::playerDie+C: 48 81 EC D8 00 00 00        - sub rsp,000000D8
+StardewValley.Minigames.AbigailGame::playerDie+13: C5 F8 77                    - vzeroupper 
+StardewValley.Minigames.AbigailGame::playerDie+16: C5 F8 29 B4 24 C0 00 00 00  - vmovaps [rsp+000000C0],xmm6
+}
+</AssemblerScript>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>104</ID>
+                  <Description>"abigailgame_base_ptr"</Description>
+                  <ShowAsHex>1</ShowAsHex>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <Color>808080</Color>
+                  <VariableType>8 Bytes</VariableType>
+                  <Address>abigailgame_base_ptr</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>106</ID>
+                  <Description>"Run Speed Level"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <Color>FF8080</Color>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>abigailgame_base_ptr</Address>
+                  <Offsets>
+                    <Offset>AbigailGame.runSpeedLevel</Offset>
+                  </Offsets>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>109</ID>
+                  <Description>"Fire Speed Level"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <Color>FF8080</Color>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>abigailgame_base_ptr</Address>
+                  <Offsets>
+                    <Offset>AbigailGame.fireSpeedLevel</Offset>
+                  </Offsets>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>108</ID>
+                  <Description>"Ammo Level"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <Color>FF8080</Color>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>abigailgame_base_ptr</Address>
+                  <Offsets>
+                    <Offset>AbigailGame.ammoLevel</Offset>
+                  </Offsets>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>107</ID>
+                  <Description>"Which Round"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <Color>808080</Color>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>abigailgame_base_ptr</Address>
+                  <Offsets>
+                    <Offset>AbigailGame.whichRound</Offset>
+                  </Offsets>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>110</ID>
+                  <Description>"Shooting Delay"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <Color>FF8080</Color>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>abigailgame_base_ptr</Address>
+                  <Offsets>
+                    <Offset>AbigailGame.shootingDelay</Offset>
+                  </Offsets>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>111</ID>
+                  <Description>"Bullet Damage"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <Color>FF8080</Color>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>abigailgame_base_ptr</Address>
+                  <Offsets>
+                    <Offset>AbigailGame.bulletDamage</Offset>
+                  </Offsets>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>112</ID>
+                  <Description>"Speed Bonus"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <Color>FF8080</Color>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>abigailgame_base_ptr</Address>
+                  <Offsets>
+                    <Offset>AbigailGame.speedBonus</Offset>
+                  </Offsets>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>113</ID>
+                  <Description>"Fire Rate Bonus"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <Color>FF8080</Color>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>abigailgame_base_ptr</Address>
+                  <Offsets>
+                    <Offset>AbigailGame.fireRateBonus</Offset>
+                  </Offsets>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>114</ID>
+                  <Description>"Lives"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <Color>FF8080</Color>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>abigailgame_base_ptr</Address>
+                  <Offsets>
+                    <Offset>AbigailGame.Lives</Offset>
+                  </Offsets>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>115</ID>
+                  <Description>"Coins"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <Color>FF8080</Color>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>abigailgame_base_ptr</Address>
+                  <Offsets>
+                    <Offset>AbigailGame.Coins</Offset>
+                  </Offsets>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>116</ID>
+                  <Description>"Score"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <Color>FF8080</Color>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>abigailgame_base_ptr</Address>
+                  <Offsets>
+                    <Offset>AbigailGame.Score</Offset>
+                  </Offsets>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>117</ID>
+                  <Description>"Spread Pistol"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <Color>FF8080</Color>
+                  <VariableType>Byte</VariableType>
+                  <Address>abigailgame_base_ptr</Address>
+                  <Offsets>
+                    <Offset>AbigailGame.spreadpistol</Offset>
+                  </Offsets>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>118</ID>
+                  <Description>"Died"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <Color>FF8080</Color>
+                  <VariableType>Byte</VariableType>
+                  <Address>abigailgame_base_ptr</Address>
+                  <Offsets>
+                    <Offset>AbigailGame.died</Offset>
+                  </Offsets>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>120</ID>
+              <Description>"junimo kart"</Description>
+              <Options moHideChildren="1"/>
+              <LastState/>
+              <Color>008000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>{ Game   : Stardew Valley.exe
+  Version: 
+  Date   : 2021-12-10
+  Author : sub1to
+
+  This script does blah blah blah
+}
+
+[ENABLE]
+{$lua}
+checkDotNetSymbol('StardewValley.Minigames.MineCart::tick')
+
+{$asm}
+define(hook,StardewValley.Minigames.MineCart::tick)
+
+alloc(newmem,$1000,hook)
+
+label(code)
+label(returnhere)
+
+label(minecartgame_tick_bytes)
+registersymbol(minecartgame_tick_bytes)
+
+label(minecartgame_base_ptr)
+registersymbol(minecartgame_base_ptr)
+
+newmem:
+minecartgame_tick_bytes:
+  readMem(hook,5)
+  jmp returnhere
+
+minecartgame_base_ptr:
+  dq 0
+
+code:
+  mov [minecartgame_base_ptr], rcx
+  jmp minecartgame_tick_bytes
+
+hook:
+  jmp code
+  returnhere:
+
+[DISABLE]
+hook:
+  readMem(minecartgame_tick_bytes,5)
+
+unregistersymbol(minecartgame_tick_bytes)
+unregistersymbol(minecartgame_base_ptr)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: StardewValley.Minigames.MineCart::tick
+
+7FFC898375DE: 00 00                       - add [rax],al
+7FFC898375E0: 00 00                       - add [rax],al
+7FFC898375E2: 00 00                       - add [rax],al
+7FFC898375E4: 00 00                       - add [rax],al
+7FFC898375E6: 00 00                       - add [rax],al
+7FFC898375E8: B0 E9                       - mov al,-17
+7FFC898375EA: 9C                          - pushfq 
+7FFC898375EB: 89 FC                       - mov esp,edi
+7FFC898375ED: 7F 00                       - jg 7FFC898375EF
+7FFC898375EF: 00                          - db 00 
+// ---------- INJECTING HERE ----------
+StardewValley.Minigames.MineCart::tick: 55                          - push rbp
+// ---------- DONE INJECTING  ----------
+StardewValley.Minigames.MineCart::tick+1: 41 57                       - push r15
+StardewValley.Minigames.MineCart::tick+3: 41 56                       - push r14
+StardewValley.Minigames.MineCart::tick+5: 41 55                       - push r13
+StardewValley.Minigames.MineCart::tick+7: 41 54                       - push r12
+StardewValley.Minigames.MineCart::tick+9: 57                          - push rdi
+StardewValley.Minigames.MineCart::tick+A: 56                          - push rsi
+StardewValley.Minigames.MineCart::tick+B: 53                          - push rbx
+StardewValley.Minigames.MineCart::tick+C: 48 81 EC 18 01 00 00        - sub rsp,00000118
+StardewValley.Minigames.MineCart::tick+13: C5 F8 77                    - vzeroupper 
+StardewValley.Minigames.MineCart::tick+16: C5 F8 29 B4 24 00 01 00 00  - vmovaps [rsp+00000100],xmm6
+}
+</AssemblerScript>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>122</ID>
+                  <Description>"minecartgame_base_ptr"</Description>
+                  <ShowAsHex>1</ShowAsHex>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <Color>808080</Color>
+                  <VariableType>8 Bytes</VariableType>
+                  <Address>minecartgame_base_ptr</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>123</ID>
+                  <Description>"Fruit Eat Count"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <Color>FF8080</Color>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>minecartgame_base_ptr</Address>
+                  <Offsets>
+                    <Offset>MinecartGame.fruitEatCount</Offset>
+                  </Offsets>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>125</ID>
+                  <Description>"Coin Count"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <Color>FF8080</Color>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>minecartgame_base_ptr</Address>
+                  <Offsets>
+                    <Offset>MinecartGame.coinCount</Offset>
+                  </Offsets>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>124</ID>
+                  <Description>"Score"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <Color>FF8080</Color>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>minecartgame_base_ptr</Address>
+                  <Offsets>
+                    <Offset>MinecartGame.score</Offset>
+                  </Offsets>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>126</ID>
+                  <Description>"Lives Left"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <Color>FF8080</Color>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>minecartgame_base_ptr</Address>
+                  <Offsets>
+                    <Offset>MinecartGame.livesLeft</Offset>
+                  </Offsets>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>136</ID>
+          <Description>"Crops"</Description>
+          <LastState Value="" RealAddress="00000000"/>
+          <Color>C08000</Color>
+          <GroupHeader>1</GroupHeader>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>127</ID>
+              <Description>"crop editor (hit with hoe)"</Description>
+              <Options moHideChildren="1"/>
+              <LastState/>
+              <Color>008000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>{ Game   : Stardew Valley.exe
+  Version: 
+  Date   : 2021-12-10
+  Author : sub1to
+
+  This script does blah blah blah
+}
+
+[ENABLE]
+{$lua}
+checkDotNetSymbol('StardewValley.Crop::hitWithHoe')
+
+{$asm}
+define(hook,StardewValley.Crop::hitWithHoe)
+
+alloc(newmem,$1000,hook)
+
+label(code)
+label(returnhere)
+
+label(crop_hit_with_hoe_bytes)
+registersymbol(crop_hit_with_hoe_bytes)
+
+label(crop_base_ptr)
+registersymbol(crop_base_ptr)
+
+newmem:
+crop_hit_with_hoe_bytes:
+  readMem(hook,5)
+  jmp returnhere
+
+crop_base_ptr:
+  dq 0
+
+code:
+  mov [crop_base_ptr], rcx
+  jmp crop_hit_with_hoe_bytes
+
+hook:
+  jmp code
+  returnhere:
+
+[DISABLE]
+hook:
+  readMem(crop_hit_with_hoe_bytes,5)
+
+unregistersymbol(crop_hit_with_hoe_bytes)
+unregistersymbol(crop_base_ptr)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: StardewValley.Crop::hitWithHoe
+
+7FFC89856BA9: 00 00                       - add [rax],al
+7FFC89856BAB: 00 00                       - add [rax],al
+7FFC89856BAD: 00 00                       - add [rax],al
+7FFC89856BAF: 00 00                       - add [rax],al
+7FFC89856BB1: 00 00                       - add [rax],al
+7FFC89856BB3: 00 00                       - add [rax],al
+7FFC89856BB5: 00 00                       - add [rax],al
+7FFC89856BB7: 00 30                       - add [rax],dh
+7FFC89856BB9: 81 9D 89 FC 7F 00 00        - db 81 9D 89 FC 7F 00 00 
+StardewValley.Crop::hitWithHoe: 55                          - push rbp
+// ---------- INJECTING HERE ----------
+StardewValley.Crop::hitWithHoe+1: 41 57                       - push r15
+// ---------- DONE INJECTING  ----------
+StardewValley.Crop::hitWithHoe+3: 41 56                       - push r14
+StardewValley.Crop::hitWithHoe+5: 41 55                       - push r13
+StardewValley.Crop::hitWithHoe+7: 41 54                       - push r12
+StardewValley.Crop::hitWithHoe+9: 57                          - push rdi
+StardewValley.Crop::hitWithHoe+A: 56                          - push rsi
+StardewValley.Crop::hitWithHoe+B: 53                          - push rbx
+StardewValley.Crop::hitWithHoe+C: 48 81 EC A8 00 00 00        - sub rsp,000000A8
+StardewValley.Crop::hitWithHoe+13: C5 F8 77                    - vzeroupper 
+StardewValley.Crop::hitWithHoe+16: C5 F8 29 B4 24 90 00 00 00  - vmovaps [rsp+00000090],xmm6
+StardewValley.Crop::hitWithHoe+1F: C5 F8 29 BC 24 80 00 00 00  - vmovaps [rsp+00000080],xmm7
+}
+</AssemblerScript>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>8934</ID>
+                  <Description>"instant re-harvest regrowing crops"</Description>
+                  <LastState/>
+                  <Color>008000</Color>
+                  <VariableType>Auto Assembler Script</VariableType>
+                  <AssemblerScript>{ Game   : Stardew Valley.exe
+  Version: 
+  Date   : 2021-12-12
+  Author : sub1to
+
+  This script does blah blah blah
+}
+
+[ENABLE]
+{$lua}
+checkDotNetSymbol('StardewValley.Crop::harvest')
+
+{$asm}
+define(hook,StardewValley.Crop::harvest)
+
+alloc(newmem,$1000,hook)
+
+label(code)
+label(end)
+label(returnhere)
+
+label(crop_harvest_bytes)
+registersymbol(crop_harvest_bytes)
+
+newmem:
+crop_harvest_bytes:
+  readMem(hook,5)
+  jmp returnhere
+
+code:
+  push rbp
+  mov rbp, rsp
+  sub rsp, 30
+
+  // public hidebysig virtual newslot instance bool harvest(int32 xTile, int32 yTile, class StardewValley.TerrainFeatures.HoeDirt soil, [opt] class StardewValley.Characters.JunimoHarvester junimoHarvester)
+  // param 5
+  mov rax, [rsp+60]
+  mov [rsp+20], rax
+
+  // store object ptr
+  mov [rsp+28], rcx
+
+  call crop_harvest_bytes
+
+  mov rcx, [rsp+28]
+
+  mov r9, [rcx+Crop.regrowAfterHarvest]
+  test r9, r9
+  jz end
+  mov r9d, [r9+netInt.value]
+  cmp r9d, FFFFFFFF
+  jz end
+  mov r9, [rcx+Crop.dayOfCurrentPhase]
+  test r9, r9
+  jz end
+  mov dword ptr [r9+netInt.value], 0
+
+end:
+  mov rsp, rbp
+  pop rbp
+  ret
+
+hook:
+  jmp code
+  returnhere:
+
+[DISABLE]
+hook:
+  readMem(crop_harvest_bytes,5)
+
+unregistersymbol(crop_harvest_bytes)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: StardewValley.Crop::harvest
+
+7FFE11604519: 00 00                       - add [rax],al
+7FFE1160451B: 00 00                       - add [rax],al
+7FFE1160451D: 00 00                       - add [rax],al
+7FFE1160451F: 00 00                       - add [rax],al
+7FFE11604521: 00 00                       - add [rax],al
+7FFE11604523: 00 00                       - add [rax],al
+7FFE11604525: 00 00                       - add [rax],al
+7FFE11604527: 00 A0 9D 76 11 FE           - add [rax-01EE8963],ah
+7FFE1160452D: 7F 00                       - jg 7FFE1160452F
+7FFE1160452F: 00                          - db 00 
+// ---------- INJECTING HERE ----------
+StardewValley.Crop::harvest: 55                          - push rbp
+// ---------- DONE INJECTING  ----------
+StardewValley.Crop::harvest+1: 41 57                       - push r15
+StardewValley.Crop::harvest+3: 41 56                       - push r14
+StardewValley.Crop::harvest+5: 41 55                       - push r13
+StardewValley.Crop::harvest+7: 41 54                       - push r12
+StardewValley.Crop::harvest+9: 57                          - push rdi
+StardewValley.Crop::harvest+A: 56                          - push rsi
+StardewValley.Crop::harvest+B: 53                          - push rbx
+StardewValley.Crop::harvest+C: 48 81 EC 58 02 00 00        - sub rsp,00000258
+StardewValley.Crop::harvest+13: C5 F8 77                    - vzeroupper 
+StardewValley.Crop::harvest+16: C5 F8 29 B4 24 40 02 00 00  - vmovaps [rsp+00000240],xmm6
+}
+</AssemblerScript>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>146</ID>
+                  <Description>"instant grow crops when planting"</Description>
+                  <LastState/>
+                  <Color>008000</Color>
+                  <VariableType>Auto Assembler Script</VariableType>
+                  <AssemblerScript>{ Game   : Stardew Valley.exe
+  Version: 
+  Date   : 2021-12-10
+  Author : sub1to
+
+  This script does blah blah blah
+}
+
+[ENABLE]
+{$lua}
+checkDotNetSymbol('StardewValley.TerrainFeatures.HoeDirt::plant')
+
+{$asm}
+define(hook,StardewValley.TerrainFeatures.HoeDirt::plant+121)
+assert(hook,49 8B 54 24 ?)
+
+alloc(newmem,$1000,hook)
+
+label(code)
+label(returnhere)
+label(end)
+
+label(hoedirt_plant_bytes)
+registersymbol(hoedirt_plant_bytes)
+
+newmem:
+hoedirt_plant_bytes:
+  readMem(hook, 5)
+  jmp returnhere
+
+code:
+  // get number of phases
+  mov r9, [r12+Crop.phaseDays]
+  test r9, r9
+  jz end
+  mov r9, [r9+netIntList.count]
+  test r9, r9
+  jz end
+  mov r8d, [r9+netInt.value]
+  //test r8d, r8d
+  //jz end
+  //test r8d, 80000000
+  //jz end
+  cmp r8d, 0
+  jle end
+  dec r8d // array count is always 1 higher than the phase we want
+
+  // set current phase
+  mov r9, [r12+Crop.currentPhase]
+  test r9, r9
+  jz end
+  mov dword ptr [r9+netInt.value], r8d
+
+  // set fully grown if regrow is not -1
+  mov r9, [r12+Crop.regrowAfterHarvest]
+  test r9, r9
+  jz end
+  mov r9d, [r9+netInt.value]
+  cmp r9d, FFFFFFFF
+  jz end
+  mov r9, [r12+Crop.fullyGrown]
+  test r9, r9
+  jz end
+  mov byte ptr [r9+netBool.value], 1
+
+end:
+  jmp hoedirt_plant_bytes
+
+hook:
+  jmp code
+  returnhere:
+
+[DISABLE]
+hook:
+  readMem(hoedirt_plant_bytes, 5)
+
+unregistersymbol(hoedirt_plant_bytes)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: StardewValley.TerrainFeatures.HoeDirt::plant+121
+
+StardewValley.TerrainFeatures.HoeDirt::plant+F5: E8 56 E0 1E FF                 - call 7FFC889DD1E0
+StardewValley.TerrainFeatures.HoeDirt::plant+FA: E9 5F 03 00 00                 - jmp StardewValley.TerrainFeatures.HoeDirt::plant+45E
+StardewValley.TerrainFeatures.HoeDirt::plant+FF: 48 B9 A0 A7 B5 88 FC 7F 00 00  - mov rcx,00007FFC88B5A7A0
+StardewValley.TerrainFeatures.HoeDirt::plant+109: E8 D2 A9 A8 5E                 - call coreclr.dll+149B70
+StardewValley.TerrainFeatures.HoeDirt::plant+10E: 4C 8B E0                       - mov r12,rax
+StardewValley.TerrainFeatures.HoeDirt::plant+111: 49 8B CC                       - mov rcx,r12
+StardewValley.TerrainFeatures.HoeDirt::plant+114: 8B D7                          - mov edx,edi
+StardewValley.TerrainFeatures.HoeDirt::plant+116: 44 8B C3                       - mov r8d,ebx
+StardewValley.TerrainFeatures.HoeDirt::plant+119: 44 8B CD                       - mov r9d,ebp
+StardewValley.TerrainFeatures.HoeDirt::plant+11C: E8 DF 70 1E FF                 - call 7FFC889D6290
+// ---------- INJECTING HERE ----------
+StardewValley.TerrainFeatures.HoeDirt::plant+121: 49 8B 54 24 70                 - mov rdx,[r12+70]
+// ---------- DONE INJECTING  ----------
+StardewValley.TerrainFeatures.HoeDirt::plant+126: 48 8B 52 30                    - mov rdx,[rdx+30]
+StardewValley.TerrainFeatures.HoeDirt::plant+12A: 48 B9 A8 93 B0 88 FC 7F 00 00  - mov rcx,00007FFC88B093A8
+StardewValley.TerrainFeatures.HoeDirt::plant+134: E8 3F DA 1D FF                 - call 7FFC889CCC08
+StardewValley.TerrainFeatures.HoeDirt::plant+139: 85 C0                          - test eax,eax
+StardewValley.TerrainFeatures.HoeDirt::plant+13B: 0F 84 D8 03 00 00              - je StardewValley.TerrainFeatures.HoeDirt::plant+519
+StardewValley.TerrainFeatures.HoeDirt::plant+141: 4D 8B AE 98 00 00 00           - mov r13,[r14+00000098]
+StardewValley.TerrainFeatures.HoeDirt::plant+148: 45 39 6D 00                    - cmp [r13+00],r13d
+StardewValley.TerrainFeatures.HoeDirt::plant+14C: 49 8B CD                       - mov rcx,r13
+StardewValley.TerrainFeatures.HoeDirt::plant+14F: E8 14 E9 1E FF                 - call 7FFC889DDAF8
+StardewValley.TerrainFeatures.HoeDirt::plant+154: 49 8B 55 18                    - mov rdx,[r13+18]
+}
+</AssemblerScript>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>129</ID>
+                  <Description>"crop_base_ptr"</Description>
+                  <ShowAsHex>1</ShowAsHex>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <Color>808080</Color>
+                  <VariableType>8 Bytes</VariableType>
+                  <Address>crop_base_ptr</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>130</ID>
+                  <Description>"Phase Days Count"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <Color>808080</Color>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>crop_base_ptr</Address>
+                  <Offsets>
+                    <Offset>netInt.value</Offset>
+                    <Offset>netIntList.count</Offset>
+                    <Offset>Crop.phaseDays</Offset>
+                  </Offsets>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>140</ID>
+                  <Description>"Phase To Show"</Description>
+                  <ShowAsSigned>1</ShowAsSigned>
+                  <Color>808080</Color>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>crop_base_ptr</Address>
+                  <Offsets>
+                    <Offset>netInt.value</Offset>
+                    <Offset>Crop.phaseToShow</Offset>
+                  </Offsets>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>131</ID>
+                  <Description>"Current Phase"</Description>
+                  <ShowAsSigned>1</ShowAsSigned>
+                  <Color>FF8080</Color>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>crop_base_ptr</Address>
+                  <Offsets>
+                    <Offset>netInt.value</Offset>
+                    <Offset>Crop.currentPhase</Offset>
+                  </Offsets>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>134</ID>
+                  <Description>"Regrow After Harvest"</Description>
+                  <ShowAsSigned>1</ShowAsSigned>
+                  <Color>808080</Color>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>crop_base_ptr</Address>
+                  <Offsets>
+                    <Offset>netInt.value</Offset>
+                    <Offset>Crop.regrowafterharvest</Offset>
+                  </Offsets>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>137</ID>
+                  <Description>"Day Of Current Phase (set to 0 to re-harvest regrowing crop)"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <Color>FF8080</Color>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>crop_base_ptr</Address>
+                  <Offsets>
+                    <Offset>netInt.value</Offset>
+                    <Offset>Crop.dayOfCurrentPhase</Offset>
+                  </Offsets>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>138</ID>
+                  <Description>"Min Harvest"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <Color>FF8080</Color>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>crop_base_ptr</Address>
+                  <Offsets>
+                    <Offset>netInt.value</Offset>
+                    <Offset>Crop.minHarvest</Offset>
+                  </Offsets>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>139</ID>
+                  <Description>"Max Harvest"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <Color>FF8080</Color>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>crop_base_ptr</Address>
+                  <Offsets>
+                    <Offset>netInt.value</Offset>
+                    <Offset>Crop.maxHarvest</Offset>
+                  </Offsets>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>132</ID>
+                  <Description>"Fully Grown"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <Color>FF8080</Color>
+                  <VariableType>Byte</VariableType>
+                  <Address>crop_base_ptr</Address>
+                  <Offsets>
+                    <Offset>netBool.value</Offset>
+                    <Offset>Crop.fullyGrown</Offset>
+                  </Offsets>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>133</ID>
+                  <Description>"Dead"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <Color>FF8080</Color>
+                  <VariableType>Byte</VariableType>
+                  <Address>crop_base_ptr</Address>
+                  <Offsets>
+                    <Offset>netBool.value</Offset>
+                    <Offset>Crop.dead</Offset>
+                  </Offsets>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>135</ID>
+                  <Description>"Chance For Extra Crops"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <Color>FF8080</Color>
+                  <VariableType>Double</VariableType>
+                  <Address>crop_base_ptr</Address>
+                  <Offsets>
+                    <Offset>NetDouble.value</Offset>
+                    <Offset>Crop.chanceForExtraCrops</Offset>
+                  </Offsets>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>8940</ID>
+          <Description>"Gathering"</Description>
+          <LastState Value="" RealAddress="00000000"/>
+          <Color>C08000</Color>
+          <GroupHeader>1</GroupHeader>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>8939</ID>
+              <Description>"one hit tree"</Description>
+              <LastState/>
+              <Color>008000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>{ Game   : Stardew Valley.exe
+  Version: 
+  Date   : 2021-12-14
+  Author : sub1to
+
+  This script does blah blah blah
+}
+
+[ENABLE]
+{$lua}
+checkDotNetSymbol('StardewValley.TerrainFeatures.Tree::performToolAction')
+
+{$asm}
+define(hook,StardewValley.TerrainFeatures.Tree::performToolAction+F7)
+assert(hook,E8)
+
+alloc(newmem,$1000,hook)
+
+label(code)
+label(returnhere)
+
+label(tree_tool_action_bytes)
+registersymbol(tree_tool_action_bytes)
+
+newmem:
+tree_tool_action_bytes:
+  readMem(hook,5)
+
+code:
+  xorps xmm0, xmm0
+  movss [rdx+netFloat.value], xmm0
+  jmp returnhere
+
+hook:
+  jmp code
+  returnhere:
+
+[DISABLE]
+hook:
+  readMem(tree_tool_action_bytes,5)
+
+unregistersymbol(tree_tool_action_bytes)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: StardewValley.TerrainFeatures.Tree::performToolAction+F7
+
+StardewValley.TerrainFeatures.Tree::performToolAction+BF: 49 8B CF                       - mov rcx,r15
+StardewValley.TerrainFeatures.Tree::performToolAction+C2: 48 B8 A0 AF ED DB FE 7F 00 00  - mov rax,00007FFEDBEDAFA0
+StardewValley.TerrainFeatures.Tree::performToolAction+CC: FF 10                          - call qword ptr [rax]
+StardewValley.TerrainFeatures.Tree::performToolAction+CE: 48 8B 57 68                    - mov rdx,[rdi+68]
+StardewValley.TerrainFeatures.Tree::performToolAction+D2: 48 B9 70 D5 14 DC FE 7F 00 00  - mov rcx,00007FFEDC14D570
+StardewValley.TerrainFeatures.Tree::performToolAction+DC: E8 FF 9C 1E FF                 - call 7FFEDC00D480
+StardewValley.TerrainFeatures.Tree::performToolAction+E1: 85 C0                          - test eax,eax
+StardewValley.TerrainFeatures.Tree::performToolAction+E3: 0F 85 57 0F 00 00              - jne StardewValley.TerrainFeatures.Tree::performToolAction+1040
+StardewValley.TerrainFeatures.Tree::performToolAction+E9: 48 8B 57 50                    - mov rdx,[rdi+50]
+StardewValley.TerrainFeatures.Tree::performToolAction+ED: 48 B9 90 EF 14 DC FE 7F 00 00  - mov rcx,00007FFEDC14EF90
+// ---------- INJECTING HERE ----------
+StardewValley.TerrainFeatures.Tree::performToolAction+F7: E8 5C 9E 1E FF                 - call 7FFEDC00D5F8
+// ---------- DONE INJECTING  ----------
+StardewValley.TerrainFeatures.Tree::performToolAction+FC: C5 FA 10 0D 24 10 00 00        - vmovss xmm1,[7FFEDCE247C8]
+StardewValley.TerrainFeatures.Tree::performToolAction+104: C5 F8 2E C8                    - vucomiss xmm1,xmm0
+StardewValley.TerrainFeatures.Tree::performToolAction+108: 0F 83 32 0F 00 00              - jae StardewValley.TerrainFeatures.Tree::performToolAction+1040
+StardewValley.TerrainFeatures.Tree::performToolAction+10E: 48 8B 57 40                    - mov rdx,[rdi+40]
+StardewValley.TerrainFeatures.Tree::performToolAction+112: 48 B9 A8 93 14 DC FE 7F 00 00  - mov rcx,00007FFEDC1493A8
+StardewValley.TerrainFeatures.Tree::performToolAction+11C: E8 C7 95 1E FF                 - call 7FFEDC00CD88
+StardewValley.TerrainFeatures.Tree::performToolAction+121: 83 F8 05                       - cmp eax,05
+StardewValley.TerrainFeatures.Tree::performToolAction+124: 0F 8C 22 07 00 00              - jl StardewValley.TerrainFeatures.Tree::performToolAction+84C
+StardewValley.TerrainFeatures.Tree::performToolAction+12A: 48 85 F6                       - test rsi,rsi
+StardewValley.TerrainFeatures.Tree::performToolAction+12D: 0F 84 68 03 00 00              - je StardewValley.TerrainFeatures.Tree::performToolAction+49B
+}
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>8941</ID>
+              <Description>"one hit boulder"</Description>
+              <LastState/>
+              <Color>008000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>{ Game   : Stardew Valley.exe
+  Version: 
+  Date   : 2021-12-14
+  Author : sub1to
+
+  This script does blah blah blah
+}
+
+[ENABLE]
+{$lua}
+checkDotNetSymbol('StardewValley.TerrainFeatures.ResourceClump::performToolAction')
+
+{$asm}
+define(hook,StardewValley.TerrainFeatures.ResourceClump::performToolAction+53F)
+assert(hook,C5 FA 10 41 44)
+
+alloc(newmem,$1000,hook)
+
+label(code)
+label(returnhere)
+
+label(resource_clump_tool_action_bytes)
+registersymbol(resource_clump_tool_action_bytes)
+
+newmem:
+resource_clump_tool_action_bytes:
+  readMem(hook,5)
+
+code:
+  xorps xmm0, xmm0
+  movss [rcx+netFloat.value], xmm0
+  jmp returnhere
+
+hook:
+  jmp code
+  returnhere:
+
+[DISABLE]
+hook:
+  readMem(resource_clump_tool_action_bytes,5)
+
+unregistersymbol(resource_clump_tool_action_bytes)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: StardewValley.TerrainFeatures.ResourceClump::performToolAction+53F
+
+StardewValley.TerrainFeatures.ResourceClump::performToolAction+50F: C5 FA 10 0D F5 1B 00 00        - vmovss xmm1,[7FFEDCE903EC]
+StardewValley.TerrainFeatures.ResourceClump::performToolAction+517: EB 22                          - jmp StardewValley.TerrainFeatures.ResourceClump::performToolAction+53B
+StardewValley.TerrainFeatures.ResourceClump::performToolAction+519: C5 FA 10 0D EF 1B 00 00        - vmovss xmm1,[7FFEDCE903F0]
+StardewValley.TerrainFeatures.ResourceClump::performToolAction+521: C5 F9 7E C9                    - vmovd ecx,xmm1
+StardewValley.TerrainFeatures.ResourceClump::performToolAction+525: 85 C9                          - test ecx,ecx
+StardewValley.TerrainFeatures.ResourceClump::performToolAction+527: 7C 0A                          - jl StardewValley.TerrainFeatures.ResourceClump::performToolAction+533
+StardewValley.TerrainFeatures.ResourceClump::performToolAction+529: C5 FA 10 0D E3 1B 00 00        - vmovss xmm1,[7FFEDCE903F4]
+StardewValley.TerrainFeatures.ResourceClump::performToolAction+531: EB 08                          - jmp StardewValley.TerrainFeatures.ResourceClump::performToolAction+53B
+StardewValley.TerrainFeatures.ResourceClump::performToolAction+533: C5 FA 10 0D DD 1B 00 00        - vmovss xmm1,[7FFEDCE903F8]
+StardewValley.TerrainFeatures.ResourceClump::performToolAction+53B: 48 8B 4F 48                    - mov rcx,[rdi+48]
+// ---------- INJECTING HERE ----------
+StardewValley.TerrainFeatures.ResourceClump::performToolAction+53F: C5 FA 10 41 44                 - vmovss xmm0,[rcx+44]
+// ---------- DONE INJECTING  ----------
+StardewValley.TerrainFeatures.ResourceClump::performToolAction+544: C5 FA 11 4D 9C                 - vmovss [rbp-64],xmm1
+StardewValley.TerrainFeatures.ResourceClump::performToolAction+549: C5 FA 5C C1                    - vsubss xmm0,xmm0,xmm1
+StardewValley.TerrainFeatures.ResourceClump::performToolAction+54D: C5 F8 28 C8                    - vmovaps xmm1,xmm0
+StardewValley.TerrainFeatures.ResourceClump::performToolAction+551: 48 8B 01                       - mov rax,[rcx]
+StardewValley.TerrainFeatures.ResourceClump::performToolAction+554: 48 8B 40 60                    - mov rax,[rax+60]
+StardewValley.TerrainFeatures.ResourceClump::performToolAction+558: FF 50 08                       - call qword ptr [rax+08]
+StardewValley.TerrainFeatures.ResourceClump::performToolAction+55B: 48 8B D6                       - mov rdx,rsi
+StardewValley.TerrainFeatures.ResourceClump::performToolAction+55E: 48 B9 50 1E 1B DC FE 7F 00 00  - mov rcx,00007FFEDC1B1E50
+StardewValley.TerrainFeatures.ResourceClump::performToolAction+568: E8 33 5F EC FE                 - call 7FFEDBD54780
+StardewValley.TerrainFeatures.ResourceClump::performToolAction+56D: 4C 8B F8                       - mov r15,rax
+}
+</AssemblerScript>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>8957</ID>
+          <Description>"Debug Commands"</Description>
+          <LastState Value="" RealAddress="00000000"/>
+          <Color>C08000</Color>
+          <GroupHeader>1</GroupHeader>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>8955</ID>
+              <Description>"enable chatbox debug commands"</Description>
+              <Options moHideChildren="1"/>
+              <LastState/>
+              <Color>008000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>{ Game   : Stardew Valley.exe
+  Version: 
+  Date   : 2021-12-15
+  Author : sub1to
+
+  This script does blah blah blah
+}
+
+[ENABLE]
+{$lua}
+if syntaxcheck then return end
+checkDotNetSymbol('StardewValley.Menus.ChatBox::runCommand')
+
+{$asm}
+define(hook,StardewValley.Menus.ChatBox::runCommand)
+
+alloc(newmem,$1000,hook)
+
+label(code)
+label(returnhere)
+
+label(chatbox_run_cmd_bytes)
+registersymbol(chatbox_run_cmd_bytes)
+
+newmem:
+chatbox_run_cmd_bytes:
+  readMem(hook, 6)
+  jmp returnhere
+
+code:
+  mov byte ptr [rcx+ChatBox.enableCheats], 1
+
+  push rbp
+  mov rbp, rsp
+  sub rsp, 30
+  mov [rsp+28], rcx
+  mov [rsp+20], rdx
+
+  call chatbox_run_cmd_bytes
+
+  mov rcx, [rsp+28]
+  mov byte ptr [rcx+ChatBox.enableCheats], 0
+  mov rsp, rbp
+  pop rbp
+  ret
+
+hook:
+  jmp code
+  nop
+  returnhere:
+
+[DISABLE]
+hook:
+  readMem(chatbox_run_cmd_bytes, 6)
+
+unregistersymbol(chatbox_run_cmd_bytes)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: StardewValley.Menus.ChatBox::runCommand
+
+7FFEEECEAA5D: 60                             - pushad (invalid) 
+7FFEEECEAA5E: 01 70 40                       - add [rax+40],esi
+7FFEEECEAA61: 00 00                          - add [rax],al
+7FFEEECEAA63: 00 00                          - add [rax],al
+7FFEEECEAA65: 00 00                          - add [rax],al
+7FFEEECEAA67: 00 50 18                       - add [rax+18],dl
+7FFEEECEAA6A: EB EE                          - jmp 7FFEEECEAA5A
+7FFEEECEAA6C: FE                             - db -02
+7FFEEECEAA6D: 7F 00                          - jg 7FFEEECEAA6F
+7FFEEECEAA6F: 00                             - db 00 
+// ---------- INJECTING HERE ----------
+StardewValley.Menus.ChatBox::runCommand: 41 57                          - push r15
+// ---------- DONE INJECTING  ----------
+StardewValley.Menus.ChatBox::runCommand+2: 41 56                          - push r14
+StardewValley.Menus.ChatBox::runCommand+4: 41 54                          - push r12
+StardewValley.Menus.ChatBox::runCommand+6: 57                             - push rdi
+StardewValley.Menus.ChatBox::runCommand+7: 56                             - push rsi
+StardewValley.Menus.ChatBox::runCommand+8: 55                             - push rbp
+StardewValley.Menus.ChatBox::runCommand+9: 53                             - push rbx
+StardewValley.Menus.ChatBox::runCommand+A: 48 81 EC 50 01 00 00           - sub rsp,00000150
+StardewValley.Menus.ChatBox::runCommand+11: C5 F8 77                       - vzeroupper 
+StardewValley.Menus.ChatBox::runCommand+14: C5 D8 57 E4                    - vxorps xmm4,xmm4,xmm4
+StardewValley.Menus.ChatBox::runCommand+18: 48 B8 E0 FE FF FF FF FF FF FF  - mov rax,FFFFFFFFFFFFFEE0
+}
+</AssemblerScript>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>8956</ID>
+                  <Description>"type a command in chat; examples:"</Description>
+                  <LastState Value="" RealAddress="00000000"/>
+                  <GroupHeader>1</GroupHeader>
+                  <CheatEntries>
+                    <CheatEntry>
+                      <ID>8961</ID>
+                      <Description>"/everythingshop"</Description>
+                      <LastState Value="" RealAddress="00000000"/>
+                      <GroupHeader>1</GroupHeader>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>8962</ID>
+                      <Description>"/item 74 1 4"</Description>
+                      <LastState Value="" RealAddress="00000000"/>
+                      <GroupHeader>1</GroupHeader>
+                    </CheatEntry>
+                  </CheatEntries>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>8960</ID>
+                  <Description>"https://stardewcommunitywiki.com/Modding:Debug_commands#General_item_search_and_spawning"</Description>
+                  <LastState Value="" RealAddress="00000000"/>
+                  <GroupHeader>1</GroupHeader>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>8942</ID>
+      <Description>"Credits"</Description>
+      <Options moHideChildren="1"/>
+      <LastState Value="" RealAddress="00000000"/>
+      <GroupHeader>1</GroupHeader>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>8943</ID>
+          <Description>"sub1to (https://fearlessrevolution.com/viewtopic.php?f=4&amp;t=18469)"</Description>
+          <LastState Value="" RealAddress="00000000"/>
+          <GroupHeader>1</GroupHeader>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>8944</ID>
+          <Description>"aSwedishMagyar (https://fearlessrevolution.com/viewtopic.php?f=4&amp;t=14816)"</Description>
+          <LastState Value="" RealAddress="00000000"/>
+          <GroupHeader>1</GroupHeader>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>8959</ID>
+      <Description>""</Description>
+      <Options moHideChildren="1"/>
+      <LastState Value="" RealAddress="00000000"/>
+      <GroupHeader>1</GroupHeader>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>8970</ID>
+          <Description>"-- DO NOT TOUCH THESE --"</Description>
+          <LastState Value="" RealAddress="00000000"/>
+          <Color>0000FF</Color>
+          <GroupHeader>1</GroupHeader>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>8954</ID>
+          <Description>"struct_update_status"</Description>
+          <DropDownList ReadOnly="1" DescriptionOnly="1" DisplayValueAsItem="1">-1:Exited
+0:Pending
+1:Done
+</DropDownList>
+          <LastState Value="-1" RealAddress="289364A0000"/>
+          <ShowAsSigned>1</ShowAsSigned>
+          <Color>C0C0C0</Color>
+          <VariableType>Byte</VariableType>
+          <Address>struct_update_status</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>8968</ID>
+          <Description>"_hook_game1_"</Description>
+          <LastState/>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>{ Game   : Stardew Valley.exe
+  Version: 
+  Date   : 2021-12-14
+  Author : sub1to
+
+  This script does blah blah blah
+}
+
+[ENABLE]
+{$lua}
+if syntaxcheck then
+	return
+end
+
+checkDotNetSymbol('StardewValley.Game1::Update')
+checkDotNetSymbol('StardewValley.Game1::get_player')
+
+{$asm}
+define(hook_game1,StardewValley.Game1::Update)
+assert(hook_game1,57 56 55 53 48 81 EC)
+
+alloc(newmem,$1000,hook_game1)
+
+label(game1_update_code)
+label(game1_update_returnhere)
+
+label(game1_update_bytes)
+registersymbol(game1_update_bytes)
+label(game1_base_ptr)
+registersymbol(game1_base_ptr)
+label(farmer_base_ptr)
+registersymbol(farmer_base_ptr)
+
+newmem:
+game1_update_bytes:
+  readMem(hook_game1,11)
+  jmp game1_update_returnhere
+
+game1_base_ptr:
+  dq 0
+
+farmer_base_ptr:
+  dq 0
+
+
+game1_update_code:
+  mov [game1_base_ptr], rcx
+
+  // method family hidebysig virtual instance void Update(class [MonoGame.Framework]Microsoft.Xna.Framework.GameTime gameTime)
+  // 2 params
+  push rbp
+  mov rbp, rsp
+  sub rsp, 30
+  mov [rsp+28], rcx
+  mov [rsp+20], rdx
+
+  call StardewValley.Game1::get_player
+  mov [farmer_base_ptr], rax
+
+  mov rdx, [rsp+20]
+  mov rcx, [rsp+28]
+  mov rsp, rbp
+  pop rbp
+  jmp game1_update_bytes
+
+
+
+hook_game1:
+  jmp game1_update_code
+  nop 6
+  game1_update_returnhere:
+
+[DISABLE]
+hook_game1:
+  readMem(game1_update_bytes,11)
+
+unregistersymbol(game1_update_bytes)
+unregistersymbol(game1_base_ptr)
+unregistersymbol(farmer_base_ptr)
+
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: StardewValley.Game1::Update
+
+StardewValley.GameRunner::IsStartDown+4B: CC                             - int 3
+StardewValley.GameRunner::IsStartDown+4C: 19 04 01                       - sbb [rcx+rax],eax
+7FFEDC1B960F: 00 04 42                       - add [rdx+rax*2],al
+7FFEDC1B9612: 00 00                          - add [rax],al
+7FFEDC1B9614: 40 00 00                       - add [rax],al
+7FFEDC1B9617: 00 70 84                       - add [rax-7C],dh
+7FFEDC1B961A: 26 DC FE                       - fdiv st(6),st(0)
+7FFEDC1B961D: 7F 00                          - jg 7FFEDC1B961F
+7FFEDC1B961F: 00                             - db 00
+StardewValley.Game1::Update: 57                             - push rdi
+// ---------- INJECTING HERE ----------
+StardewValley.Game1::Update+1: 56                             - push rsi
+// ---------- DONE INJECTING  ----------
+StardewValley.Game1::Update+2: 55                             - push rbp
+StardewValley.Game1::Update+3: 53                             - push rbx
+StardewValley.Game1::Update+4: 48 81 EC 28 01 00 00           - sub rsp,00000128
+StardewValley.Game1::Update+B: C5 F8 77                       - vzeroupper
+StardewValley.Game1::Update+E: 33 C0                          - xor eax,eax
+StardewValley.Game1::Update+10: 48 89 44 24 28                 - mov [rsp+28],rax
+StardewValley.Game1::Update+15: C5 D8 57 E4                    - vxorps xmm4,xmm4,xmm4
+StardewValley.Game1::Update+19: 48 B8 10 FF FF FF FF FF FF FF  - mov rax,FFFFFFFFFFFFFF10
+StardewValley.Game1::Update+23: C5 F9 7F A4 04 20 01 00 00     - vmovdqa [rsp+rax+00000120],xmm4
+StardewValley.Game1::Update+2C: C5 F9 7F A4 04 30 01 00 00     - vmovdqa [rsp+rax+00000130],xmm4
+}
+</AssemblerScript>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>8969</ID>
+          <Description>"_hook_chatbox_"</Description>
+          <LastState/>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>{ Game   : Stardew Valley.exe
+  Version: 
+  Date   : 2021-12-14
+  Author : sub1to
+
+  This script does blah blah blah
+}
+
+[ENABLE]
+{$lua}
+if syntaxcheck then
+	return
+end
+
+checkDotNetSymbol('StardewValley.Game1::UpdateChatBox')
+
+{$asm}
+define(hook_chatbox,StardewValley.Game1::UpdateChatBox+47)
+assert(hook_chatbox,48 B9)
+
+alloc(newmem,$1000,hook_chatbox)
+
+label(game1_update_chatbox_code)
+label(game1_update_chatbox_returnhere)
+label(game1_update_chatbox_bytes)
+registersymbol(game1_update_chatbox_bytes)
+label(chatbox_base_ptr)
+registersymbol(chatbox_base_ptr)
+
+newmem:
+game1_update_chatbox_bytes:
+  readMem(hook_chatbox,10)
+  jmp game1_update_chatbox_code
+
+chatbox_base_ptr:
+  dq 0
+
+game1_update_chatbox_code:
+  push rax
+  mov rax, [rcx]
+  mov [chatbox_base_ptr], rax
+  pop rax
+  jmp game1_update_chatbox_returnhere
+
+hook_chatbox:
+  jmp game1_update_chatbox_bytes
+  nop 5
+  game1_update_chatbox_returnhere:
+
+[DISABLE]
+hook_chatbox:
+  readMem(game1_update_chatbox_bytes,10)
+
+unregistersymbol(game1_update_chatbox_bytes)
+unregistersymbol(chatbox_base_ptr)
+
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: StardewValley.Game1::UpdateChatBox+47
+
+StardewValley.Game1::UpdateChatBox+7: C5 F8 77                       - vzeroupper
+StardewValley.Game1::UpdateChatBox+A: C5 D8 57 E4                    - vxorps xmm4,xmm4,xmm4
+StardewValley.Game1::UpdateChatBox+E: C5 F9 7F 64 24 70              - vmovdqa [rsp+70],xmm4
+StardewValley.Game1::UpdateChatBox+14: 48 B8 A0 FF FF FF FF FF FF FF  - mov rax,FFFFFFFFFFFFFFA0
+StardewValley.Game1::UpdateChatBox+1E: C5 F9 7F A4 04 E0 00 00 00     - vmovdqa [rsp+rax+000000E0],xmm4
+StardewValley.Game1::UpdateChatBox+27: C5 F9 7F A4 04 F0 00 00 00     - vmovdqa [rsp+rax+000000F0],xmm4
+StardewValley.Game1::UpdateChatBox+30: C5 F9 7F A4 04 00 01 00 00     - vmovdqa [rsp+rax+00000100],xmm4
+StardewValley.Game1::UpdateChatBox+39: 48 83 C0 30                    - add rax,30
+StardewValley.Game1::UpdateChatBox+3D: 75 DF                          - jne StardewValley.Game1::UpdateChatBox+1E
+StardewValley.Game1::UpdateChatBox+3F: 48 89 84 24 E0 00 00 00        - mov [rsp+000000E0],rax
+// ---------- INJECTING HERE ----------
+StardewValley.Game1::UpdateChatBox+47: 48 B9 E8 5A 4A F3 64 02 00 00  - mov rcx,00000264F34A5AE8
+// ---------- DONE INJECTING  ----------
+StardewValley.Game1::UpdateChatBox+51: 48 83 39 00                    - cmp qword ptr [rcx],00
+StardewValley.Game1::UpdateChatBox+55: 75 08                          - jne StardewValley.Game1::UpdateChatBox+5F
+StardewValley.Game1::UpdateChatBox+57: 48 81 C4 E8 00 00 00           - add rsp,000000E8
+StardewValley.Game1::UpdateChatBox+5E: C3                             - ret
+StardewValley.Game1::UpdateChatBox+5F: 48 B9 C0 57 4A F3 64 02 00 00  - mov rcx,00000264F34A57C0
+StardewValley.Game1::UpdateChatBox+69: 48 8B 09                       - mov rcx,[rcx]
+StardewValley.Game1::UpdateChatBox+6C: 48 8D 94 24 C0 00 00 00        - lea rdx,[rsp+000000C0]
+StardewValley.Game1::UpdateChatBox+74: 48 8B 01                       - mov rax,[rcx]
+StardewValley.Game1::UpdateChatBox+77: 48 8B 40 40                    - mov rax,[rax+40]
+StardewValley.Game1::UpdateChatBox+7B: FF 50 38                       - call qword ptr [rax+38]
+}
+</AssemblerScript>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>8971</ID>
+          <Description>"_hook_melee_weapon_"</Description>
+          <LastState/>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>{ Game   : Stardew Valley.exe
+  Version: 
+  Date   : 2021-12-27
+  Author : sub1to
+
+  This script does blah blah blah
+}
+
+[ENABLE]
+{$lua}
+if syntaxcheck then
+	return
+end
+
+checkDotNetSymbol('StardewValley.Tools.MeleeWeapon::tickUpdate')
+
+{$asm}
+define(hook,StardewValley.Tools.MeleeWeapon::tickUpdate)
+assert(hook,57 56 48 83 EC)
+
+alloc(newmem,$1000,hook)
+
+label(melee_weapon_tickupdate_code)
+label(returnhere)
+label(melee_weapon_tickupdate_bytes)
+registersymbol(melee_weapon_tickupdate_bytes)
+label(melee_weapon_base_ptr)
+registersymbol(melee_weapon_base_ptr)
+
+newmem:
+melee_weapon_tickupdate_bytes:
+  readMem(hook,6)
+  jmp returnhere
+
+melee_weapon_base_ptr:
+  dq 0
+
+melee_weapon_tickupdate_code:
+  mov [melee_weapon_base_ptr], rcx
+  jmp melee_weapon_tickupdate_bytes
+
+hook:
+  jmp melee_weapon_tickupdate_code
+  nop
+  returnhere:
+
+[DISABLE]
+hook:
+  readMem(melee_weapon_tickupdate_bytes,6)
+
+unregistersymbol(melee_weapon_tickupdate_bytes)
+unregistersymbol(melee_weapon_base_ptr)
+
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: StardewValley.Tools.MeleeWeapon::tickUpdate
+
+7FFEA4FFF3FE: 00 00                 - add [rax],al
+7FFEA4FFF400: 00 00                 - add [rax],al
+7FFEA4FFF402: 00 00                 - add [rax],al
+7FFEA4FFF404: 00 00                 - add [rax],al
+7FFEA4FFF406: 00 00                 - add [rax],al
+7FFEA4FFF408: 18 DB                 - sbb bl,bl
+7FFEA4FFF40A: 1C A5                 - sbb al,-5B
+7FFEA4FFF40C: FE                    - db -02
+7FFEA4FFF40D: 7F 00                 - jg 7FFEA4FFF40F
+7FFEA4FFF40F: 00                    - db 00
+// ---------- INJECTING HERE ----------
+StardewValley.Tools.MeleeWeapon::tickUpdate: 57                    - push rdi
+StardewValley.Tools.MeleeWeapon::tickUpdate+1: 56                    - push rsi
+StardewValley.Tools.MeleeWeapon::tickUpdate+2: 48 83 EC 28           - sub rsp,28
+// ---------- DONE INJECTING  ----------
+StardewValley.Tools.MeleeWeapon::tickUpdate+6: 48 8B F1              - mov rsi,rcx
+StardewValley.Tools.MeleeWeapon::tickUpdate+9: 49 8B F8              - mov rdi,r8
+StardewValley.Tools.MeleeWeapon::tickUpdate+C: 48 8D 8E A0 00 00 00  - lea rcx,[rsi+000000A0]
+StardewValley.Tools.MeleeWeapon::tickUpdate+13: 48 8B D7              - mov rdx,rdi
+StardewValley.Tools.MeleeWeapon::tickUpdate+16: E8 55 A3 B7 5E        - call coreclr.dll+149780
+StardewValley.Tools.MeleeWeapon::tickUpdate+1B: 48 8B 8E 28 01 00 00  - mov rcx,[rsi+00000128]
+StardewValley.Tools.MeleeWeapon::tickUpdate+22: 39 09                 - cmp [rcx],ecx
+StardewValley.Tools.MeleeWeapon::tickUpdate+24: E8 67 1A 2C FF        - call 7FFEA42C0EA0
+}
+</AssemblerScript>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+  </CheatEntries>
+  <UserdefinedSymbols>
+    <SymbolEntry>
+      <Name>tmp</Name>
+      <Address>7FFEEEEA0000</Address>
+    </SymbolEntry>
+    <SymbolEntry>
+      <Name>struct_update_status</Name>
+      <Address>289364A0000</Address>
+    </SymbolEntry>
+  </UserdefinedSymbols>
+</CheatTable>

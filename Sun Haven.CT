@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheatTable CheatEngineTableVersion="34">
+  <CheatEntries>
+    <CheatEntry>
+      <ID>0</ID>
+      <Description>"Increment Item"</Description>
+      <LastState Activated="1"/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+// Duplicate Items
+// Search for qty of an item, right click to reduce, search for new qty
+// 4 Byte
+
+
+aobscan(cheat01, 48 63 87 4C 01 00 00 2B C6 89 87 4C 01 00 00 48 8B CF)
+label(_cheat01)
+registersymbol(_cheat01)
+
+cheat01+7:
+_cheat01:
+db 01 F0
+
+/*
+18BAAA368E4:
+18BAAA368DB - 48 63 87 4C010000  - movsxd  rax,dword ptr [rdi+0000014C]
+18BAAA368E2 - 2B C6  - sub eax,esi
+18BAAA368E4 - 89 87 4C010000  - mov [rdi+0000014C],eax &lt;&lt;
+18BAAA368EA - 48 8B CF  - mov rcx,rdi
+18BAAA368ED - 90 - nop
+
+*/
+
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+
+_cheat01:
+db 2B C6
+
+unregistersymbol(_cheat01)
+
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>4</ID>
+      <Description>"No mana usage"</Description>
+      <LastState Activated="1"/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+// No Mana usage
+// Search for mana, use spell to reduce, search for new qty
+// Mana: float
+
+
+aobscan(cheat02,F3 0F 5A C0 F2 0F 5A E8 F3 0F 11 AE F4 02 00 00 F3 0F 10 86 F4 02 00 00)
+label(_cheat02)
+registersymbol(_cheat02)
+
+cheat02+8:
+_cheat02:
+db 90 90 90 90 90 90 90 90
+
+/*
+2A7B72E8A77 - F3 0F5A C0  - cvtss2sd xmm0,xmm0
+2A7B72E8A7B - F2 0F5A E8  - cvtsd2ss xmm5,xmm0
+2A7B72E8A7F - F3 0F11 AE F4020000  - movss [rsi+000002F4],xmm5 &lt;&lt;
+2A7B72E8A87 - F3 0F10 86 F4020000  - movss xmm0,[rsi+000002F4]
+2A7B72E8A8F - F3 0F5A C0  - cvtss2sd xmm0,xmm0
+
+*/
+
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+
+_cheat02:
+db F3 0F 11 AE F4 02 00 00
+
+unregistersymbol(_cheat02)
+
+</AssemblerScript>
+    </CheatEntry>
+  </CheatEntries>
+  <CheatCodes>
+    <CodeEntry Color="20000000">
+      <Description>Change of sub eax,esi</Description>
+      <AddressString>2A7BE617012</AddressString>
+      <Before>
+        <Byte>87</Byte>
+        <Byte>4C</Byte>
+        <Byte>01</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Before>
+      <Actual>
+        <Byte>2B</Byte>
+        <Byte>C6</Byte>
+      </Actual>
+      <After>
+        <Byte>89</Byte>
+        <Byte>87</Byte>
+        <Byte>4C</Byte>
+        <Byte>01</Byte>
+        <Byte>00</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry Color="20000000">
+      <Description>Change of mov [rdi+0000014C],eax</Description>
+      <AddressString>2A7BE617014</AddressString>
+      <Before>
+        <Byte>01</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+        <Byte>2B</Byte>
+        <Byte>C6</Byte>
+      </Before>
+      <Actual>
+        <Byte>89</Byte>
+        <Byte>87</Byte>
+        <Byte>4C</Byte>
+        <Byte>01</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Actual>
+      <After>
+        <Byte>48</Byte>
+        <Byte>8B</Byte>
+        <Byte>CF</Byte>
+        <Byte>90</Byte>
+        <Byte>49</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry Color="20000000">
+      <Description>Change of movss [rsi+000002F4],xmm5</Description>
+      <AddressString>2A7B72E8B1D</AddressString>
+      <Before>
+        <Byte>C0</Byte>
+        <Byte>F2</Byte>
+        <Byte>0F</Byte>
+        <Byte>5A</Byte>
+        <Byte>E8</Byte>
+      </Before>
+      <Actual>
+        <Byte>F3</Byte>
+        <Byte>0F</Byte>
+        <Byte>11</Byte>
+        <Byte>AE</Byte>
+        <Byte>F4</Byte>
+        <Byte>02</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Actual>
+      <After>
+        <Byte>48</Byte>
+        <Byte>B8</Byte>
+        <Byte>60</Byte>
+        <Byte>DC</Byte>
+        <Byte>12</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry Color="20000000">
+      <Description>Change of movss [rsi+000002F4],xmm5</Description>
+      <AddressString>2A7B72E8A7F</AddressString>
+      <Before>
+        <Byte>C0</Byte>
+        <Byte>F2</Byte>
+        <Byte>0F</Byte>
+        <Byte>5A</Byte>
+        <Byte>E8</Byte>
+      </Before>
+      <Actual>
+        <Byte>F3</Byte>
+        <Byte>0F</Byte>
+        <Byte>11</Byte>
+        <Byte>AE</Byte>
+        <Byte>F4</Byte>
+        <Byte>02</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Actual>
+      <After>
+        <Byte>F3</Byte>
+        <Byte>0F</Byte>
+        <Byte>10</Byte>
+        <Byte>86</Byte>
+        <Byte>F4</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry Color="80000008">
+      <Description>Change of sub eax,edi</Description>
+      <AddressString>18BAAA3755A</AddressString>
+      <Before>
+        <Byte>86</Byte>
+        <Byte>4C</Byte>
+        <Byte>01</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Before>
+      <Actual>
+        <Byte>2B</Byte>
+        <Byte>C7</Byte>
+      </Actual>
+      <After>
+        <Byte>89</Byte>
+        <Byte>86</Byte>
+        <Byte>4C</Byte>
+        <Byte>01</Byte>
+        <Byte>00</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry Color="80000008">
+      <Description>Change of mov [rsi+0000014C],eax</Description>
+      <AddressString>18BAAA3755C</AddressString>
+      <Before>
+        <Byte>01</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+        <Byte>2B</Byte>
+        <Byte>C7</Byte>
+      </Before>
+      <Actual>
+        <Byte>89</Byte>
+        <Byte>86</Byte>
+        <Byte>4C</Byte>
+        <Byte>01</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Actual>
+      <After>
+        <Byte>48</Byte>
+        <Byte>8B</Byte>
+        <Byte>CE</Byte>
+        <Byte>83</Byte>
+        <Byte>3E</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry Color="80000008">
+      <Description>Change of mov [rax+24],ecx</Description>
+      <AddressString>18BAAA36D94</AddressString>
+      <Before>
+        <Byte>00</Byte>
+        <Byte>48</Byte>
+        <Byte>63</Byte>
+        <Byte>4D</Byte>
+        <Byte>C0</Byte>
+      </Before>
+      <Actual>
+        <Byte>89</Byte>
+        <Byte>48</Byte>
+        <Byte>24</Byte>
+      </Actual>
+      <After>
+        <Byte>48</Byte>
+        <Byte>8B</Byte>
+        <Byte>5D</Byte>
+        <Byte>C8</Byte>
+        <Byte>48</Byte>
+      </After>
+    </CodeEntry>
+  </CheatCodes>
+  <UserdefinedSymbols/>
+</CheatTable>

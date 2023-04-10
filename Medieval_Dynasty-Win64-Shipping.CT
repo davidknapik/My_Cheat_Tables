@@ -1,0 +1,1763 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheatTable CheatEngineTableVersion="31">
+  <CheatEntries>
+    <CheatEntry>
+      <ID>49</ID>
+      <Description>"Player Pointer"</Description>
+      <Options moHideChildren="1"/>
+      <LastState Activated="1"/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+aobscanmodule(player,$process,F2 0F 10 44 24 ?? 48 85 C0 F3 0F 10 ?? 24 ?? 48 8B CE 40)
+alloc(newmem,$1000,player)
+
+label(playerBkp)
+label(playerPtr)
+label(return)
+
+newmem:
+  push rax
+  mov rax,playerPtr
+  mov [rax],rsi
+  pop rax
+playerBkp:
+  readmem(player,6)
+  jmp return
+
+playerPtr:
+  dq 0
+
+player:
+  jmp newmem
+  nop
+return:
+registersymbol(player)
+registersymbol(playerBkp)
+registersymbol(playerPtr)
+
+[DISABLE]
+player:
+  readmem(playerBkp,6)
+unregistersymbol(player)
+unregistersymbol(playerBkp)
+unregistersymbol(playerPtr)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: "Medieval_Dynasty-Win64-Shipping.exe"+255511E
+
+"Medieval_Dynasty-Win64-Shipping.exe"+25550ED: 4C 8D 44 24 50        -  lea r8,[rsp+50]
+"Medieval_Dynasty-Win64-Shipping.exe"+25550F2: E8 09 06 80 FE        -  call Medieval_Dynasty-Win64-Shipping.exe+D55700
+"Medieval_Dynasty-Win64-Shipping.exe"+25550F7: EB 1C                 -  jmp Medieval_Dynasty-Win64-Shipping.exe+2555115
+"Medieval_Dynasty-Win64-Shipping.exe"+25550F9: 4C 8B 83 80 00 00 00  -  mov r8,[rbx+00000080]
+"Medieval_Dynasty-Win64-Shipping.exe"+2555100: 48 8D 54 24 50        -  lea rdx,[rsp+50]
+"Medieval_Dynasty-Win64-Shipping.exe"+2555105: 49 8B 40 20           -  mov rax,[r8+20]
+"Medieval_Dynasty-Win64-Shipping.exe"+2555109: 48 89 83 80 00 00 00  -  mov [rbx+00000080],rax
+"Medieval_Dynasty-Win64-Shipping.exe"+2555110: E8 1B 06 80 FE        -  call Medieval_Dynasty-Win64-Shipping.exe+D55730
+"Medieval_Dynasty-Win64-Shipping.exe"+2555115: 48 8B 43 20           -  mov rax,[rbx+20]
+"Medieval_Dynasty-Win64-Shipping.exe"+2555119: 48 8D 54 24 30        -  lea rdx,[rsp+30]
+// ---------- INJECTING HERE ----------
+"Medieval_Dynasty-Win64-Shipping.exe"+255511E: F2 0F 10 44 24 20     -  movsd xmm0,[rsp+20]
+// ---------- DONE INJECTING  ----------
+"Medieval_Dynasty-Win64-Shipping.exe"+2555124: 48 85 C0              -  test rax,rax
+"Medieval_Dynasty-Win64-Shipping.exe"+2555127: F3 0F 10 54 24 58     -  movss xmm2,[rsp+58]
+"Medieval_Dynasty-Win64-Shipping.exe"+255512D: 48 8B CE              -  mov rcx,rsi
+"Medieval_Dynasty-Win64-Shipping.exe"+2555130: 40 0F 95 C7           -  setne dil
+"Medieval_Dynasty-Win64-Shipping.exe"+2555134: F2 0F 11 44 24 30     -  movsd [rsp+30],xmm0
+"Medieval_Dynasty-Win64-Shipping.exe"+255513A: 48 03 F8              -  add rdi,rax
+"Medieval_Dynasty-Win64-Shipping.exe"+255513D: 8B 44 24 28           -  mov eax,[rsp+28]
+"Medieval_Dynasty-Win64-Shipping.exe"+2555141: 83 7C 24 50 00        -  cmp dword ptr [rsp+50],00
+"Medieval_Dynasty-Win64-Shipping.exe"+2555146: 48 89 7B 20           -  mov [rbx+20],rdi
+"Medieval_Dynasty-Win64-Shipping.exe"+255514A: 89 44 24 38           -  mov [rsp+38],eax
+}
+</AssemblerScript>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>125</ID>
+          <Description>"Find Offsets (jump, open inventory, etc.)"</Description>
+          <Options moHideChildren="1"/>
+          <LastState Activated="1"/>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>[ENABLE]
+aobscanmodule(playerOffsets,$process,4D 63 41 4C 4D 03 C5)
+alloc(newmem,$1000,playerOffsets)
+
+label(code)
+label(return)
+label(isPlayer)
+label(other)
+label(playerStats)
+
+newmem:
+  mov r8,playerPtr
+  cmp r13,[r8]
+  je isPlayer
+  mov r8,[r8]
+  cmp r8,[r13+20]
+  jne other // belongs to other
+  movsxd  r8,dword ptr [r9+4C]
+  add r8,r13
+  // health
+  cmp dword ptr [r8-04],(float)10.0
+  jne @f
+  push rax
+  mov rax,playerStats
+  mov [rax],r8
+  pop rax
+  jmp return
+@@:
+  // skills
+  cmp [r8-04],#10
+  jne @f
+  cmp [r8-08],#10
+  jne @f
+  cmp [r8+08],#10
+  je @f
+  push rax
+  mov rax,playerStats
+  mov [rax+08],r8
+  mov [rax+10],r13 // save stats
+  pop rax
+@@:
+  jmp return
+isPlayer:
+  movsxd  r8,dword ptr [r9+4C]
+  add r8,r13
+  // run speed
+  cmp [r8],(float)380
+  jne @f
+  cmp [r8-04],(float)180
+  jne @f
+  push rax
+  mov rax,playerStats
+  mov [rax+20],r8
+  pop rax
+  jmp return
+@@:
+  // address of stats inside player
+  push rax
+  mov rax,playerStats
+  mov rax,[rax+10]
+  test rax,rax
+  je @f
+  cmp rax,[r8]
+  jne @f
+  mov rax,playerStats
+  mov [rax+18],r8
+  mov [rax+48],r9 // save stats offset
+@@:
+  pop rax
+  jmp return
+other:
+  movsxd  r8,dword ptr [r9+4C]
+  add r8,r13
+  // game time
+  cmp [r8-20],(float)0.1
+  jne @f
+  cmp [r8+2C],(float)1.0
+  jne @f
+  cmp [r8],#0
+  jl @f
+  cmp [r8],#24
+  jge @f
+  cmp [r8+04],#0
+  jl @f
+  cmp [r8+04],#60
+  jge @f
+  cmp [r8+08],#0
+  jl @f
+  cmp [r8+08],#60
+  jge @f
+  push rax
+  mov rax,playerStats
+  mov [rax+28],r8
+  pop rax
+@@:
+  // village manager
+  cmp [r8-18],(float)1
+  jne @f
+  cmp [r8-14],(float)1
+  jne @f
+  cmp [r8-10],(float)1
+  jne @f
+  cmp [r8-0C],(float)1
+  jne @f
+  cmp [r8-08],(float)1
+  jne @f
+  cmp [r8-04],(float)1
+  jne @f
+  cmp [r8+10],0
+  jne @f
+  push rax
+  mov rax,playerStats
+  mov [rax+30],r8
+  pop rax
+@@:
+  // target's relations
+  push rax
+  cmp [r8-04],3
+  jne @f
+  cmp [r8],0
+  jl @f
+  cmp [r8],#100
+  jg @f
+  mov rax,playerStats
+  mov rax,[rax+18]
+  test rax,rax
+  je @f
+  mov rax,[rax+08]
+  test rax,rax
+  je @f
+  mov rax,[rax+10]
+  cmp [r13+10],rax
+  jne @f
+  mov rax,playerStats
+  mov [rax+38],r13
+  mov [rax+40],r8
+@@:
+  pop rax
+code:
+  movsxd  r8,dword ptr [r9+4C]
+  add r8,r13
+  jmp return
+
+playerStats:
+  dq 0
+  dq 0
+  dq 0
+  dq 0
+
+playerOffsets:
+  jmp newmem
+  nop 2
+return:
+registersymbol(playerOffsets)
+registersymbol(playerStats)
+
+[DISABLE]
+playerOffsets:
+  db 4D 63 41 4C 4D 03 C5
+unregistersymbol(playerOffsets)
+unregistersymbol(playerStats)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: "Medieval_Dynasty-Win64-Shipping.exe"+D59C36
+
+"Medieval_Dynasty-Win64-Shipping.exe"+D59C14: 4D 8B 41 10           -  mov r8,[r9+10]
+"Medieval_Dynasty-Win64-Shipping.exe"+D59C18: 48 8B 51 10           -  mov rdx,[rcx+10]
+"Medieval_Dynasty-Win64-Shipping.exe"+D59C1C: 49 83 C0 30           -  add r8,30
+"Medieval_Dynasty-Win64-Shipping.exe"+D59C20: 49 63 40 08           -  movsxd  rax,dword ptr [r8+08]
+"Medieval_Dynasty-Win64-Shipping.exe"+D59C24: 3B 42 38              -  cmp eax,[rdx+38]
+"Medieval_Dynasty-Win64-Shipping.exe"+D59C27: 7F 35                 -  jg Medieval_Dynasty-Win64-Shipping.exe+D59C5E
+"Medieval_Dynasty-Win64-Shipping.exe"+D59C29: 48 8B C8              -  mov rcx,rax
+"Medieval_Dynasty-Win64-Shipping.exe"+D59C2C: 48 8B 42 30           -  mov rax,[rdx+30]
+"Medieval_Dynasty-Win64-Shipping.exe"+D59C30: 4C 39 04 C8           -  cmp [rax+rcx*8],r8
+"Medieval_Dynasty-Win64-Shipping.exe"+D59C34: 75 28                 -  jne Medieval_Dynasty-Win64-Shipping.exe+D59C5E
+// ---------- INJECTING HERE ----------
+"Medieval_Dynasty-Win64-Shipping.exe"+D59C36: 4D 63 41 4C           -  movsxd  r8,dword ptr [r9+4C]
+"Medieval_Dynasty-Win64-Shipping.exe"+D59C3A: 4D 03 C5              -  add r8,r13
+// ---------- DONE INJECTING  ----------
+"Medieval_Dynasty-Win64-Shipping.exe"+D59C3D: 4D 89 46 38           -  mov [r14+38],r8
+"Medieval_Dynasty-Win64-Shipping.exe"+D59C41: 4D 85 D2              -  test r10,r10
+"Medieval_Dynasty-Win64-Shipping.exe"+D59C44: 0F 84 B8 03 00 00     -  je Medieval_Dynasty-Win64-Shipping.exe+D5A002
+"Medieval_Dynasty-Win64-Shipping.exe"+D59C4A: 49 8B 01              -  mov rax,[r9]
+"Medieval_Dynasty-Win64-Shipping.exe"+D59C4D: 49 8B D2              -  mov rdx,r10
+"Medieval_Dynasty-Win64-Shipping.exe"+D59C50: 49 8B C9              -  mov rcx,r9
+"Medieval_Dynasty-Win64-Shipping.exe"+D59C53: FF 90 C8 00 00 00     -  call qword ptr [rax+000000C8]
+"Medieval_Dynasty-Win64-Shipping.exe"+D59C59: E9 A4 03 00 00        -  jmp Medieval_Dynasty-Win64-Shipping.exe+D5A002
+"Medieval_Dynasty-Win64-Shipping.exe"+D59C5E: 49 8D 49 28           -  lea rcx,[r9+28]
+"Medieval_Dynasty-Win64-Shipping.exe"+D59C62: 48 8D 54 24 20        -  lea rdx,[rsp+20]
+}
+</AssemblerScript>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>664</ID>
+              <Description>"Run Speed"</Description>
+              <LastState Value="2000" RealAddress="1CD8DDDCFD0"/>
+              <VariableType>Float</VariableType>
+              <Address>playerStats+20</Address>
+              <Offsets>
+                <Offset>4</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>611</ID>
+              <Description>"Statistics"</Description>
+              <Options moHideChildren="1"/>
+              <LastState Value="" RealAddress="1CE1626EEBC"/>
+              <GroupHeader>1</GroupHeader>
+              <Address>playerStats</Address>
+              <Offsets>
+                <Offset>0</Offset>
+              </Offsets>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>613</ID>
+                  <Description>"Health"</Description>
+                  <LastState Value="1" RealAddress="1CE1626EEC8"/>
+                  <VariableType>Float</VariableType>
+                  <Address>+0C</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>614</ID>
+                  <Description>"Stamina"</Description>
+                  <LastState Value="1" RealAddress="1CE1626EED8"/>
+                  <VariableType>Float</VariableType>
+                  <Address>+1C</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>615</ID>
+                  <Description>"Food"</Description>
+                  <LastState Value="9999" RealAddress="1CE1626EEC0"/>
+                  <VariableType>Float</VariableType>
+                  <Address>+04</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>616</ID>
+                  <Description>"Water"</Description>
+                  <LastState Value="9999" RealAddress="1CE1626EED0"/>
+                  <VariableType>Float</VariableType>
+                  <Address>+14</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>612</ID>
+                  <Description>"Dirty"</Description>
+                  <LastState Value="0.1252011061" RealAddress="1CE1626EEBC"/>
+                  <VariableType>Float</VariableType>
+                  <Address>+0</Address>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>618</ID>
+              <Description>"Skills"</Description>
+              <Options moHideChildren="1"/>
+              <LastState Value="" RealAddress="1CE1626E990"/>
+              <GroupHeader>1</GroupHeader>
+              <Address>playerStats+08</Address>
+              <Offsets>
+                <Offset>0</Offset>
+              </Offsets>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>619</ID>
+                  <Description>"Extraction XP"</Description>
+                  <LastState Value="152" RealAddress="1CE1626E9D4"/>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>+0*60+44</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>620</ID>
+                  <Description>"Extraction Points"</Description>
+                  <LastState Value="0" RealAddress="1CE1626E9EC"/>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>+0*60+5C</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>621</ID>
+                  <Description>"Hunting XP"</Description>
+                  <LastState Value="36" RealAddress="1CE1626EA34"/>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>+1*60+44</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>622</ID>
+                  <Description>"Hunting Points"</Description>
+                  <LastState Value="0" RealAddress="1CE1626EA4C"/>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>+1*60+5C</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>623</ID>
+                  <Description>"Farming XP"</Description>
+                  <LastState Value="4" RealAddress="1CE1626EA94"/>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>+2*60+44</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>624</ID>
+                  <Description>"Farming Points"</Description>
+                  <LastState Value="0" RealAddress="1CE1626EAAC"/>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>+2*60+5C</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>625</ID>
+                  <Description>"Diplomacy XP"</Description>
+                  <LastState Value="112" RealAddress="1CE1626EAF4"/>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>+3*60+44</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>626</ID>
+                  <Description>"Diplomacy Points"</Description>
+                  <LastState Value="0" RealAddress="1CE1626EB0C"/>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>+3*60+5C</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>627</ID>
+                  <Description>"Survival XP"</Description>
+                  <LastState Value="198" RealAddress="1CE1626EB54"/>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>+4*60+44</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>628</ID>
+                  <Description>"Survival Points"</Description>
+                  <LastState Value="0" RealAddress="1CE1626EB6C"/>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>+4*60+5C</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>629</ID>
+                  <Description>"Crafting XP"</Description>
+                  <LastState Value="92" RealAddress="1CE1626EBB4"/>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>+5*60+44</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>630</ID>
+                  <Description>"Crafting Points"</Description>
+                  <LastState Value="0" RealAddress="1CE1626EBCC"/>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>+5*60+5C</Address>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>631</ID>
+              <Description>"Inventory"</Description>
+              <Options moHideChildren="1"/>
+              <LastState Value="" RealAddress="1CEA68EA600"/>
+              <GroupHeader>1</GroupHeader>
+              <Address>playerStats+18</Address>
+              <Offsets>
+                <Offset>0</Offset>
+                <Offset>10</Offset>
+              </Offsets>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>633</ID>
+                  <Description>"Weight Limit"</Description>
+                  <LastState Value="35" RealAddress="1CEA68EA6C8"/>
+                  <VariableType>Float</VariableType>
+                  <Address>+C8</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>634</ID>
+                  <Description>"Overloaded"</Description>
+                  <LastState Value="50" RealAddress="1CEA68EA6CC"/>
+                  <VariableType>Float</VariableType>
+                  <Address>+CC</Address>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>677</ID>
+              <Description>"Village Manager"</Description>
+              <Options moHideChildren="1"/>
+              <LastState Value="" Activated="1" RealAddress="1CE121003AC"/>
+              <GroupHeader>1</GroupHeader>
+              <Address>playerStats+30</Address>
+              <Offsets>
+                <Offset>0</Offset>
+              </Offsets>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>682</ID>
+                  <Description>"Dynasty Reputation"</Description>
+                  <LastState Value="1056" RealAddress="1CE12100390"/>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>-1C</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>678</ID>
+                  <Description>"Building Technology"</Description>
+                  <LastState Value="10053" RealAddress="1CE121003AC"/>
+                  <VariableType>Float</VariableType>
+                  <Address>+00</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>679</ID>
+                  <Description>"Survival Technology"</Description>
+                  <LastState Value="5009" RealAddress="1CE121003B0"/>
+                  <VariableType>Float</VariableType>
+                  <Address>+04</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>680</ID>
+                  <Description>"Farming Technology"</Description>
+                  <LastState Value="4.199999809" RealAddress="1CE121003B4"/>
+                  <VariableType>Float</VariableType>
+                  <Address>+08</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>681</ID>
+                  <Description>"Crafting Technology"</Description>
+                  <LastState Value="10001" RealAddress="1CE121003B8"/>
+                  <VariableType>Float</VariableType>
+                  <Address>+0C</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>683</ID>
+                  <Description>"Building Limit"</Description>
+                  <LastState Value="8" RealAddress="1CE12100444"/>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>+98</Address>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>671</ID>
+              <Description>"Time Manager"</Description>
+              <Options moHideChildren="1"/>
+              <LastState Value="" RealAddress="1CD8F41AE7C"/>
+              <GroupHeader>1</GroupHeader>
+              <Address>playerStats+28</Address>
+              <Offsets>
+                <Offset>0</Offset>
+              </Offsets>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>672</ID>
+                  <Description>"Hour"</Description>
+                  <LastState Value="18" RealAddress="1CD8F41AE7C"/>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>+00</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>673</ID>
+                  <Description>"Minute"</Description>
+                  <LastState Value="12" RealAddress="1CD8F41AE80"/>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>+04</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>674</ID>
+                  <Description>"Second"</Description>
+                  <LastState Value="9" RealAddress="1CD8F41AE84"/>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>+08</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>675</ID>
+                  <Description>"Season"</Description>
+                  <DropDownList ReadOnly="1" DescriptionOnly="1" DisplayValueAsItem="1">0:Spring
+1:Summer
+2:Autumn
+3:Winter
+</DropDownList>
+                  <LastState Value="1" RealAddress="1CD8F41AE8C"/>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>+10</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>676</ID>
+                  <Description>"Year"</Description>
+                  <LastState Value="1" RealAddress="1CD8F41AE90"/>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>+14</Address>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>732</ID>
+              <Description>"Relations with Target (populate skills first)"</Description>
+              <Options moHideChildren="1"/>
+              <LastState Value="" Activated="1" RealAddress="1CD88FE428C"/>
+              <GroupHeader>1</GroupHeader>
+              <Address>playerStats+40</Address>
+              <Offsets>
+                <Offset>0</Offset>
+              </Offsets>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>733</ID>
+                  <Description>"Approval"</Description>
+                  <LastState Value="100" RealAddress="1CD88FE428C"/>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>+00</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>734</ID>
+                  <Description>"Affection"</Description>
+                  <LastState Value="100" RealAddress="1CD88FE4290"/>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>+04</Address>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>728</ID>
+              <Description>"Relations with Target (backup)"</Description>
+              <Options moHideChildren="1"/>
+              <LastState Value="" RealAddress="1CD88FE4140"/>
+              <GroupHeader>1</GroupHeader>
+              <Address>playerStats+38</Address>
+              <Offsets>
+                <Offset>0</Offset>
+              </Offsets>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>700</ID>
+                  <Description>"Approval"</Description>
+                  <LastState Value="100" RealAddress="1CD88FE428C"/>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>+14C</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>731</ID>
+                  <Description>"Affection"</Description>
+                  <LastState Value="100" RealAddress="1CD88FE4290"/>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>+150</Address>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>737</ID>
+              <Description>"Skills of Target"</Description>
+              <Options moHideChildren="1"/>
+              <LastState Value="" Activated="1" RealAddress="1CF68D54B10"/>
+              <GroupHeader>1</GroupHeader>
+              <Address>playerStats+38</Address>
+              <Offsets>
+                <Offset>1A0</Offset>
+                <Offset>(DWORD)[[playerStats+48]+4C]</Offset>
+                <Offset>20</Offset>
+              </Offsets>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>741</ID>
+                  <Description>"Mood"</Description>
+                  <LastState Value="9999992" RealAddress="1CF68D54A68"/>
+                  <VariableType>Float</VariableType>
+                  <Address>-A8</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>747</ID>
+                  <Description>"Skill 1"</Description>
+                  <LastState Value="99" RealAddress="1CF68D54B10"/>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>+0*60</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>742</ID>
+                  <Description>"Skill 2"</Description>
+                  <LastState Value="99" RealAddress="1CF68D54B70"/>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>+1*60</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>743</ID>
+                  <Description>"Skill 3"</Description>
+                  <LastState Value="99" RealAddress="1CF68D54BD0"/>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>+2*60</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>744</ID>
+                  <Description>"Skill 4"</Description>
+                  <LastState Value="99" RealAddress="1CF68D54C30"/>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>+3*60</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>745</ID>
+                  <Description>"Skill 5"</Description>
+                  <LastState Value="99" RealAddress="1CF68D54C90"/>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>+4*60</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>746</ID>
+                  <Description>"Skill 6"</Description>
+                  <LastState Value="99" RealAddress="1CF68D54CF0"/>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>+5*60</Address>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>10</ID>
+      <Description>"Inventory Pointer"</Description>
+      <Options moHideChildren="1"/>
+      <LastState Activated="1"/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+aobscanmodule(inventory,$process,4C 03 C0 48 8B 07 FF)
+alloc(newmem,$1000,inventory)
+
+label(code)
+label(return)
+label(inventoryPtr)
+
+newmem:
+
+code:
+  add r8,rax
+  mov rax,inventoryPtr
+  mov [rax],r8
+  mov rax,[rdi]
+  jmp return
+
+inventoryPtr:
+  dq 0
+
+inventory:
+  jmp newmem
+  nop
+return:
+registersymbol(inventory)
+registersymbol(inventoryPtr)
+
+[DISABLE]
+inventory:
+  db 4C 03 C0 48 8B 07
+unregistersymbol(inventory)
+unregistersymbol(inventoryPtr)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: "Medieval_Dynasty-Win64-Shipping.exe"+20B95A0
+
+"Medieval_Dynasty-Win64-Shipping.exe"+20B9585: 48 8B 03                 -  mov rax,[rbx]
+"Medieval_Dynasty-Win64-Shipping.exe"+20B9588: 75 0A                    -  jne Medieval_Dynasty-Win64-Shipping.exe+20B9594
+"Medieval_Dynasty-Win64-Shipping.exe"+20B958A: A8 01                    -  test al,01
+"Medieval_Dynasty-Win64-Shipping.exe"+20B958C: 74 06                    -  je Medieval_Dynasty-Win64-Shipping.exe+20B9594
+"Medieval_Dynasty-Win64-Shipping.exe"+20B958E: 48 D1 F8                 -  sar rax,1
+"Medieval_Dynasty-Win64-Shipping.exe"+20B9591: 48 03 C3                 -  add rax,rbx
+"Medieval_Dynasty-Win64-Shipping.exe"+20B9594: 0F AF CD                 -  imul ecx,ebp
+"Medieval_Dynasty-Win64-Shipping.exe"+20B9597: 49 8B D6                 -  mov rdx,r14
+"Medieval_Dynasty-Win64-Shipping.exe"+20B959A: 4C 63 C1                 -  movsxd  r8,ecx
+"Medieval_Dynasty-Win64-Shipping.exe"+20B959D: 48 8B CF                 -  mov rcx,rdi
+// ---------- INJECTING HERE ----------
+"Medieval_Dynasty-Win64-Shipping.exe"+20B95A0: 4C 03 C0                 -  add r8,rax
+"Medieval_Dynasty-Win64-Shipping.exe"+20B95A3: 48 8B 07                 -  mov rax,[rdi]
+// ---------- DONE INJECTING  ----------
+"Medieval_Dynasty-Win64-Shipping.exe"+20B95A6: FF 90 D8 00 00 00        -  call qword ptr [rax+000000D8]
+"Medieval_Dynasty-Win64-Shipping.exe"+20B95AC: E9 01 01 00 00           -  jmp Medieval_Dynasty-Win64-Shipping.exe+20B96B2
+"Medieval_Dynasty-Win64-Shipping.exe"+20B95B1: 0F 10 46 10              -  movups xmm0,[rsi+10]
+"Medieval_Dynasty-Win64-Shipping.exe"+20B95B5: 4C 89 A4 24 98 00 00 00  -  mov [rsp+00000098],r12
+"Medieval_Dynasty-Win64-Shipping.exe"+20B95BD: 48 8D 54 24 60           -  lea rdx,[rsp+60]
+"Medieval_Dynasty-Win64-Shipping.exe"+20B95C2: 48 8D 4C 24 50           -  lea rcx,[rsp+50]
+"Medieval_Dynasty-Win64-Shipping.exe"+20B95C7: 4C 89 BC 24 A0 00 00 00  -  mov [rsp+000000A0],r15
+"Medieval_Dynasty-Win64-Shipping.exe"+20B95CF: 0F 11 44 24 50           -  movups [rsp+50],xmm0
+"Medieval_Dynasty-Win64-Shipping.exe"+20B95D4: E8 87 A0 C2 FE           -  call Medieval_Dynasty-Win64-Shipping.exe+CE3660
+"Medieval_Dynasty-Win64-Shipping.exe"+20B95D9: 4C 8D 3D 70 CE C7 00     -  lea r15,[Medieval_Dynasty-Win64-Shipping.exe+2D36450]
+}
+</AssemblerScript>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>11</ID>
+          <Description>"Last Item Selected"</Description>
+          <Options moHideChildren="1"/>
+          <LastState Value="" RealAddress="1CF22476C98"/>
+          <GroupHeader>1</GroupHeader>
+          <Address>inventoryPtr</Address>
+          <Offsets>
+            <Offset>0</Offset>
+          </Offsets>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>16</ID>
+              <Description>"Item ID"</Description>
+              <LastState Value="82B6FC80" RealAddress="1CF22476C98"/>
+              <ShowAsHex>1</ShowAsHex>
+              <VariableType>4 Bytes</VariableType>
+              <Address>+0</Address>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>632</ID>
+              <Description>"Quantity"</Description>
+              <LastState Value="248765648" RealAddress="1CF22476CA0"/>
+              <VariableType>4 Bytes</VariableType>
+              <Address>+8</Address>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>51</ID>
+              <Description>"Charges"</Description>
+              <LastState Value="111353" RealAddress="1CF22476CB8"/>
+              <VariableType>4 Bytes</VariableType>
+              <Address>+20</Address>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>13</ID>
+              <Description>"Durability (Current)"</Description>
+              <LastState Value="9.997563894E-41" RealAddress="1CF22476CBC"/>
+              <VariableType>Float</VariableType>
+              <Address>+24</Address>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>15</ID>
+              <Description>"Durability (Max)"</Description>
+              <LastState Value="2.621549167E-41" RealAddress="1CF22476CC0"/>
+              <VariableType>Float</VariableType>
+              <Address>+28</Address>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>18</ID>
+              <Description>"?1"</Description>
+              <LastState Value="8.275660786E-31" RealAddress="1CF22476CB0"/>
+              <VariableType>Float</VariableType>
+              <Address>+18</Address>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>17</ID>
+              <Description>"?2"</Description>
+              <LastState Value="4.590513639E-41" RealAddress="1CF22476CB4"/>
+              <VariableType>Float</VariableType>
+              <Address>+1C</Address>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>25</ID>
+      <Description>"Ignore This"</Description>
+      <Options moHideChildren="1"/>
+      <LastState Value="" RealAddress="00000000"/>
+      <Color>FFFFFF</Color>
+      <GroupHeader>1</GroupHeader>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>19</ID>
+          <Description>"Inventory"</Description>
+          <Options moHideChildren="1"/>
+          <LastState Value="" RealAddress="21EB7B6A380"/>
+          <GroupHeader>1</GroupHeader>
+          <Address>21EB7B6A380</Address>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>20</ID>
+              <Description>"Items"</Description>
+              <LastState Value="" RealAddress="00000000"/>
+              <GroupHeader>1</GroupHeader>
+              <Address>+B8</Address>
+              <Offsets>
+                <Offset>0</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>27</ID>
+              <Description>"PlayerCharacter"</Description>
+              <LastState Value="" RealAddress="00000000"/>
+              <GroupHeader>1</GroupHeader>
+              <Address>+20</Address>
+              <Offsets>
+                <Offset>0</Offset>
+              </Offsets>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>28</ID>
+                  <Description>"PC_Player"</Description>
+                  <LastState Value="" RealAddress="00000000"/>
+                  <GroupHeader>1</GroupHeader>
+                  <Address>+E0</Address>
+                  <Offsets>
+                    <Offset>0</Offset>
+                  </Offsets>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>40</ID>
+          <Description>"Find"</Description>
+          <Options moHideChildren="1"/>
+          <LastState/>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>[ENABLE]
+aobscanmodule(find,VCRUNTIME140.dll,8B 0A 89 08 C3)
+alloc(newmem,$1000,find)
+
+label(code)
+label(return)
+label(addr)
+
+newmem:
+  mov rcx,addr
+  cmp [rcx+00],rax
+  jne @f
+  lea rcx,[rax]
+  jmp code
+@@:
+  cmp [rcx+08],rdx
+  jne @f
+  lea rcx,[rdx]
+  jmp code
+@@:
+  movss xmm0,[rdx]
+  comiss xmm0,[rcx+00]
+  jl @f
+  comiss xmm0,[rcx+08]
+  jg @f
+  lea rcx,[rdx]
+  jmp code
+@@:
+  movsxd ecx,[rcx]
+  cmp [rdx],ecx
+  jne @f
+  lea rcx,[rdx]
+code:
+  mov ecx,[rdx]
+  mov [rax],ecx
+  ret 
+  jmp return
+
+addr:
+  dq 0
+  dq 0
+
+find:
+  jmp newmem
+return:
+registersymbol(find)
+registersymbol(addr)
+
+[DISABLE]
+find:
+  db 8B 0A 89 08 C3
+unregistersymbol(find)
+unregistersymbol(addr)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: "VCRUNTIME140.dll"+13B8
+
+"VCRUNTIME140.dll"+1399: F3 0F 7F 00                    -  movdqu [rax],xmm0
+"VCRUNTIME140.dll"+139D: C3                             -  ret 
+"VCRUNTIME140.dll"+139E: 66 90                          -  nop 2
+"VCRUNTIME140.dll"+13A0: 4C 8B 02                       -  mov r8,[rdx]
+"VCRUNTIME140.dll"+13A3: 0F B7 4A 08                    -  movzx ecx,word ptr [rdx+08]
+"VCRUNTIME140.dll"+13A7: 44 0F B6 4A 0A                 -  movzx r9d,byte ptr [rdx+0A]
+"VCRUNTIME140.dll"+13AC: 4C 89 00                       -  mov [rax],r8
+"VCRUNTIME140.dll"+13AF: 66 89 48 08                    -  mov [rax+08],cx
+"VCRUNTIME140.dll"+13B3: 44 88 48 0A                    -  mov [rax+0A],r9l
+"VCRUNTIME140.dll"+13B7: C3                             -  ret 
+// ---------- INJECTING HERE ----------
+"VCRUNTIME140.dll"+13B8: 8B 0A                          -  mov ecx,[rdx]
+"VCRUNTIME140.dll"+13BA: 89 08                          -  mov [rax],ecx
+"VCRUNTIME140.dll"+13BC: C3                             -  ret 
+// ---------- DONE INJECTING  ----------
+"VCRUNTIME140.dll"+13BD: 0F 1F 00                       -  nop dword ptr [rax]
+"VCRUNTIME140.dll"+13C0: 8B 0A                          -  mov ecx,[rdx]
+"VCRUNTIME140.dll"+13C2: 44 0F B6 42 04                 -  movzx r8d,byte ptr [rdx+04]
+"VCRUNTIME140.dll"+13C7: 89 08                          -  mov [rax],ecx
+"VCRUNTIME140.dll"+13C9: 44 88 40 04                    -  mov [rax+04],r8l
+"VCRUNTIME140.dll"+13CD: C3                             -  ret 
+"VCRUNTIME140.dll"+13CE: 66 90                          -  nop 2
+"VCRUNTIME140.dll"+13D0: 8B 0A                          -  mov ecx,[rdx]
+"VCRUNTIME140.dll"+13D2: 44 0F B7 42 04                 -  movzx r8d,word ptr [rdx+04]
+"VCRUNTIME140.dll"+13D7: 89 08                          -  mov [rax],ecx
+}
+</AssemblerScript>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>41</ID>
+              <Description>"Write"</Description>
+              <ShowAsHex>1</ShowAsHex>
+              <VariableType>8 Bytes</VariableType>
+              <Address>addr</Address>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>42</ID>
+              <Description>"Read"</Description>
+              <ShowAsHex>1</ShowAsHex>
+              <VariableType>8 Bytes</VariableType>
+              <Address>addr+08</Address>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>684</ID>
+              <Description>"Float Min"</Description>
+              <VariableType>Float</VariableType>
+              <Address>addr</Address>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>696</ID>
+              <Description>"Float Max"</Description>
+              <VariableType>Float</VariableType>
+              <Address>addr+08</Address>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>697</ID>
+              <Description>"Integer"</Description>
+              <VariableType>4 Bytes</VariableType>
+              <Address>addr</Address>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>45</ID>
+          <Description>"World Pointers"</Description>
+          <Options moHideChildren="1"/>
+          <LastState/>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>//World-&gt;Level-&gt;Map-&gt;Systems-&gt;Village
+//World-&gt;Level-&gt;Map-&gt;Systems-&gt;Time
+[ENABLE]
+aobscanmodule(world,$process,7D ?? 48 8B 41 ?? 48 85 C0 74)
+alloc(newmem,$1000,world)
+
+label(worldBkp)
+label(worldPtr)
+label(return)
+
+newmem:
+  mov rax,worldPtr
+  mov [rax],rcx
+worldBkp:
+  readmem(world+02,7)
+  jmp return
+
+worldPtr:
+  dq 0
+
+world+02:
+  jmp newmem
+  nop 2
+return:
+registersymbol(world)
+registersymbol(worldBkp)
+registersymbol(worldPtr)
+
+[DISABLE]
+world+02:
+  readmem(worldBkp,7)
+unregistersymbol(world)
+unregistersymbol(worldBkp)
+unregistersymbol(worldPtr)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: "Medieval_Dynasty-Win64-Shipping.exe"+2424B19
+
+"Medieval_Dynasty-Win64-Shipping.exe"+2424B08: CC                    -  int 3 
+"Medieval_Dynasty-Win64-Shipping.exe"+2424B09: CC                    -  int 3 
+"Medieval_Dynasty-Win64-Shipping.exe"+2424B0A: CC                    -  int 3 
+"Medieval_Dynasty-Win64-Shipping.exe"+2424B0B: CC                    -  int 3 
+"Medieval_Dynasty-Win64-Shipping.exe"+2424B0C: CC                    -  int 3 
+"Medieval_Dynasty-Win64-Shipping.exe"+2424B0D: CC                    -  int 3 
+"Medieval_Dynasty-Win64-Shipping.exe"+2424B0E: CC                    -  int 3 
+"Medieval_Dynasty-Win64-Shipping.exe"+2424B0F: CC                    -  int 3 
+"Medieval_Dynasty-Win64-Shipping.exe"+2424B10: 80 B9 1C 01 00 00 00  -  cmp byte ptr [rcx+0000011C],00
+"Medieval_Dynasty-Win64-Shipping.exe"+2424B17: 7D 15                 -  jnl Medieval_Dynasty-Win64-Shipping.exe+2424B2E
+// ---------- INJECTING HERE ----------
+"Medieval_Dynasty-Win64-Shipping.exe"+2424B19: 48 8B 41 30           -  mov rax,[rcx+30]
+"Medieval_Dynasty-Win64-Shipping.exe"+2424B1D: 48 85 C0              -  test rax,rax
+// ---------- DONE INJECTING  ----------
+"Medieval_Dynasty-Win64-Shipping.exe"+2424B20: 74 0C                 -  je Medieval_Dynasty-Win64-Shipping.exe+2424B2E
+"Medieval_Dynasty-Win64-Shipping.exe"+2424B22: 83 B8 A0 00 00 00 00  -  cmp dword ptr [rax+000000A0],00
+"Medieval_Dynasty-Win64-Shipping.exe"+2424B29: 74 03                 -  je Medieval_Dynasty-Win64-Shipping.exe+2424B2E
+"Medieval_Dynasty-Win64-Shipping.exe"+2424B2B: B0 01                 -  mov al,01
+"Medieval_Dynasty-Win64-Shipping.exe"+2424B2D: C3                    -  ret 
+"Medieval_Dynasty-Win64-Shipping.exe"+2424B2E: 32 C0                 -  xor al,al
+"Medieval_Dynasty-Win64-Shipping.exe"+2424B30: C3                    -  ret 
+"Medieval_Dynasty-Win64-Shipping.exe"+2424B31: CC                    -  int 3 
+"Medieval_Dynasty-Win64-Shipping.exe"+2424B32: CC                    -  int 3 
+"Medieval_Dynasty-Win64-Shipping.exe"+2424B33: CC                    -  int 3 
+}
+</AssemblerScript>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>106</ID>
+          <Description>"World Pointers"</Description>
+          <Options moHideChildren="1"/>
+          <LastState/>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>[ENABLE]
+aobscanmodule(world,$process,48 89 05 ?? ?? ?? ?? 0F 28)
+label(worldPtr)
+world+(DWORD)[world+03]+07:
+worldPtr:
+registersymbol(world)
+registersymbol(worldPtr)
+
+[DISABLE]
+unregistersymbol(world)
+unregistersymbol(worldPtr)
+
+{
+// ORIGINAL CODE - INJECTION POINT: "Medieval_Dynasty-Win64-Shipping.exe"+20073CA
+
+"Medieval_Dynasty-Win64-Shipping.exe"+2007393: 4C 8B F6                 -  mov r14,rsi
+"Medieval_Dynasty-Win64-Shipping.exe"+2007396: 48 89 75 C7              -  mov [rbp-39],rsi
+"Medieval_Dynasty-Win64-Shipping.exe"+200739A: 48 C7 C3 FF FF FF FF     -  mov rbx,FFFFFFFFFFFFFFFF
+"Medieval_Dynasty-Win64-Shipping.exe"+20073A1: 49 8B 84 24 38 0C 00 00  -  mov rax,[r12+00000C38]
+"Medieval_Dynasty-Win64-Shipping.exe"+20073A9: 4E 8B 2C 30              -  mov r13,[rax+r14]
+"Medieval_Dynasty-Win64-Shipping.exe"+20073AD: 49 8B 85 78 02 00 00     -  mov rax,[r13+00000278]
+"Medieval_Dynasty-Win64-Shipping.exe"+20073B4: 48 85 C0                 -  test rax,rax
+"Medieval_Dynasty-Win64-Shipping.exe"+20073B7: 0F 84 CA 02 00 00        -  je Medieval_Dynasty-Win64-Shipping.exe+2007687
+"Medieval_Dynasty-Win64-Shipping.exe"+20073BD: F6 80 1E 01 00 00 10     -  test byte ptr [rax+0000011E],10
+"Medieval_Dynasty-Win64-Shipping.exe"+20073C4: 0F 84 BD 02 00 00        -  je Medieval_Dynasty-Win64-Shipping.exe+2007687
+// ---------- INJECTING HERE ----------
+"Medieval_Dynasty-Win64-Shipping.exe"+20073CA: 48 89 05 AF B1 F3 01     -  mov [Medieval_Dynasty-Win64-Shipping.exe+3F42580],rax
+// ---------- DONE INJECTING  ----------
+"Medieval_Dynasty-Win64-Shipping.exe"+20073D1: 0F 28 D6                 -  movaps xmm2,xmm6
+"Medieval_Dynasty-Win64-Shipping.exe"+20073D4: 49 8B 04 24              -  mov rax,[r12]
+"Medieval_Dynasty-Win64-Shipping.exe"+20073D8: 49 8B D5                 -  mov rdx,r13
+"Medieval_Dynasty-Win64-Shipping.exe"+20073DB: 49 8B CC                 -  mov rcx,r12
+"Medieval_Dynasty-Win64-Shipping.exe"+20073DE: FF 90 48 04 00 00        -  call qword ptr [rax+00000448]
+"Medieval_Dynasty-Win64-Shipping.exe"+20073E4: 80 7D 77 00              -  cmp byte ptr [rbp+77],00
+"Medieval_Dynasty-Win64-Shipping.exe"+20073E8: 75 1C                    -  jne Medieval_Dynasty-Win64-Shipping.exe+2007406
+"Medieval_Dynasty-Win64-Shipping.exe"+20073EA: 41 89 B4 24 A4 07 00 00  -  mov [r12+000007A4],esi
+"Medieval_Dynasty-Win64-Shipping.exe"+20073F2: 0F 28 D6                 -  movaps xmm2,xmm6
+"Medieval_Dynasty-Win64-Shipping.exe"+20073F5: 49 8B 8D 78 02 00 00     -  mov rcx,[r13+00000278]
+}
+</AssemblerScript>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>107</ID>
+              <Description>"World"</Description>
+              <LastState Value="" RealAddress="00000000"/>
+              <GroupHeader>1</GroupHeader>
+              <Address>worldPtr</Address>
+              <Offsets>
+                <Offset>0</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>108</ID>
+              <Description>"GM_MedievalDynasty_C"</Description>
+              <LastState Value="" RealAddress="00000000"/>
+              <GroupHeader>1</GroupHeader>
+              <Address>worldPtr</Address>
+              <Offsets>
+                <Offset>0</Offset>
+                <Offset>128</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>114</ID>
+              <Description>"SceneComponent"</Description>
+              <LastState Value="" RealAddress="00000000"/>
+              <GroupHeader>1</GroupHeader>
+              <Address>worldPtr</Address>
+              <Offsets>
+                <Offset>0</Offset>
+                <Offset>130</Offset>
+                <Offset>128</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>113</ID>
+              <Description>"GS_GameState_C"</Description>
+              <LastState Value="" RealAddress="00000000"/>
+              <GroupHeader>1</GroupHeader>
+              <Address>worldPtr</Address>
+              <Offsets>
+                <Offset>0</Offset>
+                <Offset>130</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>112</ID>
+              <Description>"Level"</Description>
+              <LastState Value="" RealAddress="00000000"/>
+              <GroupHeader>1</GroupHeader>
+              <Address>worldPtr</Address>
+              <Offsets>
+                <Offset>0</Offset>
+                <Offset>30</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>109</ID>
+              <Description>"Map_Persistent_C"</Description>
+              <LastState Value="" RealAddress="00000000"/>
+              <GroupHeader>1</GroupHeader>
+              <Address>worldPtr</Address>
+              <Offsets>
+                <Offset>0</Offset>
+                <Offset>E8</Offset>
+                <Offset>30</Offset>
+              </Offsets>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>26</ID>
+          <Description>"List of Items"</Description>
+          <LastState/>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>[ENABLE]
+{
+-- DataTable DT_ListOfItems.DT_ListOfItems
+local list = 0x21E7747C9C0
+local size = readInteger(list + 0x38)
+local item = readPointer(list + 0x30)
+print("----------")
+for i = 1, size do
+  local id = readInteger(item + 0x00)
+  local name = readPointer(item + 0x08)
+  name = readPointer(name + 0x00)
+  name = readPointer(name + 0x08)
+  name = readPointer(name + 0x00)
+  name = readString(name, 256, true)
+  print(string.format("%08X:%s", id, name))
+  item = item + 0x18
+end
+}
+[DISABLE]
+</AssemblerScript>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>50</ID>
+          <Description>"Player"</Description>
+          <Options moHideChildren="1"/>
+          <LastState Value="" RealAddress="1CD8DDDC940"/>
+          <GroupHeader>1</GroupHeader>
+          <Address>playerPtr</Address>
+          <Offsets>
+            <Offset>0</Offset>
+          </Offsets>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>31</ID>
+              <Description>"Statistics"</Description>
+              <Options moHideChildren="1"/>
+              <LastState Value="" RealAddress="1CE1626E830"/>
+              <GroupHeader>1</GroupHeader>
+              <Address>+558</Address>
+              <Offsets>
+                <Offset>0</Offset>
+              </Offsets>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>36</ID>
+                  <Description>"Health"</Description>
+                  <LastState Value="1" RealAddress="1CE1626EEC8"/>
+                  <VariableType>Float</VariableType>
+                  <Address>+698</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>38</ID>
+                  <Description>"Stamina"</Description>
+                  <LastState Value="1" RealAddress="1CE1626EED8"/>
+                  <VariableType>Float</VariableType>
+                  <Address>+6A8</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>34</ID>
+                  <Description>"Food"</Description>
+                  <LastState Value="9999" RealAddress="1CE1626EEC0"/>
+                  <VariableType>Float</VariableType>
+                  <Address>+690</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>35</ID>
+                  <Description>"Water"</Description>
+                  <LastState Value="9999" RealAddress="1CE1626EED0"/>
+                  <VariableType>Float</VariableType>
+                  <Address>+6A0</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>39</ID>
+                  <Description>"Dirty"</Description>
+                  <LastState Value="0.1252011061" RealAddress="1CE1626EEBC"/>
+                  <VariableType>Float</VariableType>
+                  <Address>+68C</Address>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>54</ID>
+              <Description>"Skills"</Description>
+              <Options moHideChildren="1"/>
+              <LastState Value="" RealAddress="1CE1626E990"/>
+              <GroupHeader>1</GroupHeader>
+              <Address>+558</Address>
+              <Offsets>
+                <Offset>160</Offset>
+              </Offsets>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>60</ID>
+                  <Description>"Extraction XP"</Description>
+                  <LastState Value="152" RealAddress="1CE1626E9D4"/>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>+0*60+44</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>66</ID>
+                  <Description>"Extraction Points"</Description>
+                  <LastState Value="0" RealAddress="1CE1626E9EC"/>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>+0*60+5C</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>61</ID>
+                  <Description>"Hunting XP"</Description>
+                  <LastState Value="36" RealAddress="1CE1626EA34"/>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>+1*60+44</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>68</ID>
+                  <Description>"Hunting Points"</Description>
+                  <LastState Value="0" RealAddress="1CE1626EA4C"/>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>+1*60+5C</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>62</ID>
+                  <Description>"Farming XP"</Description>
+                  <LastState Value="4" RealAddress="1CE1626EA94"/>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>+2*60+44</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>69</ID>
+                  <Description>"Farming Points"</Description>
+                  <LastState Value="0" RealAddress="1CE1626EAAC"/>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>+2*60+5C</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>63</ID>
+                  <Description>"Diplomacy XP"</Description>
+                  <LastState Value="112" RealAddress="1CE1626EAF4"/>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>+3*60+44</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>70</ID>
+                  <Description>"Diplomacy Points"</Description>
+                  <LastState Value="0" RealAddress="1CE1626EB0C"/>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>+3*60+5C</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>64</ID>
+                  <Description>"Survival XP"</Description>
+                  <LastState Value="198" RealAddress="1CE1626EB54"/>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>+4*60+44</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>67</ID>
+                  <Description>"Survival Points"</Description>
+                  <LastState Value="0" RealAddress="1CE1626EB6C"/>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>+4*60+5C</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>65</ID>
+                  <Description>"Crafting XP"</Description>
+                  <LastState Value="92" RealAddress="1CE1626EBB4"/>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>+5*60+44</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>71</ID>
+                  <Description>"Crafting Points"</Description>
+                  <LastState Value="0" RealAddress="1CE1626EBCC"/>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>+5*60+5C</Address>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>607</ID>
+              <Description>"PC_Player"</Description>
+              <Options moHideChildren="1"/>
+              <LastState Value="" RealAddress="1CE1626B890"/>
+              <GroupHeader>1</GroupHeader>
+              <Address>+258</Address>
+              <Offsets>
+                <Offset>0</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>32</ID>
+              <Description>"Inventory"</Description>
+              <Options moHideChildren="1"/>
+              <LastState Value="" RealAddress="1CEA68EA600"/>
+              <GroupHeader>1</GroupHeader>
+              <Address>+568</Address>
+              <Offsets>
+                <Offset>0</Offset>
+              </Offsets>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>23</ID>
+                  <Description>"Weight Limit"</Description>
+                  <LastState Value="35" RealAddress="1CEA68EA6C8"/>
+                  <VariableType>Float</VariableType>
+                  <Address>+C8</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>24</ID>
+                  <Description>"Overloaded"</Description>
+                  <LastState Value="50" RealAddress="1CEA68EA6CC"/>
+                  <VariableType>Float</VariableType>
+                  <Address>+CC</Address>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>33</ID>
+              <Description>"Relations"</Description>
+              <LastState Value="" RealAddress="1CDF5D83340"/>
+              <GroupHeader>1</GroupHeader>
+              <Address>+560</Address>
+              <Offsets>
+                <Offset>0</Offset>
+              </Offsets>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>117</ID>
+          <Description>"Class Size"</Description>
+          <ShowAsHex>1</ShowAsHex>
+          <VariableType>4 Bytes</VariableType>
+          <Address>+10</Address>
+          <Offsets>
+            <Offset>58</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>635</ID>
+          <Description>"BP_PlayerCharacter_C"</Description>
+          <Options moHideChildren="1"/>
+          <LastState Value="" RealAddress="1CD8DDDC940"/>
+          <GroupHeader>1</GroupHeader>
+          <Address>playerPtr</Address>
+          <Offsets>
+            <Offset>0</Offset>
+          </Offsets>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>636</ID>
+              <Description>"PC_Player_C"</Description>
+              <LastState Value="" RealAddress="1CE1626B890"/>
+              <GroupHeader>1</GroupHeader>
+              <Address>+E0</Address>
+              <Offsets>
+                <Offset>0</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>637</ID>
+              <Description>"InputComponent"</Description>
+              <LastState Value="" RealAddress="1CF67948440"/>
+              <GroupHeader>1</GroupHeader>
+              <Address>+F8</Address>
+              <Offsets>
+                <Offset>0</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>638</ID>
+              <Description>"CapsuleComponent"</Description>
+              <LastState Value="" RealAddress="1CE324B7290"/>
+              <GroupHeader>1</GroupHeader>
+              <Address>+130</Address>
+              <Offsets>
+                <Offset>0</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>644</ID>
+              <Description>"List Size"</Description>
+              <LastState Value="53" RealAddress="1CD8DDDCAE8"/>
+              <VariableType>4 Bytes</VariableType>
+              <Address>+1A8</Address>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>639</ID>
+              <Description>"List of Components"</Description>
+              <Options moHideChildren="1"/>
+              <LastState Value="" RealAddress="1CDED4C7080"/>
+              <GroupHeader>1</GroupHeader>
+              <Address>+1A0</Address>
+              <Offsets>
+                <Offset>0</Offset>
+              </Offsets>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>640</ID>
+                  <Description>"CharacterMovementComponent 00C"</Description>
+                  <LastState Value="" RealAddress="1CE16220100"/>
+                  <GroupHeader>1</GroupHeader>
+                  <Address>+10</Address>
+                  <Offsets>
+                    <Offset>0</Offset>
+                  </Offsets>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>641</ID>
+                  <Description>"InventoryComponent_C 003"</Description>
+                  <LastState Value="" RealAddress="1CEA68EA600"/>
+                  <GroupHeader>1</GroupHeader>
+                  <Address>+E0</Address>
+                  <Offsets>
+                    <Offset>0</Offset>
+                  </Offsets>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>643</ID>
+                  <Description>"BP_RelationsComponent_C 02F"</Description>
+                  <LastState Value="" RealAddress="1CDF5D83340"/>
+                  <GroupHeader>1</GroupHeader>
+                  <Address>+F0</Address>
+                  <Offsets>
+                    <Offset>0</Offset>
+                  </Offsets>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>642</ID>
+                  <Description>"BP_CharacterStatsComponent_C 037"</Description>
+                  <LastState Value="" RealAddress="1CE1626E830"/>
+                  <GroupHeader>1</GroupHeader>
+                  <Address>+100</Address>
+                  <Offsets>
+                    <Offset>0</Offset>
+                  </Offsets>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>645</ID>
+                  <Description>"CameraComponent 033"</Description>
+                  <LastState Value="" RealAddress="1CE1626D850"/>
+                  <GroupHeader>1</GroupHeader>
+                  <Address>+180</Address>
+                  <Offsets>
+                    <Offset>0</Offset>
+                  </Offsets>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>646</ID>
+                  <Description>"BP_StageInteractionComponent_C 007"</Description>
+                  <LastState Value="" RealAddress="1CF67AC3100"/>
+                  <GroupHeader>1</GroupHeader>
+                  <Address>+170</Address>
+                  <Offsets>
+                    <Offset>0</Offset>
+                  </Offsets>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>647</ID>
+                  <Description>"BP_PlayerBuildingComponent_C 028"</Description>
+                  <LastState Value="" RealAddress="1CEA7724500"/>
+                  <GroupHeader>1</GroupHeader>
+                  <Address>+280</Address>
+                  <Offsets>
+                    <Offset>0</Offset>
+                  </Offsets>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>649</ID>
+              <Description>"PlayerState"</Description>
+              <LastState Value="" RealAddress="1CDED761900"/>
+              <GroupHeader>1</GroupHeader>
+              <Address>+240</Address>
+              <Offsets>
+                <Offset>0</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>650</ID>
+              <Description>"CharacterMovementComponent"</Description>
+              <LastState Value="" RealAddress="1CE16220100"/>
+              <GroupHeader>1</GroupHeader>
+              <Address>+288</Address>
+              <Offsets>
+                <Offset>0</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>651</ID>
+              <Description>"CapsuleComponent"</Description>
+              <LastState Value="" RealAddress="1CE324B7290"/>
+              <GroupHeader>1</GroupHeader>
+              <Address>+290</Address>
+              <Offsets>
+                <Offset>0</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>653</ID>
+              <Description>"BP_HoldableItem_"</Description>
+              <LastState Value="" RealAddress="1CF223564E0"/>
+              <GroupHeader>1</GroupHeader>
+              <Address>+880</Address>
+              <Offsets>
+                <Offset>0</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>654</ID>
+              <Description>"BP_SystemsManager_C"</Description>
+              <LastState Value="" RealAddress="1CDF55A7100"/>
+              <GroupHeader>1</GroupHeader>
+              <Address>+8C8</Address>
+              <Offsets>
+                <Offset>0</Offset>
+              </Offsets>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>665</ID>
+                  <Description>"BP_TimeManager_C"</Description>
+                  <LastState Value="" RealAddress="1CD8F41AC00"/>
+                  <GroupHeader>1</GroupHeader>
+                  <Address>+270</Address>
+                  <Offsets>
+                    <Offset>0</Offset>
+                  </Offsets>
+                  <CheatEntries>
+                    <CheatEntry>
+                      <ID>98</ID>
+                      <Description>"Hour"</Description>
+                      <LastState Value="18" RealAddress="1CD8F41AE7C"/>
+                      <VariableType>4 Bytes</VariableType>
+                      <Address>+27C</Address>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>101</ID>
+                      <Description>"Minute"</Description>
+                      <LastState Value="12" RealAddress="1CD8F41AE80"/>
+                      <VariableType>4 Bytes</VariableType>
+                      <Address>+280</Address>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>102</ID>
+                      <Description>"Second"</Description>
+                      <LastState Value="9" RealAddress="1CD8F41AE84"/>
+                      <VariableType>4 Bytes</VariableType>
+                      <Address>+284</Address>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>103</ID>
+                      <Description>"Season"</Description>
+                      <DropDownList ReadOnly="1" DescriptionOnly="1" DisplayValueAsItem="1">0:Spring
+1:Summer
+2:Autumn
+3:Winter
+</DropDownList>
+                      <LastState Value="1" RealAddress="1CD8F41AE8C"/>
+                      <VariableType>4 Bytes</VariableType>
+                      <Address>+28C</Address>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>104</ID>
+                      <Description>"Year"</Description>
+                      <LastState Value="1" RealAddress="1CD8F41AE90"/>
+                      <VariableType>4 Bytes</VariableType>
+                      <Address>+290</Address>
+                    </CheatEntry>
+                  </CheatEntries>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>666</ID>
+                  <Description>"BP_KingdomManager_C"</Description>
+                  <LastState Value="" RealAddress="1CDF55A6E40"/>
+                  <GroupHeader>1</GroupHeader>
+                  <Address>+278</Address>
+                  <Offsets>
+                    <Offset>0</Offset>
+                  </Offsets>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>667</ID>
+                  <Description>"BP_VillageManager_C"</Description>
+                  <LastState Value="" RealAddress="1CE12100100"/>
+                  <GroupHeader>1</GroupHeader>
+                  <Address>+280</Address>
+                  <Offsets>
+                    <Offset>0</Offset>
+                  </Offsets>
+                  <CheatEntries>
+                    <CheatEntry>
+                      <ID>73</ID>
+                      <Description>"Dynasty Reputation"</Description>
+                      <LastState Value="1056" RealAddress="1CE12100390"/>
+                      <VariableType>4 Bytes</VariableType>
+                      <Address>+290</Address>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>74</ID>
+                      <Description>"Building Limit"</Description>
+                      <LastState Value="8" RealAddress="1CE12100444"/>
+                      <VariableType>4 Bytes</VariableType>
+                      <Address>+344</Address>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>75</ID>
+                      <Description>"Building Tech"</Description>
+                      <LastState Value="10053" RealAddress="1CE121003AC"/>
+                      <VariableType>Float</VariableType>
+                      <Address>+2AC</Address>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>76</ID>
+                      <Description>"Survival Tech"</Description>
+                      <LastState Value="5009" RealAddress="1CE121003B0"/>
+                      <VariableType>Float</VariableType>
+                      <Address>+2B0</Address>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>77</ID>
+                      <Description>"Farming Tech"</Description>
+                      <LastState Value="4.199999809" RealAddress="1CE121003B4"/>
+                      <VariableType>Float</VariableType>
+                      <Address>+2B4</Address>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>78</ID>
+                      <Description>"Crafting Tech"</Description>
+                      <LastState Value="10001" RealAddress="1CE121003B8"/>
+                      <VariableType>Float</VariableType>
+                      <Address>+2B8</Address>
+                    </CheatEntry>
+                  </CheatEntries>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>668</ID>
+                  <Description>"BP_NPCManager_C"</Description>
+                  <LastState Value="" RealAddress="1CE12176700"/>
+                  <GroupHeader>1</GroupHeader>
+                  <Address>+288</Address>
+                  <Offsets>
+                    <Offset>0</Offset>
+                  </Offsets>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>655</ID>
+              <Description>"BP_PlayerBuildingComponent_C"</Description>
+              <LastState Value="" RealAddress="1CEA7724500"/>
+              <GroupHeader>1</GroupHeader>
+              <Address>+DB0</Address>
+              <Offsets>
+                <Offset>0</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>656</ID>
+              <Description>"DataTable DT_ListOfItems"</Description>
+              <LastState Value="" RealAddress="1CD827FC9C0"/>
+              <GroupHeader>1</GroupHeader>
+              <Address>+10C8</Address>
+              <Offsets>
+                <Offset>0</Offset>
+              </Offsets>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+  </CheatEntries>
+  <UserdefinedSymbols/>
+</CheatTable>

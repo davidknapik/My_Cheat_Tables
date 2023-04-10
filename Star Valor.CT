@@ -1,0 +1,2683 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheatTable CheatEngineTableVersion="34">
+  <CheatEntries>
+    <CheatEntry>
+      <ID>115868</ID>
+      <Description>"Star.Valor.v1.2.5a"</Description>
+      <Options moHideChildren="1" moDeactivateChildrenAsWell="1"/>
+      <LastState/>
+      <Color>808000</Color>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>{======================
+Author   : aanpsx
+Date     : 2021-01-24
+Game     : Star Valor.exe
+Version  : 2019.4.16.23406
+======================}
+
+[ENABLE]
+{$lua}
+if syntaxcheck then return end
+-----------------------
+memrec.Color=0x000000ff
+-------------- A.B.G.R
+LaunchMonoDataCollector()
+--reinitializeDotNetSymbolhandler()
+if(getCEVersion() &lt; 7.2) then
+   ShowMessage('Warning. CE version should be 7.2 or above')
+end
+if(process == nil) then
+   ShowMessage('No process was selected')
+elseif (string.upper(process) ~= string.upper("Star Valor.exe")) then
+   ShowMessage('Warning. Expected Process = Star Valor.exe')
+end
+{$asm}
+LuaCall(function cycleFullCompact(sender,force) local state = not(compactmenuitem.Caption == 'Compact View Mode'); if force~=nil then state = not force end; compactmenuitem.Caption = state and 'Compact View Mode' or 'Full View Mode'; getMainForm().Splitter1.Visible = state; getMainForm().Panel4.Visible    = state; getMainForm().Panel5.Visible    = state; end; function addCompactMenu() if compactmenualreadyexists then return end; local parent = getMainForm().Menu.Items; compactmenuitem = createMenuItem(parent); parent.add(compactmenuitem); compactmenuitem.Caption = 'Compact View Mode'; compactmenuitem.OnClick = cycleFullCompact; compactmenualreadyexists = 'yes'; end; addCompactMenu(); cycleFullCompact(nil,true))
+
+[DISABLE]
+LuaCall(cycleFullCompact(nil,false))
+{$lua}
+if syntaxcheck then return end
+-----------------------
+memrec.Color=0x00808000
+-------------- A.B.G.R 
+{$asm}
+</AssemblerScript>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>116469</ID>
+          <Description>"Enable"</Description>
+          <Options moHideChildren="1" moDeactivateChildrenAsWell="1"/>
+          <LastState/>
+          <Color>808000</Color>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>{======================
+Author   : aanpsx
+Date     : 2020-06-23
+Game     : Star Valor.exe
+Version  : 2019.2.9.52813
+======================}
+
+define(address_Player,"PlayerUIControl:UpdateUI")
+define(bytes_Player,db 55 8B EC 57 81 EC 14 01 00 00)
+define(address_MarketItem,"Market:ActivateTooltip+3b")
+define(bytes_MarketItem,db 8B 40 08 85 C0)
+define(address_Item,"Inventory:ActivateTooltip+15a")
+define(bytes_Item,db 8B 40 14 89 44 24 0C)
+define(address_Crafting,"WeaponCrafting:LoadItems")
+define(bytes_Crafting,db 55 8B EC 53 57)
+define(address_Char,"PlayerUIControl:LateUpdate+cc")
+define(bytes_Char,db 8B 80 88 00 00 00)
+define(fmax,(float)999999999)
+define(fmin,(float)0)
+define(imax,#999999999)
+define(cmp1,cmp byte ptr)
+define(bit,byte ptr)
+define(4b,dd 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
+//           0 4 8 c1014181c2024282c3034383c4044484c
+[ENABLE]
+{$lua}
+if syntaxcheck then return end
+LaunchMonoDataCollector()
+-----------------------
+memrec.Color=0x00ff0000
+-------------- A.B.G.R
+{$asm}
+aobscanregion(PSX_Player,PlayerUIControl:UpdateUI,PlayerUIControl:UpdateUI+1,55)
+alloc(newmem_Player,$1000,PSX_Player)
+label(_Player)
+label(code_Player)
+registersymbol(_Player)
+registersymbol(PSX_Player)
+registersymbol(code_Player)
+newmem_Player:
+  mov [_Player],eax
+code_Player:
+  readmem(PSX_Player,10)
+  jmp return_Player
+_Player:
+  4b
+PSX_Player:
+  jmp newmem_Player
+  nop 5
+return_Player:
+
+
+aobscanregion(PSX_MarketItem,Market:ActivateTooltip,Market:ActivateTooltip+13b,8B 40 08 85 C0)
+alloc(newmem_MarketItem,$1000,PSX_MarketItem)
+label(_MarketItem)
+label(code_MarketItem)
+registersymbol(_MarketItem)
+registersymbol(PSX_MarketItem)
+registersymbol(code_MarketItem)
+newmem_MarketItem:
+  mov [_MarketItem],eax
+  mov [_MarketItem+4],ebx
+  mov [_MarketItem+8],ecx
+  mov [_MarketItem+c],edx
+code_MarketItem:
+  readmem(PSX_MarketItem,5)
+  jmp return_MarketItem
+_MarketItem:
+  4b
+PSX_MarketItem:
+  jmp newmem_MarketItem
+return_MarketItem:
+
+aobscanregion(PSX_Item,Inventory:ActivateTooltip+5a,Inventory:ActivateTooltip+25a,8B 40 14 89 44 24 0C)
+alloc(newmem_Item,$1000,PSX_Item)
+label(_Item)
+label(code_Item)
+registersymbol(_Item)
+registersymbol(PSX_Item)
+registersymbol(code_Item)
+newmem_Item:
+  mov [_Item],eax
+  mov [_Item+4],ebx
+  mov [_Item+8],ecx
+  mov [_Item+c],edx
+code_Item:
+  readmem(PSX_Item,7)
+  jmp return_Item
+_Item:
+  4b
+PSX_Item:
+  jmp newmem_Item
+  nop 2
+return_Item:
+
+aobscanregion(PSX_Crafting,WeaponCrafting:LoadItems,WeaponCrafting:LoadItems+1,55)
+alloc(newmem_Crafting,$1000,PSX_Crafting)
+label(_Crafting)
+label(code_Crafting)
+registersymbol(_Crafting)
+registersymbol(PSX_Crafting)
+registersymbol(code_Crafting)
+newmem_Crafting:
+  mov [_Crafting],edi
+  mov [_Crafting+4],eax
+  mov [_Crafting+8],ebx
+  mov [_Crafting+c],ecx
+  mov [_Crafting+10],edx
+code_Crafting:
+  readmem(PSX_Crafting,5)
+  jmp return_Crafting
+_Crafting:
+  4b
+PSX_Crafting:
+  jmp newmem_Crafting
+return_Crafting:
+
+aobscanregion(PSX_Char,PlayerUIControl:LateUpdate+c,PlayerUIControl:LateUpdate+1cc,8B 80 88 00 00 00)
+alloc(newmem_Char,$1000,PSX_Char)
+label(_Char)
+label(code_Char)
+registersymbol(_Char)
+registersymbol(PSX_Char)
+registersymbol(code_Char)
+newmem_Char:
+  mov [_Char],eax
+code_Char:
+  readmem(PSX_Char,6)
+  jmp return_Char
+_Char:
+  4b
+PSX_Char:
+  jmp newmem_Char
+  nop
+return_Char:
+
+[DISABLE]
+unregistersymbol(_Player)
+unregistersymbol(PSX_Player)
+unregistersymbol(code_Player)
+dealloc(newmem_Player)
+PSX_Player:
+  readmem(code_Player,10)
+//Alt: push ebp
+//Alt: mov ebp,esp
+//Alt: push edi
+//Alt: sub esp,00000114
+
+unregistersymbol(_MarketItem)
+unregistersymbol(PSX_MarketItem)
+unregistersymbol(code_MarketItem)
+dealloc(newmem_MarketItem)
+PSX_MarketItem:
+  readmem(code_MarketItem,5)
+//Alt: mov eax,[eax+08]
+//Alt: test eax,eax
+
+unregistersymbol(_Item)
+unregistersymbol(PSX_Item)
+unregistersymbol(code_Item)
+dealloc(newmem_Item)
+PSX_Item:
+  readmem(code_Item,7)
+//Alt: mov eax,[eax+14]
+//Alt: mov [esp+0C],eax
+
+unregistersymbol(_Crafting)
+unregistersymbol(PSX_Crafting)
+unregistersymbol(code_Crafting)
+dealloc(newmem_Crafting)
+PSX_Crafting:
+  readmem(code_Crafting,5)
+//Alt: push ebp
+//Alt: mov ebp,esp
+//Alt: push ebx
+//Alt: push edi
+
+unregistersymbol(_Char)
+unregistersymbol(PSX_Char)
+unregistersymbol(code_Char)
+dealloc(newmem_Char)
+PSX_Char:
+  readmem(code_Char,6)
+//Alt: mov eax,[eax+00000088]
+
+{$lua}
+if syntaxcheck then return end
+-----------------------
+memrec.Color=0x00808000
+-------------- A.B.G.R 
+{$asm}
+{
+// ORIGINAL CODE - INJECTION POINT: PlayerUIControl:UpdateUI
+
+""+5AC004: 0F B6 C0                 -  movzx eax,al
+""+5AC007: 8B CE                    -  mov ecx,esi
+""+5AC009: 88 4D F8                 -  mov [ebp-08],cl
+""+5AC00C: 8D 65 FC                 -  lea esp,[ebp-04]
+""+5AC00F: 8D 65 FC                 -  lea esp,[ebp-04]
+""+5AC012: 5E                       -  pop esi
+""+5AC013: C9                       -  leave 
+""+5AC014: C3                       -  ret 
+""+5AC015: 00 00                    -  add [eax],al
+""+5AC017: 00 55                    - db 00 55  // SHORTENED TO HIT INJECTION FROM:  add [ebp-75],dl
+// ---------- INJECTING HERE ----------
+""+5AC019: 8B EC                    -  mov ebp,esp
+""+5AC01B: 57                       -  push edi
+""+5AC01C: 81 EC 14 01 00 00        -  sub esp,00000114
+// ---------- DONE INJECTING  ----------
+""+5AC022: 8B 7D 08                 -  mov edi,[ebp+08]
+""+5AC025: D9 EE                    -  fldz 
+""+5AC027: D9 9D 58 FF FF FF        -  fstp dword ptr [ebp-000000A8]
+""+5AC02D: D9 EE                    -  fldz 
+""+5AC02F: D9 9D 54 FF FF FF        -  fstp dword ptr [ebp-000000AC]
+""+5AC035: 8B 47 1C                 -  mov eax,[edi+1C]
+""+5AC038: 89 85 44 FF FF FF        -  mov [ebp-000000BC],eax
+""+5AC03E: 8B 47 58                 -  mov eax,[edi+58]
+""+5AC041: D9 40 2C                 -  fld dword ptr [eax+2C]
+""+5AC044: C7 44 24 04 FF FF FF FF  -  mov [esp+04],FFFFFFFF
+}
+</AssemblerScript>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>116479</ID>
+              <Description>"Inf HP"</Description>
+              <LastState/>
+              <Color>008000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>{$lua}
+if syntaxcheck then return end
+
+[ENABLE]
+-----------------------
+memrec.Color=0x000080ff
+-------------- A.B.G.R
+HP = createTimer()
+HP.setInterval(10)
+HP.onTimer = function()
+    MaxHP = readFloat('[["_Player"]+54]+38')
+    writeFloat('[["_Player"]+54]+3c',MaxHP)
+end
+
+[DISABLE]
+HP.destroy()
+-----------------------
+memrec.Color=0x00008000
+-------------- A.B.G.R
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>116480</ID>
+              <Description>"Inf Energy"</Description>
+              <LastState/>
+              <Color>008000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>{$lua}
+if syntaxcheck then return end
+
+[ENABLE]
+-----------------------
+memrec.Color=0x000080ff
+-------------- A.B.G.R
+EN = createTimer()
+EN.setInterval(10)
+EN.onTimer = function()
+    MaxEN = readFloat('[[["_Player"]+54]+7c]+20')
+    writeFloat('[[["_Player"]+54]+7c]+24',MaxEN)
+end
+
+[DISABLE]
+EN.destroy()
+-----------------------
+memrec.Color=0x00008000
+-------------- A.B.G.R
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>116481</ID>
+              <Description>"Inf Shield"</Description>
+              <LastState/>
+              <Color>008000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>{$lua}
+if syntaxcheck then return end
+
+[ENABLE]
+-----------------------
+memrec.Color=0x000080ff
+-------------- A.B.G.R
+Shield = createTimer()
+Shield.setInterval(10)
+Shield.onTimer = function()
+    MaxShield = readFloat('[[["_Player"]+54]+7c]+38')
+    writeFloat('[[["_Player"]+54]+7c]+3c',MaxShield)
+end
+
+[DISABLE]
+Shield.destroy()
+-----------------------
+memrec.Color=0x00008000
+-------------- A.B.G.R
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>116482</ID>
+              <Description>"Can Equip All"</Description>
+              <LastState/>
+              <Color>008000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>{$LUA}
+if syntaxcheck then return end
+
+[ENABLE]
+-----------------------
+memrec.Color=0x000080ff
+-------------- A.B.G.R
+EquipAll = createTimer()
+EquipAll.setInterval(10)
+EquipAll.OnTimer = function()
+    writeInteger("[[_Player]+54]+f0",7)
+    writeInteger("[[[[_Player]+54]+7c]+8]+50",7)
+end
+
+[DISABLE]
+EquipAll.destroy()
+-----------------------
+memrec.Color=0x00008000
+-------------- A.B.G.R
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>116483</ID>
+              <Description>"Can Wrap"</Description>
+              <LastState/>
+              <Color>008000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>{$LUA}
+if syntaxcheck then return end
+
+[ENABLE]
+-----------------------
+memrec.Color=0x000080ff
+-------------- A.B.G.R
+Wrap = createTimer()
+Wrap.setInterval(10)
+Wrap.OnTimer = function()
+    writeFloat('[[["_Player"]+54]+7c]+a8',100)--warpDistance
+    writeFloat('[[["_Player"]+54]+7c]+ac',0)--warpCostPerSector
+    writeFloat('[[["_Player"]+54]+7c]+b0',0)--warpCooldownTime
+end
+
+[DISABLE]
+Wrap.destroy()
+-----------------------
+memrec.Color=0x00008000
+-------------- A.B.G.R
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>116484</ID>
+              <Description>"Weapon Always Cool"</Description>
+              <LastState/>
+              <Color>008000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>{$LUA}
+if syntaxcheck then return end
+
+[ENABLE]
+-----------------------
+memrec.Color=0x000080ff
+-------------- A.B.G.R
+Cooling = createTimer()
+Cooling.setInterval(10)
+Cooling.OnTimer = function()
+    writeFloat('[[["_Player"]+54]+7c]+b4',9999999)--weaponCooling
+end
+
+[DISABLE]
+Cooling.destroy()
+-----------------------
+memrec.Color=0x00008000
+-------------- A.B.G.R
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>116485</ID>
+              <Description>"+Max Tech Lv"</Description>
+              <LastState/>
+              <Color>008000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>{$LUA}
+if syntaxcheck then return end
+
+[ENABLE]
+-----------------------
+memrec.Color=0x000080ff
+-------------- A.B.G.R
+TechLV = createTimer()
+TechLV.setInterval(10)
+TechLV.OnTimer = function()
+    writeInteger('[[["_Player"]+54]+7c]+74',99999999)--techLevelBonus
+end
+
+[DISABLE]
+TechLV.destroy()
+-----------------------
+memrec.Color=0x00008000
+-------------- A.B.G.R
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>116487</ID>
+              <Description>"Max Move + Scanner lua"</Description>
+              <LastState/>
+              <Color>008000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>{$LUA}
+if syntaxcheck then return end
+
+[ENABLE]
+-----------------------
+memrec.Color=0x000080ff
+-------------- A.B.G.R
+ShipTweak = createTimer()
+ShipTweak.setInterval(10)
+ShipTweak.OnTimer = function()
+	writeFloat('[[["_Player"]+54]+7c]+4c',100)--acceleration
+	writeFloat('[[["_Player"]+54]+7c]+50',100)--maxSpeed
+	writeFloat('[[["_Player"]+54]+7c]+78',100)--turnSpeed
+	writeFloat('[[["_Player"]+54]+7c]+7c',100)--strafeSpeed
+    writeFloat('[[["_Player"]+54]+7c]+88',100)--breakDragValue
+    writeInteger('[[["_Player"]+54]+7c]+90',500)--scannerPower
+end
+
+[DISABLE]
+ShipTweak.destroy()
+-----------------------
+memrec.Color=0x00008000
+-------------- A.B.G.R
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>116953</ID>
+              <Description>"Max Equipment Space"</Description>
+              <LastState/>
+              <Color>008000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>{======================
+Author   : aanpsx
+Date     : 2020-06-24
+Game     : Star Valor.exe
+Version  : 2019.2.9.52813
+======================}
+
+define(address_Equipment,"ShipInfo:LoadData+9be")
+define(bytes_Equipment,db 8B 40 14 8B 40 20)
+define(fmax,(float)999999999)
+define(fmin,(float)0)
+define(imax,#999999999)
+define(cmp1,cmp byte ptr)
+define(bit,byte ptr)
+define(4b,dd 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
+//           0 4 8 c1014181c2024282c3034383c4044484c
+[ENABLE]
+{$lua}
+if syntaxcheck then return end
+LaunchMonoDataCollector()
+-----------------------
+memrec.Color=0x000080ff
+-------------- A.B.G.R
+{$asm}
+aobscanregion(PSX_Equipment,ShipInfo:LoadData+8be,ShipInfo:LoadData+abe,8B 40 14 8B 40 20)
+alloc(newmem_Equipment,$1000,PSX_Equipment)
+label(_Equipment)
+label(code_Equipment)
+registersymbol(_Equipment)
+registersymbol(PSX_Equipment)
+registersymbol(code_Equipment)
+newmem_Equipment:
+  mov eax,[eax+14]
+  mov [eax+20],imax
+  mov eax,[eax+20]
+  jmp return_Equipment
+code_Equipment:
+  readmem(PSX_Equipment,6)
+  jmp return_Equipment
+_Equipment:
+  4b
+PSX_Equipment:
+  jmp newmem_Equipment
+  nop
+return_Equipment:
+
+[DISABLE]
+unregistersymbol(_Equipment)
+unregistersymbol(PSX_Equipment)
+unregistersymbol(code_Equipment)
+dealloc(newmem_Equipment)
+PSX_Equipment:
+  readmem(code_Equipment,6)
+//Alt: mov eax,[eax+14]
+//Alt: mov eax,[eax+1C]
+{$lua}
+if syntaxcheck then return end
+-----------------------
+memrec.Color=0x00008000
+-------------- A.B.G.R 
+{$asm}
+{
+// ORIGINAL CODE - INJECTION POINT: ShipInfo:LoadData+9be
+
+10BD45AB: 89 8D 78 FF FF FF        -  mov [ebp-00000088],ecx
+10BD45B1: C7 44 24 08 80 4A 82 0B  -  mov [esp+08],0B824A80
+10BD45B9: C7 44 24 04 04 00 00 00  -  mov [esp+04],00000004
+10BD45C1: 89 04 24                 -  mov [esp],eax
+10BD45C4: 8B 00                    -  mov eax,[eax]
+10BD45C6: FF 90 8C 00 00 00        -  call dword ptr [eax+0000008C]
+10BD45CC: 8B 85 78 FF FF FF        -  mov eax,[ebp-00000088]
+10BD45D2: 89 45 80                 -  mov [ebp-80],eax
+10BD45D5: 89 45 84                 -  mov [ebp-7C],eax
+10BD45D8: 8B 05 E0 4E AC 05        -  mov eax,[05AC4EE0]
+// ---------- INJECTING HERE ----------
+10BD45DE: 8B 40 14                 -  mov eax,[eax+14]
+10BD45E1: 8B 40 1C                 -  mov eax,[eax+1C]
+// ---------- DONE INJECTING  ----------
+10BD45E4: 89 85 7C FF FF FF        -  mov [ebp-00000084],eax
+10BD45EA: C7 04 24 C0 4C 1A 0B     -  mov [esp],0B1A4CC0
+10BD45F1: 8B C0                    -  mov eax,eax
+10BD45F3: E8 E8 C9 40 F2           -  call 02FE0FE0
+10BD45F8: 8B C8                    -  mov ecx,eax
+10BD45FA: 8B 45 80                 -  mov eax,[ebp-80]
+10BD45FD: 8B 95 7C FF FF FF        -  mov edx,[ebp-00000084]
+10BD4603: 89 51 08                 -  mov [ecx+08],edx
+10BD4606: 89 4C 24 08              -  mov [esp+08],ecx
+10BD460A: C7 44 24 04 05 00 00 00  -  mov [esp+04],00000005
+}
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>116509</ID>
+              <Description>"Max Weapon Space"</Description>
+              <LastState/>
+              <Color>008000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>{======================
+Author   : aanpsx
+Date     : 2020-06-24
+Game     : Star Valor.exe
+Version  : 2019.2.9.52813
+======================}
+
+define(address_Weapon,"GameDataInfo:CheckWeaponSpaceOcupied+35")
+define(bytes_Weapon,db 8B 40 08 8D 4D D4)
+define(fmax,(float)999999999)
+define(fmin,(float)0)
+define(imax,#999999999)
+define(cmp1,cmp byte ptr)
+define(bit,byte ptr)
+define(4b,dd 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
+//           0 4 8 c1014181c2024282c3034383c4044484c
+[ENABLE]
+{$lua}
+if syntaxcheck then return end
+LaunchMonoDataCollector()
+-----------------------
+memrec.Color=0x000080ff
+-------------- A.B.G.R
+{$asm}
+aobscanregion(PSX_Weapon,GameDataInfo:CheckWeaponSpaceOcupied,GameDataInfo:CheckWeaponSpaceOcupied+135,8B 40 08 8D)
+alloc(newmem_Weapon,$1000,PSX_Weapon)
+label(_Weapon)
+label(code_Weapon)
+registersymbol(_Weapon)
+registersymbol(PSX_Weapon)
+registersymbol(code_Weapon)
+newmem_Weapon:
+  mov [_Weapon],eax
+  mov [_Weapon+4],ebx
+  mov [_Weapon+8],ecx
+  mov [_Weapon+c],edx
+  mov [eax+1c],fmax
+code_Weapon:
+  readmem(PSX_Weapon,6)
+  jmp return_Weapon
+_Weapon:
+  4b
+PSX_Weapon:
+  jmp newmem_Weapon
+  nop
+return_Weapon:
+
+[DISABLE]
+unregistersymbol(_Weapon)
+unregistersymbol(PSX_Weapon)
+unregistersymbol(code_Weapon)
+dealloc(newmem_Weapon)
+PSX_Weapon:
+  readmem(code_Weapon,6)
+//Alt: mov eax,[eax+08]
+//Alt: lea ecx,[ebp-2C]
+{$lua}
+if syntaxcheck then return end
+-----------------------
+memrec.Color=0x00008000
+-------------- A.B.G.R 
+{$asm}
+{
+// ORIGINAL CODE - INJECTION POINT: GameDataInfo:CheckWeaponSpaceOcupied+35
+
+0E36C4D1: 8B 7D 08              -  mov edi,[ebp+08]
+0E36C4D4: D9 EE                 -  fldz 
+0E36C4D6: D9 5D D0              -  fstp dword ptr [ebp-30]
+0E36C4D9: C7 45 D4 00 00 00 00  -  mov [ebp-2C],00000000
+0E36C4E0: C7 45 D8 00 00 00 00  -  mov [ebp-28],00000000
+0E36C4E7: C7 45 DC 00 00 00 00  -  mov [ebp-24],00000000
+0E36C4EE: C7 45 E0 00 00 00 00  -  mov [ebp-20],00000000
+0E36C4F5: D9 EE                 -  fldz 
+0E36C4F7: D9 5D D0              -  fstp dword ptr [ebp-30]
+0E36C4FA: 8B 47 14              -  mov eax,[edi+14]
+// ---------- INJECTING HERE ----------
+0E36C4FD: 8B 40 08              -  mov eax,[eax+08]
+0E36C500: 8D 4D D4              -  lea ecx,[ebp-2C]
+// ---------- DONE INJECTING  ----------
+0E36C503: 89 4C 24 04           -  mov [esp+04],ecx
+0E36C507: 89 04 24              -  mov [esp],eax
+0E36C50A: 39 00                 -  cmp [eax],eax
+0E36C50C: 8D 6D 00              -  lea ebp,[ebp+00]
+0E36C50F: E8 DC FC E3 F2        -  call 011AC1F0
+0E36C514: 83 EC 04              -  sub esp,04
+0E36C517: E9 3E 00 00 00        -  jmp 0E36C55A
+0E36C51C: 8D 64 24 00           -  lea esp,[esp+00]
+0E36C520: 8B 75 E0              -  mov esi,[ebp-20]
+0E36C523: D9 45 D0              -  fld dword ptr [ebp-30]
+}
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>116955</ID>
+              <Description>"Ignore Cargo Space"</Description>
+              <LastState/>
+              <Color>008000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>{======================
+Author   : aanpsx
+Date     : 2021-01-24
+Game     : Star Valor.exe
+Version  : 2019.4.16.23406
+======================}
+
+define(address_IgnoreCargo,"CargoSystem:GetUsedCargoSpace")
+define(Yes_IgnoreCargo,db d9 ee c3 53 57)//fldz ret
+define(No_IgnoreCargo,db 55 8B EC 53 57)
+[ENABLE]
+{$lua}
+if syntaxcheck then return end
+LaunchMonoDataCollector()
+-----------------------
+memrec.Color=0x000080ff
+-------------- A.B.G.R
+{$asm}
+aobscanregion(PSX_IgnoreCargo,CargoSystem:GetUsedCargoSpace,CargoSystem:GetUsedCargoSpace+1,55)
+//aobscanregion(PSX_IgnoreCargo,CargoSystem:GetUsedCargoSpace,CargoSystem:GetUsedCargoSpace,55 8B EC 53 57 56 83 EC 5C 8B 7D 08 D9)
+registersymbol(PSX_IgnoreCargo)
+PSX_IgnoreCargo:
+  Yes_IgnoreCargo
+
+[DISABLE]
+unregistersymbol(PSX_IgnoreCargo)
+PSX_IgnoreCargo:
+  No_IgnoreCargo
+{$lua}
+if syntaxcheck then return end
+-----------------------
+memrec.Color=0x00008000
+-------------- A.B.G.R 
+{$asm}
+{
+// ORIGINAL CODE - INJECTION POINT: 16E09738
+
+16E09702: D9 45 F8              - fld dword ptr [ebp-08]
+16E09705: D9 EE                 - fldz 
+16E09707: DF F1                 - fcomip st(0),st(1)
+16E09709: DD D8                 - fstp st(0)
+16E0970B: 76 05                 - jna 16E09712
+16E0970D: D9 EE                 - fldz 
+16E0970F: D9 5D F8              - fstp dword ptr [ebp-08]
+16E09712: D9 45 F8              - fld dword ptr [ebp-08]
+16E09715: 8D 65 FC              - lea esp,[ebp-04]
+16E09718: 8D 65 FC              - lea esp,[ebp-04]
+16E0971B: 5E                    - pop esi
+16E0971C: C9                    - leave 
+16E0971D: C3                    - ret 
+16E0971E: 00 00                 - add [eax],al
+16E09720: 68 C8 EA 67 0F        - push 0F67EAC8
+16E09725: E9 D6 69 C1 EC        - jmp 03A20100
+16E0972A: 00 00                 - add [eax],al
+16E0972C: 68 E0 EA 67 0F        - push 0F67EAE0
+16E09731: E9 CA 69 C1 EC        - jmp 03A20100
+16E09736: 00 00                 - add [eax],al
+// ---------- INJECTING HERE ----------
+16E09738: 55                    - push ebp
+// ---------- DONE INJECTING  ----------
+16E09739: 8B EC                 - mov ebp,esp
+16E0973B: 53                    - push ebx
+16E0973C: 57                    - push edi
+16E0973D: 56                    - push esi
+16E0973E: 83 EC 5C              - sub esp,5C
+16E09741: 8B 7D 08              - mov edi,[ebp+08]
+16E09744: D9 EE                 - fldz 
+16E09746: D9 5D D0              - fstp dword ptr [ebp-30]
+16E09749: C7 45 D4 00 00 00 00  - mov [ebp-2C],00000000
+16E09750: C7 45 D8 00 00 00 00  - mov [ebp-28],00000000
+16E09757: C7 45 DC 00 00 00 00  - mov [ebp-24],00000000
+16E0975E: C7 45 E0 00 00 00 00  - mov [ebp-20],00000000
+16E09765: D9 EE                 - fldz 
+16E09767: D9 5D D0              - fstp dword ptr [ebp-30]
+16E0976A: 8B 47 0C              - mov eax,[edi+0C]
+16E0976D: 8D 4D D4              - lea ecx,[ebp-2C]
+16E09770: 89 4C 24 04           - mov [esp+04],ecx
+16E09774: 89 04 24              - mov [esp],eax
+16E09777: 39 00                 - cmp [eax],eax
+16E09779: 8B C0                 - mov eax,eax
+}
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>116495</ID>
+              <Description>"Max Credit"</Description>
+              <LastState/>
+              <Color>008000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>{$LUA}
+if syntaxcheck then return end
+
+[ENABLE]
+-----------------------
+memrec.Color=0x000080ff
+-------------- A.B.G.R
+Credit = createTimer()
+Credit.setInterval(10)
+Credit.OnTimer = function()
+    writeFloat("[[_Player]+58]+2c",999999999)
+end
+
+[DISABLE]
+Credit.destroy()
+-----------------------
+memrec.Color=0x00008000
+-------------- A.B.G.R
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>116494</ID>
+              <Description>"Ship Tweak (Max Hull, En, Shield)"</Description>
+              <LastState/>
+              <Color>008000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>{$LUA}
+if syntaxcheck then return end
+
+[ENABLE]
+-----------------------
+memrec.Color=0x000080ff
+-------------- A.B.G.R
+ShipTweakHull = createTimer()
+ShipTweakHull.setInterval(10)
+ShipTweakHull.OnTimer = function()
+    writeFloat('[["_Player"]+54]+38',100000000)--baseHP
+	writeFloat('[[["_Player"]+54]+7c]+20',100000000)--baseEnergy
+	writeFloat('[[["_Player"]+54]+7c]+28',100000000)--energyGenerated
+	writeFloat('[[["_Player"]+54]+7c]+34',0)--energyExpend
+	writeFloat('[[["_Player"]+54]+7c]+38',100000000)--baseShield
+	writeFloat('[[["_Player"]+54]+7c]+40',100000000)--shieldRecharge
+	writeFloat('[[["_Player"]+54]+7c]+44',100000000)--shieldAbsorb
+end
+
+[DISABLE]
+ShipTweakHull.destroy()
+-----------------------
+memrec.Color=0x00008000
+-------------- A.B.G.R
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>116486</ID>
+              <Description>"Mining/scavenge Tweak"</Description>
+              <LastState/>
+              <Color>008000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>{$LUA}
+if syntaxcheck then return end
+
+[ENABLE]
+-----------------------
+memrec.Color=0x000080ff
+-------------- A.B.G.R
+Tweak = createTimer()
+Tweak.setInterval(10)
+Tweak.OnTimer = function()
+	writeFloat('[[["_Player"]+54]+7c]+60',10)--miningSpeedBonus
+	writeFloat('[[["_Player"]+54]+7c]+64',5)--miningLootBonus
+	writeFloat('[[["_Player"]+54]+7c]+68',5)--specialMetalBonus
+	writeFloat('[[["_Player"]+54]+7c]+6c',5)--scavengeLootBonus
+--	writeBytes('[[["_Player"]+54]+78]+8d',1)--canRoll
+end
+
+[DISABLE]
+Tweak.destroy()
+-----------------------
+memrec.Color=0x00008000
+-------------- A.B.G.R
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>116613</ID>
+              <Description>"Pointer"</Description>
+              <Options moHideChildren="1"/>
+              <LastState Value="" RealAddress="00000000"/>
+              <Color>FF0000</Color>
+              <GroupHeader>1</GroupHeader>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>116779</ID>
+                  <Description>"Player"</Description>
+                  <Options moHideChildren="1"/>
+                  <LastState Value="" RealAddress="00000000"/>
+                  <GroupHeader>1</GroupHeader>
+                  <CheatEntries>
+                    <CheatEntry>
+                      <ID>116780</ID>
+                      <Description>"base"</Description>
+                      <ShowAsHex>1</ShowAsHex>
+                      <VariableType>4 Bytes</VariableType>
+                      <Address>_Player</Address>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>116781</ID>
+                      <Description>"credits"</Description>
+                      <VariableType>Float</VariableType>
+                      <Address>_Player</Address>
+                      <Offsets>
+                        <Offset>2C</Offset>
+                        <Offset>58</Offset>
+                      </Offsets>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>116782</ID>
+                      <Description>"Current Character"</Description>
+                      <Options moHideChildren="1"/>
+                      <LastState Value="" RealAddress="00000000"/>
+                      <GroupHeader>1</GroupHeader>
+                      <CheatEntries>
+                        <CheatEntry>
+                          <ID>116783</ID>
+                          <Description>"base"</Description>
+                          <ShowAsHex>1</ShowAsHex>
+                          <VariableType>4 Bytes</VariableType>
+                          <Address>_Char</Address>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>116784</ID>
+                          <Description>"Name"</Description>
+                          <VariableType>String</VariableType>
+                          <Length>128</Length>
+                          <Unicode>1</Unicode>
+                          <CodePage>0</CodePage>
+                          <ZeroTerminate>1</ZeroTerminate>
+                          <Address>_Char</Address>
+                          <Offsets>
+                            <Offset>C</Offset>
+                            <Offset>8</Offset>
+                          </Offsets>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>116785</ID>
+                          <Description>"Reputation"</Description>
+                          <Options moHideChildren="1"/>
+                          <LastState Value="" RealAddress="00000000"/>
+                          <GroupHeader>1</GroupHeader>
+                          <CheatEntries>
+                            <CheatEntry>
+                              <ID>116786</ID>
+                              <Description>"Current"</Description>
+                              <Options moHideChildren="1"/>
+                              <LastState Value="" RealAddress="00000000"/>
+                              <GroupHeader>1</GroupHeader>
+                              <CheatEntries>
+                                <CheatEntry>
+                                  <ID>116787</ID>
+                                  <Description>"???"</Description>
+                                  <VariableType>4 Bytes</VariableType>
+                                  <Address>_Char</Address>
+                                  <Offsets>
+                                    <Offset>10</Offset>
+                                    <Offset>8</Offset>
+                                    <Offset>60</Offset>
+                                  </Offsets>
+                                </CheatEntry>
+                                <CheatEntry>
+                                  <ID>116788</ID>
+                                  <Description>"Proxima Mining Company"</Description>
+                                  <VariableType>4 Bytes</VariableType>
+                                  <Address>_Char</Address>
+                                  <Offsets>
+                                    <Offset>14</Offset>
+                                    <Offset>8</Offset>
+                                    <Offset>60</Offset>
+                                  </Offsets>
+                                </CheatEntry>
+                                <CheatEntry>
+                                  <ID>116789</ID>
+                                  <Description>"The Syndicate"</Description>
+                                  <VariableType>4 Bytes</VariableType>
+                                  <Address>_Char</Address>
+                                  <Offsets>
+                                    <Offset>18</Offset>
+                                    <Offset>8</Offset>
+                                    <Offset>60</Offset>
+                                  </Offsets>
+                                </CheatEntry>
+                                <CheatEntry>
+                                  <ID>116790</ID>
+                                  <Description>"Red Skull Pirates"</Description>
+                                  <VariableType>4 Bytes</VariableType>
+                                  <Address>_Char</Address>
+                                  <Offsets>
+                                    <Offset>1C</Offset>
+                                    <Offset>8</Offset>
+                                    <Offset>60</Offset>
+                                  </Offsets>
+                                </CheatEntry>
+                                <CheatEntry>
+                                  <ID>116791</ID>
+                                  <Description>"Venghi Ascension"</Description>
+                                  <VariableType>4 Bytes</VariableType>
+                                  <Address>_Char</Address>
+                                  <Offsets>
+                                    <Offset>20</Offset>
+                                    <Offset>8</Offset>
+                                    <Offset>60</Offset>
+                                  </Offsets>
+                                </CheatEntry>
+                                <CheatEntry>
+                                  <ID>116792</ID>
+                                  <Description>"Children of Terra"</Description>
+                                  <VariableType>4 Bytes</VariableType>
+                                  <Address>_Char</Address>
+                                  <Offsets>
+                                    <Offset>24</Offset>
+                                    <Offset>8</Offset>
+                                    <Offset>60</Offset>
+                                  </Offsets>
+                                </CheatEntry>
+                                <CheatEntry>
+                                  <ID>116793</ID>
+                                  <Description>"Technomancer"</Description>
+                                  <VariableType>4 Bytes</VariableType>
+                                  <Address>_Char</Address>
+                                  <Offsets>
+                                    <Offset>28</Offset>
+                                    <Offset>8</Offset>
+                                    <Offset>60</Offset>
+                                  </Offsets>
+                                </CheatEntry>
+                                <CheatEntry>
+                                  <ID>116794</ID>
+                                  <Description>"======================================"</Description>
+                                  <LastState Value="" RealAddress="00000000"/>
+                                  <Color>808000</Color>
+                                  <GroupHeader>1</GroupHeader>
+                                </CheatEntry>
+                              </CheatEntries>
+                            </CheatEntry>
+                            <CheatEntry>
+                              <ID>116795</ID>
+                              <Description>"Max Limits Value"</Description>
+                              <Options moHideChildren="1"/>
+                              <LastState Value="" RealAddress="00000000"/>
+                              <GroupHeader>1</GroupHeader>
+                              <CheatEntries>
+                                <CheatEntry>
+                                  <ID>116796</ID>
+                                  <Description>"???"</Description>
+                                  <VariableType>4 Bytes</VariableType>
+                                  <Address>_Char</Address>
+                                  <Offsets>
+                                    <Offset>10</Offset>
+                                    <Offset>C</Offset>
+                                    <Offset>60</Offset>
+                                  </Offsets>
+                                </CheatEntry>
+                                <CheatEntry>
+                                  <ID>116797</ID>
+                                  <Description>"Proxima Mining Company"</Description>
+                                  <VariableType>4 Bytes</VariableType>
+                                  <Address>_Char</Address>
+                                  <Offsets>
+                                    <Offset>14</Offset>
+                                    <Offset>C</Offset>
+                                    <Offset>60</Offset>
+                                  </Offsets>
+                                </CheatEntry>
+                                <CheatEntry>
+                                  <ID>116798</ID>
+                                  <Description>"The Syndicate"</Description>
+                                  <VariableType>4 Bytes</VariableType>
+                                  <Address>_Char</Address>
+                                  <Offsets>
+                                    <Offset>18</Offset>
+                                    <Offset>C</Offset>
+                                    <Offset>60</Offset>
+                                  </Offsets>
+                                </CheatEntry>
+                                <CheatEntry>
+                                  <ID>116799</ID>
+                                  <Description>"Red Skull Pirates"</Description>
+                                  <VariableType>4 Bytes</VariableType>
+                                  <Address>_Char</Address>
+                                  <Offsets>
+                                    <Offset>1C</Offset>
+                                    <Offset>C</Offset>
+                                    <Offset>60</Offset>
+                                  </Offsets>
+                                </CheatEntry>
+                                <CheatEntry>
+                                  <ID>116800</ID>
+                                  <Description>"Venghi Ascension"</Description>
+                                  <VariableType>4 Bytes</VariableType>
+                                  <Address>_Char</Address>
+                                  <Offsets>
+                                    <Offset>20</Offset>
+                                    <Offset>C</Offset>
+                                    <Offset>60</Offset>
+                                  </Offsets>
+                                </CheatEntry>
+                                <CheatEntry>
+                                  <ID>116801</ID>
+                                  <Description>"Children of Terra"</Description>
+                                  <VariableType>4 Bytes</VariableType>
+                                  <Address>_Char</Address>
+                                  <Offsets>
+                                    <Offset>24</Offset>
+                                    <Offset>C</Offset>
+                                    <Offset>60</Offset>
+                                  </Offsets>
+                                </CheatEntry>
+                                <CheatEntry>
+                                  <ID>116802</ID>
+                                  <Description>"Technomancer"</Description>
+                                  <VariableType>4 Bytes</VariableType>
+                                  <Address>_Char</Address>
+                                  <Offsets>
+                                    <Offset>28</Offset>
+                                    <Offset>C</Offset>
+                                    <Offset>60</Offset>
+                                  </Offsets>
+                                </CheatEntry>
+                              </CheatEntries>
+                            </CheatEntry>
+                            <CheatEntry>
+                              <ID>116943</ID>
+                              <Description>"========================================"</Description>
+                              <Options moHideChildren="1"/>
+                              <LastState Value="" RealAddress="00000000"/>
+                              <Color>808000</Color>
+                              <GroupHeader>1</GroupHeader>
+                            </CheatEntry>
+                          </CheatEntries>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>116803</ID>
+                          <Description>"imgIndex"</Description>
+                          <VariableType>4 Bytes</VariableType>
+                          <Address>_Char</Address>
+                          <Offsets>
+                            <Offset>10</Offset>
+                          </Offsets>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>116804</ID>
+                          <Description>"level"</Description>
+                          <VariableType>4 Bytes</VariableType>
+                          <Address>_Char</Address>
+                          <Offsets>
+                            <Offset>14</Offset>
+                          </Offsets>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>116805</ID>
+                          <Description>"speed"</Description>
+                          <VariableType>Float</VariableType>
+                          <Address>_Char</Address>
+                          <Offsets>
+                            <Offset>18</Offset>
+                          </Offsets>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>116806</ID>
+                          <Description>"agility"</Description>
+                          <VariableType>Float</VariableType>
+                          <Address>_Char</Address>
+                          <Offsets>
+                            <Offset>1C</Offset>
+                          </Offsets>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>116807</ID>
+                          <Description>"xpMod"</Description>
+                          <VariableType>Float</VariableType>
+                          <Address>_Char</Address>
+                          <Offsets>
+                            <Offset>20</Offset>
+                          </Offsets>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>116808</ID>
+                          <Description>"shipDmgToleranceMod"</Description>
+                          <VariableType>Float</VariableType>
+                          <Address>_Char</Address>
+                          <Offsets>
+                            <Offset>24</Offset>
+                          </Offsets>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>116809</ID>
+                          <Description>"stationDmgToleranceMod"</Description>
+                          <VariableType>Float</VariableType>
+                          <Address>_Char</Address>
+                          <Offsets>
+                            <Offset>28</Offset>
+                          </Offsets>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>116810</ID>
+                          <Description>"techLevel"</Description>
+                          <VariableType>4 Bytes</VariableType>
+                          <Address>_Char</Address>
+                          <Offsets>
+                            <Offset>2C</Offset>
+                          </Offsets>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>116811</ID>
+                          <Description>"fighterPilot"</Description>
+                          <VariableType>4 Bytes</VariableType>
+                          <Address>_Char</Address>
+                          <Offsets>
+                            <Offset>30</Offset>
+                          </Offsets>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>116812</ID>
+                          <Description>"fighterPilotCount"</Description>
+                          <VariableType>4 Bytes</VariableType>
+                          <Address>_Char</Address>
+                          <Offsets>
+                            <Offset>34</Offset>
+                          </Offsets>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>116813</ID>
+                          <Description>"fleetCommander"</Description>
+                          <VariableType>4 Bytes</VariableType>
+                          <Address>_Char</Address>
+                          <Offsets>
+                            <Offset>38</Offset>
+                          </Offsets>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>116814</ID>
+                          <Description>"fleetCommanderCount"</Description>
+                          <VariableType>4 Bytes</VariableType>
+                          <Address>_Char</Address>
+                          <Offsets>
+                            <Offset>3C</Offset>
+                          </Offsets>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>116815</ID>
+                          <Description>"leadership"</Description>
+                          <VariableType>4 Bytes</VariableType>
+                          <Address>_Char</Address>
+                          <Offsets>
+                            <Offset>40</Offset>
+                          </Offsets>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>116816</ID>
+                          <Description>"leadershipCount"</Description>
+                          <VariableType>4 Bytes</VariableType>
+                          <Address>_Char</Address>
+                          <Offsets>
+                            <Offset>44</Offset>
+                          </Offsets>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>116817</ID>
+                          <Description>"geology"</Description>
+                          <VariableType>4 Bytes</VariableType>
+                          <Address>_Char</Address>
+                          <Offsets>
+                            <Offset>48</Offset>
+                          </Offsets>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>116818</ID>
+                          <Description>"geologyCount"</Description>
+                          <VariableType>4 Bytes</VariableType>
+                          <Address>_Char</Address>
+                          <Offsets>
+                            <Offset>4C</Offset>
+                          </Offsets>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>116819</ID>
+                          <Description>"marketInsight"</Description>
+                          <VariableType>4 Bytes</VariableType>
+                          <Address>_Char</Address>
+                          <Offsets>
+                            <Offset>50</Offset>
+                          </Offsets>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>116820</ID>
+                          <Description>"currXP"</Description>
+                          <VariableType>Float</VariableType>
+                          <Address>_Char</Address>
+                          <Offsets>
+                            <Offset>84</Offset>
+                          </Offsets>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>116821</ID>
+                          <Description>"skillPoints"</Description>
+                          <Color>FF0000</Color>
+                          <VariableType>4 Bytes</VariableType>
+                          <Address>_Char</Address>
+                          <Offsets>
+                            <Offset>88</Offset>
+                          </Offsets>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>116956</ID>
+                          <Description>"creditLootMod"</Description>
+                          <ShowAsSigned>0</ShowAsSigned>
+                          <VariableType>Float</VariableType>
+                          <Address>_Char</Address>
+                          <Offsets>
+                            <Offset>8c</Offset>
+                          </Offsets>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>116822</ID>
+                          <Description>"resetSkillsPoints"</Description>
+                          <ShowAsSigned>0</ShowAsSigned>
+                          <Color>FF0000</Color>
+                          <VariableType>4 Bytes</VariableType>
+                          <Address>_Char</Address>
+                          <Offsets>
+                            <Offset>90</Offset>
+                          </Offsets>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>116823</ID>
+                          <Description>"asteroidAnalyzer"</Description>
+                          <ShowAsSigned>0</ShowAsSigned>
+                          <VariableType>4 Bytes</VariableType>
+                          <Address>_Char</Address>
+                          <Offsets>
+                            <Offset>94</Offset>
+                          </Offsets>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>116824</ID>
+                          <Description>"showTutorial"</Description>
+                          <ShowAsSigned>0</ShowAsSigned>
+                          <VariableType>Byte</VariableType>
+                          <Address>_Char</Address>
+                          <Offsets>
+                            <Offset>98</Offset>
+                          </Offsets>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>116825</ID>
+                          <Description>"nextQuestID"</Description>
+                          <ShowAsSigned>0</ShowAsSigned>
+                          <VariableType>4 Bytes</VariableType>
+                          <Address>_Char</Address>
+                          <Offsets>
+                            <Offset>9C</Offset>
+                          </Offsets>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>116826</ID>
+                          <Description>"nextChainQuestID"</Description>
+                          <ShowAsSigned>0</ShowAsSigned>
+                          <VariableType>4 Bytes</VariableType>
+                          <Address>_Char</Address>
+                          <Offsets>
+                            <Offset>A0</Offset>
+                          </Offsets>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>116842</ID>
+                          <Description>"=========================================="</Description>
+                          <LastState Value="" RealAddress="00000000"/>
+                          <Color>808000</Color>
+                          <GroupHeader>1</GroupHeader>
+                        </CheatEntry>
+                      </CheatEntries>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>116941</ID>
+                      <Description>"============================================"</Description>
+                      <Options moHideChildren="1"/>
+                      <LastState Value="" RealAddress="00000000"/>
+                      <Color>808000</Color>
+                      <GroupHeader>1</GroupHeader>
+                    </CheatEntry>
+                  </CheatEntries>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>116614</ID>
+                  <Description>"Highlighted Market Item"</Description>
+                  <Options moHideChildren="1"/>
+                  <LastState Value="" RealAddress="00000000"/>
+                  <GroupHeader>1</GroupHeader>
+                  <CheatEntries>
+                    <CheatEntry>
+                      <ID>116517</ID>
+                      <Description>"base"</Description>
+                      <ShowAsHex>1</ShowAsHex>
+                      <VariableType>4 Bytes</VariableType>
+                      <Address>_MarketItem</Address>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>116518</ID>
+                      <Description>"itemID"</Description>
+                      <VariableType>4 Bytes</VariableType>
+                      <Address>_MarketItem</Address>
+                      <Offsets>
+                        <Offset>8</Offset>
+                      </Offsets>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>116519</ID>
+                      <Description>"============================================"</Description>
+                      <LastState Value="" RealAddress="00000000"/>
+                      <Color>808000</Color>
+                      <GroupHeader>1</GroupHeader>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>116520</ID>
+                      <Description>"Weapon ID"</Description>
+                      <DropDownList DisplayValueAsItem="1">0:Light Laser
+1:Burst Light Laser
+2:Light Cannon
+3:Medium Laser
+4:Light Laser Beam
+5:PD Laser
+6:Small Missile Launcher
+7:Simple Mining Laser
+8:Demolition Missile Launcher
+9:Plasma Cannon
+10:PD Laser Beam
+11:Heavy Laser
+12:Ion Cannon
+13:Rapid Medium Laser
+14:Medium Laser Beam
+15:Rapid Vulcan
+16:Burst Medium Laser
+17:Burst Missile Launcher
+18:Improved Laser Beam
+19:Heavy Laser Beam
+20:Burst Cannon
+21:Simple Repair Beam
+22:Small Laser
+23:Heavy Mining Laser
+24:PD Rapid Laser
+25:Pulson Missile Launcher
+26:Gatling Vulcan
+27:Heavy Cannon
+28:Impact Mine
+29:Heavy Plasma Cannon
+30:Charging Heavy Laser
+31:Fast Pierching Laser
+32:Miner Laser
+33:Station weapon 1
+34:Station weapon 2
+35:Station weapon 3
+36:Ultra Laser Beam
+37:Ultra Cannon
+38:Ion Beam
+39:Doom Cannon
+40:Heavy Mine
+41:Venghi Light Blaster
+42:Venghi Heavy Blaster
+43:Venghi Missile Launcher
+44:X-27 Flak Cannon
+45:Improved Repair Beam
+</DropDownList>
+                      <Color>0000FF</Color>
+                      <VariableType>4 Bytes</VariableType>
+                      <Address>_MarketItem</Address>
+                      <Offsets>
+                        <Offset>8</Offset>
+                      </Offsets>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>116521</ID>
+                      <Description>"Equipment ID"</Description>
+                      <DropDownList DisplayValueAsItem="1">0:Nuclear Reactor
+1:Solar Reactor
+2:Large Nuclear Reactor
+3:Small Battery
+4:Large Battery
+5:Tritanium Armor
+6:Zotrium Armor
+7:Neutronium Armor
+8:Adamatium Armor
+9:Impulse Drive
+10:Heavy Impulse Drive
+11:Lateral Thrusters
+12:Speed Booster
+13:Deuterium Warp Drive
+14:Iridium Warp Drive
+15:Neutron Warp Drive
+16:Gyroscope
+17:Shield Generator
+18:Shield Charger
+19:Shield Absorber
+20:Basic Scanner
+21:Tachyon Scanner
+22:Neutron Scanner
+23:Inertial Stabilizer
+24:Inertial Nullifier
+25:Battle Computer 1.0
+26:Battle Computer 2.0
+27:Battle Computer 3.0
+28:Fusion Reactor
+29:Large Fusion Reactor
+30:Spotlight
+31:Large Gyroscope
+32:Large Lateral Thruster
+33:Repair Drone Bay
+34:Attack Drone Bay
+35:Heatsink
+36:Impact Absorber
+37:Impact Booster
+38:Thorium Scanner
+39:Impulse Drive Mk.II
+40:Impulse Drive Mk.III
+41:Impulse Drive Mk.IV
+42:Heavy Impulse Drive Mk.II
+43:Impulse Drive Mk.V
+44:Heavy Impulse Drive Mk.III
+45:Heavy Shield Generator
+46:Shield Generator Mk.II
+47:Pirate Heatsink
+48:Venghi Sield Generator
+49:Pirate Impulse Drive
+50:Syndicate Scanner
+51:Miners Reactor
+52:Xentronium Armor
+53:Shield Generator Mk.III
+54:Heavy Shield Generator Mk.II
+55:Shield Charger Mk.II
+56:Shiled Absorber Mk.II
+57:Venghi Light Armor
+58:Asteroid Analyzer 1.0
+59:Asteroid Analyzer 2.0
+60:Asteroid Analyzer 3.0
+61:Trader Codex 1.0
+62:Trader Codex 2.0
+63:Trader Codex 3.0
+64:Automated Repair System
+65:Light Shield Generator
+66:Heavy Impulse Drive Mk.IV
+67:Ion Reactor
+68:Large Ion Reactor
+69:Venghi Heavy Shield Generator
+70:Huge Battery
+71:Small Capacitor
+72:Large Capacitor
+73:Nitro Cooling
+74:Hyper Cooling
+75:Lithrium Armor
+76:Venghi Heavy Armor
+77:Capital Impulse Drive
+78:Capital Impulse Drive Mk.II
+79:Capital Impulse Drive Mk.III
+80:Hull Reinforcement
+81:Improved Hull Reinforcement
+82:Tractor Beam
+83:Improved Tractor Beam
+84:Cloacking Device
+85:Speed Booster Mk.II
+86:Speed Booster Mk.III
+87:Thorium Warp Drive
+88:Debris Analyzer 1.0
+89:Debris Analyzer 2.0
+90:Debris Analyzer 3.0
+91:Pathfinder 1.0
+92:Pathfinder 2.0
+93:Pathfinder 3.0
+94:Blue Holocron
+95:Red Holocron
+96:Green Holocron
+97:Capital Impulse Drive Mk.IV
+98:Heavy Tractor Beam
+99:Terran Armor
+100:Energy Armor
+101:Superior Hull Reinforcement
+102:Gyroscope Mk.II
+103:Shield Charger Mk.II
+104:Improved Repair System
+105:Optronic Computer
+106:Ardonian Warp Drive
+107:Optronic Warp Drive
+108:Venghi Reactor
+109:Venghi Large Reactor
+110:Ardonian Small Battery
+111:Ardonian Large Battery
+112:Ardonian Huge Battery
+113:Nodolo's Combat Mod
+114:Nodolo's Warp Mod
+115:Attack Drone Bay Mk.II
+116:Attack Drone Bay Mk.III
+117:Repair Drone Bay Mk.II
+</DropDownList>
+                      <Color>0000FF</Color>
+                      <VariableType>4 Bytes</VariableType>
+                      <Address>_MarketItem</Address>
+                      <Offsets>
+                        <Offset>8</Offset>
+                      </Offsets>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>116522</ID>
+                      <Description>"Ship ID"</Description>
+                      <DropDownList DisplayValueAsItem="1">1:Valor
+2:Space Trader
+3:Falcon
+4:Viper
+5:Feisar
+6:Speeder
+7:Space Ranger
+8:Hauler
+9:Eagle
+10:Shark
+11:Beetle
+12:Venom
+13:Claymore
+14:Juggernaut
+15:Wasp
+16:Seagul
+17:V3G-A
+18:Ogre
+19:Valor Mk.II
+20:Valor Mk.III
+21:Luna
+22:Transport
+23:Hound
+24:Screamer
+25:Mauler
+26:Triton
+27:V2F-A
+28:Titan
+29:Interceptor
+30:Walrus
+31:Driller
+32:Zeep
+33:Fido
+34:Reaper
+35:Bolder
+36:Hawk
+37:Scourge
+38:Mule
+39:Donkey
+40:Dominance
+41:Corsair
+42:Galaxy
+43:Komb-E
+44:Mercury
+45:Squire A22
+46:Defender 6-300
+47:Guardian 4-77
+48:Magellan 10-10
+49:Beatle 8-42
+50:Marco F07
+51:Pelican H44
+52:Horizon A03
+53:Galaxy (Worn)
+54:Theseus
+55:Raven
+56:Geraki
+57:Dorothy
+58:V1I-A
+59:Fury
+60:Phantom
+61:Sanctuary
+</DropDownList>
+                      <Color>0000FF</Color>
+                      <VariableType>4 Bytes</VariableType>
+                      <Address>_MarketItem</Address>
+                      <Offsets>
+                        <Offset>8</Offset>
+                      </Offsets>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>116523</ID>
+                      <Description>"Goods ID"</Description>
+                      <DropDownList DisplayValueAsItem="1">1:Iron
+2:Blue Crystal
+3:Red Crystal
+4:Green Crystal
+5:Fruit and Vegetables
+6:Animal Meat
+7:Syntetic Meat
+8:Coffee
+9:Microchips
+10:Robotics
+11:Plastics
+12:Water Purifiers
+13:Basic Medicine
+14:Progenitor Cells
+15:Wine
+16:Gold
+17:Explosive
+18:Energy Cells
+19:Silver
+20:Cannon Ammo
+21:Vulcan Ammo
+22:Missile Ammo
+23:Drone Parts (Combat)
+24:Ancient Relic
+25:Liquid Nitrogen
+26:Junk
+27:Gray Ore
+28:Nickel
+29:Cobalt
+30:Aluminium
+31:Copper
+32:Gallium
+33:Titanium
+34:Bismuth
+35:Samarium
+36:Lithium
+37:Indium
+38:Iridium
+39:Platinum
+40:Red Ore
+41:Green Ore
+</DropDownList>
+                      <Color>0000FF</Color>
+                      <VariableType>4 Bytes</VariableType>
+                      <Address>_MarketItem</Address>
+                      <Offsets>
+                        <Offset>8</Offset>
+                      </Offsets>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>116524</ID>
+                      <Description>"============================================"</Description>
+                      <LastState Value="" RealAddress="00000000"/>
+                      <Color>808000</Color>
+                      <GroupHeader>1</GroupHeader>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>116525</ID>
+                      <Description>"itemType"</Description>
+                      <VariableType>4 Bytes</VariableType>
+                      <Address>_MarketItem</Address>
+                      <Offsets>
+                        <Offset>c</Offset>
+                      </Offsets>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>116526</ID>
+                      <Description>"rarity"</Description>
+                      <VariableType>4 Bytes</VariableType>
+                      <Address>_MarketItem</Address>
+                      <Offsets>
+                        <Offset>10</Offset>
+                      </Offsets>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>116527</ID>
+                      <Description>"stock"</Description>
+                      <VariableType>4 Bytes</VariableType>
+                      <Address>_MarketItem</Address>
+                      <Offsets>
+                        <Offset>14</Offset>
+                      </Offsets>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>116528</ID>
+                      <Description>"lastStockCount"</Description>
+                      <VariableType>4 Bytes</VariableType>
+                      <Address>_MarketItem</Address>
+                      <Offsets>
+                        <Offset>18</Offset>
+                      </Offsets>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>116529</ID>
+                      <Description>"============================================"</Description>
+                      <LastState Value="" RealAddress="00000000"/>
+                      <Color>808000</Color>
+                      <GroupHeader>1</GroupHeader>
+                    </CheatEntry>
+                  </CheatEntries>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>116615</ID>
+                  <Description>"Highlighted Cargo Item"</Description>
+                  <Options moHideChildren="1"/>
+                  <LastState Value="" RealAddress="00000000"/>
+                  <GroupHeader>1</GroupHeader>
+                  <CheatEntries>
+                    <CheatEntry>
+                      <ID>115872</ID>
+                      <Description>"base"</Description>
+                      <ShowAsHex>1</ShowAsHex>
+                      <VariableType>4 Bytes</VariableType>
+                      <Address>_Item</Address>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>115873</ID>
+                      <Description>"itemType"</Description>
+                      <VariableType>4 Bytes</VariableType>
+                      <Address>_Item</Address>
+                      <Offsets>
+                        <Offset>8</Offset>
+                      </Offsets>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>115881</ID>
+                      <Description>"itemID"</Description>
+                      <VariableType>4 Bytes</VariableType>
+                      <Address>_Item</Address>
+                      <Offsets>
+                        <Offset>c</Offset>
+                      </Offsets>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>115882</ID>
+                      <Description>"============================================"</Description>
+                      <Options moHideChildren="1"/>
+                      <LastState Value="" RealAddress="00000000"/>
+                      <Color>808000</Color>
+                      <GroupHeader>1</GroupHeader>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>115883</ID>
+                      <Description>"Weapon ID"</Description>
+                      <DropDownList DisplayValueAsItem="1">0:Light Laser
+1:Burst Light Laser
+2:Light Cannon
+3:Medium Laser
+4:Light Laser Beam
+5:PD Laser
+6:Small Missile Launcher
+7:Simple Mining Laser
+8:Demolition Missile Launcher
+9:Plasma Cannon
+10:PD Laser Beam
+11:Heavy Laser
+12:Ion Cannon
+13:Rapid Medium Laser
+14:Medium Laser Beam
+15:Rapid Vulcan
+16:Burst Medium Laser
+17:Burst Missile Launcher
+18:Improved Laser Beam
+19:Heavy Laser Beam
+20:Burst Cannon
+21:Simple Repair Beam
+22:Small Laser
+23:Heavy Mining Laser
+24:PD Rapid Laser
+25:Pulson Missile Launcher
+26:Gatling Vulcan
+27:Heavy Cannon
+28:Impact Mine
+29:Heavy Plasma Cannon
+30:Charging Heavy Laser
+31:Fast Pierching Laser
+32:Miner Laser
+33:Station weapon 1
+34:Station weapon 2
+35:Station weapon 3
+36:Ultra Laser Beam
+37:Ultra Cannon
+38:Ion Beam
+39:Doom Cannon
+40:Heavy Mine
+41:Venghi Light Blaster
+42:Venghi Heavy Blaster
+43:Venghi Missile Launcher
+44:X-27 Flak Cannon
+45:Improved Repair Beam
+69:Overload Gatling Heavy Laser
+70:Gatling Heavy Missile Launcher
+</DropDownList>
+                      <Color>0000FF</Color>
+                      <VariableType>4 Bytes</VariableType>
+                      <Address>_Item</Address>
+                      <Offsets>
+                        <Offset>c</Offset>
+                      </Offsets>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>115884</ID>
+                      <Description>"Equipment ID"</Description>
+                      <DropDownList DisplayValueAsItem="1">0:Nuclear Reactor
+1:Solar Reactor
+2:Large Nuclear Reactor
+3:Small Battery
+4:Large Battery
+5:Tritanium Armor
+6:Zotrium Armor
+7:Neutronium Armor
+8:Adamatium Armor
+9:Impulse Drive
+10:Heavy Impulse Drive
+11:Lateral Thrusters
+12:Speed Booster
+13:Deuterium Warp Drive
+14:Iridium Warp Drive
+15:Neutron Warp Drive
+16:Gyroscope
+17:Shield Generator
+18:Shield Charger
+19:Shield Absorber
+20:Basic Scanner
+21:Tachyon Scanner
+22:Neutron Scanner
+23:Inertial Stabilizer
+24:Inertial Nullifier
+25:Battle Computer 1.0
+26:Battle Computer 2.0
+27:Battle Computer 3.0
+28:Fusion Reactor
+29:Large Fusion Reactor
+30:Spotlight
+31:Large Gyroscope
+32:Large Lateral Thruster
+33:Repair Drone Bay
+34:Attack Drone Bay
+35:Heatsink
+36:Impact Absorber
+37:Impact Booster
+38:Thorium Scanner
+39:Impulse Drive Mk.II
+40:Impulse Drive Mk.III
+41:Impulse Drive Mk.IV
+42:Heavy Impulse Drive Mk.II
+43:Impulse Drive Mk.V
+44:Heavy Impulse Drive Mk.III
+45:Heavy Shield Generator
+46:Shield Generator Mk.II
+47:Pirate Heatsink
+48:Venghi Sield Generator
+49:Pirate Impulse Drive
+50:Syndicate Scanner
+51:Miners Reactor
+52:Xentronium Armor
+53:Shield Generator Mk.III
+54:Heavy Shield Generator Mk.II
+55:Shield Charger Mk.II
+56:Shiled Absorber Mk.II
+57:Venghi Light Armor
+58:Asteroid Analyzer 1.0
+59:Asteroid Analyzer 2.0
+60:Asteroid Analyzer 3.0
+61:Trader Codex 1.0
+62:Trader Codex 2.0
+63:Trader Codex 3.0
+64:Automated Repair System
+65:Light Shield Generator
+66:Heavy Impulse Drive Mk.IV
+67:Ion Reactor
+68:Large Ion Reactor
+69:Venghi Heavy Shield Generator
+70:Huge Battery
+71:Small Capacitor
+72:Large Capacitor
+73:Nitro Cooling
+74:Hyper Cooling
+75:Lithrium Armor
+76:Venghi Heavy Armor
+77:Capital Impulse Drive
+78:Capital Impulse Drive Mk.II
+79:Capital Impulse Drive Mk.III
+80:Hull Reinforcement
+81:Improved Hull Reinforcement
+82:Tractor Beam
+83:Improved Tractor Beam
+84:Cloacking Device
+85:Speed Booster Mk.II
+86:Speed Booster Mk.III
+87:Thorium Warp Drive
+88:Debris Analyzer 1.0
+89:Debris Analyzer 2.0
+90:Debris Analyzer 3.0
+91:Pathfinder 1.0
+92:Pathfinder 2.0
+93:Pathfinder 3.0
+94:Blue Holocron
+95:Red Holocron
+96:Green Holocron
+97:Capital Impulse Drive Mk.IV
+98:Heavy Tractor Beam
+99:Terran Armor
+100:Energy Armor
+101:Superior Hull Reinforcement
+102:Gyroscope Mk.II
+103:Shield Charger Mk.II
+104:Improved Repair System
+105:Optronic Computer
+106:Ardonian Warp Drive
+107:Optronic Warp Drive
+108:Venghi Reactor
+109:Venghi Large Reactor
+110:Ardonian Small Battery
+111:Ardonian Large Battery
+112:Ardonian Huge Battery
+113:Nodolo's Combat Mod
+114:Nodolo's Warp Mod
+115:Attack Drone Bay Mk.II
+116:Attack Drone Bay Mk.III
+117:Repair Drone Bay Mk.II
+118:Mining Drone Bay
+119:Heavy Mining Drone Bay
+120:Basic Mobile Refinery
+121:Advanced Mobile Refinery
+</DropDownList>
+                      <Color>0000FF</Color>
+                      <VariableType>4 Bytes</VariableType>
+                      <Address>_Item</Address>
+                      <Offsets>
+                        <Offset>c</Offset>
+                      </Offsets>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>115885</ID>
+                      <Description>"Ship ID"</Description>
+                      <DropDownList DisplayValueAsItem="1">1:Valor
+2:Space Trader
+3:Falcon
+4:Viper
+5:Feisar
+6:Speeder
+7:Space Ranger
+8:Hauler
+9:Eagle
+10:Shark
+11:Beetle
+12:Venom
+13:Claymore
+14:Juggernaut
+15:Wasp
+16:Seagul
+17:V3G-A
+18:Ogre
+19:Valor Mk.II
+20:Valor Mk.III
+21:Luna
+22:Transport
+23:Hound
+24:Screamer
+25:Mauler
+26:Triton
+27:V2F-A
+28:Titan
+29:Interceptor
+30:Walrus
+31:Driller
+32:Zeep
+33:Fido
+34:Reaper
+35:Bolder
+36:Hawk
+37:Scourge
+38:Mule
+39:Donkey
+40:Dominance
+41:Corsair
+42:Galaxy
+43:Komb-E
+44:Mercury
+45:Squire A22
+46:Defender 6-300
+47:Guardian 4-77
+48:Magellan 10-10
+49:Beatle 8-42
+50:Marco F07
+51:Pelican H44
+52:Horizon A03
+53:Galaxy (Worn)
+54:Theseus
+55:Raven
+56:Geraki
+57:Dorothy
+58:V1I-A
+59:Fury
+60:Phantom
+61:Sanctuary
+</DropDownList>
+                      <Color>0000FF</Color>
+                      <VariableType>4 Bytes</VariableType>
+                      <Address>_Item</Address>
+                      <Offsets>
+                        <Offset>c</Offset>
+                      </Offsets>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>115886</ID>
+                      <Description>"Goods ID"</Description>
+                      <DropDownList DisplayValueAsItem="1">1:Iron
+2:Blue Crystal
+3:Red Crystal
+4:Green Crystal
+5:Fruit and Vegetables
+6:Animal Meat
+7:Syntetic Meat
+8:Coffee
+9:Microchips
+10:Robotics
+11:Plastics
+12:Water Purifiers
+13:Basic Medicine
+14:Progenitor Cells
+15:Wine
+16:Gold
+17:Explosive
+18:Energy Cells
+19:Silver
+20:Cannon Ammo
+21:Vulcan Ammo
+22:Missile Ammo
+23:Drone Parts (Combat)
+24:Ancient Relic
+25:Liquid Nitrogen
+26:Junk
+27:Gray Ore
+28:Nickel
+29:Cobalt
+30:Aluminium
+31:Copper
+32:Gallium
+33:Titanium
+34:Bismuth
+35:Samarium
+36:Lithium
+37:Indium
+38:Iridium
+39:Platinum
+40:Red Ore
+41:Green Ore
+</DropDownList>
+                      <Color>0000FF</Color>
+                      <VariableType>4 Bytes</VariableType>
+                      <Address>_Item</Address>
+                      <Offsets>
+                        <Offset>c</Offset>
+                      </Offsets>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>116429</ID>
+                      <Description>"============================================"</Description>
+                      <LastState Value="" RealAddress="00000000"/>
+                      <Color>808000</Color>
+                      <GroupHeader>1</GroupHeader>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>115875</ID>
+                      <Description>"rarity"</Description>
+                      <Color>800080</Color>
+                      <VariableType>4 Bytes</VariableType>
+                      <Address>_Item</Address>
+                      <Offsets>
+                        <Offset>10</Offset>
+                      </Offsets>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>115876</ID>
+                      <Description>"qnt"</Description>
+                      <ShowAsSigned>1</ShowAsSigned>
+                      <Color>008000</Color>
+                      <VariableType>4 Bytes</VariableType>
+                      <Address>_Item</Address>
+                      <Offsets>
+                        <Offset>14</Offset>
+                      </Offsets>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>115877</ID>
+                      <Description>"pricePaid"</Description>
+                      <VariableType>Float</VariableType>
+                      <Address>_Item</Address>
+                      <Offsets>
+                        <Offset>18</Offset>
+                      </Offsets>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>115878</ID>
+                      <Description>"sellerID"</Description>
+                      <ShowAsHex>1</ShowAsHex>
+                      <VariableType>4 Bytes</VariableType>
+                      <Address>_Item</Address>
+                      <Offsets>
+                        <Offset>1c</Offset>
+                      </Offsets>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>115879</ID>
+                      <Description>"stockStationID"</Description>
+                      <ShowAsHex>1</ShowAsHex>
+                      <VariableType>4 Bytes</VariableType>
+                      <Address>_Item</Address>
+                      <Offsets>
+                        <Offset>20</Offset>
+                      </Offsets>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>115880</ID>
+                      <Description>"shipLoadoutID"</Description>
+                      <ShowAsHex>1</ShowAsHex>
+                      <VariableType>4 Bytes</VariableType>
+                      <Address>_Item</Address>
+                      <Offsets>
+                        <Offset>24</Offset>
+                      </Offsets>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>116430</ID>
+                      <Description>"============================================"</Description>
+                      <LastState Value="" RealAddress="00000000"/>
+                      <Color>808000</Color>
+                      <GroupHeader>1</GroupHeader>
+                    </CheatEntry>
+                  </CheatEntries>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>116616</ID>
+                  <Description>"Crafting"</Description>
+                  <Options moHideChildren="1"/>
+                  <LastState Value="" Activated="1" RealAddress="00000000"/>
+                  <GroupHeader>1</GroupHeader>
+                  <CheatEntries>
+                    <CheatEntry>
+                      <ID>116531</ID>
+                      <Description>"Crafting Tweak ( DISABLE OUTSIDE CRAFTING )"</Description>
+                      <LastState/>
+                      <Color>008000</Color>
+                      <VariableType>Auto Assembler Script</VariableType>
+                      <AssemblerScript>{$lua}
+if syntaxcheck then return end
+LaunchMonoDataCollector()
+-----------------------
+memrec.Color=0x000080ff
+-------------- A.B.G.R
+
+[ENABLE]
+memrec.Color=0x0008000
+CraftingTweak = createTimer()
+CraftingTweak.setInterval(10)
+CraftingTweak.OnTimer = function()
+    writeInteger("[[[_Crafting]+14]+20]+c",0)
+	writeInteger("[[[_Crafting]+14]+1c]+8",4294967295)--ffffffff (No ammo)
+    writeInteger("[[[_Crafting]+14]+1c]+c",0)
+	writeFloat("[[_Crafting]+14]+60",0.001)--weapon space
+    writeFloat("[[_Crafting]+14]+64",0)
+    writeFloat("[[_Crafting]+14]+68",0)
+    writeBytes("[[_Crafting]+14]+6c",1)
+    writeBytes("[[_Crafting]+14]+6d",1)
+end
+
+[DISABLE]
+
+CraftingTweak.destroy()
+if syntaxcheck then return end
+-----------------------
+memrec.Color=0x00008000
+-------------- A.B.G.R
+</AssemblerScript>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>116574</ID>
+                      <Description>"Stats"</Description>
+                      <Options moHideChildren="1" moDeactivateChildrenAsWell="1"/>
+                      <LastState Value="" RealAddress="00000000"/>
+                      <GroupHeader>1</GroupHeader>
+                      <CheatEntries>
+                        <CheatEntry>
+                          <ID>116575</ID>
+                          <Description>"base"</Description>
+                          <ShowAsHex>1</ShowAsHex>
+                          <VariableType>4 Bytes</VariableType>
+                          <Address>_Crafting</Address>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>116576</ID>
+                          <Description>"name"</Description>
+                          <VariableType>String</VariableType>
+                          <Length>128</Length>
+                          <Unicode>1</Unicode>
+                          <CodePage>0</CodePage>
+                          <ZeroTerminate>1</ZeroTerminate>
+                          <Address>_Crafting</Address>
+                          <Offsets>
+                            <Offset>c</Offset>
+                            <Offset>8</Offset>
+                            <Offset>14</Offset>
+                          </Offsets>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>116577</ID>
+                          <Description>"spriteName"</Description>
+                          <VariableType>String</VariableType>
+                          <Length>128</Length>
+                          <Unicode>1</Unicode>
+                          <CodePage>0</CodePage>
+                          <ZeroTerminate>1</ZeroTerminate>
+                          <Address>_Crafting</Address>
+                          <Offsets>
+                            <Offset>c</Offset>
+                            <Offset>C</Offset>
+                            <Offset>14</Offset>
+                          </Offsets>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>116578</ID>
+                          <Description>"projectileName"</Description>
+                          <VariableType>String</VariableType>
+                          <Length>128</Length>
+                          <Unicode>1</Unicode>
+                          <CodePage>0</CodePage>
+                          <ZeroTerminate>1</ZeroTerminate>
+                          <Address>_Crafting</Address>
+                          <Offsets>
+                            <Offset>c</Offset>
+                            <Offset>10</Offset>
+                            <Offset>14</Offset>
+                          </Offsets>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>116579</ID>
+                          <Description>"audioName"</Description>
+                          <VariableType>String</VariableType>
+                          <Length>128</Length>
+                          <Unicode>1</Unicode>
+                          <CodePage>0</CodePage>
+                          <ZeroTerminate>1</ZeroTerminate>
+                          <Address>_Crafting</Address>
+                          <Offsets>
+                            <Offset>c</Offset>
+                            <Offset>14</Offset>
+                            <Offset>14</Offset>
+                          </Offsets>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>116580</ID>
+                          <Description>"beamName"</Description>
+                          <VariableType>String</VariableType>
+                          <Length>128</Length>
+                          <Unicode>1</Unicode>
+                          <CodePage>0</CodePage>
+                          <ZeroTerminate>1</ZeroTerminate>
+                          <Address>_Crafting</Address>
+                          <Offsets>
+                            <Offset>c</Offset>
+                            <Offset>18</Offset>
+                            <Offset>14</Offset>
+                          </Offsets>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>116581</ID>
+                          <Description>"================================================"</Description>
+                          <LastState Value="" RealAddress="00000000"/>
+                          <Color>808000</Color>
+                          <GroupHeader>1</GroupHeader>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>116582</ID>
+                          <Description>"Ammo itemID"</Description>
+                          <ShowAsHex>1</ShowAsHex>
+                          <Color>0000FF</Color>
+                          <VariableType>4 Bytes</VariableType>
+                          <Address>_Crafting</Address>
+                          <Offsets>
+                            <Offset>8</Offset>
+                            <Offset>1c</Offset>
+                            <Offset>14</Offset>
+                          </Offsets>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>116583</ID>
+                          <Description>"Ammo qnt"</Description>
+                          <Color>0000FF</Color>
+                          <VariableType>4 Bytes</VariableType>
+                          <Address>_Crafting</Address>
+                          <Offsets>
+                            <Offset>c</Offset>
+                            <Offset>1C</Offset>
+                            <Offset>14</Offset>
+                          </Offsets>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>116584</ID>
+                          <Description>"materials_size (requirement)"</Description>
+                          <Color>0000FF</Color>
+                          <VariableType>4 Bytes</VariableType>
+                          <Address>_Crafting</Address>
+                          <Offsets>
+                            <Offset>c</Offset>
+                            <Offset>20</Offset>
+                            <Offset>14</Offset>
+                          </Offsets>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>116585</ID>
+                          <Description>"================================================"</Description>
+                          <LastState Value="" RealAddress="00000000"/>
+                          <Color>808000</Color>
+                          <GroupHeader>1</GroupHeader>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>116586</ID>
+                          <Description>"description"</Description>
+                          <VariableType>String</VariableType>
+                          <Length>128</Length>
+                          <Unicode>1</Unicode>
+                          <CodePage>0</CodePage>
+                          <ZeroTerminate>1</ZeroTerminate>
+                          <Address>_Crafting</Address>
+                          <Offsets>
+                            <Offset>c</Offset>
+                            <Offset>24</Offset>
+                            <Offset>14</Offset>
+                          </Offsets>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>116587</ID>
+                          <Description>"index"</Description>
+                          <VariableType>4 Bytes</VariableType>
+                          <Address>_Crafting</Address>
+                          <Offsets>
+                            <Offset>28</Offset>
+                            <Offset>14</Offset>
+                          </Offsets>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>116588</ID>
+                          <Description>"type"</Description>
+                          <VariableType>4 Bytes</VariableType>
+                          <Address>_Crafting</Address>
+                          <Offsets>
+                            <Offset>2C</Offset>
+                            <Offset>14</Offset>
+                          </Offsets>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>116589</ID>
+                          <Description>"compType"</Description>
+                          <VariableType>4 Bytes</VariableType>
+                          <Address>_Crafting</Address>
+                          <Offsets>
+                            <Offset>30</Offset>
+                            <Offset>14</Offset>
+                          </Offsets>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>116590</ID>
+                          <Description>"damageType"</Description>
+                          <VariableType>4 Bytes</VariableType>
+                          <Address>_Crafting</Address>
+                          <Offsets>
+                            <Offset>34</Offset>
+                            <Offset>14</Offset>
+                          </Offsets>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>116591</ID>
+                          <Description>"aoe"</Description>
+                          <Color>FF0000</Color>
+                          <VariableType>Float</VariableType>
+                          <Address>_Crafting</Address>
+                          <Offsets>
+                            <Offset>38</Offset>
+                            <Offset>14</Offset>
+                          </Offsets>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>116592</ID>
+                          <Description>"damage"</Description>
+                          <Color>FF0000</Color>
+                          <VariableType>Float</VariableType>
+                          <Address>_Crafting</Address>
+                          <Offsets>
+                            <Offset>3C</Offset>
+                            <Offset>14</Offset>
+                          </Offsets>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>116593</ID>
+                          <Description>"critChance"</Description>
+                          <Color>FF0000</Color>
+                          <VariableType>Float</VariableType>
+                          <Address>_Crafting</Address>
+                          <Offsets>
+                            <Offset>40</Offset>
+                            <Offset>14</Offset>
+                          </Offsets>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>116594</ID>
+                          <Description>"rateOfFire"</Description>
+                          <Color>FF0000</Color>
+                          <VariableType>Float</VariableType>
+                          <Address>_Crafting</Address>
+                          <Offsets>
+                            <Offset>44</Offset>
+                            <Offset>14</Offset>
+                          </Offsets>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>116612</ID>
+                          <Description>"range"</Description>
+                          <Color>FF0000</Color>
+                          <VariableType>4 Bytes</VariableType>
+                          <Address>_Crafting</Address>
+                          <Offsets>
+                            <Offset>4C</Offset>
+                            <Offset>14</Offset>
+                          </Offsets>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>116596</ID>
+                          <Description>"speed"</Description>
+                          <Color>FF0000</Color>
+                          <VariableType>4 Bytes</VariableType>
+                          <Address>_Crafting</Address>
+                          <Offsets>
+                            <Offset>54</Offset>
+                            <Offset>14</Offset>
+                          </Offsets>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>116597</ID>
+                          <Description>"size"</Description>
+                          <Color>0000FF</Color>
+                          <VariableType>Float</VariableType>
+                          <Address>_Crafting</Address>
+                          <Offsets>
+                            <Offset>78</Offset>
+                            <Offset>14</Offset>
+                          </Offsets>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>116598</ID>
+                          <Description>"boosterRangeMod"</Description>
+                          <Color>000000</Color>
+                          <VariableType>Float</VariableType>
+                          <Address>_Crafting</Address>
+                          <Offsets>
+                            <Offset>50</Offset>
+                            <Offset>14</Offset>
+                          </Offsets>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>116599</ID>
+                          <Description>"boosterSpeedMod"</Description>
+                          <Color>000000</Color>
+                          <VariableType>Float</VariableType>
+                          <Address>_Crafting</Address>
+                          <Offsets>
+                            <Offset>58</Offset>
+                            <Offset>14</Offset>
+                          </Offsets>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>116600</ID>
+                          <Description>"burst"</Description>
+                          <Color>000000</Color>
+                          <VariableType>Byte</VariableType>
+                          <Address>_Crafting</Address>
+                          <Offsets>
+                            <Offset>48</Offset>
+                            <Offset>14</Offset>
+                          </Offsets>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>116601</ID>
+                          <Description>"turnSpeed"</Description>
+                          <Color>000000</Color>
+                          <VariableType>4 Bytes</VariableType>
+                          <Address>_Crafting</Address>
+                          <Offsets>
+                            <Offset>5C</Offset>
+                            <Offset>14</Offset>
+                          </Offsets>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>116602</ID>
+                          <Description>"space"</Description>
+                          <VariableType>Float</VariableType>
+                          <Address>_Crafting</Address>
+                          <Offsets>
+                            <Offset>60</Offset>
+                            <Offset>14</Offset>
+                          </Offsets>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>116603</ID>
+                          <Description>"energyCostMod"</Description>
+                          <VariableType>Float</VariableType>
+                          <Address>_Crafting</Address>
+                          <Offsets>
+                            <Offset>64</Offset>
+                            <Offset>14</Offset>
+                          </Offsets>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>116604</ID>
+                          <Description>"heatGenMod"</Description>
+                          <VariableType>Float</VariableType>
+                          <Address>_Crafting</Address>
+                          <Offsets>
+                            <Offset>68</Offset>
+                            <Offset>14</Offset>
+                          </Offsets>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>116605</ID>
+                          <Description>"canHitProjectiles"</Description>
+                          <VariableType>Byte</VariableType>
+                          <Address>_Crafting</Address>
+                          <Offsets>
+                            <Offset>6C</Offset>
+                            <Offset>14</Offset>
+                          </Offsets>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>116606</ID>
+                          <Description>"tradable"</Description>
+                          <VariableType>Byte</VariableType>
+                          <Address>_Crafting</Address>
+                          <Offsets>
+                            <Offset>6D</Offset>
+                            <Offset>14</Offset>
+                          </Offsets>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>116607</ID>
+                          <Description>"timedFuse"</Description>
+                          <VariableType>Byte</VariableType>
+                          <Address>_Crafting</Address>
+                          <Offsets>
+                            <Offset>6e</Offset>
+                            <Offset>14</Offset>
+                          </Offsets>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>116608</ID>
+                          <Description>"dropLevel"</Description>
+                          <VariableType>4 Bytes</VariableType>
+                          <Address>_Crafting</Address>
+                          <Offsets>
+                            <Offset>70</Offset>
+                            <Offset>14</Offset>
+                          </Offsets>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>116609</ID>
+                          <Description>"techLevel"</Description>
+                          <VariableType>Byte</VariableType>
+                          <Address>_Crafting</Address>
+                          <Offsets>
+                            <Offset>74</Offset>
+                            <Offset>14</Offset>
+                          </Offsets>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>116610</ID>
+                          <Description>"shortCooldown"</Description>
+                          <VariableType>Float</VariableType>
+                          <Address>_Crafting</Address>
+                          <Offsets>
+                            <Offset>7c</Offset>
+                            <Offset>14</Offset>
+                          </Offsets>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>116611</ID>
+                          <Description>"repReq"</Description>
+                          <VariableType>4 Bytes</VariableType>
+                          <Address>_Crafting</Address>
+                          <Offsets>
+                            <Offset>80</Offset>
+                            <Offset>14</Offset>
+                          </Offsets>
+                        </CheatEntry>
+                      </CheatEntries>
+                    </CheatEntry>
+                  </CheatEntries>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>116938</ID>
+              <Description>" ================================================"</Description>
+              <Options moHideChildren="1"/>
+              <LastState Value="" RealAddress="00000000"/>
+              <Color>808000</Color>
+              <GroupHeader>1</GroupHeader>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+  </CheatEntries>
+  <UserdefinedSymbols/>
+  <Signature>
+    <SignedHash HashSize="132">0nIiDL;%PXn?74vAPQ[j.mk@R5}gy7447hPS8wJh#eBBh:;0o_,sUMN8Y#iQf_:fC5DQX@FH$L6YuiVrm$3n%x{,]w$)rb;j!wIx]U%w+34A52Oflr.g:BYAEgGaaB;VEp:D@zy-#,erCE[bWitBb1C^J:Qgxr,O.06:t</SignedHash>
+    <PublicKey Size="6360">00000i}s?vMMG0HLI3}(02_$UnKVWp^:})-*6le1vYO_I#4OPi,%He{$/RM8sv2/R($/2@Yk#NMNstIb.A2H6s5x^fj+](%azFn*gc_],]L^qfP,71w_Ktc)#^u%@){0dr8;RST0+-$yT,I!4fRafB2/[Cnmki6@l,.x%6RV(zRy3h5*dl0F^S(op2DcXg0EtjeM-2*Z3IG5A4M_8uQUCw_X8-@ICI_*q007xVg*jgB00d]2O,f$vv5tKEQIh{w03c(XQcVB:hYtV%j1K=,^Zaq]fj_HNeR%*=;5BjWJmmlY8O)D$g=9h_3NL9xLr[UWLm+IcZ*Rz1WdHz3$DNjUR8-d%htIutdZEoQ)iwV[E---fE,8EQQ5a=h7_H.^3^7l@s6a#!5dlSzpnw6Rp-8NVVj)D}U:K)TP,}BOsHkK^*:GSNdGF:r[s6}8,Gp:][t_?(wJrc8PaiHX1)pIJnJ3?{dN_Wpg-6h[^Qw4dfB}ieFj=uTzCrH6KqN0W7kawL3H+!R3.^@_zGdj=Pp5/bPtvSZz5oEoU(Q8YPC84)]65or6r[snGa^zOB#IeEiJ31-P^eX#j$7oVpM4hDQOxXQ9$UoXoKxA!Y%%wUczcGBBVxoy#042#PNs-(i(!(Bn9LRNTXAeMhnWrliX@rRIIMUPn}0di4-Rw??p1rgq[^6Q/[i^ZvIOEoxum3K@SN;H0:h0sk8Wyh(7ga7GLtw0fuTQ;mB^3=:]JbBsZ3rr0E:h-EE#ca;7pWAnp#[08k!lIeo=6Zy7*IG=)HJI3i#YJh{QRq=XUb(;HuKOifXg#4[nNB06Mk.Ab0-^o8{/@Bt=B_zwyO,XySQ@7YI@qjEyrhGmW=$mXWxizw3WG^0*8aJtOgUzn6#Z%86wPlLT}e-B;9{DMCIyJ)bDg(/,1Q#Q!,)uk%/M$cg3fIXqEBsA$T#yf^)2d2FtLo5G]WdH/:2_1j*NTAXW/DD_HJHOdG]-Jk.G:RSa/5CIZ-P}7$3]^siW1;(0+raG{W[n!s+];t=[[;s/y]yA(I7**mg]5B9A.%f:efB,-]703e;paFD(Aut10z!o=HH=RWufnX30*(drY2g!gBGC=lb3/@LI+ah}2N;BspK[h4ZCqM?^4K9Go.5xVo=tlki1dM}^U/SMa@AH4KAu;dP/RMi@3o=MrAO;U*xj^ZqAQTQoLvauf5//Dq7N]g,g)^)1s1f:WIt5+Tu0jLQJ!lk}f[^bG!w5]+sjxDv4I9G?+a]NAgW*xB9GnK^!1=e[xB^,(kHPKm1@7CA2Ofc,!=OrLhzJc*LktlH.*3]g5lAe.M;ZgZNI6o6v;.tbFLDbRL8g(,C:7}%qN5B@wkS[j2#SSDLv276qbgBHQSGQ6*GgE}Y6kTQO-3uB4bV1dFZ3#O96A$SfG$Tjpxe-w)09/_:r/S*hKA9;SYbRd.g_%;I!rO/0Hzgl9y5R$!@}o[Sb3{g*)-23Wnu-]0[:Y5G3,[*Aa*%47DvRX.;;XFxCk5%mxn9IHQ}/U25{R)dAt-{3vYw;!=W=)[!4_Qz6+Z=KaQU#NE37jc7$L.0%0=ug3v.@M0iMeMI.i^iPppbBA2+^SV25ayh0o$z9Y$y@hqwHNRp7WlXQf1o@,4(icBVJlO4$sWC3_6xsiO4^FwY!f,Arg.U(SA+eFpY)JnD4?j=/WsU[)oxmGeqvRv_^/PFJbDZG?nl#3KoYJ+gj*G4W9saa]=w5hb8bh31?bd(T_:{8%@jJAxM3_l5(:CI5}nK24N)V*0cSd:Z4ddelrI2A,Hp=Xmhs72IosQuI#SsB?7vZ1nBvQ?HYWJhQSO]GOLOQMy}PSA#E?0TbqaazJzvSUfhlEEc(a+A={avZrrxmLM5a[^Bo?@12p@1J0b/R2-Z6!aAW6fzYKDqK;SR-]K0DzX#^6.CMMSAv!Fl;)L4DIHeoQ/[y*QT9,yRo/[BQF(U0rsAlQpi-uCR%J=,qH3=oRV]CJr{}U8OLw9t)JSaZ@cgiJHBU96TCG}Y,Pu1sdWd=SdaL;*4T1)kBUYnKqg!J{Q(rPfGgq?(@S%}di:h;-wNI.8Yff87J4{0/c8B)*j,}B^PL58q(O:=Yu7hrxZk[IJJ(YbhFH!G,-c5a2-$FlLze?jx0c;Dtz%?8vFt8N8*OsmzY2DIcLz1DBVTNI_.iwVK$j2zpsKe-mv8Hi@?owW?/4-0QCP@msCJ#)yOjnrZnRc1{YNl[-GOIGXZB90KH^WR9Y5sDV!7_RWgUjw)P%L}cwpnyre6,N)/Xg5[PFZPMMO#%^4Kt[:e=}FmiZ$BW+=Ob)Y3p{3mNo+L6E=rt8rmk;HrY-t+ICY4UcY=IPTh]aS8F$7Pq(Y?KV)1Rpyt4IsB=JYsNu,VY.c?#)sN31I[C7k+}FRe,}z#zV(k(j/-9B6;fu]G,V3Xg7UEXv[SjwBJ/h$@ea6GWW1Yu(Pqe4E:WfqoFJ(+5SEJX:3ab[CSM,$3yo0/ey]T8#]_y3bd_{?ezI%KhuGCt_TiM_U^Ji{3[(xI1?lW(rJ@(NoA5azWG_*6KH=TK_5*;8G6!a$8Ik,VFL5OaMFr,)FGBh%?F=24;HLNsjWR;x%@^cLjD{-}yJ0q_Wp%D!cv#Z?!=[E6{X%SfvIkZM,P1c(LYZcZetvwSZ8O4k]8I6t)i+Abk!1QC+F:u1EVya[iST3x6tmkY.b^Tt$W5,4wOvKv7mc}xT+}RUNn}HacFOQ$+x@OGGFB3cyY7+uW^SuEPE,mB_wI/[_qmxhZWO#_Zo*ndotdxONgVci5ku.mMy:gOiZ,:5Ml*fgtQ$Q8^O!WzMg/FNA8TJ]f8E-Q}Gf!qoXYsQ7vh{lfWKZO^:X_^mwT]u{J6A1tbMEMRr{ecPpbaq[x.JWU%-:Y@$z#+e(4kT}n{5hN$t%r!y)Mf+SH5!oru=z39$T9WBntQi!]p1P*oe#=:Wg%cVZLMkj!%W]!fQn*Mdd^widn[izB2u*..V)7u^--qEK3gV!tCPh8rto!]*H_jX-=[b9@XCfW%RPbve$c}[FgStR$jA?uur(eq^647bHC;PUHd.(##i2^a._EvR.u1nJ$Hb8VDO.h!Im23nxdNbhq#CC*[T.o+J./4AI2QcIQ,Cew7(Oi#?CGv3JpaKACK@kj2sO-,S6#(+x01hRMHGL3!A5oMIO8Pjq5j@Eru/%t,dvn/KVdP[[J?Lza2W@eWLp$/7CTsTHjT-QQ8XIq4w/dnU465k/ReWfm16@b$8izwS8}(^gKmZr;oA$o,(v=IGcZV.atwS,4HIAr!T{@80)JeesFQs#oIjrJ@h!wFI}Cpe*)drQ{4Mec2]bcwYhrg8sl2Wb/6AReHMLfKUn/G*@FM0e#7cU:S{OIT=5Mp(JH;ZUby9Y;,*?^,t:?]yfZKqGIV!1a)Lt{]_jkuq/b(#XWXBEu/0TCVc^dGN9B*_9?qV-[hajb/.a.*+U]QwK}ElxvBsYNl;XC*?%+Rcr^xo;6OEH+lc%TLr+1x5^cQYs;ht.Of{f;-u708W.:5lQf9ac9H8cK[_8n8i.#cyoj:Wy;x[j1t[VJtKH{i9aZ^@/{eaCp$]#$Xb#C,xl=1zevdLO$!d4GDiki4,*8}23s]!?tB9smFU32.bRa^vG=A@-p]A[1!6-I4$R4Dv{tK}!i%=OF,RRmB.enfunfyd+$03xp6LAuO8Yy)AVCBuL%B/63Re,GCZbmK5=^mbSLm4Nomu9+Iz.)iUm09O^A#*()0I3YH]/3lJnAvI/0(knQDd[fEgLxp0hymKIE2a],CHnfYh#ynFv_^$:KdT+4+v8x{1p9H()WJ+ZX:2^.RiWzP9xO6e})kqXGxxynm!+P4R^LxP-z1qDeuB7LTCUc?LZ0U3WIoIL1qmFyG!PG_AA?un_xPTq5sFS$^?X%K+E/*DTj280v{VuAspgOyxI8U0jPlISllU$UmNqs;SuxgIj@a2BsqZwzq@335QpeQ.%@s2-?ST%r.JNVwGZ6NFeJhWS7m!]MTFC?).!h]vz9kRS*X]52V]Dy}LNM0]Z1/z-7$w,.E?oRBFfMJwM]Ub-HAOc3OB7KLmAF^sHwW}PIJgHU-Xtl{/M(vYS(%wyzi4cymLq7C]uV5m@k)b}}l!rg%(,]HaUP}4*4LJEVH94K?;lW3dI,bv=ul_sf9K6[Dq)Il:YKLR6n6B1mV=/}9)T_Jc0*7jcXTB!o{roz9=5w6eSC:S:emvAmPoJFx)[21xd6h@6vEGW+:M99X9dO+T;QO_c2(2tnKRjM5tU@%LL198ci](X+*ED#pwa1;pyH3u9al{bY}cOlDK3m5bvr{RENoDSk^xSpM.J5m1(.zkgweWZHBIgsxxnuhT!!O8=m[#ULyt+EEVT*DcUymYHJ=5qH;J79qoOI?WaG_[,_WXQpaUX7:TBMQ%;jP2xH5rMlx@yTE[u:I=}n=cIkqMh$37_WQn:XAjTDiCY7!(ZbP8E@$LPL$@jSkPfvQLe9Wm2THW1A;r:Iq+EQ38%wRz97pyiBk3q2;T7LUx1iL5HnVy^w+.UEBhE=%}:(LJQ*5;M%4)5d9Aa9kI2t2F!%PJA3$cj#8{h*[ZJQ5.ti#QAP#E)lcMlD86(gdzE)ps55Za%iwp8uP/s[)(4G%F@3LVUmj_?[]an(WxtxM;9VdLHHG.M-U0T,obqfnUXUzFBf@yIn9ZlZUngfDRa%-/cq01O$Z{[MjWh9axYWDAL+:bHrna}Jgbet%6%0d5bNoRaTQIsD?659hV4sl9uTv{FgK%1%$5PzPboIK{pmF(.YFO0-+46mpt,pBep1S8qyD(4I$]vC4uxI[^61[YsFIXvjVTA7U1zGQh;Sx]}rIaoRRq?,aXo]mDSB*GjhD:RByxUTD%#CBo46^ICILiZyMU7c.uEWx!?Ot*}6BOJ:?pqxG.h.cd#:Za,G%ftx4eJ.hqSOMa}Q1.34K.%0{QWCXhzawPGQ79XUSYbi6TeP9Hr:Xm,+49;p4$_cJc85dBPm4aZje..#jv^e+29jz/r4:CUR;/Cil6Oc/ipHvsz_0SWqyQ($8mD_Q;I$rBftV+hzv!M5Cr.jis+XzZeYnqsxc39mCm[pm%Ez0lCuz-o$JgT4Y(Kge-u78S]O7tRb-(ldeINpNR*,lvRAxYdvuoUL8HxiRya9d57?{=n)QZc?N,!x[7Xt-84[PjHPbji76GTdTcDKCJdi028,KibLN^)BQS2*sWU/cs{k;!:XEABguxpU@eG()V9p3!7lCI?^.)G5^dA{?7zbULh7%K:Qc]QZM2BQf7Fzt]7NQ)u;g:g^u%KU^Rn$,Bk[f_y?{7zs:751P0S)$mw8a6bnKqu7t_je-}/hXQVa)$l#Tu:.#nzUiZ=eYKl6iD2$Q?45#bct8+%R]=HnK92,_iJ%f_JbwJ--V=]/jRw)(.O0CS)[t^sP37fF+jI[k(dl8YMQdxeyXK#bxW8SeH}E.3e5Ykc@Tgv^9DNtWJpA#-zgHoq4fFf]]$35}KphZVG_L$sAJ1ar.*UB0b0+Zd;,V%MzJiSO@l:7BUj[2o6)j)*Zg-!{o@U)ur%v6!t+IWCK[a1SwxzCiis+AV3m,w%t#rAT91-o*m}qYYBLTnP04w[Lv{/Rshc)0?HXYTvRm8?_)!?}-El}DwBna=w#D^rDi9RF,sXMlBYnG5/2-8iTklIsST?[:LbQ;[V6@ln40rfjB3OV*,TRdKDBdlNttiL(,$UnnAA,65sK66SekZrf$1^YL]F$TDsA9s5@Zy1fnn1.s2gW3:;fBwVQetu}Go8BI8xX07I6WN/PYwFdjJf5!iw$^7FZvTrd=pnCQUS!,svkXS#hk..l_Fr4XCTyy%,JZ6q9(gX:ZOzT=V$4.OCQ*v-ya=.F.+{Hd)g[f6#yn?fj$UQYd:/o5gIvk(:.,uxA{Z:[uF(q9]r3Q6A@naEc57KSTM}jVh+8adWXGwt#_%u]A]$B99YIJ,N^S%n4+c9a5EH}MvKSl5:I{7fGQFfL)uR=YD;KYZ@;q)fEY@swuFg.3T1dCoQ{pr1j{n^QZe)XrFXg(SyFE,PC#I%aU_8i$l6YifR07:K91IA?lIt.;!d?3,5dW,oW+zRVg+D#{i]^}H3zq_nM85!?Ef2*Vcn2d}?@6Pn4todB+-[h2H)/mFTo5?}Hv3dq!qc!A.V!mfXMb/Ru.E,bGlp_Y*$@_?Q;Kt8YviA=V#V)MD2Vw!VuO){[7f.k^J#3pD;XIMq{NN8a3k*@V:lh}mKX/RnXF-!n-GUYMutr#z*64,wm3a4JuD+JT8lAa4!P}+$r}[k8S3}AYD8)svSm*yQML-3)h=B!thgO6Z9L^VP{A6WAj?t}MC[{BbQ1dS#(au{F9km]zP8=tg^1zXAo!xk:JNrb/@P9m?=@8l6b6NGD[-LjOtuipdmqZj3MB=acoB?n3A5PE8!(Dge$s@c6_y2f0gDsI[g*aP0eh935rZ}BDQ^*lY]2-hEUyIvfg@goKHAgWGa0M,Q)IbEtWIZmnNqIj!a_7h0Tk+ro6SW:lX)WL[Eji)G}8@QMCnS+=T3r}d3^4ebEeHU3NEq$vLrm]5j?**oU#Wo$BT$5;X^vg,Kd:C4$m$H6+(X0Sr75@xV9nd6!-QkE?)yQpb#irhpgDhC_v-nC]8*%Bwly{R.V9Dd.]NepbS[6jl^}vo]EJ3zi+zqp]l5+AN0eWup1S@-xkEE6El^Fv0M)yos,J)@3iK?a)+Yo@-WDj5v%?,st$xMhEm1h+NlMAe=liotFX{5h:5+K=;?Z6U3W9C,XOM^l$6:/,Y=b0XL9in%$K;c.7i18#GK3EHvfpG4)?F$EU+Swz}l95AL^xS7i2kjp*wRPqAmydBkm@mnIjaW*Dsw2y4$,CJ_7klu=}t83+j+Q#*7*Kx{X;^cI.S(z=%pcco?lpPsl)Df[(yKCNX2WJ@SEu(pmsMke;[L[N-5@Kt45?%)L3NIz{]#HF;qJKESgIw@ss-kzwVVU{1S$mzd+CkY0k!aieG;rrm,Xl/D#IJk^LXeCAxPzi}n2WM+dSDCa47sWYE](xVYQj1eew4Gj(gy@^Y75c=RcaQXC^;srgpO3t}?u-okvG35{9/t;XP^Cic@AD#2]8P7]LI)HF8d9bG5U9E^j8W%+*+9{KO?jh6@7+_/_Ch3bwsi{Ia#kw2rXziGB/L9qkyJncyH6$/}S.%:qQLe!1QP0{WhA=wD.s{8_q(Hn26T81xI(:]y/hWd:oyf,[xw+M#wQz)d5#Xt$lOptb-Kt+c([QTh4uGuBWU*kGFG5Ieu6nHhq^CU/yJw+!hEpPs8:ssY2mR](f{w/vjyb2^bQbSMs:XB%*Mto6xnKqRC4T#!T]eox,fL0+vuFLZvZ736jzbEAf+b*?%wAXu[BS+hncPgI#g%ycbeYTFtSB$rpbZ.R7(PPvAodu.ED]=zF[By$1tyd9p*U{Sx.rIiGI@z7P-2RSN)RO#[x1jX0W{$jUzWM#BQj$F#pg3*OV+}uL]TcJcI@(}8I!0SJ9bQ7y=V9yWTD.?Di{26q?_@inX[)**iFK:DolWji$*3@g*Z==E*17APt#+ZFCmhG9W9/x:v+P#cybw+Cm0i)T?PGi7g5v=c[$Rg56XVucD-JIq@ztgWEdK-4?v)kKn^z)=6L%j)W!*!bSQlylr8:=EeZ88Q1(P:5s$jK.wa@?C{TONF}{-nVN5aTS7mC,QBralt_,1qi86M=*7@F4=RJL?IfKfr/;lo]lF1Yn?c7L-ozbk/D/*YXM#LclEJ.rph2;zuF$I/b;HyA!/-m40,!{#jBRqiplV6gE(!.FpJ({4m0k4My0zE5MtWb{YF5wdX3kdlaZJ=6rtdBUS00000NkvXXu0mjfga7}l0YH,WXXC{3^7+?)HAUlfo{1mDko=.K4wLc9YGaRYLpVIkdy:@^g.X{ESSnB;#H9*_HnK5v:ej5k%ee3e(!hkfeh3J}2Q?$Wt4d5g6gJ::nIry.)-@rLQD}uaGW0Wp6U:pgXVxkZ%18Ojuq72VlRzZQ8iUCzZH[4xq3L7_</PublicKey>
+  </Signature>
+</CheatTable>
