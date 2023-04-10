@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<CheatTable CheatEngineTableVersion="28">
+<CheatTable CheatEngineTableVersion="29">
   <CheatEntries>
     <CheatEntry>
       <ID>3</ID>
@@ -37,13 +37,13 @@ db 89 48 54
     </CheatEntry>
     <CheatEntry>
       <ID>4</ID>
-      <Description>"Dont pay for anything"</Description>
+      <Description>"* Dont pay in shops"</Description>
       <LastState Activated="1"/>
       <VariableType>Auto Assembler Script</VariableType>
       <AssemblerScript>[ENABLE]
 // Don't pay for anything in stores
 //code from here to '[DISABLE]' will be used to enable the cheat
-aobscan(cheat02, D9 45 BC DEE9 D9 58 08 8B 47 54 8B 40 48)
+aobscan(cheat02, D9 45 BC DE E9 D9 58 08 8B 47 54 8B 40 48)
 label(_cheat02)
 registersymbol(_cheat02)
 
@@ -54,11 +54,21 @@ db 90 90 90
 
 /*
 
+Stores
 1AF61CCF - D9 45 BC  - fld dword ptr [ebp-44]
-1AF61CD2 - DEE9 - fsubp st(1),st(0)
+1AF61CD2 - DE E9 - fsubp st(1),st(0)
 1AF61CD4 - D9 58 08  - fstp dword ptr [eax+08] &lt;&lt;
 1AF61CD7 - 8B 47 54  - mov eax,[edi+54]
 1AF61CDA - 8B 40 48  - mov eax,[eax+48]
+
+
+
+Rest
+35BBA8B9 - 83 C4 04 - add esp,04
+35BBA8BC - DEE9 - fsubp st(1),st(0)
+35BBA8BE - D9 59 08  - fstp dword ptr [ecx+08] &lt;&lt;
+35BBA8C1 - BA 704EAF14 - mov edx,14AF4E70
+35BBA8C6 - 83 EC 0C - sub esp,0C
 
 */
  
@@ -69,54 +79,110 @@ _cheat02:
 db D9 58 08
 </AssemblerScript>
     </CheatEntry>
+    <CheatEntry>
+      <ID>10</ID>
+      <Description>"* Dont pay in stronghold upgrades"</Description>
+      <LastState Activated="1"/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+// Don't pay for anything in stores
+//code from here to '[DISABLE]' will be used to enable the cheat
+aobscan(cheat05, D9 04 24 83 C4 04 D9 58 08 8D 65 F8 )
+label(_cheat05)
+registersymbol(_cheat05)
+
+cheat05+5:
+_cheat05:
+db 90 90 90
+
+
+/*
+Stronghold upgrade
+20034F55 - D9 04 24   - fld dword ptr [esp]
+20034F58 - 83 C4 04 - add esp,04
+20034F5B - D9 58 08  - fstp dword ptr [eax+08] &lt;&lt;
+20034F5E - 8D 65 F8  - lea esp,[ebp-08]
+20034F61 - 5E - pop esi
+
+*/
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+_cheat05:
+db D9 58 08
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>6</ID>
+      <Description>"Lockpicks"</Description>
+      <LastState Activated="1"/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+// Don't pay for anything in stores
+//code from here to '[DISABLE]' will be used to enable the cheat
+// Lockpicks: 4 byte
+aobscan(cheat03, 89 85 78 FF FF FF 8B 47 0C 2B 45 10 89 47 0C)
+label(_cheat03)
+registersymbol(_cheat03)
+
+cheat03+c:
+_cheat03:
+db 90 90 90
+
+
+/*
+4B30A79F - 89 85 78 FF FF FF        - mov [ebp-00000088],eax
+4B30A7A5 - 8B 47 0C  - mov eax,[edi+0C]
+4B30A7A8 - 2B 45 10  - sub eax,[ebp+10]
+4B30A7AB - 89 47 0C  - mov [edi+0C],eax &lt;&lt;
+4B30A7AE - 85 C0  - test eax,eax
+4B30A7B0 - 0F8F 48000000 - jg 4B30A7FE
+
+*/
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+_cheat03:
+db 89 47 0C
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>8</ID>
+      <Description>"Health"</Description>
+      <LastState Activated="1"/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+// Don't pay for anything in stores
+//code from here to '[DISABLE]' will be used to enable the cheat
+// Lockpicks: 4 byte
+aobscan(cheat04, D9 45 A0 DE E9 D9 5B 54)
+label(_cheat04)
+registersymbol(_cheat04)
+
+cheat04+5:
+_cheat04:
+db 90 90 90
+
+
+/*
+1FF7C770 - D9 45 A0  - fld dword ptr [ebp-60]
+1FF7C773 - DE E9 - fsubp st(1),st(0)
+1FF7C775 - D9 5B 54  - fstp dword ptr [ebx+54] &lt;&lt;
+1FF7C778 - EB 16 - jmp 1FF7C790
+1FF7C77A - 0FB6 83 88000000  - movzx eax,byte ptr [ebx+00000088]
+
+
+*/
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+_cheat04:
+db D9 5B 54
+</AssemblerScript>
+    </CheatEntry>
   </CheatEntries>
-  <CheatCodes>
-    <CodeEntry>
-      <Description>Change of mov [eax+54],ecx</Description>
-      <AddressString>1AFDE4C9</AddressString>
-      <Before>
-        <Byte>8B</Byte>
-        <Byte>C8</Byte>
-        <Byte>8B</Byte>
-        <Byte>45</Byte>
-        <Byte>08</Byte>
-      </Before>
-      <Actual>
-        <Byte>89</Byte>
-        <Byte>48</Byte>
-        <Byte>54</Byte>
-      </Actual>
-      <After>
-        <Byte>C9</Byte>
-        <Byte>C3</Byte>
-        <Byte>00</Byte>
-        <Byte>00</Byte>
-        <Byte>55</Byte>
-      </After>
-    </CodeEntry>
-    <CodeEntry>
-      <Description>Change of fstp dword ptr [eax+08]</Description>
-      <AddressString>1AF61CD4</AddressString>
-      <Before>
-        <Byte>D9</Byte>
-        <Byte>45</Byte>
-        <Byte>BC</Byte>
-        <Byte>DE</Byte>
-        <Byte>E9</Byte>
-      </Before>
-      <Actual>
-        <Byte>D9</Byte>
-        <Byte>58</Byte>
-        <Byte>08</Byte>
-      </Actual>
-      <After>
-        <Byte>8B</Byte>
-        <Byte>47</Byte>
-        <Byte>54</Byte>
-        <Byte>8B</Byte>
-        <Byte>40</Byte>
-      </After>
-    </CodeEntry>
-  </CheatCodes>
   <UserdefinedSymbols/>
 </CheatTable>

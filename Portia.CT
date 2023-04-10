@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<CheatTable CheatEngineTableVersion="27">
+<CheatTable CheatEngineTableVersion="34">
   <CheatEntries>
     <CheatEntry>
-      <ID>123</ID>
+      <ID>250</ID>
       <Description>"Active Cheat Table"</Description>
       <Options moHideChildren="1" moDeactivateChildrenAsWell="1"/>
-      <LastState/>
+      <LastState Activated="1"/>
       <VariableType>Auto Assembler Script</VariableType>
       <AssemblerScript>[ENABLE]
 {$lua}
@@ -17,20 +17,147 @@ LuaCall(function cycleFullCompact(sender,force) local state = not(compactmenuite
 </AssemblerScript>
       <CheatEntries>
         <CheatEntry>
-          <ID>121</ID>
+          <ID>251</ID>
           <Description>"Scripts"</Description>
           <Options moHideChildren="1" moDeactivateChildrenAsWell="1"/>
-          <LastState Value="" RealAddress="00000000"/>
+          <LastState Value="" Activated="1" RealAddress="00000000"/>
           <GroupHeader>1</GroupHeader>
           <CheatEntries>
             <CheatEntry>
-              <ID>29</ID>
+              <ID>272</ID>
+              <Description>"+Inf Items"</Description>
+              <LastState/>
+              <Color>000080</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>[ENABLE]
+Pathea.ItemSystem:ItemObject:ChangeNumber+21+3:
+  db 20
+//48 63 40 20
+//movsxd  rax,dword ptr [rax+20]
+
+[DISABLE]
+Pathea.ItemSystem:ItemObject:ChangeNumber+21+3:
+  db 24
+//48 63 40 24
+//movsxd  rax,dword ptr [rax+24]
+
+</AssemblerScript>
+              <Hotkeys>
+                <Hotkey>
+                  <Action>Toggle Activation</Action>
+                  <Keys>
+                    <Key>113</Key>
+                  </Keys>
+                  <Description>Inf Items</Description>
+                  <ID>0</ID>
+                </Hotkey>
+              </Hotkeys>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>275</ID>
+              <Description>"Clock Stop "</Description>
+              <LastState/>
+              <Color>000080</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>[ENABLE]
+TimeManager:get_TimeStoped+9+2:
+  db 56
+//0F B6 56 50
+//movzx edx,byte ptr [rsi+50]
+
+[DISABLE]
+TimeManager:get_TimeStoped+9+2:
+  db 46
+//0F B6 46 50
+//movzx eax,byte ptr [rsi+50]
+
+
+
+</AssemblerScript>
+              <Hotkeys>
+                <Hotkey>
+                  <Action>Toggle Activation</Action>
+                  <Keys>
+                    <Key>112</Key>
+                  </Keys>
+                  <ID>0</ID>
+                </Hotkey>
+              </Hotkeys>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>253</ID>
+              <Description>"+Inf Stamina"</Description>
+              <LastState Activated="1"/>
+              <Color>408000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>[ENABLE]
+Pathea:Player:ChangeStamina:
+  db C3
+//ret
+
+[DISABLE]
+Pathea:Player:ChangeStamina:
+  db 55
+//push rbp
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>254</ID>
+              <Description>"+Inf Endurance"</Description>
+              <LastState Activated="1"/>
+              <Color>408000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>[ENABLE]
+// Running
+Pathea:Player:UpdateVp:
+  ret
+
+// Rolling
+Pathea:Player:ConsumeRollVp:
+  ret
+
+//ridableVpConsumeFastRun [ ONLY aobscan works  :( ]
+alloc(originalbytes, 19)
+registersymbol(originalbytes)
+aobscan(ridableVpConsumeFastRun,55 48 8B EC 56 48 83 EC 18 48 8B F1 F3 0F 11 4D E8 48 63)
+registersymbol(ridableVpConsumeFastRun)
+
+originalbytes:
+  readmem(ridableVpConsumeFastRun, 19)
+
+ridableVpConsumeFastRun:
+  db C3
+
+//ridableVpConsumeJump
+Pathea.ActorNs:Actor:RidableConsumeJumpVp:
+  ret
+
+[DISABLE]
+Pathea:Player:UpdateVp:
+  push rbp
+
+Pathea:Player:ConsumeRollVp:
+  push rbp
+
+ridableVpConsumeFastRun:
+  readmem(originalbytes, 19)
+
+  unregistersymbol(originalbytes)
+  unregistersymbol(ridableVpConsumeFastRun)
+  dealloc(originalbytes)
+
+Pathea.ActorNs:Actor:RidableConsumeJumpVp:
+  push rbp
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>252</ID>
               <Description>"+Inf Health"</Description>
               <LastState/>
               <Color>408000</Color>
               <VariableType>Auto Assembler Script</VariableType>
               <AssemblerScript>define(address,Pathea.ActorNS:Actor:ValidateValue+49)
-define(bytes,F3 0F 10 86 50 04 00 00)
+define(bytes,F3 0F 10 86 60 04 00 00)
 
 [ENABLE]
 assert(address,bytes)
@@ -40,7 +167,7 @@ label(code)
 label(return)
 
 newmem:
-  cmp [rsi+00000474],#4000001   //player id
+  cmp [rsi+00000480],#4000001   //player id
   jne code
   mov [rsi+00000460],(float)99999
   movss xmm0,[rsi+00000460]
@@ -65,305 +192,56 @@ address:
 dealloc(newmem)
 
 {
-// ORIGINAL CODE - INJECTION POINT: 0745F839
+// ORIGINAL CODE - INJECTION POINT: 332DB919
 
-0745F80B: 0F 86 6A 04 00 00        -  jbe Pathea.ActorNs:Actor:ValidateValue+48b
-0745F811: 48 8D 44 88 20           -  lea rax,[rax+rcx*4+20]
-0745F816: F3 0F 10 00              -  movss xmm0,[rax]
-0745F81A: F3 0F 5A C0              -  cvtss2sd xmm0,xmm0
-0745F81E: F2 0F 5A E8              -  cvtsd2ss xmm5,xmm0
-0745F822: F3 0F 11 6D F4           -  movss [rbp-0C],xmm5
-0745F827: F3 0F 10 45 F4           -  movss xmm0,[rbp-0C]
-0745F82C: F3 0F 5A C0              -  cvtss2sd xmm0,xmm0
-0745F830: F2 0F 5A E8              -  cvtsd2ss xmm5,xmm0
-0745F834: F3 0F 11 6D F4           -  movss [rbp-0C],xmm5
+332DB8EB: 0F 86 6A 04 00 00        -  jbe Pathea.ActorNs:Actor:ValidateValue+48b
+332DB8F1: 48 8D 44 88 20           -  lea rax,[rax+rcx*4+20]
+332DB8F6: F3 0F 10 00              -  movss xmm0,[rax]
+332DB8FA: F3 0F 5A C0              -  cvtss2sd xmm0,xmm0
+332DB8FE: F2 0F 5A E8              -  cvtsd2ss xmm5,xmm0
+332DB902: F3 0F 11 6D F4           -  movss [rbp-0C],xmm5
+332DB907: F3 0F 10 45 F4           -  movss xmm0,[rbp-0C]
+332DB90C: F3 0F 5A C0              -  cvtss2sd xmm0,xmm0
+332DB910: F2 0F 5A E8              -  cvtsd2ss xmm5,xmm0
+332DB914: F3 0F 11 6D F4           -  movss [rbp-0C],xmm5
 // ---------- INJECTING HERE ----------
-0745F839: F3 0F 10 86 60 04 00 00  -  movss xmm0,[rsi+00000460]
+332DB919: F3 0F 10 86 60 04 00 00  -  movss xmm0,[rsi+00000460]
 // ---------- DONE INJECTING  ----------
-0745F841: F3 0F 5A C0              -  cvtss2sd xmm0,xmm0
-0745F845: 66 0F 57 C9              -  xorpd xmm1,xmm1
-0745F849: 48 8B 86 70 01 00 00     -  mov rax,[rsi+00000170]
-0745F850: 48 8B C8                 -  mov rcx,rax
-0745F853: 83 39 00                 -  cmp dword ptr [rcx],00
-0745F856: 48 8B 40 20              -  mov rax,[rax+20]
-0745F85A: 48 8B C8                 -  mov rcx,rax
-0745F85D: 83 39 00                 -  cmp dword ptr [rcx],00
-0745F860: 48 8B 40 10              -  mov rax,[rax+10]
-0745F864: B9 04 00 00 00           -  mov ecx,00000004
+332DB921: F3 0F 5A C0              -  cvtss2sd xmm0,xmm0
+332DB925: 66 0F 57 C9              -  xorpd xmm1,xmm1
+332DB929: 48 8B 86 88 01 00 00     -  mov rax,[rsi+00000188]
+332DB930: 48 8B C8                 -  mov rcx,rax
+332DB933: 83 39 00                 -  cmp dword ptr [rcx],00
+332DB936: 48 8B 40 20              -  mov rax,[rax+20]
+332DB93A: 48 8B C8                 -  mov rcx,rax
+332DB93D: 83 39 00                 -  cmp dword ptr [rcx],00
+332DB940: 48 8B 40 10              -  mov rax,[rax+10]
+332DB944: B9 04 00 00 00           -  mov ecx,00000004
 }
 </AssemblerScript>
             </CheatEntry>
             <CheatEntry>
-              <ID>30</ID>
-              <Description>"+Inf Stamina"</Description>
+              <ID>273</ID>
+              <Description>"+Inf SP"</Description>
               <LastState/>
-              <Color>408000</Color>
+              <Color>000080</Color>
               <VariableType>Auto Assembler Script</VariableType>
               <AssemblerScript>[ENABLE]
-Pathea:Player:ChangeStamina:
-  db C3
-//ret
+Pathea.PlayerAbilityNs:PlayerAbilityModule:AssignPoint+15f+1:
+  db C0
+//FF C0
+//inc eax
 
 [DISABLE]
-Pathea:Player:ChangeStamina:
-  db 55
-//push rbp
-</AssemblerScript>
-            </CheatEntry>
-            <CheatEntry>
-              <ID>31</ID>
-              <Description>"+Inf Endurance"</Description>
-              <LastState/>
-              <Color>408000</Color>
-              <VariableType>Auto Assembler Script</VariableType>
-              <AssemblerScript>[ENABLE]
-// Running
-Pathea:Player:UpdateVp:
-  ret
-
-// Rolling
-Pathea:Player:ConsumeRollVp:
-  ret
-
-[DISABLE]
-Pathea:Player:UpdateVp:
-  push rbp
-
-Pathea:Player:ConsumeRollVp:
-  push rbp
-</AssemblerScript>
-            </CheatEntry>
-            <CheatEntry>
-              <ID>32</ID>
-              <Description>"Instant Crafting"</Description>
-              <LastState/>
-              <Color>408000</Color>
-              <VariableType>Auto Assembler Script</VariableType>
-              <AssemblerScript>[ENABLE]
-AutomataItem:AddTime+25c+3:
-  db 5F
-//F3 41 0F 5F 47 1C
-//maxss xmm0,[r15+1C]
-
-[DISABLE]
-AutomataItem:AddTime+25c+3:
-  db 10
-//F3 41 0F 10 47 1C
-//movss xmm0,[r15+1C]
-
-
-{
-float value
-  *start value = 0
-  *end value = 1
-}
-</AssemblerScript>
-            </CheatEntry>
-            <CheatEntry>
-              <ID>33</ID>
-              <Description>"NoItemCraftingCostTime (another way to have instant crafting)"</Description>
-              <LastState/>
-              <Color>408000</Color>
-              <VariableType>Auto Assembler Script</VariableType>
-              <AssemblerScript>[ENABLE]
-AutomataItem:AddTime+8c+3:
-  db 5D
-//F3 41 0F 5D 4F 18
-//minss xmm1,[r15+18]
-
-[DISABLE]
-AutomataItem:AddTime+8c+3:
-  db 10
-//F3 41 0F 10 4F 18
-//movss xmm1,[r15+18]
-
+Pathea.PlayerAbilityNs:PlayerAbilityModule:AssignPoint+15f+1:
+  db C8
+//FF C8
+//dec eax
 
 </AssemblerScript>
             </CheatEntry>
             <CheatEntry>
-              <ID>219</ID>
-              <Description>"NoEquipmentLevelRequirement { Player }"</Description>
-              <LastState/>
-              <Color>008000</Color>
-              <VariableType>Auto Assembler Script</VariableType>
-              <AssemblerScript>[ENABLE]
-Pathea.UISystemNs.MainMenu.PackageUI:PackageUICtr:EquipOn+36:
-  db 74
-//74 07
-//je Pathea.UISystemNs.MainMenu.PackageUI:PackageUICtr:EquipOn+3f
- 
-[DISABLE]
-Pathea.UISystemNs.MainMenu.PackageUI:PackageUICtr:EquipOn+36:
-  db 75
-//75 07
-//jne Pathea.UISystemNs.MainMenu.PackageUI:PackageUICtr:EquipOn+3f
-
-</AssemblerScript>
-            </CheatEntry>
-            <CheatEntry>
-              <ID>220</ID>
-              <Description>"NoMaterialRequirement (Worktable/Stone Furnace crafting)"</Description>
-              <LastState/>
-              <Color>008000</Color>
-              <VariableType>Auto Assembler Script</VariableType>
-              <AssemblerScript>[ENABLE]
-Pathea.CompoundSystem:CompoundManager:GetItemCount:
-  ret
-
-[DISABLE]
-Pathea.CompoundSystem:CompoundManager:GetItemCount:
-  push rbp
-
-</AssemblerScript>
-            </CheatEntry>
-            <CheatEntry>
-              <ID>221</ID>
-              <Description>"NoCostFarmBuying"</Description>
-              <LastState/>
-              <Color>008000</Color>
-              <VariableType>Auto Assembler Script</VariableType>
-              <AssemblerScript>[ENABLE]
-Pathea.FarmNs:FarmLevelUnlocker:CheckCanDo:
-  ret
- 
-[DISABLE]
-Pathea.FarmNs:FarmLevelUnlocker:CheckCanDo:
-  push rbp
-</AssemblerScript>
-            </CheatEntry>
-            <CheatEntry>
-              <ID>222</ID>
-              <Description>"NoCheckPlayerItem (repair all)"</Description>
-              <LastState/>
-              <Color>008000</Color>
-              <VariableType>Auto Assembler Script</VariableType>
-              <AssemblerScript>[ENABLE]
-PatheaScriptExt:CheckPlayerItem:Do:
- ret
-
-[DISABLE]
-PatheaScriptExt:CheckPlayerItem:Do:
- push rbp
-
-</AssemblerScript>
-            </CheatEntry>
-            <CheatEntry>
-              <ID>223</ID>
-              <Description>"NoBaitRequirement (Trap Box)"</Description>
-              <LastState/>
-              <Color>008000</Color>
-              <VariableType>Auto Assembler Script</VariableType>
-              <AssemblerScript>[ENABLE]
-//Needed Materials
-Pathea.ItemSystem:ItemBar:GetItemCount+6f:
-  db 74
-//74 0B
-//je Pathea.ItemSystem:ItemBar:GetItemCount+7c
-
-//Trap Requirements
-
-
-[DISABLE]
-Pathea.ItemSystem:ItemBar:GetItemCount+6f:
-  db 75
-//75 0B
-//jne Pathea.ItemSystem:ItemBar:GetItemCount+7c
-
-</AssemblerScript>
-            </CheatEntry>
-            <CheatEntry>
-              <ID>225</ID>
-              <Description>"FreeBuying (Npc_Store)"</Description>
-              <LastState/>
-              <Color>008000</Color>
-              <VariableType>Auto Assembler Script</VariableType>
-              <AssemblerScript>[ENABLE]
-//For stores that use money as spare currency
-Pathea.UISystemNs:Store_Npc_BuySell:ModifiedBuyPrice+1b:
-  db 74
-//74 07
-//je Pathea.UISystemNs:Store_Npc_BuySell:ModifiedBuyPrice+24
-
-//For stores that use items as spare currency
-Pathea.UISystemNs:Store_Npc_BuySell:ModifiedBuyByItem+14:
-  db 74
-//74 07
-//je Pathea.UISystemNs:Store_Npc_BuySell:ModifiedBuyByItem+1d
-
-[DISABLE]
-Pathea.UISystemNs:Store_Npc_BuySell:ModifiedBuyPrice+1b:
-  db 75
-//75 07
-//jne Pathea.UISystemNs:Store_Npc_BuySell:ModifiedBuyPrice+24
-
-Pathea.UISystemNs:Store_Npc_BuySell:ModifiedBuyByItem+14:
-  db 75
-//75 07
-//jne Pathea.UISystemNs:Store_Npc_BuySell:ModifiedBuyByItem+1d
-</AssemblerScript>
-            </CheatEntry>
-            <CheatEntry>
-              <ID>228</ID>
-              <Description>"NoCostFarmUpgrading"</Description>
-              <LastState/>
-              <Color>008000</Color>
-              <VariableType>Auto Assembler Script</VariableType>
-              <AssemblerScript>[ENABLE]
-//Farm Upgrade Money Cost
-Pathea.HomeNs:FarmUpgradeMgr:MoneyCost+e0+2:
-  db 4C
-//48 0F 4C C1
-//cmovl rax,rcx
-
-//Farm Upgrade Material Cost
-Pathea.HomeNs:FarmUpgradeMgr:MaterialCost+e0+2:
-  db 4C
-//48 0F 4C C1
-//cmovl rax,rcx
-
-//Farm Change Appearance Money Cost
-Pathea.UISystemNs:FarmEditModeMatBuilding:ExitPay+a4:
-  db 90 90 90
-{
-nop
-nop
-nop
-}
-
-//Farm Change Appearance Material Cost
-Pathea.UISystemNs:FarmEditModeMatBuilding:ExitPay+1c2:
-  db 90 90 90
-{
-nop
-nop
-nop
-}
-
-[DISABLE]
-Pathea.HomeNs:FarmUpgradeMgr:MoneyCost+e0+2:
-  db 4D
-//48 0F 4D C1
-//cmovge rax,rcx
-
-Pathea.HomeNs:FarmUpgradeMgr:MaterialCost+e0+2:
-  db 4D
-//48 0F 4D C1
-//cmovge rax,rcx
-
-Pathea.UISystemNs:FarmEditModeMatBuilding:ExitPay+a4:
-  db 41 FF D3
-//call r11
-
-Pathea.UISystemNs:FarmEditModeMatBuilding:ExitPay+1c2:
-  db 41 FF D3
-//call r11
-
-
-
-</AssemblerScript>
-            </CheatEntry>
-            <CheatEntry>
-              <ID>229</ID>
+              <ID>264</ID>
               <Description>"+Inf Tree Kick"</Description>
               <LastState/>
               <Color>008000</Color>
@@ -383,163 +261,7 @@ Pathea.TreeNs:MyTreeInstance:CanKick+46+3:
 </AssemblerScript>
             </CheatEntry>
             <CheatEntry>
-              <ID>238</ID>
-              <Description>"SetNpcRelationship"</Description>
-              <Options moHideChildren="1"/>
-              <LastState/>
-              <Color>008000</Color>
-              <VariableType>Auto Assembler Script</VariableType>
-              <AssemblerScript>define(address,Pathea.FavorSystemNs:FavorUtility:GetGradeName+17)
-define(bytes,48 63 56 2C 48 8B C8)
-
-[ENABLE]
-assert(address,bytes)
-alloc(newmem,$100,Pathea.FavorSystemNs:FavorUtility:GetGradeName+17)
-
-label(code)
-label(return)
-
-globalalloc(setFavorGradeName_ptr,8)
-
-newmem:
-  mov [setFavorGradeName_ptr],rsi
-
-code:
-  movsxd  rdx,dword ptr [rsi+2C]
-  mov rcx,rax
-  jmp return
-
-address:
-  jmp newmem
-  nop
-  nop
-return:
-
-[DISABLE]
-address:
-  db bytes
-  // movsxd  rdx,dword ptr [rsi+2C]
-  // mov rcx,rax
-
-dealloc(newmem)
-
-{
-// ORIGINAL CODE - INJECTION POINT: Pathea.FavorSystemNs:FavorUtility:GetGradeName+17
-
-4DFF556A: 00 00                          -  add [rax],al
-4DFF556C: 00 00                          -  add [rax],al
-4DFF556E: 00 00                          -  add [rax],al
-4DFF5570: 55                             -  push rbp
-4DFF5571: 48 8B EC                       -  mov rbp,rsp
-4DFF5574: 56                             -  push rsi
-4DFF5575: 48 83 EC 08                    -  sub rsp,08
-4DFF5579: 48 8B F1                       -  mov rsi,rcx
-4DFF557C: 48 8B 04 25 40 C3 93 04        -  mov rax,[0493C340]
-4DFF5584: 83 3E 00                       -  cmp dword ptr [rsi],00
-// ---------- INJECTING HERE ----------
-4DFF5587: 48 63 56 2C                    -  movsxd  rdx,dword ptr [rsi+2C]
-4DFF558B: 48 8B C8                       -  mov rcx,rax
-// ---------- DONE INJECTING  ----------
-4DFF558E: 48 83 EC 20                    -  sub rsp,20
-4DFF5592: 83 38 00                       -  cmp dword ptr [rax],00
-4DFF5595: 49 BB 40 37 E5 3E 00 00 00 00  -  mov r11,Pathea.NpcRepositoryNs:NpcRepository:GetNpcData
-4DFF559F: 41 FF D3                       -  call r11
-4DFF55A2: 48 83 C4 20                    -  add rsp,20
-4DFF55A6: 48 63 88 A4 00 00 00           -  movsxd  rcx,dword ptr [rax+000000A4]
-4DFF55AD: 83 3E 00                       -  cmp dword ptr [rsi],00
-4DFF55B0: 48 63 56 38                    -  movsxd  rdx,dword ptr [rsi+38]
-4DFF55B4: 48 83 EC 20                    -  sub rsp,20
-4DFF55B8: 49 BB F0 55 FF 4D 00 00 00 00  -  mov r11,Pathea.FavorSystemNs:FavorRelationshipUtil:GetGenderRelation
-}
-</AssemblerScript>
-              <CheatEntries>
-                <CheatEntry>
-                  <ID>239</ID>
-                  <Description>"BaseAddress"</Description>
-                  <LastState RealAddress="85C88960"/>
-                  <VariableType>String</VariableType>
-                  <Length>0</Length>
-                  <Unicode>0</Unicode>
-                  <CodePage>0</CodePage>
-                  <ZeroTerminate>1</ZeroTerminate>
-                  <Address>setFavorGradeName_ptr</Address>
-                  <Offsets>
-                    <Offset>0</Offset>
-                  </Offsets>
-                  <CheatEntries>
-                    <CheatEntry>
-                      <ID>240</ID>
-                      <Description>"NPC_Name"</Description>
-                      <DropDownList ReadOnly="1" DescriptionOnly="1" DisplayValueAsItem="1">4000006:Nora
-4000008:Gale
-4000011:Django
-4000012:Sophie
-4000033:Sonia
-4000035:Phyllis
-4000038:Aadit
-4000040:Presley
-4000052:Mei
-4000053:Lucy
-4000059:McDonald
-4000063:Arlo
-4000069:Pinky
-</DropDownList>
-                      <LastState Value="4000033" RealAddress="85C8898C"/>
-                      <VariableType>4 Bytes</VariableType>
-                      <Address>+2C</Address>
-                    </CheatEntry>
-                    <CheatEntry>
-                      <ID>241</ID>
-                      <Description>"mFavorValue"</Description>
-                      <LastState Value="502" RealAddress="85C88994"/>
-                      <VariableType>4 Bytes</VariableType>
-                      <Address>+34</Address>
-                    </CheatEntry>
-                    <CheatEntry>
-                      <ID>242</ID>
-                      <Description>"relationship"</Description>
-                      <DropDownList ReadOnly="1" DescriptionOnly="1" DisplayValueAsItem="1">1:Nemesis
-2:Adversary
-3:Stranger
-4:Associate
-5:Buddy
-6:Friend
-7:Good Friend
-8:Best Friend
-9:BFF
-10:Girlfriend/Boyfriend
-11:Sweetheart
-12:Lover
-13:Soulmate
-14:Wife/Husband
-15:Soulmate
-16:Unhappy Wife/Husband
-</DropDownList>
-                      <LastState Value="16" RealAddress="85C88998"/>
-                      <VariableType>4 Bytes</VariableType>
-                      <Address>+38</Address>
-                    </CheatEntry>
-                  </CheatEntries>
-                </CheatEntry>
-              </CheatEntries>
-            </CheatEntry>
-            <CheatEntry>
-              <ID>243</ID>
-              <Description>"FastAnimalGrow"</Description>
-              <LastState/>
-              <Color>008000</Color>
-              <VariableType>Auto Assembler Script</VariableType>
-              <AssemblerScript>[ENABLE]
-Pathea.AnimalFarmNs:AnimalinFarm:get_IsMaturation:
-  ret
-
-[DISABLE]
-Pathea.AnimalFarmNs:AnimalinFarm:get_IsMaturation:
-  push rbp
-</AssemblerScript>
-            </CheatEntry>
-            <CheatEntry>
-              <ID>14</ID>
+              <ID>271</ID>
               <Description>"All Slots Unlocked"</Description>
               <LastState/>
               <Color>000080</Color>
@@ -571,53 +293,488 @@ Pathea.ItemSystem:ItemTable:IsSlotUnlocked+17:
 </AssemblerScript>
             </CheatEntry>
             <CheatEntry>
-              <ID>1</ID>
-              <Description>"+Inf Items"</Description>
+              <ID>378</ID>
+              <Description>"Always Catch Fish"</Description>
               <LastState/>
-              <Color>000080</Color>
+              <Color>004080</Color>
               <VariableType>Auto Assembler Script</VariableType>
               <AssemblerScript>[ENABLE]
-Pathea.ItemSystem:ItemObject:ChangeNumber+21+3:
-  db 20
-//48 63 40 20
-//movsxd  rax,dword ptr [rax+20]
+Pathea.MiniGameNs.Fishing:FishingSystem_t:IsFailed:
+  ret
 
 [DISABLE]
-Pathea.ItemSystem:ItemObject:ChangeNumber+21+3:
-  db 24
-//48 63 40 24
-//movsxd  rax,dword ptr [rax+24]
+Pathea.MiniGameNs.Fishing:FishingSystem_t:IsFailed:
+  push rbp
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>270</ID>
+              <Description>"FastAnimalGrow"</Description>
+              <LastState/>
+              <Color>008000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>[ENABLE]
+Pathea.AnimalFarmNs:AnimalinFarm:get_IsMaturation:
+  ret
+
+[DISABLE]
+Pathea.AnimalFarmNs:AnimalinFarm:get_IsMaturation:
+  push rbp
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>262</ID>
+              <Description>"FreeBuying (Npc_Store)"</Description>
+              <LastState/>
+              <Color>008000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>[ENABLE]
+//For stores that use money as spare currency
+Pathea.UISystemNs:Store_Npc_BuySell:ModifiedBuyPrice+1b:
+  db 74
+//74 07
+//je Pathea.UISystemNs:Store_Npc_BuySell:ModifiedBuyPrice+24
+
+//For stores that use items as spare currency
+Pathea.UISystemNs:Store_Npc_BuySell:ModifiedBuyByItem+14:
+  db 74
+//74 07
+//je Pathea.UISystemNs:Store_Npc_BuySell:ModifiedBuyByItem+1d
+
+//Mc D's Stable
+Pathea.RiderNs:RidableModuleManager:BuyRidable+d2+1:
+ db 8D
+//0F 8D B8 00 00 00
+//jnl Pathea.RiderNs:RidableModuleManager:BuyRidable+190
+
+[DISABLE]
+Pathea.UISystemNs:Store_Npc_BuySell:ModifiedBuyPrice+1b:
+  db 75
+//75 07
+//jne Pathea.UISystemNs:Store_Npc_BuySell:ModifiedBuyPrice+24
+
+Pathea.UISystemNs:Store_Npc_BuySell:ModifiedBuyByItem+14:
+  db 75
+//75 07
+//jne Pathea.UISystemNs:Store_Npc_BuySell:ModifiedBuyByItem+1d
+
+Pathea.RiderNs:RidableModuleManager:BuyRidable+d2+1:
+ db 8C
+//0F 8C B8 00 00 00
+//jl Pathea.RiderNs:RidableModuleManager:BuyRidable+190
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>372</ID>
+              <Description>"IgnoreFuelRequirement (Stone Furnace crafting)"</Description>
+              <LastState/>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>[ENABLE]
+alloc(newmem,2048,AutoMachineData:get_MaxFuel+f)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+newmem:
+mov [rax+48],0
+originalcode:
+movsxd  rcx,dword ptr [rax+48]
+sub rsp,20
+
+exit:
+jmp returnhere
+
+AutoMachineData:get_MaxFuel+f:
+jmp newmem
+nop
+nop
+nop
+returnhere:
+
+[DISABLE]
+dealloc(newmem)
+AutoMachineData:get_MaxFuel+f:
+movsxd  rcx,dword ptr [rax+48]
+sub rsp,20
+//Alt: db 48 63 48 48 48 83 EC 20
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>377</ID>
+              <Description>"Infinite Gifts"</Description>
+              <LastState/>
+              <Color>008000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>[ENABLE]
+alloc(newmem,2048,Pathea.FavorSystemNs:FavorBehavior_GiveGift:Pathea.FavorSystemNs.IFavorBehavior.CanExecute+17)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+newmem:
+mov [rsi+10],0
+originalcode:
+movsxd  rdx,dword ptr [rsi+10] //GiveNormalGiftCount - current value
+movsxd  r8,dword ptr [rsi+14]  //MaxGiveNormalGiftCount - max (4bytes) value { 1 }
+
+exit:
+jmp returnhere
+
+Pathea.FavorSystemNs:FavorBehavior_GiveGift:Pathea.FavorSystemNs.IFavorBehavior.CanExecute+17:
+jmp newmem
+nop
+nop
+nop
+returnhere:
+
+[DISABLE]
+dealloc(newmem)
+Pathea.FavorSystemNs:FavorBehavior_GiveGift:Pathea.FavorSystemNs.IFavorBehavior.CanExecute+17:
+movsxd  rdx,dword ptr [rsi+10]
+movsxd  r8,dword ptr [rsi+14]
+//Alt: db 48 63 56 10 4C 63 46 14
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>255</ID>
+              <Description>"Instant Crafting"</Description>
+              <LastState/>
+              <Color>408000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>[ENABLE]
+AutomataItem:AddTime+323+3:
+  db 5F
+//F3 41 0F 5F 47 1C
+//maxss xmm0,[r15+1C]
+
+[DISABLE]
+AutomataItem:AddTime+323+3:
+  db 10
+//F3 41 0F 10 47 1C
+//movss xmm0,[r15+1C]
+
+
+{
+float value
+  *start value = 0
+  *end value = 1
+}
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>376</ID>
+              <Description>"Instant Crafting V2"</Description>
+              <LastState/>
+              <Color>408000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>[ENABLE]
+AutomataMachineMenuCtr:GetTotalTime+13+2:
+  db 11 4F
+//F3 0F 11 4F 70
+//movss [rdi+70],xmm1
+
+[DISABLE]
+AutomataMachineMenuCtr:GetTotalTime+13+2:
+  db 10 47
+//F3 0F 10 47 70
+//movss xmm0,[rdi+70]
 
 </AssemblerScript>
             </CheatEntry>
             <CheatEntry>
-              <ID>12</ID>
-              <Description>"+Inf SP"</Description>
+              <ID>380</ID>
+              <Description>"Instant Fishing"</Description>
               <LastState/>
-              <Color>000080</Color>
+              <Color>004080</Color>
               <VariableType>Auto Assembler Script</VariableType>
               <AssemblerScript>[ENABLE]
-Pathea.PlayerAbilityNs:PlayerAbilityModule:AssignPoint+15f+1:
+//FishingWaitTimeMax
+Pathea.MiniGameNs.Fishing:FishingSystem_t:get_maxWaitTime+25+3:
+  db C2
+//F3 0F 5A C2
+//cvtss2sd xmm0,xmm2  //xmm2 value [ 0 ]
+
+//dragFishSpeedFactor
+Pathea.MiniGameNs.Fishing:FishingSystem_t:get_DragFishSpeed+25+3:
+  db C3
+//F2 0F 59 C3
+//mulsd xmm0,xmm3   //xmm3 value [ 503 ]
+
+[DISABLE]
+//FishingWaitTimeMax
+Pathea.MiniGameNs.Fishing:FishingSystem_t:get_maxWaitTime+25+3:
   db C0
-//FF C0
-//inc eax
+//F3 0F 5A C0
+//cvtss2sd xmm0,xmm0  //xmm0 default (float) value [ 5 ]
+
+//dragFishSpeedFactor
+Pathea.MiniGameNs.Fishing:FishingSystem_t:get_DragFishSpeed+25+3:
+  db C1
+//F2 0F 59 C1
+//mulsd xmm0,xmm1  //xmm1 default (float) value [ 1 ]
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>371</ID>
+              <Description>"Instant Grow Plants"</Description>
+              <LastState/>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>[ENABLE]
+Pathea.HomeNs:Plant:Grow+94+3:
+  db 56
+//F3 0F 11 56 28
+//movss [rsi+28],xmm2
+
+//currentFruitGrowValue
+Pathea.HomeNs:Plant:Grow+113+3:
+  db 56
+//F3 0F 11 56 2C
+//movss [rsi+2C],xmm2
 
 [DISABLE]
-Pathea.PlayerAbilityNs:PlayerAbilityModule:AssignPoint+15f+1:
-  db C8
-//FF C8
-//dec eax
+Pathea.HomeNs:Plant:Grow+94+3:
+  db 6E
+//F3 0F 11 6E 28
+//movss [rsi+28],xmm5
+
+//currentFruitGrowValue
+Pathea.HomeNs:Plant:Grow+113+3:
+  db 6E
+//F3 0F 11 6E 2C
+//movss [rsi+2C],xmm5
+
+
+{
+//***************************************************//
+
+//or this one:
+
+//[ENABLE]
+Pathea.HomeNs:Plant:CalculateGrowSeconds+41+2:
+  db 5F
+//F3 0F 5F 4E 28
+//maxss xmm1,[rsi+28]
+
+//[DISABLE]
+Pathea.HomeNs:Plant:CalculateGrowSeconds+41+2:
+  db 10
+//F3 0F 10 4E 28
+//movss xmm1,[rsi+28]
+}
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>443</ID>
+              <Description>"JumpActionParamer"</Description>
+              <Options moHideChildren="1"/>
+              <LastState/>
+              <Color>800000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>[ENABLE]
+alloc(newmem,2048,Pathea:ActorMotor:JumpStart+c9) 
+label(returnhere)
+label(originalcode)
+label(exit)
+
+globalalloc(jump_ptr,8)
+
+newmem:
+mov [jump_ptr],rax
+originalcode:
+movss xmm0,[rax+18]
+
+exit:
+jmp returnhere
+
+Pathea:ActorMotor:JumpStart+c9:
+jmp newmem
+returnhere:
+
+[DISABLE]
+dealloc(newmem)
+Pathea:ActorMotor:JumpStart+c9:
+movss xmm0,[rax+18]
+//Alt: db F3 0F 10 40 18
+</AssemblerScript>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>442</ID>
+                  <Description>"BaseAddress"</Description>
+                  <LastState RealAddress="00000000"/>
+                  <VariableType>String</VariableType>
+                  <Length>0</Length>
+                  <Unicode>0</Unicode>
+                  <CodePage>0</CodePage>
+                  <ZeroTerminate>1</ZeroTerminate>
+                  <Address>jump_ptr</Address>
+                  <Offsets>
+                    <Offset>0</Offset>
+                  </Offsets>
+                  <CheatEntries>
+                    <CheatEntry>
+                      <ID>444</ID>
+                      <Description>"JumpInitSpeed"</Description>
+                      <VariableType>Float</VariableType>
+                      <Address>+10</Address>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>445</ID>
+                      <Description>"Gravity"</Description>
+                      <VariableType>Float</VariableType>
+                      <Address>+14</Address>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>446</ID>
+                      <Description>"Multiply"</Description>
+                      <VariableType>Float</VariableType>
+                      <Address>+18</Address>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>447</ID>
+                      <Description>"DropMoreTime"</Description>
+                      <VariableType>Float</VariableType>
+                      <Address>+1C</Address>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>448</ID>
+                      <Description>"JumpMoveDelta"</Description>
+                      <VariableType>Float</VariableType>
+                      <Address>+20</Address>
+                    </CheatEntry>
+                  </CheatEntries>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>369</ID>
+              <Description>"MaxHorseLoyalty"</Description>
+              <LastState/>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>[ENABLE]
+//On each new day, your Horse's loyalty is decreasing. Now it will always be on the max.
+Pathea.RiderNs:RidableModuleManager:TryDecreaseLoyalty+ea+4:
+  db 57
+//F3 41 0F 11 57 50
+//movss [r15+50],xmm2
+ 
+[DISABLE]
+Pathea.RiderNs:RidableModuleManager:TryDecreaseLoyalty+ea+4:
+  db 6F
+//F3 41 0F 11 6F 50
+//movss [r15+50],xmm5
+
+{
+*********** OR ************
+//Each time you pet your Horse, it will bring the max of loyatly.
+//[ENABLE]
+Pathea.RiderNs:RidableModuleManager:TryIncreaseLoyalty+1e2+4:
+  db 57
+//F3 41 0F 11 57 50
+//movss [r15+50],xmm2
+
+//[DISABLE]
+Pathea.RiderNs:RidableModuleManager:TryIncreaseLoyalty+1e2+4:
+  db 6F
+//F3 41 0F 11 6F 50
+//movss [r15+50],xmm5
+}
 
 </AssemblerScript>
             </CheatEntry>
             <CheatEntry>
-              <ID>22</ID>
+              <ID>278</ID>
+              <Description>"MiniGameNs:AnimalBehavior:BeCached"</Description>
+              <LastState/>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>define(address,Pathea.MiniGameNs:AnimalBehavior:Update+e5)
+define(bytes,0F B6 40 75 85 C0)
+
+[ENABLE]
+assert(address,bytes)
+alloc(newmem,$1000,Pathea.MiniGameNs:AnimalBehavior:Update+e5)
+
+label(code)
+label(return)
+
+newmem:
+  mov byte ptr [rax+75],01
+
+code:
+  movzx eax,byte ptr [rax+75]
+  test eax,eax
+  jmp return
+
+address:
+  jmp newmem
+  nop
+return:
+
+[DISABLE]
+address:
+  db bytes
+  // movzx eax,byte ptr [rax+75]
+  // test eax,eax
+
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: Pathea.MiniGameNs:AnimalBehavior:Update+e0
+
+604330D5: 48 8B C8                       -  mov rcx,rax
+604330D8: 48 83 EC 20                    -  sub rsp,20
+604330DC: 90                             -  nop 
+604330DD: 90                             -  nop 
+604330DE: 90                             -  nop 
+604330DF: FF 50 18                       -  call qword ptr [rax+18]
+604330E2: 48 83 C4 20                    -  add rsp,20
+604330E6: 48 8B 46 50                    -  mov rax,[rsi+50]
+604330EA: 48 8B C8                       -  mov rcx,rax
+604330ED: 83 39 00                       -  cmp dword ptr [rcx],00
+// ---------- INJECTING HERE ----------
+604330F0: 0F B6 40 75                    -  movzx eax,byte ptr [rax+75]
+604330F4: 85 C0                          -  test eax,eax
+// ---------- DONE INJECTING  ----------
+604330F6: 0F 84 91 00 00 00              -  je Pathea.MiniGameNs:AnimalBehavior:Update+17d
+604330FC: 48 8B 56 50                    -  mov rdx,[rsi+50]
+60433100: 48 8B CE                       -  mov rcx,rsi
+60433103: 48 83 EC 20                    -  sub rsp,20
+60433107: 49 BB D0 31 43 60 00 00 00 00  -  mov r11,Pathea.MiniGameNs:AnimalBehavior:HasReached
+60433111: 41 FF D3                       -  call r11
+60433114: 48 83 C4 20                    -  add rsp,20
+60433118: 85 C0                          -  test eax,eax
+6043311A: 0F 84 6D 00 00 00              -  je Pathea.MiniGameNs:AnimalBehavior:Update+17d
+60433120: 48 8B 86 80 00 00 00           -  mov rax,[rsi+00000080]
+}
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>277</ID>
+              <Description>"MiniGameNs:CatchCowGame:LeftCircleNum"</Description>
+              <LastState/>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>[ENABLE]
+Pathea.MiniGameNs:CatchCowGameCtr:ShowLeftCircle+13+1:
+  db C2
+//FF C2
+//inc edx
+
+ 
+[DISABLE]
+Pathea.MiniGameNs:CatchCowGameCtr:ShowLeftCircle+13+1:
+  db CA
+//FF CA
+//dec edx
+
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>274</ID>
               <Description>"Never Attacked"</Description>
               <LastState/>
               <Color>000080</Color>
               <VariableType>Auto Assembler Script</VariableType>
               <AssemblerScript>define(address,Pathea.ActorNs:Actor:Pathea.SkillNs.ISkillable.PlayAnimation+c)
-define(bytes,0F B6 87 EC 03 00 00)
+define(bytes,0F B6 87 E4 03 00 00)
 
 [ENABLE]
 assert(address,bytes)
@@ -627,14 +784,14 @@ label(code)
 label(return)
 
 newmem:
-  cmp [rdi+00000474],#4000001   //player id
+  cmp [rdi+00000480],#4000001   //player id
   je code
-  mov [rdi+000004B0],0
-  movzx eax,byte ptr [rdi+000004B0]
+  mov [rdi+000004BC],0
+  movzx eax,byte ptr [rdi+000004BC]  //haveAnim
   jmp return
 
 code:
-  movzx eax,byte ptr [rdi+000003EC]
+  movzx eax,byte ptr [rdi+000003E4]
   jmp return
 
 address:
@@ -647,63 +804,242 @@ return:
 
 address:
   db bytes
-  // movzx eax,byte ptr [rdi+000003EC]
+  // movzx eax,byte ptr [rdi+000003E4]
 
 dealloc(newmem)
 
 {
-// ORIGINAL CODE - INJECTION POINT: 235CE09C
+// ORIGINAL CODE - INJECTION POINT: 54281D9C
 
-235CE088: 00 00                          -  add [rax],al
-235CE08A: 00 00                          -  add [rax],al
-235CE08C: 00 00                          -  add [rax],al
-235CE08E: 00 00                          -  add [rax],al
-235CE090: 55                             -  push rbp
-235CE091: 48 8B EC                       -  mov rbp,rsp
-235CE094: 56                             -  push rsi
-235CE095: 57                             -  push rdi
-235CE096: 48 8B F9                       -  mov rdi,rcx
-235CE099: 48 8B F2                       -  mov rsi,rdx
+54281D88: 00 00                          -  add [rax],al
+54281D8A: 00 00                          -  add [rax],al
+54281D8C: 00 00                          -  add [rax],al
+54281D8E: 00 00                          -  add [rax],al
+54281D90: 55                             -  push rbp
+54281D91: 48 8B EC                       -  mov rbp,rsp
+54281D94: 56                             -  push rsi
+54281D95: 57                             -  push rdi
+54281D96: 48 8B F9                       -  mov rdi,rcx
+54281D99: 48 8B F2                       -  mov rsi,rdx
 // ---------- INJECTING HERE ----------
-235CE09C: 0F B6 87 EC 03 00 00           -  movzx eax,byte ptr [rdi+000003EC]
+54281D9C: 0F B6 87 E4 03 00 00           -  movzx eax,byte ptr [rdi+000003E4]
 // ---------- DONE INJECTING  ----------
-235CE0A3: 85 C0                          -  test eax,eax
-235CE0A5: 0F 84 7C 00 00 00              -  je Pathea.ActorNs:Actor:Pathea.SkillNs.ISkillable.PlayAnimation+97
-235CE0AB: 48 8B CE                       -  mov rcx,rsi
-235CE0AE: 48 83 EC 20                    -  sub rsp,20
-235CE0B2: 49 BB 00 A6 DA 04 00 00 00 00  -  mov r11,System:String:IsNullOrEmpty
-235CE0BC: 41 FF D3                       -  call r11
-235CE0BF: 48 83 C4 20                    -  add rsp,20
-235CE0C3: 85 C0                          -  test eax,eax
-235CE0C5: 0F 85 5C 00 00 00              -  jne Pathea.ActorNs:Actor:Pathea.SkillNs.ISkillable.PlayAnimation+97
-235CE0CB: 48 8B CE                       -  mov rcx,rsi
+54281DA3: 85 C0                          -  test eax,eax
+54281DA5: 0F 84 7C 00 00 00              -  je Pathea.ActorNs:Actor:Pathea.SkillNs.ISkillable.PlayAnimation+97
+54281DAB: 48 8B CE                       -  mov rcx,rsi
+54281DAE: 48 83 EC 20                    -  sub rsp,20
+54281DB2: 49 BB 00 A6 76 04 00 00 00 00  -  mov r11,System:String:IsNullOrEmpty
+54281DBC: 41 FF D3                       -  call r11
+54281DBF: 48 83 C4 20                    -  add rsp,20
+54281DC3: 85 C0                          -  test eax,eax
+54281DC5: 0F 85 5C 00 00 00              -  jne Pathea.ActorNs:Actor:Pathea.SkillNs.ISkillable.PlayAnimation+97
+54281DCB: 48 8B CE                       -  mov rcx,rsi
 }
 </AssemblerScript>
             </CheatEntry>
             <CheatEntry>
-              <ID>28</ID>
-              <Description>"Clock Stop "</Description>
+              <ID>379</ID>
+              <Description>"No Fishing Bait Requirement"</Description>
               <LastState/>
-              <Color>000080</Color>
+              <Color>004080</Color>
               <VariableType>Auto Assembler Script</VariableType>
               <AssemblerScript>[ENABLE]
-TimeManager:get_TimeStoped+9+2:
-  db 56
-//0F B6 56 50
-//movzx edx,byte ptr [rsi+50]
+Pathea.MiniGameNs.Fishing:FishingInteraction:HasFishBait+5a:
+  db  90 90 90
 
 [DISABLE]
-TimeManager:get_TimeStoped+9+2:
-  db 46
-//0F B6 46 50
-//movzx eax,byte ptr [rsi+50]
+Pathea.MiniGameNs.Fishing:FishingInteraction:HasFishBait+5a:
+  db  41 FF D3
+ //call r11  //where r11 is Pathea.ItemSystem:ItemBag:GetItemByID
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>261</ID>
+              <Description>"NoBaitRequirement (Trap Box)"</Description>
+              <LastState/>
+              <Color>008000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>[ENABLE]
+//Needed Materials
+Pathea.ItemSystem:ItemBar:GetItemCount+6f:
+  db 74
+//74 0B
+//je Pathea.ItemSystem:ItemBar:GetItemCount+7c
 
+//Trap Requirements
+Pathea.RiderNs:RidableCatchController:FindTrapID+45:
+  db 74
+//74 06
+//je Pathea.RiderNs:RidableCatchController:FindTrapID+4d
+
+
+[DISABLE]
+Pathea.ItemSystem:ItemBar:GetItemCount+6f:
+  db 75
+//75 0B
+//jne Pathea.ItemSystem:ItemBar:GetItemCount+7c
+
+Pathea.RiderNs:RidableCatchController:FindTrapID+45:
+  db 75
+//75 06
+//jne Pathea.RiderNs:RidableCatchController:FindTrapID+4d
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>260</ID>
+              <Description>"NoCheckPlayerItem (repair all)"</Description>
+              <LastState/>
+              <Color>008000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>[ENABLE]
+PatheaScriptExt:CheckPlayerItem:Do:
+ ret
+
+[DISABLE]
+PatheaScriptExt:CheckPlayerItem:Do:
+ push rbp
+
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>259</ID>
+              <Description>"NoCostFarmBuying"</Description>
+              <LastState/>
+              <Color>008000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>[ENABLE]
+Pathea.FarmNs:FarmLevelUnlocker:CheckCanDo:
+  ret
+ 
+[DISABLE]
+Pathea.FarmNs:FarmLevelUnlocker:CheckCanDo:
+  push rbp
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>263</ID>
+              <Description>"NoCostFarmUpgrading"</Description>
+              <LastState/>
+              <Color>008000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>[ENABLE]
+//Farm Upgrade Money Cost
+Pathea.HomeNs:FarmUpgradeMgr:MoneyCost+ef+2:
+  db 4C
+
+//Farm Upgrade Material Cost
+Pathea.HomeNs:FarmUpgradeMgr:MaterialCost+ef+2:
+  db 4C
+
+//Farm Change Appearance Money Cost
+Pathea.UISystemNs:FarmEditModeMatBuilding:ExitPay+7f:
+  db 90 90 90
+{
+nop
+nop
+nop
+}
+
+//Farm Change Appearance Material Cost
+Pathea.UISystemNs:FarmEditModeMatBuilding:ExitPay+ad:
+  db 90 90 90
+{
+nop
+nop
+nop
+}
+
+[DISABLE]
+Pathea.HomeNs:FarmUpgradeMgr:MoneyCost+ef+2:
+  db 4D
+
+Pathea.HomeNs:FarmUpgradeMgr:MaterialCost+ef+2:
+  db 4D
+
+Pathea.UISystemNs:FarmEditModeMatBuilding:ExitPay+7f:
+  db 41 FF D3
+
+Pathea.UISystemNs:FarmEditModeMatBuilding:ExitPay+ad:
+  db 41 FF D3
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>257</ID>
+              <Description>"NoEquipmentLevelRequirement { Player }"</Description>
+              <LastState/>
+              <Color>008000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>[ENABLE]
+Pathea.UISystemNs.MainMenu.PackageUI:PackageUICtr:EquipOn+36:
+  db 74
+//74 07
+//je Pathea.UISystemNs.MainMenu.PackageUI:PackageUICtr:EquipOn+3f
+ 
+[DISABLE]
+Pathea.UISystemNs.MainMenu.PackageUI:PackageUICtr:EquipOn+36:
+  db 75
+//75 07
+//jne Pathea.UISystemNs.MainMenu.PackageUI:PackageUICtr:EquipOn+3f
+
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>256</ID>
+              <Description>"NoItemCraftingCostTime (another way to have instant crafting)"</Description>
+              <LastState/>
+              <Color>408000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>[ENABLE]
+AutomataItem:AddTime+a5+3:
+  db 5D
+//F3 41 0F 5D 4F 18
+//minss xmm1,[r15+18]
+
+[DISABLE]
+AutomataItem:AddTime+a5+3:
+  db 10
+//F3 41 0F 10 4F 18
+//movss xmm1,[r15+18]
 
 
 </AssemblerScript>
             </CheatEntry>
             <CheatEntry>
-              <ID>24</ID>
+              <ID>258</ID>
+              <Description>"NoMaterialRequirement (Worktable/Stone Furnace crafting)"</Description>
+              <LastState/>
+              <Color>008000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>[ENABLE]
+Pathea.CompoundSystem:CompoundManager:GetItemCount:
+  ret
+
+[DISABLE]
+Pathea.CompoundSystem:CompoundManager:GetItemCount:
+  push rbp
+
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>367</ID>
+              <Description>"NoRidableTrainingTime"</Description>
+              <LastState/>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>[ENABLE]
+Pathea.HomeNs:RidableTamingUnit:UpdateRidableTamingData+a3+3:
+  db 67
+//F3 0F 11 67 18
+//movss [rdi+18],xmm4
+ 
+[DISABLE]
+Pathea.HomeNs:RidableTamingUnit:UpdateRidableTamingData+a3+3:
+  db 6F
+//F3 0F 11 6F 18
+//movss [rdi+18],xmm5
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>276</ID>
               <Description>"One Hit Kill"</Description>
               <LastState/>
               <Color>000080</Color>
@@ -765,20 +1101,352 @@ dealloc(newmem)
 }
 </AssemblerScript>
             </CheatEntry>
+            <CheatEntry>
+              <ID>493</ID>
+              <Description>"PlayerWorkshopRep (+150)"</Description>
+              <Options moHideChildren="1"/>
+              <LastState/>
+              <Color>000080</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>[ENABLE]
+alloc(newmem,2048,Pathea.GuildRanking:WorkshopRepController:AddReputation+84)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+globalalloc(playerWorkshopRep_ptr,8)
+
+newmem:
+mov [playerWorkshopRep_ptr],r15
+mov edi,#1000    //put here the value you want
+originalcode:
+movsxd  rax,dword ptr [r15+2C]
+add eax,edi
+
+exit:
+jmp returnhere
+
+Pathea.GuildRanking:WorkshopRepController:AddReputation+84:
+jmp newmem
+nop
+returnhere:
+ 
+[DISABLE]
+dealloc(newmem)
+Pathea.GuildRanking:WorkshopRepController:AddReputation+84:
+movsxd  rax,dword ptr [r15+2C]
+add eax,edi
+//Alt: db 49 63 47 2C 03 C7
+</AssemblerScript>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>468</ID>
+                  <Description>"Base Address"</Description>
+                  <LastState RealAddress="00000000"/>
+                  <VariableType>String</VariableType>
+                  <Length>0</Length>
+                  <Unicode>0</Unicode>
+                  <CodePage>0</CodePage>
+                  <ZeroTerminate>1</ZeroTerminate>
+                  <Address>playerWorkshopRep_ptr</Address>
+                  <Offsets>
+                    <Offset>0</Offset>
+                  </Offsets>
+                  <CheatEntries>
+                    <CheatEntry>
+                      <ID>494</ID>
+                      <Description>"mType"</Description>
+                      <VariableType>4 Bytes</VariableType>
+                      <Address>+10</Address>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>495</ID>
+                      <Description>"id"</Description>
+                      <VariableType>4 Bytes</VariableType>
+                      <Address>+14</Address>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>496</ID>
+                      <Description>"level"</Description>
+                      <DropDownList ReadOnly="1" DescriptionOnly="1" DisplayValueAsItem="1">1:D
+2:C
+3:B
+4:A
+5:S
+</DropDownList>
+                      <VariableType>4 Bytes</VariableType>
+                      <Address>+18</Address>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>497</ID>
+                      <Description>"curValue"</Description>
+                      <VariableType>4 Bytes</VariableType>
+                      <Address>+1C</Address>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>498</ID>
+                      <Description>"lastUpgradeValue"</Description>
+                      <VariableType>4 Bytes</VariableType>
+                      <Address>+20</Address>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>499</ID>
+                      <Description>"curUpgradeValue"</Description>
+                      <VariableType>4 Bytes</VariableType>
+                      <Address>+24</Address>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>500</ID>
+                      <Description>"year"</Description>
+                      <VariableType>4 Bytes</VariableType>
+                      <Address>+28</Address>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>501</ID>
+                      <Description>"yearValue"</Description>
+                      <VariableType>4 Bytes</VariableType>
+                      <Address>+2C</Address>
+                    </CheatEntry>
+                  </CheatEntries>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>265</ID>
+              <Description>"SetNpcRelationship"</Description>
+              <Options moHideChildren="1"/>
+              <LastState/>
+              <Color>008000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>define(address,Pathea.FavorSystemNs:FavorUtility:GetGradeName+1d)
+define(bytes,48 63 56 2C 48 8B C8)
+
+[ENABLE]
+assert(address,bytes)
+alloc(newmem,$100,Pathea.FavorSystemNs:FavorUtility:GetGradeName+1d)
+
+label(code)
+label(return)
+
+globalalloc(setFavorGradeName_ptr,8)
+
+newmem:
+  mov [setFavorGradeName_ptr],rsi
+
+code:
+  movsxd  rdx,dword ptr [rsi+2C]
+  mov rcx,rax
+  jmp return
+
+address:
+  jmp newmem
+  nop
+  nop
+return:
+
+[DISABLE]
+address:
+  db bytes
+  // movsxd  rdx,dword ptr [rsi+2C]
+  // mov rcx,rax
+
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: Pathea.FavorSystemNs:FavorUtility:GetGradeName+18
+
+542DDAEC: 00 00                          -  add [rax],al
+542DDAEE: 00 00                          -  add [rax],al
+542DDAF0: 55                             -  push rbp
+542DDAF1: 48 8B EC                       -  mov rbp,rsp
+542DDAF4: 56                             -  push rsi
+542DDAF5: 57                             -  push rdi
+542DDAF6: 48 83 EC 10                    -  sub rsp,10
+542DDAFA: 48 8B F1                       -  mov rsi,rcx
+542DDAFD: 48 8B 04 25 D0 C1 37 02        -  mov rax,[0237C1D0]
+542DDB05: 83 3E 00                       -  cmp dword ptr [rsi],00
+// ---------- INJECTING HERE ----------
+542DDB08: 48 63 56 2C                    -  movsxd  rdx,dword ptr [rsi+2C]
+542DDB0C: 48 8B C8                       -  mov rcx,rax
+// ---------- DONE INJECTING  ----------
+542DDB0F: 48 83 EC 20                    -  sub rsp,20
+542DDB13: 83 38 00                       -  cmp dword ptr [rax],00
+542DDB16: 49 BB 50 89 04 2A 00 00 00 00  -  mov r11,Pathea.NpcRepositoryNs:NpcRepository:GetNpcData
+542DDB20: 41 FF D3                       -  call r11
+542DDB23: 48 83 C4 20                    -  add rsp,20
+542DDB27: 48 8B F8                       -  mov rdi,rax
+542DDB2A: 83 3E 00                       -  cmp dword ptr [rsi],00
+542DDB2D: 48 63 4E 38                    -  movsxd  rcx,dword ptr [rsi+38]
+542DDB31: 48 83 EC 20                    -  sub rsp,20
+542DDB35: 49 BB E0 6F 04 2A 00 00 00 00  -  mov r11,Pathea.FavorSystemNs:FavorRelationshipData:GetRefData
+}
+</AssemblerScript>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>266</ID>
+                  <Description>"BaseAddress"</Description>
+                  <LastState RealAddress="00000000"/>
+                  <VariableType>String</VariableType>
+                  <Length>0</Length>
+                  <Unicode>0</Unicode>
+                  <CodePage>0</CodePage>
+                  <ZeroTerminate>1</ZeroTerminate>
+                  <Address>setFavorGradeName_ptr</Address>
+                  <Offsets>
+                    <Offset>0</Offset>
+                  </Offsets>
+                  <CheatEntries>
+                    <CheatEntry>
+                      <ID>267</ID>
+                      <Description>"NPC_Name"</Description>
+                      <DropDownList ReadOnly="1" DescriptionOnly="1" DisplayValueAsItem="1">4000006:Nora
+4000008:Gale
+4000011:Django
+4000012:Sophie
+4000033:Sonia
+4000035:Phyllis
+4000038:Aadit
+4000040:Presley
+4000052:Mei
+4000053:Lucy
+4000059:McDonald
+4000063:Arlo
+4000069:Pinky
+</DropDownList>
+                      <VariableType>4 Bytes</VariableType>
+                      <Address>+2C</Address>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>268</ID>
+                      <Description>"mFavorValue"</Description>
+                      <VariableType>4 Bytes</VariableType>
+                      <Address>+34</Address>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>269</ID>
+                      <Description>"relationship"</Description>
+                      <DropDownList ReadOnly="1" DescriptionOnly="1" DisplayValueAsItem="1">1:Nemesis
+2:Adversary
+3:Stranger
+4:Associate
+5:Buddy
+6:Friend
+7:Good Friend
+8:Best Friend
+9:BFF
+10:Girlfriend/Boyfriend
+11:Sweetheart
+12:Lover
+13:Soulmate
+14:Wife/Husband
+15:Soulmate
+16:Unhappy Wife/Husband
+</DropDownList>
+                      <VariableType>4 Bytes</VariableType>
+                      <Address>+38</Address>
+                    </CheatEntry>
+                  </CheatEntries>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>450</ID>
+              <Description>"Sub-Super Speed (Use Indoors)"</Description>
+              <LastState/>
+              <Color>800000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>[ENABLE]
+alloc(newmem,2048,Pathea:ActorMotor:MoveBySpeed+3b)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+newmem:
+cmp [rsi+0000008C],1
+jne originalcode
+mov [rsi+00000090],(float)25  //default maxSpeed value is { 10 }
+movss xmm0,[rsi+00000090]
+cvtss2sd xmm0,xmm0
+xorpd xmm1,xmm1
+jmp returnhere
+originalcode:
+cvtss2sd xmm0,xmm0
+xorpd xmm1,xmm1
+
+exit:
+jmp returnhere
+
+Pathea:ActorMotor:MoveBySpeed+3b:
+jmp newmem
+nop
+nop
+nop
+returnhere:
+
+[DISABLE]
+dealloc(newmem)
+Pathea:ActorMotor:MoveBySpeed+3b:
+cvtss2sd xmm0,xmm0
+xorpd xmm1,xmm1
+//Alt: db F3 0F 5A C0 66 0F 57 C9
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>381</ID>
+              <Description>"Super Speed"</Description>
+              <LastState/>
+              <Color>800000</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>[ENABLE]
+alloc(newmem,2048,Pathea:ActorMotor:MoveBySpeed+3b)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+newmem:
+cmp [rsi+0000008C],1
+jne originalcode
+mov [rsi+00000090],(float)50  //default maxSpeed value is { 10 }
+movss xmm0,[rsi+00000090]
+cvtss2sd xmm0,xmm0
+xorpd xmm1,xmm1
+jmp returnhere
+originalcode:
+cvtss2sd xmm0,xmm0
+xorpd xmm1,xmm1
+
+exit:
+jmp returnhere
+
+Pathea:ActorMotor:MoveBySpeed+3b:
+jmp newmem
+nop
+nop
+nop
+returnhere:
+
+[DISABLE]
+dealloc(newmem)
+Pathea:ActorMotor:MoveBySpeed+3b:
+cvtss2sd xmm0,xmm0
+xorpd xmm1,xmm1
+//Alt: db F3 0F 5A C0 66 0F 57 C9
+</AssemblerScript>
+            </CheatEntry>
           </CheatEntries>
         </CheatEntry>
         <CheatEntry>
-          <ID>122</ID>
+          <ID>279</ID>
           <Description>"Pointers"</Description>
           <Options moHideChildren="1" moDeactivateChildrenAsWell="1"/>
           <LastState Value="" RealAddress="00000000"/>
           <GroupHeader>1</GroupHeader>
           <CheatEntries>
             <CheatEntry>
-              <ID>69</ID>
+              <ID>280</ID>
               <Description>"Player Base Addresses"</Description>
               <Options moHideChildren="1"/>
-              <LastState/>
+              <LastState Activated="1"/>
               <Color>004080</Color>
               <VariableType>Auto Assembler Script</VariableType>
               <AssemblerScript>define(address,Pathea:Player:Update+27)
@@ -846,9 +1514,9 @@ dealloc(newmem)
 </AssemblerScript>
               <CheatEntries>
                 <CheatEntry>
-                  <ID>70</ID>
+                  <ID>281</ID>
                   <Description>"Base Address"</Description>
-                  <LastState RealAddress="04966D48"/>
+                  <LastState RealAddress="2DA643C6550"/>
                   <Color>BBBB00</Color>
                   <VariableType>String</VariableType>
                   <Length>0</Length>
@@ -861,9 +1529,9 @@ dealloc(newmem)
                   </Offsets>
                   <CheatEntries>
                     <CheatEntry>
-                      <ID>71</ID>
+                      <ID>282</ID>
                       <Description>"mBag"</Description>
-                      <LastState RealAddress="04966D60"/>
+                      <LastState RealAddress="2DA643C6568"/>
                       <Color>400040</Color>
                       <VariableType>String</VariableType>
                       <Length>0</Length>
@@ -876,9 +1544,9 @@ dealloc(newmem)
                       </Offsets>
                       <CheatEntries>
                         <CheatEntry>
-                          <ID>72</ID>
+                          <ID>283</ID>
                           <Description>"itemTables"</Description>
-                          <LastState RealAddress="07786CD8"/>
+                          <LastState RealAddress="2DA08621918"/>
                           <Color>0000B9</Color>
                           <VariableType>String</VariableType>
                           <Length>0</Length>
@@ -892,9 +1560,9 @@ dealloc(newmem)
                           </Offsets>
                           <CheatEntries>
                             <CheatEntry>
-                              <ID>73</ID>
+                              <ID>284</ID>
                               <Description>"Item[2]"</Description>
-                              <LastState RealAddress="077995C0"/>
+                              <LastState RealAddress="2DA0869F2F0"/>
                               <Color>58B000</Color>
                               <VariableType>String</VariableType>
                               <Length>0</Length>
@@ -909,9 +1577,9 @@ dealloc(newmem)
                               </Offsets>
                               <CheatEntries>
                                 <CheatEntry>
-                                  <ID>74</ID>
+                                  <ID>285</ID>
                                   <Description>"unlockedCount (of slots)"</Description>
-                                  <LastState Value="80" RealAddress="07798048"/>
+                                  <LastState Value="104" RealAddress="2DA086A3688"/>
                                   <Color>0076EC</Color>
                                   <VariableType>4 Bytes</VariableType>
                                   <Address>player_ptr</Address>
@@ -927,9 +1595,9 @@ dealloc(newmem)
                           </CheatEntries>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>75</ID>
+                          <ID>286</ID>
                           <Description>"itemBar"</Description>
-                          <LastState RealAddress="07786CE0"/>
+                          <LastState RealAddress="2DA08621920"/>
                           <Color>0000B9</Color>
                           <VariableType>String</VariableType>
                           <Length>0</Length>
@@ -943,9 +1611,9 @@ dealloc(newmem)
                           </Offsets>
                           <CheatEntries>
                             <CheatEntry>
-                              <ID>80</ID>
+                              <ID>287</ID>
                               <Description>"itemBarItems"</Description>
-                              <LastState RealAddress="04968D00"/>
+                              <LastState RealAddress="2DA643C8E80"/>
                               <Color>805600</Color>
                               <VariableType>String</VariableType>
                               <Length>0</Length>
@@ -960,9 +1628,9 @@ dealloc(newmem)
                               </Offsets>
                               <CheatEntries>
                                 <CheatEntry>
-                                  <ID>76</ID>
+                                  <ID>288</ID>
                                   <Description>"Item[2]"</Description>
-                                  <LastState RealAddress="0756CCD0"/>
+                                  <LastState RealAddress="2DA08605B80"/>
                                   <Color>58B000</Color>
                                   <VariableType>String</VariableType>
                                   <Length>0</Length>
@@ -978,9 +1646,9 @@ dealloc(newmem)
                                   </Offsets>
                                   <CheatEntries>
                                     <CheatEntry>
-                                      <ID>81</ID>
+                                      <ID>289</ID>
                                       <Description>"maxNumber"</Description>
-                                      <LastState Value="1" RealAddress="87C47DE0"/>
+                                      <LastState Value="1" RealAddress="2DA95FC19A8"/>
                                       <Color>0076EC</Color>
                                       <VariableType>4 Bytes</VariableType>
                                       <Address>player_ptr</Address>
@@ -993,9 +1661,9 @@ dealloc(newmem)
                                       </Offsets>
                                     </CheatEntry>
                                     <CheatEntry>
-                                      <ID>82</ID>
+                                      <ID>290</ID>
                                       <Description>"number"</Description>
-                                      <LastState Value="1" RealAddress="87C47DE4"/>
+                                      <LastState Value="1" RealAddress="2DA95FC19AC"/>
                                       <Color>0076EC</Color>
                                       <VariableType>4 Bytes</VariableType>
                                       <Address>player_ptr</Address>
@@ -1010,9 +1678,9 @@ dealloc(newmem)
                                   </CheatEntries>
                                 </CheatEntry>
                                 <CheatEntry>
-                                  <ID>83</ID>
+                                  <ID>291</ID>
                                   <Description>"Item[3]"</Description>
-                                  <LastState RealAddress="0756CCD8"/>
+                                  <LastState RealAddress="2DA08605B88"/>
                                   <Color>58B000</Color>
                                   <VariableType>String</VariableType>
                                   <Length>0</Length>
@@ -1028,9 +1696,9 @@ dealloc(newmem)
                                   </Offsets>
                                   <CheatEntries>
                                     <CheatEntry>
-                                      <ID>84</ID>
+                                      <ID>292</ID>
                                       <Description>"maxNumber"</Description>
-                                      <LastState Value="1" RealAddress="87C47D68"/>
+                                      <LastState Value="1" RealAddress="2DA95FC1930"/>
                                       <Color>0076EC</Color>
                                       <VariableType>4 Bytes</VariableType>
                                       <Address>player_ptr</Address>
@@ -1043,9 +1711,9 @@ dealloc(newmem)
                                       </Offsets>
                                     </CheatEntry>
                                     <CheatEntry>
-                                      <ID>85</ID>
+                                      <ID>293</ID>
                                       <Description>"number"</Description>
-                                      <LastState Value="1" RealAddress="87C47D6C"/>
+                                      <LastState Value="1" RealAddress="2DA95FC1934"/>
                                       <Color>0076EC</Color>
                                       <VariableType>4 Bytes</VariableType>
                                       <Address>player_ptr</Address>
@@ -1060,9 +1728,9 @@ dealloc(newmem)
                                   </CheatEntries>
                                 </CheatEntry>
                                 <CheatEntry>
-                                  <ID>86</ID>
+                                  <ID>294</ID>
                                   <Description>"Item[4]"</Description>
-                                  <LastState RealAddress="0756CCE0"/>
+                                  <LastState RealAddress="2DA08605B90"/>
                                   <Color>58B000</Color>
                                   <VariableType>String</VariableType>
                                   <Length>0</Length>
@@ -1078,9 +1746,9 @@ dealloc(newmem)
                                   </Offsets>
                                   <CheatEntries>
                                     <CheatEntry>
-                                      <ID>87</ID>
+                                      <ID>295</ID>
                                       <Description>"maxNumber"</Description>
-                                      <LastState Value="1" RealAddress="87C47CF0"/>
+                                      <LastState Value="1" RealAddress="2DA95FC18B8"/>
                                       <Color>0076EC</Color>
                                       <VariableType>4 Bytes</VariableType>
                                       <Address>player_ptr</Address>
@@ -1093,9 +1761,9 @@ dealloc(newmem)
                                       </Offsets>
                                     </CheatEntry>
                                     <CheatEntry>
-                                      <ID>88</ID>
+                                      <ID>296</ID>
                                       <Description>"number"</Description>
-                                      <LastState Value="1" RealAddress="87C47CF4"/>
+                                      <LastState Value="1" RealAddress="2DA95FC18BC"/>
                                       <Color>0076EC</Color>
                                       <VariableType>4 Bytes</VariableType>
                                       <Address>player_ptr</Address>
@@ -1110,9 +1778,9 @@ dealloc(newmem)
                                   </CheatEntries>
                                 </CheatEntry>
                                 <CheatEntry>
-                                  <ID>89</ID>
+                                  <ID>297</ID>
                                   <Description>"Item[5]"</Description>
-                                  <LastState RealAddress="0756CCE8"/>
+                                  <LastState RealAddress="2DA08605B98"/>
                                   <Color>58B000</Color>
                                   <VariableType>String</VariableType>
                                   <Length>0</Length>
@@ -1128,9 +1796,8 @@ dealloc(newmem)
                                   </Offsets>
                                   <CheatEntries>
                                     <CheatEntry>
-                                      <ID>90</ID>
+                                      <ID>298</ID>
                                       <Description>"maxNumber"</Description>
-                                      <LastState Value="1" RealAddress="87C47C78"/>
                                       <Color>0076EC</Color>
                                       <VariableType>4 Bytes</VariableType>
                                       <Address>player_ptr</Address>
@@ -1143,9 +1810,8 @@ dealloc(newmem)
                                       </Offsets>
                                     </CheatEntry>
                                     <CheatEntry>
-                                      <ID>91</ID>
+                                      <ID>299</ID>
                                       <Description>"number"</Description>
-                                      <LastState Value="1" RealAddress="87C47C7C"/>
                                       <Color>0076EC</Color>
                                       <VariableType>4 Bytes</VariableType>
                                       <Address>player_ptr</Address>
@@ -1160,9 +1826,9 @@ dealloc(newmem)
                                   </CheatEntries>
                                 </CheatEntry>
                                 <CheatEntry>
-                                  <ID>92</ID>
+                                  <ID>300</ID>
                                   <Description>"Item[6]"</Description>
-                                  <LastState RealAddress="0756CCF0"/>
+                                  <LastState RealAddress="2DA08605BA0"/>
                                   <Color>58B000</Color>
                                   <VariableType>String</VariableType>
                                   <Length>0</Length>
@@ -1178,9 +1844,8 @@ dealloc(newmem)
                                   </Offsets>
                                   <CheatEntries>
                                     <CheatEntry>
-                                      <ID>93</ID>
+                                      <ID>301</ID>
                                       <Description>"maxNumber"</Description>
-                                      <LastState Value="1" RealAddress="87C47C00"/>
                                       <Color>0076EC</Color>
                                       <VariableType>4 Bytes</VariableType>
                                       <Address>player_ptr</Address>
@@ -1193,9 +1858,8 @@ dealloc(newmem)
                                       </Offsets>
                                     </CheatEntry>
                                     <CheatEntry>
-                                      <ID>94</ID>
+                                      <ID>302</ID>
                                       <Description>"number"</Description>
-                                      <LastState Value="1" RealAddress="87C47C04"/>
                                       <Color>0076EC</Color>
                                       <VariableType>4 Bytes</VariableType>
                                       <Address>player_ptr</Address>
@@ -1206,13 +1870,24 @@ dealloc(newmem)
                                         <Offset>20</Offset>
                                         <Offset>18</Offset>
                                       </Offsets>
+                                      <Hotkeys>
+                                        <Hotkey>
+                                          <Action>Set Value</Action>
+                                          <Keys>
+                                            <Key>17</Key>
+                                            <Key>53</Key>
+                                          </Keys>
+                                          <Value>888</Value>
+                                          <ID>0</ID>
+                                        </Hotkey>
+                                      </Hotkeys>
                                     </CheatEntry>
                                   </CheatEntries>
                                 </CheatEntry>
                                 <CheatEntry>
-                                  <ID>95</ID>
+                                  <ID>303</ID>
                                   <Description>"Item[7]"</Description>
-                                  <LastState RealAddress="0756CCF8"/>
+                                  <LastState RealAddress="2DA08605BA8"/>
                                   <Color>58B000</Color>
                                   <VariableType>String</VariableType>
                                   <Length>0</Length>
@@ -1228,9 +1903,8 @@ dealloc(newmem)
                                   </Offsets>
                                   <CheatEntries>
                                     <CheatEntry>
-                                      <ID>96</ID>
+                                      <ID>304</ID>
                                       <Description>"maxNumber"</Description>
-                                      <LastState Value="999" RealAddress="87C47B88"/>
                                       <Color>0076EC</Color>
                                       <VariableType>4 Bytes</VariableType>
                                       <Address>player_ptr</Address>
@@ -1243,9 +1917,8 @@ dealloc(newmem)
                                       </Offsets>
                                     </CheatEntry>
                                     <CheatEntry>
-                                      <ID>97</ID>
+                                      <ID>305</ID>
                                       <Description>"number"</Description>
-                                      <LastState Value="11" RealAddress="87C47B8C"/>
                                       <Color>0076EC</Color>
                                       <VariableType>4 Bytes</VariableType>
                                       <Address>player_ptr</Address>
@@ -1256,13 +1929,24 @@ dealloc(newmem)
                                         <Offset>20</Offset>
                                         <Offset>18</Offset>
                                       </Offsets>
+                                      <Hotkeys>
+                                        <Hotkey>
+                                          <Action>Set Value</Action>
+                                          <Keys>
+                                            <Key>17</Key>
+                                            <Key>54</Key>
+                                          </Keys>
+                                          <Value>888</Value>
+                                          <ID>0</ID>
+                                        </Hotkey>
+                                      </Hotkeys>
                                     </CheatEntry>
                                   </CheatEntries>
                                 </CheatEntry>
                                 <CheatEntry>
-                                  <ID>98</ID>
+                                  <ID>306</ID>
                                   <Description>"Item[8]"</Description>
-                                  <LastState RealAddress="0756CD00"/>
+                                  <LastState RealAddress="2DA08605BB0"/>
                                   <Color>58B000</Color>
                                   <VariableType>String</VariableType>
                                   <Length>0</Length>
@@ -1278,9 +1962,8 @@ dealloc(newmem)
                                   </Offsets>
                                   <CheatEntries>
                                     <CheatEntry>
-                                      <ID>99</ID>
+                                      <ID>307</ID>
                                       <Description>"maxNumber"</Description>
-                                      <LastState Value="999" RealAddress="87C47B38"/>
                                       <Color>0076EC</Color>
                                       <VariableType>4 Bytes</VariableType>
                                       <Address>player_ptr</Address>
@@ -1293,9 +1976,8 @@ dealloc(newmem)
                                       </Offsets>
                                     </CheatEntry>
                                     <CheatEntry>
-                                      <ID>100</ID>
+                                      <ID>308</ID>
                                       <Description>"number"</Description>
-                                      <LastState Value="11" RealAddress="87C47B3C"/>
                                       <Color>0076EC</Color>
                                       <VariableType>4 Bytes</VariableType>
                                       <Address>player_ptr</Address>
@@ -1306,13 +1988,24 @@ dealloc(newmem)
                                         <Offset>20</Offset>
                                         <Offset>18</Offset>
                                       </Offsets>
+                                      <Hotkeys>
+                                        <Hotkey>
+                                          <Action>Set Value</Action>
+                                          <Keys>
+                                            <Key>17</Key>
+                                            <Key>55</Key>
+                                          </Keys>
+                                          <Value>888</Value>
+                                          <ID>0</ID>
+                                        </Hotkey>
+                                      </Hotkeys>
                                     </CheatEntry>
                                   </CheatEntries>
                                 </CheatEntry>
                                 <CheatEntry>
-                                  <ID>101</ID>
+                                  <ID>309</ID>
                                   <Description>"Item[9]"</Description>
-                                  <LastState RealAddress="0756CD08"/>
+                                  <LastState RealAddress="2DA08605BB8"/>
                                   <Color>58B000</Color>
                                   <VariableType>String</VariableType>
                                   <Length>0</Length>
@@ -1328,9 +2021,9 @@ dealloc(newmem)
                                   </Offsets>
                                   <CheatEntries>
                                     <CheatEntry>
-                                      <ID>102</ID>
+                                      <ID>310</ID>
                                       <Description>"maxNumber"</Description>
-                                      <LastState Value="999" RealAddress="87C47AE8"/>
+                                      <LastState Value="1" RealAddress="2DA95FC17F0"/>
                                       <Color>0076EC</Color>
                                       <VariableType>4 Bytes</VariableType>
                                       <Address>player_ptr</Address>
@@ -1343,9 +2036,9 @@ dealloc(newmem)
                                       </Offsets>
                                     </CheatEntry>
                                     <CheatEntry>
-                                      <ID>103</ID>
+                                      <ID>311</ID>
                                       <Description>"number"</Description>
-                                      <LastState Value="11" RealAddress="87C47AEC"/>
+                                      <LastState Value="1" RealAddress="2DA95FC17F4"/>
                                       <Color>0076EC</Color>
                                       <VariableType>4 Bytes</VariableType>
                                       <Address>player_ptr</Address>
@@ -1356,6 +2049,17 @@ dealloc(newmem)
                                         <Offset>20</Offset>
                                         <Offset>18</Offset>
                                       </Offsets>
+                                      <Hotkeys>
+                                        <Hotkey>
+                                          <Action>Set Value</Action>
+                                          <Keys>
+                                            <Key>17</Key>
+                                            <Key>56</Key>
+                                          </Keys>
+                                          <Value>888</Value>
+                                          <ID>0</ID>
+                                        </Hotkey>
+                                      </Hotkeys>
                                     </CheatEntry>
                                   </CheatEntries>
                                 </CheatEntry>
@@ -1364,9 +2068,9 @@ dealloc(newmem)
                           </CheatEntries>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>104</ID>
+                          <ID>312</ID>
                           <Description>"money"</Description>
-                          <LastState Value="100" RealAddress="07786D18"/>
+                          <LastState Value="157793" RealAddress="2DA08621958"/>
                           <Color>0000B9</Color>
                           <VariableType>4 Bytes</VariableType>
                           <Address>player_ptr</Address>
@@ -1378,9 +2082,9 @@ dealloc(newmem)
                       </CheatEntries>
                     </CheatEntry>
                     <CheatEntry>
-                      <ID>114</ID>
+                      <ID>313</ID>
                       <Description>"playingActor"</Description>
-                      <LastState RealAddress="04966D68"/>
+                      <LastState RealAddress="2DA643C6570"/>
                       <Color>5A2E2E</Color>
                       <VariableType>String</VariableType>
                       <Length>0</Length>
@@ -1393,9 +2097,9 @@ dealloc(newmem)
                       </Offsets>
                       <CheatEntries>
                         <CheatEntry>
-                          <ID>115</ID>
-                          <Description>"mLevel"</Description>
-                          <LastState RealAddress="87B7B020"/>
+                          <ID>314</ID>
+                          <Description>"level"</Description>
+                          <LastState RealAddress="2DA9763AAC0"/>
                           <Color>29A600</Color>
                           <VariableType>String</VariableType>
                           <Length>0</Length>
@@ -1409,9 +2113,9 @@ dealloc(newmem)
                           </Offsets>
                           <CheatEntries>
                             <CheatEntry>
-                              <ID>117</ID>
+                              <ID>315</ID>
                               <Description>"mExpTotal"</Description>
-                              <LastState Value="9610" RealAddress="408E86CC"/>
+                              <LastState Value="190984" RealAddress="2DA4B863D84"/>
                               <Color>004EF0</Color>
                               <VariableType>4 Bytes</VariableType>
                               <Address>player_ptr</Address>
@@ -1422,9 +2126,9 @@ dealloc(newmem)
                               </Offsets>
                             </CheatEntry>
                             <CheatEntry>
-                              <ID>116</ID>
+                              <ID>316</ID>
                               <Description>"mLevel"</Description>
-                              <LastState Value="4" RealAddress="408E86D0"/>
+                              <LastState Value="18" RealAddress="2DA4B863D88"/>
                               <Color>004EF0</Color>
                               <VariableType>4 Bytes</VariableType>
                               <Address>player_ptr</Address>
@@ -1435,9 +2139,9 @@ dealloc(newmem)
                               </Offsets>
                             </CheatEntry>
                             <CheatEntry>
-                              <ID>125</ID>
+                              <ID>317</ID>
                               <Description>"mExp"</Description>
-                              <LastState Value="3630" RealAddress="408E86D4"/>
+                              <LastState Value="2354" RealAddress="2DA4B863D8C"/>
                               <Color>004EF0</Color>
                               <VariableType>4 Bytes</VariableType>
                               <Address>player_ptr</Address>
@@ -1448,9 +2152,9 @@ dealloc(newmem)
                               </Offsets>
                             </CheatEntry>
                             <CheatEntry>
-                              <ID>118</ID>
+                              <ID>318</ID>
                               <Description>"mNextLevelExp"</Description>
-                              <LastState Value="3820" RealAddress="408E86D8"/>
+                              <LastState Value="26230" RealAddress="2DA4B863D90"/>
                               <Color>004EF0</Color>
                               <VariableType>4 Bytes</VariableType>
                               <Address>player_ptr</Address>
@@ -1463,9 +2167,9 @@ dealloc(newmem)
                           </CheatEntries>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>124</ID>
+                          <ID>319</ID>
                           <Description>"minHpValue"</Description>
-                          <LastState Value="-1" RealAddress="87B7B460"/>
+                          <LastState Value="0" RealAddress="2DA9763AF00"/>
                           <Color>00A600</Color>
                           <VariableType>Float</VariableType>
                           <Address>player_ptr</Address>
@@ -1481,7 +2185,7 @@ dealloc(newmem)
               </CheatEntries>
             </CheatEntry>
             <CheatEntry>
-              <ID>126</ID>
+              <ID>320</ID>
               <Description>"PlayerStats Base Addresses"</Description>
               <Options moHideChildren="1"/>
               <LastState/>
@@ -1547,9 +2251,9 @@ dealloc(newmem)
 </AssemblerScript>
               <CheatEntries>
                 <CheatEntry>
-                  <ID>127</ID>
+                  <ID>321</ID>
                   <Description>"Base Address"</Description>
-                  <LastState RealAddress="03930068"/>
+                  <LastState RealAddress="00000000"/>
                   <Color>BBBB00</Color>
                   <VariableType>String</VariableType>
                   <Length>0</Length>
@@ -1562,25 +2266,22 @@ dealloc(newmem)
                   </Offsets>
                   <CheatEntries>
                     <CheatEntry>
-                      <ID>128</ID>
+                      <ID>322</ID>
                       <Description>"currentHealth"</Description>
-                      <LastState Value="0.2745098174" RealAddress="03930088"/>
                       <Color>400040</Color>
                       <VariableType>Float</VariableType>
                       <Address>+20</Address>
                     </CheatEntry>
                     <CheatEntry>
-                      <ID>162</ID>
+                      <ID>323</ID>
                       <Description>"currentStamina"</Description>
-                      <LastState Value="1" RealAddress="0393008C"/>
                       <Color>400040</Color>
                       <VariableType>Float</VariableType>
                       <Address>+24</Address>
                     </CheatEntry>
                     <CheatEntry>
-                      <ID>163</ID>
+                      <ID>324</ID>
                       <Description>"currentEndurance"</Description>
-                      <LastState Value="8.639976749E-37" RealAddress="03930090"/>
                       <Color>400040</Color>
                       <VariableType>Float</VariableType>
                       <Address>+28</Address>
@@ -1590,7 +2291,7 @@ dealloc(newmem)
               </CheatEntries>
             </CheatEntry>
             <CheatEntry>
-              <ID>197</ID>
+              <ID>325</ID>
               <Description>"PlayerAbilityModule Base Addresses"</Description>
               <Options moHideChildren="1"/>
               <LastState/>
@@ -1660,9 +2361,9 @@ dealloc(newmem)
 </AssemblerScript>
               <CheatEntries>
                 <CheatEntry>
-                  <ID>198</ID>
+                  <ID>326</ID>
                   <Description>"Base Address"</Description>
-                  <LastState RealAddress="00000023"/>
+                  <LastState RealAddress="00000000"/>
                   <Color>BBBB00</Color>
                   <VariableType>String</VariableType>
                   <Length>0</Length>
@@ -1675,7 +2376,7 @@ dealloc(newmem)
                   </Offsets>
                   <CheatEntries>
                     <CheatEntry>
-                      <ID>199</ID>
+                      <ID>327</ID>
                       <Description>"totalPoint"</Description>
                       <Color>400040</Color>
                       <VariableType>4 Bytes</VariableType>
@@ -1685,7 +2386,7 @@ dealloc(newmem)
                       </Offsets>
                     </CheatEntry>
                     <CheatEntry>
-                      <ID>200</ID>
+                      <ID>328</ID>
                       <Description>"point"</Description>
                       <Color>400040</Color>
                       <VariableType>4 Bytes</VariableType>
@@ -1695,7 +2396,7 @@ dealloc(newmem)
                       </Offsets>
                     </CheatEntry>
                     <CheatEntry>
-                      <ID>201</ID>
+                      <ID>329</ID>
                       <Description>"resetTimes"</Description>
                       <Color>400040</Color>
                       <VariableType>4 Bytes</VariableType>
@@ -1709,18 +2410,18 @@ dealloc(newmem)
               </CheatEntries>
             </CheatEntry>
             <CheatEntry>
-              <ID>205</ID>
+              <ID>330</ID>
               <Description>"AbilityItem Base Addresses"</Description>
               <Options moHideChildren="1"/>
               <LastState/>
               <Color>004080</Color>
               <VariableType>Auto Assembler Script</VariableType>
-              <AssemblerScript>define(address,Pathea.UISystemNs.MainMenu:GridPlayerAbility:ShowLevelDetial+1d)
+              <AssemblerScript>define(address,Pathea.UISystemNs.MainMenu:GridPlayerAbility:ShowLevelDetial+2d)
 define(bytes,48 63 40 20 85 C0)
 
 [ENABLE]
 assert(address,bytes)
-alloc(newmem,$100)
+alloc(newmem,$1000,Pathea.UISystemNs.MainMenu:GridPlayerAbility:ShowLevelDetial+2d)
 
 label(code)
 label(return)
@@ -1749,39 +2450,39 @@ address:
 dealloc(newmem)
 
 {
-// ORIGINAL CODE - INJECTION POINT: Pathea.UISystemNs.MainMenu:GridPlayerAbility:ShowLevelDetial+1d
+// ORIGINAL CODE - INJECTION POINT: Pathea.UISystemNs.MainMenu:GridPlayerAbility:ShowLevelDetial+2d
 
-07B1051F: 00 55 48                       -  add [rbp+48],dl
-07B10522: 8B EC                          -  mov ebp,esp
-07B10524: 56                             -  push rsi
-07B10525: 57                             -  push rdi
-07B10526: 48 83 EC 10                    -  sub rsp,10
-07B1052A: 48 8B F9                       -  mov rdi,rcx
-07B1052D: 49 8B F0                       -  mov rsi,r8
-07B10530: 48 8B 87 D8 00 00 00           -  mov rax,[rdi+000000D8]
-07B10537: 48 8B C8                       -  mov rcx,rax
-07B1053A: 83 39 00                       -  cmp dword ptr [rcx],00
+2A86D3A5: 57                             -  push rdi
+2A86D3A6: 48 83 EC 10                    -  sub rsp,10
+2A86D3AA: 48 8B F9                       -  mov rdi,rcx
+2A86D3AD: 49 8B F0                       -  mov rsi,r8
+2A86D3B0: 48 8B 87 D8 00 00 00           -  mov rax,[rdi+000000D8]
+2A86D3B7: 48 85 C0                       -  test rax,rax
+2A86D3BA: 0F 84 53 01 00 00              -  je Pathea.UISystemNs.MainMenu:GridPlayerAbility:ShowLevelDetial+173
+2A86D3C0: 48 8B 87 D8 00 00 00           -  mov rax,[rdi+000000D8]
+2A86D3C7: 48 8B C8                       -  mov rcx,rax
+2A86D3CA: 83 39 00                       -  cmp dword ptr [rcx],00
 // ---------- INJECTING HERE ----------
-07B1053D: 48 63 40 20                    -  movsxd  rax,dword ptr [rax+20]
-07B10541: 85 C0                          -  test eax,eax
+2A86D3CD: 48 63 40 20                    -  movsxd  rax,dword ptr [rax+20]
+2A86D3D1: 85 C0                          -  test eax,eax
 // ---------- DONE INJECTING  ----------
-07B10543: 0F 85 FC 00 00 00              -  jne Pathea.UISystemNs.MainMenu:GridPlayerAbility:ShowLevelDetial+125
-07B10549: 48 8B 04 25 60 C1 79 04        -  mov rax,[0479C160]
-07B10551: 48 63 97 10 01 00 00           -  movsxd  rdx,dword ptr [rdi+00000110]
-07B10558: 4C 63 87 14 01 00 00           -  movsxd  r8,dword ptr [rdi+00000114]
-07B1055F: 48 8B C8                       -  mov rcx,rax
-07B10562: 48 83 EC 20                    -  sub rsp,20
-07B10566: 83 38 00                       -  cmp dword ptr [rax],00
-07B10569: 49 BB FC 04 B1 07 00 00 00 00  -  mov r11,0000000007B104FC
-07B10573: 41 FF D3                       -  call r11
-07B10576: 48 83 C4 20                    -  add rsp,20
+2A86D3D3: 0F 85 FC 00 00 00              -  jne Pathea.UISystemNs.MainMenu:GridPlayerAbility:ShowLevelDetial+135
+2A86D3D9: 48 8B 04 25 50 C1 98 04        -  mov rax,[0498C150]
+2A86D3E1: 48 63 97 10 01 00 00           -  movsxd  rdx,dword ptr [rdi+00000110]
+2A86D3E8: 4C 63 87 14 01 00 00           -  movsxd  r8,dword ptr [rdi+00000114]
+2A86D3EF: 48 8B C8                       -  mov rcx,rax
+2A86D3F2: 48 83 EC 20                    -  sub rsp,20
+2A86D3F6: 83 38 00                       -  cmp dword ptr [rax],00
+2A86D3F9: 49 BB 43 D5 86 2A 00 00 00 00  -  mov r11,000000002A86D543
+2A86D403: 41 FF D3                       -  call r11
+2A86D406: 48 83 C4 20                    -  add rsp,20
 }
 </AssemblerScript>
               <CheatEntries>
                 <CheatEntry>
-                  <ID>206</ID>
+                  <ID>331</ID>
                   <Description>"Base Address"</Description>
-                  <LastState RealAddress="00000044"/>
+                  <LastState RealAddress="00000000"/>
                   <Color>BBBB00</Color>
                   <VariableType>String</VariableType>
                   <Length>0</Length>
@@ -1794,9 +2495,9 @@ dealloc(newmem)
                   </Offsets>
                   <CheatEntries>
                     <CheatEntry>
-                      <ID>207</ID>
+                      <ID>332</ID>
                       <Description>"refData"</Description>
-                      <LastState RealAddress="00000054"/>
+                      <LastState RealAddress="00000010"/>
                       <Color>400040</Color>
                       <VariableType>String</VariableType>
                       <Length>0</Length>
@@ -1809,7 +2510,7 @@ dealloc(newmem)
                       </Offsets>
                       <CheatEntries>
                         <CheatEntry>
-                          <ID>210</ID>
+                          <ID>333</ID>
                           <Description>"maxPoint"</Description>
                           <Color>400040</Color>
                           <VariableType>4 Bytes</VariableType>
@@ -1820,13 +2521,13 @@ dealloc(newmem)
                           </Offsets>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>218</ID>
+                          <ID>334</ID>
                           <Description>"nameTextID"</Description>
                           <DropDownList ReadOnly="1" DescriptionOnly="1" DisplayValueAsItem="1">Fight:
 140044:Toughness
 140046:Defense Posture
 140048:Aggressive Stance
-140050:Pain Dealer
+140050:Follow Victory
 140052:Healer
 140054:Loot
 140056:Recovery
@@ -1852,15 +2553,15 @@ Gather:
 140038:Mastery of Pickaxe
 140040:Mastery of Axe
 140042:Power Up
-140076:Luck is on my side.
+140076:Lucky Me
 140078:Artisan
-140080:Plant Guru
+140080:Farm Guru
 140082:Fish Encyclopedia
-140084:Ride Training
+140084:Mount Training
 140086:Expert Electrician
-140088:Master of livestock cultivation
+140088:Livestock Guru
 140090:Charm Overload
-140092:Born to ride
+140092:Born to Ride
 
 Social:
 140000:Martial Artist
@@ -1874,7 +2575,7 @@ Social:
 140016:Business Mind
 140018:The Giver
 140020:Smooth Talk
-140094:Hot shot at the Commerce Guild
+140094:Commerce Hot Shot
 140096:Altruistic
 140098:Custom Discount
 140100:Intimate Interaction
@@ -1891,7 +2592,7 @@ Social:
                       </CheatEntries>
                     </CheatEntry>
                     <CheatEntry>
-                      <ID>208</ID>
+                      <ID>335</ID>
                       <Description>"point"</Description>
                       <Color>400040</Color>
                       <VariableType>4 Bytes</VariableType>
@@ -1905,7 +2606,7 @@ Social:
               </CheatEntries>
             </CheatEntry>
             <CheatEntry>
-              <ID>167</ID>
+              <ID>336</ID>
               <Description>"TimeManager Base Addresses"</Description>
               <Options moHideChildren="1"/>
               <LastState/>
@@ -1976,9 +2677,9 @@ dealloc(newmem)
 </AssemblerScript>
               <CheatEntries>
                 <CheatEntry>
-                  <ID>168</ID>
+                  <ID>337</ID>
                   <Description>"Base Address"</Description>
-                  <LastState RealAddress="FFFF0000"/>
+                  <LastState RealAddress="00000000"/>
                   <Color>BBBB00</Color>
                   <VariableType>String</VariableType>
                   <Length>0</Length>
@@ -1991,35 +2692,9 @@ dealloc(newmem)
                   </Offsets>
                   <CheatEntries>
                     <CheatEntry>
-                      <ID>191</ID>
-                      <Description>"enable"</Description>
-                      <DropDownList DescriptionOnly="1" DisplayValueAsItem="1">0:No
-1:Yes
-</DropDownList>
-                      <Color>400040</Color>
-                      <VariableType>Byte</VariableType>
-                      <Address>timeManager_ptr</Address>
-                      <Offsets>
-                        <Offset>50</Offset>
-                      </Offsets>
-                    </CheatEntry>
-                    <CheatEntry>
-                      <ID>192</ID>
-                      <Description>"normalTimeScale"</Description>
-                      <DropDownList DescriptionOnly="1" DisplayValueAsItem="1">0:No
-1:Yes
-</DropDownList>
-                      <Color>400040</Color>
-                      <VariableType>Byte</VariableType>
-                      <Address>timeManager_ptr</Address>
-                      <Offsets>
-                        <Offset>51</Offset>
-                      </Offsets>
-                    </CheatEntry>
-                    <CheatEntry>
-                      <ID>169</ID>
+                      <ID>338</ID>
                       <Description>"config"</Description>
-                      <LastState RealAddress="FFFF0020"/>
+                      <LastState RealAddress="00000020"/>
                       <Color>400040</Color>
                       <VariableType>String</VariableType>
                       <Length>0</Length>
@@ -2032,7 +2707,7 @@ dealloc(newmem)
                       </Offsets>
                       <CheatEntries>
                         <CheatEntry>
-                          <ID>170</ID>
+                          <ID>339</ID>
                           <Description>"timeStandard"</Description>
                           <LastState RealAddress="00000000"/>
                           <Color>0000B9</Color>
@@ -2048,55 +2723,7 @@ dealloc(newmem)
                           </Offsets>
                           <CheatEntries>
                             <CheatEntry>
-                              <ID>176</ID>
-                              <Description>"minutePerHour"</Description>
-                              <Color>C08000</Color>
-                              <VariableType>4 Bytes</VariableType>
-                              <Address>timeManager_ptr</Address>
-                              <Offsets>
-                                <Offset>20</Offset>
-                                <Offset>18</Offset>
-                                <Offset>20</Offset>
-                              </Offsets>
-                            </CheatEntry>
-                            <CheatEntry>
-                              <ID>177</ID>
-                              <Description>"secondPerMinute"</Description>
-                              <Color>C08000</Color>
-                              <VariableType>4 Bytes</VariableType>
-                              <Address>timeManager_ptr</Address>
-                              <Offsets>
-                                <Offset>24</Offset>
-                                <Offset>18</Offset>
-                                <Offset>20</Offset>
-                              </Offsets>
-                            </CheatEntry>
-                            <CheatEntry>
-                              <ID>175</ID>
-                              <Description>"hourPerDay"</Description>
-                              <Color>C08000</Color>
-                              <VariableType>4 Bytes</VariableType>
-                              <Address>timeManager_ptr</Address>
-                              <Offsets>
-                                <Offset>1C</Offset>
-                                <Offset>18</Offset>
-                                <Offset>20</Offset>
-                              </Offsets>
-                            </CheatEntry>
-                            <CheatEntry>
-                              <ID>174</ID>
-                              <Description>"dayPerWeek"</Description>
-                              <Color>C08000</Color>
-                              <VariableType>4 Bytes</VariableType>
-                              <Address>timeManager_ptr</Address>
-                              <Offsets>
-                                <Offset>18</Offset>
-                                <Offset>18</Offset>
-                                <Offset>20</Offset>
-                              </Offsets>
-                            </CheatEntry>
-                            <CheatEntry>
-                              <ID>171</ID>
+                              <ID>340</ID>
                               <Description>"month"</Description>
                               <LastState RealAddress="00000000"/>
                               <Color>C08000</Color>
@@ -2113,7 +2740,7 @@ dealloc(newmem)
                               </Offsets>
                               <CheatEntries>
                                 <CheatEntry>
-                                  <ID>172</ID>
+                                  <ID>341</ID>
                                   <Description>"Item[2]"</Description>
                                   <LastState RealAddress="00000000"/>
                                   <Color>009500</Color>
@@ -2131,7 +2758,7 @@ dealloc(newmem)
                                   </Offsets>
                                   <CheatEntries>
                                     <CheatEntry>
-                                      <ID>173</ID>
+                                      <ID>342</ID>
                                       <Description>"dayCount"</Description>
                                       <Color>0076EC</Color>
                                       <VariableType>4 Bytes</VariableType>
@@ -2148,10 +2775,58 @@ dealloc(newmem)
                                 </CheatEntry>
                               </CheatEntries>
                             </CheatEntry>
+                            <CheatEntry>
+                              <ID>343</ID>
+                              <Description>"dayPerWeek"</Description>
+                              <Color>C08000</Color>
+                              <VariableType>4 Bytes</VariableType>
+                              <Address>timeManager_ptr</Address>
+                              <Offsets>
+                                <Offset>18</Offset>
+                                <Offset>18</Offset>
+                                <Offset>20</Offset>
+                              </Offsets>
+                            </CheatEntry>
+                            <CheatEntry>
+                              <ID>344</ID>
+                              <Description>"hourPerDay"</Description>
+                              <Color>C08000</Color>
+                              <VariableType>4 Bytes</VariableType>
+                              <Address>timeManager_ptr</Address>
+                              <Offsets>
+                                <Offset>1C</Offset>
+                                <Offset>18</Offset>
+                                <Offset>20</Offset>
+                              </Offsets>
+                            </CheatEntry>
+                            <CheatEntry>
+                              <ID>345</ID>
+                              <Description>"minutePerHour"</Description>
+                              <Color>C08000</Color>
+                              <VariableType>4 Bytes</VariableType>
+                              <Address>timeManager_ptr</Address>
+                              <Offsets>
+                                <Offset>20</Offset>
+                                <Offset>18</Offset>
+                                <Offset>20</Offset>
+                              </Offsets>
+                            </CheatEntry>
+                            <CheatEntry>
+                              <ID>346</ID>
+                              <Description>"secondPerMinute"</Description>
+                              <Color>C08000</Color>
+                              <VariableType>4 Bytes</VariableType>
+                              <Address>timeManager_ptr</Address>
+                              <Offsets>
+                                <Offset>24</Offset>
+                                <Offset>18</Offset>
+                                <Offset>20</Offset>
+                              </Offsets>
+                            </CheatEntry>
                           </CheatEntries>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>178</ID>
+                          <ID>347</ID>
                           <Description>"baseSetting"</Description>
                           <LastState RealAddress="00000000"/>
                           <Color>0000B9</Color>
@@ -2167,31 +2842,7 @@ dealloc(newmem)
                           </Offsets>
                           <CheatEntries>
                             <CheatEntry>
-                              <ID>187</ID>
-                              <Description>"timeScaleSpleedUp"</Description>
-                              <Color>805600</Color>
-                              <VariableType>Float</VariableType>
-                              <Address>timeManager_ptr</Address>
-                              <Offsets>
-                                <Offset>1C</Offset>
-                                <Offset>20</Offset>
-                                <Offset>20</Offset>
-                              </Offsets>
-                            </CheatEntry>
-                            <CheatEntry>
-                              <ID>186</ID>
-                              <Description>"timeScale"</Description>
-                              <Color>805600</Color>
-                              <VariableType>Float</VariableType>
-                              <Address>timeManager_ptr</Address>
-                              <Offsets>
-                                <Offset>18</Offset>
-                                <Offset>20</Offset>
-                                <Offset>20</Offset>
-                              </Offsets>
-                            </CheatEntry>
-                            <CheatEntry>
-                              <ID>179</ID>
+                              <ID>348</ID>
                               <Description>"originalDate"</Description>
                               <LastState RealAddress="00000000"/>
                               <Color>805600</Color>
@@ -2208,20 +2859,7 @@ dealloc(newmem)
                               </Offsets>
                               <CheatEntries>
                                 <CheatEntry>
-                                  <ID>183</ID>
-                                  <Description>"hour"</Description>
-                                  <Color>0076EC</Color>
-                                  <VariableType>4 Bytes</VariableType>
-                                  <Address>timeManager_ptr</Address>
-                                  <Offsets>
-                                    <Offset>1C</Offset>
-                                    <Offset>10</Offset>
-                                    <Offset>20</Offset>
-                                    <Offset>20</Offset>
-                                  </Offsets>
-                                </CheatEntry>
-                                <CheatEntry>
-                                  <ID>180</ID>
+                                  <ID>349</ID>
                                   <Description>"month"</Description>
                                   <Color>0076EC</Color>
                                   <VariableType>4 Bytes</VariableType>
@@ -2234,7 +2872,7 @@ dealloc(newmem)
                                   </Offsets>
                                 </CheatEntry>
                                 <CheatEntry>
-                                  <ID>181</ID>
+                                  <ID>350</ID>
                                   <Description>"day"</Description>
                                   <Color>0076EC</Color>
                                   <VariableType>4 Bytes</VariableType>
@@ -2247,7 +2885,7 @@ dealloc(newmem)
                                   </Offsets>
                                 </CheatEntry>
                                 <CheatEntry>
-                                  <ID>182</ID>
+                                  <ID>351</ID>
                                   <Description>"year"</Description>
                                   <Color>0076EC</Color>
                                   <VariableType>4 Bytes</VariableType>
@@ -2260,7 +2898,20 @@ dealloc(newmem)
                                   </Offsets>
                                 </CheatEntry>
                                 <CheatEntry>
-                                  <ID>184</ID>
+                                  <ID>352</ID>
+                                  <Description>"hour"</Description>
+                                  <Color>0076EC</Color>
+                                  <VariableType>4 Bytes</VariableType>
+                                  <Address>timeManager_ptr</Address>
+                                  <Offsets>
+                                    <Offset>1C</Offset>
+                                    <Offset>10</Offset>
+                                    <Offset>20</Offset>
+                                    <Offset>20</Offset>
+                                  </Offsets>
+                                </CheatEntry>
+                                <CheatEntry>
+                                  <ID>353</ID>
                                   <Description>"minute"</Description>
                                   <Color>0076EC</Color>
                                   <VariableType>4 Bytes</VariableType>
@@ -2273,7 +2924,7 @@ dealloc(newmem)
                                   </Offsets>
                                 </CheatEntry>
                                 <CheatEntry>
-                                  <ID>185</ID>
+                                  <ID>354</ID>
                                   <Description>"second"</Description>
                                   <Color>0076EC</Color>
                                   <VariableType>4 Bytes</VariableType>
@@ -2287,10 +2938,34 @@ dealloc(newmem)
                                 </CheatEntry>
                               </CheatEntries>
                             </CheatEntry>
+                            <CheatEntry>
+                              <ID>355</ID>
+                              <Description>"timeScale"</Description>
+                              <Color>805600</Color>
+                              <VariableType>Float</VariableType>
+                              <Address>timeManager_ptr</Address>
+                              <Offsets>
+                                <Offset>18</Offset>
+                                <Offset>20</Offset>
+                                <Offset>20</Offset>
+                              </Offsets>
+                            </CheatEntry>
+                            <CheatEntry>
+                              <ID>356</ID>
+                              <Description>"timeScaleSpleedUp"</Description>
+                              <Color>805600</Color>
+                              <VariableType>Float</VariableType>
+                              <Address>timeManager_ptr</Address>
+                              <Offsets>
+                                <Offset>1C</Offset>
+                                <Offset>20</Offset>
+                                <Offset>20</Offset>
+                              </Offsets>
+                            </CheatEntry>
                           </CheatEntries>
                         </CheatEntry>
                         <CheatEntry>
-                          <ID>188</ID>
+                          <ID>357</ID>
                           <Description>"sleep"</Description>
                           <LastState RealAddress="00000000"/>
                           <Color>0000B9</Color>
@@ -2306,19 +2981,7 @@ dealloc(newmem)
                           </Offsets>
                           <CheatEntries>
                             <CheatEntry>
-                              <ID>190</ID>
-                              <Description>"endSleepHour"</Description>
-                              <Color>805600</Color>
-                              <VariableType>4 Bytes</VariableType>
-                              <Address>timeManager_ptr</Address>
-                              <Offsets>
-                                <Offset>14</Offset>
-                                <Offset>28</Offset>
-                                <Offset>20</Offset>
-                              </Offsets>
-                            </CheatEntry>
-                            <CheatEntry>
-                              <ID>189</ID>
+                              <ID>358</ID>
                               <Description>"beginSleepHour"</Description>
                               <Color>805600</Color>
                               <VariableType>4 Bytes</VariableType>
@@ -2329,16 +2992,51 @@ dealloc(newmem)
                                 <Offset>20</Offset>
                               </Offsets>
                             </CheatEntry>
+                            <CheatEntry>
+                              <ID>359</ID>
+                              <Description>"endSleepHour"</Description>
+                              <Color>805600</Color>
+                              <VariableType>4 Bytes</VariableType>
+                              <Address>timeManager_ptr</Address>
+                              <Offsets>
+                                <Offset>14</Offset>
+                                <Offset>28</Offset>
+                                <Offset>20</Offset>
+                              </Offsets>
+                            </CheatEntry>
                           </CheatEntries>
                         </CheatEntry>
                       </CheatEntries>
                     </CheatEntry>
                     <CheatEntry>
-                      <ID>193</ID>
-                      <Description>"dateTime"</Description>
+                      <ID>361</ID>
+                      <Description>"enable"</Description>
                       <DropDownList DescriptionOnly="1" DisplayValueAsItem="1">0:No
 1:Yes
 </DropDownList>
+                      <Color>400040</Color>
+                      <VariableType>Byte</VariableType>
+                      <Address>timeManager_ptr</Address>
+                      <Offsets>
+                        <Offset>50</Offset>
+                      </Offsets>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>362</ID>
+                      <Description>"normalTimeScale"</Description>
+                      <DropDownList DescriptionOnly="1" DisplayValueAsItem="1">0:No
+1:Yes
+</DropDownList>
+                      <Color>400040</Color>
+                      <VariableType>Byte</VariableType>
+                      <Address>timeManager_ptr</Address>
+                      <Offsets>
+                        <Offset>51</Offset>
+                      </Offsets>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>370</ID>
+                      <Description>"dateTime"</Description>
                       <Color>400040</Color>
                       <VariableType>8 Bytes</VariableType>
                       <Address>timeManager_ptr</Address>
@@ -2352,37 +3050,1295 @@ dealloc(newmem)
             </CheatEntry>
           </CheatEntries>
         </CheatEntry>
+        <CheatEntry>
+          <ID>474</ID>
+          <Description>"Call Function"</Description>
+          <Options moHideChildren="1"/>
+          <LastState/>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>[ENABLE]
+define(Address,"CCC_Cmd:CreateFlyPig")
+label(Addres)
+assert(Pathea.ActorNs:Actor:Update+165,F3 0F 5A C0 48 8B CE)
+alloc(newmem,2048,Pathea.ActorNs:Actor:Update+165) 
+label(returnhere)
+label(act)
+label(flag)
+
+
+newmem:
+cmp [flag],01
+jne long act
+
+mov [flag+8],rdx
+mov rdx,[flag+10]
+mov [flag+18],r8
+mov r8,[flag+14]
+
+sub rsp,20
+Addres:
+mov r11,Address
+call r11
+add rsp,20
+
+mov [flag],0
+mov rdx,[flag+8]
+mov r8,[flag+18]
+act:
+cvtss2sd xmm0,xmm0
+mov rcx,rsi
+jmp returnhere
+flag:
+dq 0 0 #2000001 0 0
+
+Pathea.ActorNs:Actor:Update+165:
+jmp newmem
+nop
+nop
+returnhere:
+
+registersymbol(flag)
+registersymbol(Addres)
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+Pathea.ActorNs:Actor:Update+165:
+//cvtss2sd xmm0,xmm0
+//mov rcx,rsi
+db F3 0F 5A C0 48 8B CE
+unregistersymbol(flag)
+unregistersymbol(Addres)
+</AssemblerScript>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>475</ID>
+              <Description>"AddItem"</Description>
+              <Options moManualExpandCollapse="1"/>
+              <LastState/>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>[ENABLE]
+Addres+2:
+dq "CCC_Cmd:AddPackageItem"
+flag:
+db 1
+
+[DISABLE]
+</AssemblerScript>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>476</ID>
+                  <Description>"itemID"</Description>
+                  <DropDownList DescriptionOnly="1" DisplayValueAsItem="1">*******:***Tools &amp; Weapons***
+1000001:Mini-Drill
+1001000:Dev's Dagger
+1001001:Practice Sword
+1001002:Rusty Iron Pipe
+1001003:Bronze Sword
+1001004:Iron Sword
+1001005:Nova Sword
+1001006:Salted Fish Sword
+1001007:Macuahuitl
+1001008:Ruin Text Claymore
+1001009:ObsidianEdge
+1001010:Rogue Knight's Sword
+1001011:Water Sword
+1001012:Purple Haze
+1001101:Enhanced Practice Sword
+1001102:Enhanced Bronze Sword
+1001103:Enhanced Iron Sword
+1001105:Spiked Practice Sword
+1001106:Blade of Malice
+1001107:The Shredder
+1001200:Worn Gloves
+1001201:Lion's Claws
+1001202:Knuckle
+1001203:Poison Knuckles
+1001204:Steel Lion
+1001300
+1001301
+1001302:Triple Barrel Snakebite
+1001303:Scare Soaker
+1001304:Red Hawk
+1001400:Corps' Hammer
+1001401:War Hammer
+1001402:Inflatable Hammer
+1001999
+1002001:Bubble Wand
+1004001:Simple Axe
+1004002:Bronze Axe
+1004003:Iron Axe
+1004004:Fisherman's Axe
+1004005:Chainsaw
+1005001:Beginner's Fishing Rod
+1005002:Classic Fishing Rod
+1005003:Master Fishing Rod
+1007001:Pickaxe
+1007002:Bronze Pickaxe
+1007003:Iron Pickaxe
+1007004:Fisherman's Pickaxe
+1021000:Miner's Hat
+***Food &amp; Ingredients***
+2000001:Salad Sauce
+2000002:Apple Juice
+2000003:Steamed Potato Fruit
+2000004:Smoked Meat
+2000005:Baked Bread
+2000006:Dried Apple Slice
+2000007:Fruit Salad
+2000008:Sashimi
+2000009:Dried Apricot
+2000010:Nori
+2000011:Dried Blade Fish
+2000012:Salty Grilled Catfish
+2000013:Rainbow Lemonade
+2000014:Vegetable Salad
+2000015:Spicy Fish Soup
+2000016:Tasteless Stew Mix
+2000017:Sweet Stew Mix
+2000018:Salty Stew Mix
+2000019:Spicy Stew Mix
+2000020:Strange Soup
+2000021:Banner Fish Sushi
+2000022:Cheap Soda
+2000023:Juice
+2000024:Seafood Stew Mix
+2000025:Bacon Fish Roll
+2000026:Nori Burrito
+2000027:Tasteless Broth
+2000028:Golden Radish Soup
+2000029:Shrimp and Cheese on Rice
+2000030:Blade Fish Mushroom Soup
+2000031:Deep Fried Ribs
+2000032:Sweet Caviar
+2000033:Smoked Fish Roll
+2000034:Spaghetti with Hot Sauce
+2000035:Pumpkin Shrimp Soup
+2000036:Mushroom Crepe with Fruit Sauce
+2000037:Roasted Pork with Honey
+2000038:Bubblefish Stew
+2000039:Seafood Noodles
+2000040:Supremely Spicy Spaghetti
+2000041:Special Salmon Fried Rice
+2000042:Crispy Salmon with Sauce
+2000043:Red Tea
+2000044:Pumpkin Steamed Rice
+2000045:Pumpkin Pie
+2000046:Roasted Meat
+2000047:Seafood Paella
+2000048:Meatballs and Vegetable Soup
+2000049:Delicious Roasted Ribs
+2000050:Fish Porridge
+2000051:Meat and Mushrooms Stew
+2000052:Bamboo Papaya with Egg-on-Top
+2000053:Fishhead Stewed in Soy Sauce
+2000054:Fruit Tart
+2000055:Classic Spaghetti with Meat Sauce
+2000056:Herbal Juice
+2000057:Creamy Salmon Stew
+2000058:Milk Tea
+2000059:Bubblefish Soup
+2000060:Stewed Mushrooms
+2000061:Apricot Juice
+2000062:Spicy Tea
+2000063:Ocean's Fortune
+2000064:Dragon Soup
+2000065:Foie Gras with Orange
+2000066:Power in a Can
+2000067:Chicken Risotto with Coconut
+2000068:Spiced Steak
+2000069:Beef Jerky
+2000070:Rainbow Jam
+2000071:Smoked Ham
+2000072:Fried Rice with Radish
+2000073:Roasted Turkey
+2000074:Steak with Coconut Juice
+2000075:King Salmon Fillet
+2000076:Secret Fish King Soup
+*******
+2010001:Herbal Mixture
+2010002:Simple Ointment
+2010003:First Aid Kit
+2010004:First Aid Kit (Super GOD Mode)
+2010010:Phyllis's Bamboo Incense
+2010011:Bamboo Incense
+2020001:Simple Antidote
+2030001:Caterpillar
+2030002:Dough
+2030003:Venom Dart
+2030004:Red Firework
+2030005:Yellow Fireworks
+2030006:Green Fireworks
+2030007:Blue Fireworks
+2030008:Purple Fireworks
+2030009:Magnifying Glass
+2030010:Dog Food
+2030011:Coin Bag
+2030012:Ammo
+2040001:Fertilizer
+2050001:Dee-Dee Stop
+2060001:Data Disc
+2060002:Knight Badge
+2060003:Research Notes
+2060004:Fisherman's Badge
+2060005:Rider's Badge
+2060006:Martial Artist's Badge
+2060007:Ghost Badge
+2060008:Snowball Battle Badge
+2060009:Autumn Festival Badge
+2060010:Challenger's Coin
+2070001:Lucky Sack
+2070002:Lucky Chest
+2070003:Special Gift Box
+2080001:Calf
+2080002:Lamb
+2080003:Chick
+2080004:Duckling
+2080005:Foal
+*******:***Furniture &amp; Decorations***
+3000001:Strange Mirror
+3000002:Wall Light
+3000003:Tea Table
+3000004:Dark Coffee Table
+3000005:Simple Desk
+3000006:Wooden Table
+3000007:Xylophone
+3000008:Washing Machine
+3000009:Bookshelf
+3000010:Wooden Storage
+3000011:Leather Sofa
+3000012:Trunk Bench
+3000013:Hardwood Sofa
+3000014:Dining Table
+3000015:Small Chair
+3000016:Pot of Asteria
+3000017:Washbasin
+3000018:Red Lamp
+3000019:Wall Lamp
+3000020:Paw Mat
+3000021:Striped Carpet
+3000022:Flower Carpet
+3000023:Linen Rug
+3000024:Small Clock
+3000025:Fan
+3000026:Metal Storage
+3000027:Advanced Skiver
+3000028:Coop
+3000029:Shed
+3000032:Stone Table
+3000033:Stone Stool
+3000034:Stone Furnace
+3000035:Civil Cutter
+3000036:Basic Skiver
+3000037:Grill
+3000039:Grinder
+3000040:Drying Rack
+3000041:Civil Furnace
+3000042:Industrial Furnace
+3000043:Blender
+3000044:Industrial Cutter
+3000045:Purple Hydrangea
+3000046:Wild Roses
+3000047
+3000048:Maya
+3000049:Street Light
+3000050:Lara Model
+3000051:Safety Box
+3000052:Solid Wood Clock
+3000053:Massage Chair
+3000054:One-legged Dining Table
+3000055:Armor of a Knight
+3000056:Grapevines
+3000057:Meeting Table
+3000058:Leather Chair
+3000059:Cushioned Couch
+3000060:Square Table
+3000061:Large Bookshelf
+3000062:Mini-Bar
+3000063:Small Potted Purple Hydrangea
+3000064:Work Desk
+3000065:Orange Sofa
+3000066:Cushioned Stool
+3000067:Small Waste Bin
+3000068:Printing Press
+3000070:Glass Cabinet
+3000071:Privacy Screen
+3000072:Yellow Leaf
+3000073:Rainbow Flower Pot
+3000074:Short Stool
+3000075:Piano
+3000076:Piano Bench
+3000077:Vending Machine
+3000078:Coarse Rug
+3000082:Fireplace
+3000083:Wooden Armchair
+3000084:White Armchair
+3000085:Water Cooler
+3000086:Little Bear Sofa
+3000087:Plaid Rug
+3000088:File Cabinet
+3000089:Cupboard
+3000090:Yellow Patio Umbrella
+3000091:Red Patio Umbrella
+3000092:Patio Umbrella
+3000093:Sandbox Table
+3000094:Clothing Basket
+3000096:Hardwood Couch
+3000098:Goddess Statue
+3000099:Old Thermos
+3000100:Galloping Horse
+3000101:Soldier with Scepter
+3000102:Soldier with Axe
+3000103:Soldier with Blade
+3000104:Soldier with Lance
+3000105:The Thinking Can
+3000106:Monster Toy
+3000107:Magic Lamp
+3000108:Fish Sub
+3000109:Duck on a King
+3000110:Old Talker
+3000111:Owl Clock
+3000112:Porcelain Waterholder
+3000113:Weird Glass Jar
+3000114:Bonsai
+3000115:Monument Model
+3000116:Catmaid Statue
+3000117:Solstice Wreath
+3000118:Solstice Tree
+3000119:Snowman with a Red Scarf
+3000120:Rabbit Snowman
+3000121:Pointy Nosed Snowman
+3000122:Solstice Lantern
+3000123:Red Heart Knot
+3000124:Lucky Cover
+3000125:Power Lamp
+3000126:Stone Pillar
+3000127:Stone Fence
+3000128:Stone Pedestal
+3000129:Wooden Fence 1
+3000130:Wooden Fence 2
+3000131:Wooden Fence 3
+3000132:Sunny Side
+3000133:Performance Center Model
+3000134:Cat's Bed
+3000135:The Waiting Girl Music Box
+3000136:Wooden Music Box
+3000137:Stuffed Bear
+3000138:Drum
+3000140:Dream Lamp
+3000141:Old Basin
+3000142:Concave Mirror
+3000143:Convex Mirror
+3000144:Man-eater Sofa
+3000145:Incense Burner
+3000146:Crystal Statue
+3000147:Elephant Fountain
+3000148:Toy Robot
+3000149:Gold Trophy
+3000150:Fluffy Rabbit
+3000151:Crystal Hourglass
+3000152:Craft Candle
+3000153:Llama Sculpture
+3000155:Fossil Replica
+3000156:Succulent Plant
+3000157:Tea Set
+3000158:Basic Sewing Machine
+3000159:Blonde Doll
+3000160:Wooden Drawers
+3000161:Hospital Bed
+3000162:Electric Furnace
+3000163:Comprehensive Grinder
+3000164:Comprehensive Cutter
+3000166:Spring Doll
+3000167:Summer Doll
+3000168:Autumn Doll
+3000169:Winter Doll
+3000170:Keypad
+3000171:Sculpted Lion
+3000172:Fortune Cat
+3000173:AI Model
+3000174:Clay Figure: Male
+3000175:Clay Figure: Female
+3000176:Rocket Model
+3000177:Plane Model
+3000178:Sailboat Model
+3000179:Sphere Trophy
+3000180:Fan Model
+3000181:Muti-purpose Tea Table
+3000182:Bubble Machine
+3000183:Marble Fence Portion 1
+3000184:Marble Fence Portion 2
+3000185:Marble Fence Portion 3
+3000186:Helper's Storage Box
+3000187:Wooden Photo Frame
+3000188:Cat Tree
+3000189:Cat Scratcher
+3000190:Stone Fountain
+3000191:Cat-Ear Patio Umbrella
+3000192:Striped Lounge Chair
+3000193:Stone Striped Wooden Bench
+3000194:Rattan Chair
+3000195:Brick Flower Stand
+3000196:Wooden Flower Square
+3000197:Garden Table
+3000198:Marble Fountain
+3000199:Marble Courtyard Chair
+3000200:Marble Flower Stand
+3000201:Marble Arbor
+3000202:Marble Flower Square
+3000203:Marble Flower Bed
+3000204:Marble Street Light
+3000205:Double Fitness Mat
+3000206:Merry Go Around
+3000207:Double Lounge Chair
+3000208:Double Rocking Chair
+3000209:Jumping Hoop
+3000210:Climbing Pole
+3000211:Spinball
+3000212:Dog House
+3000213:Haunted Cave Sign
+3000214:Tree of Claws
+3000215:Kingfisher Pennant
+3000216:Martial Arts Legend Pennant
+3000217:Master Rider Pennant
+3000218:Egg Sculpture
+3000219:Day of Memories Sign
+3000220:Balloons
+3000221:Dancing Ghost
+3000222:Wall Candle
+3000223:Ghost #1
+3000224:Ghost #2
+3000225:Ghost #3
+3000226:Ghost #4
+3000227:Ghost #5
+3000228:Ghost #6
+3000229:Ghost #7
+3000230:Ghost #8
+3000231:Ghost #9
+3000232:Large Office Desk
+3000233:Carp Flag
+3000234:Fish Balloon
+3000235:Fishing Flag
+3000236:Winged Lion
+3000237:Goolo Goolo Clock
+3000238:Ship in a Bottle
+3000240:Ancient Computer
+3000241:Typewriter
+3000242:Vinyl Record Player
+3000243:Horse Head Floor Lamp
+3000244:Billboard for the Portia Land Run
+3000245:Hurdle
+3000246:Jockey Statue
+3000247:Pony Table Lamp
+3000248:Llama Memorabillia Blanket
+3000249:Race Horse Memorabillia Blanket
+3000250:Wooden Horse
+3000251:Head of a Deer
+3000252:Lotus Lamp
+3000253:Plum Blossom Lantern
+3000254:Kungfu Sack
+3000255:War Drum
+3000256:Wooden Hassock
+3000257:Taishi Chair
+3000258:Double Door Wooden Cabinet
+3000259:Snowball Fighter Flag
+3000260:Plain Bed
+3000261:Portian Rug
+3000262:Ocean Blue Carpet
+3000263:Boundary Carpet
+3000264:Banquet Table
+3000265:Hardwood Double Bed
+3000266:Iron Framed Double Bed
+3000267:Autumn Festival Sign
+3000268:Autumn Festival Banner
+3000269:Autumn Festival Gold Medal
+3000270:Autumn Festival Silver Medal
+3000271:Autumn Festival Bronze Medal
+3000272:Stringed Peppers
+3000273:Stringed Corn
+3000274:Scarecrow
+3000275:Painting - A City on the Sea
+3000276:Oak Double Bed
+3000277:Damour Roly-Poly
+3000278:Clear Sky Doll
+3000279:Cauldron
+3000280:Coral Tree
+3000281:Treadmill
+3000282:Plant Rack
+3000283:Weapon Rack
+3000284:Moving Closet
+3000285:Mini Bowling Alley
+3000286:Cradle
+3000287:Flower Shop Sign
+3000288:Celebration Lamp Post
+3000289:Balloons in a Bottle
+3000290:Wall Light of Love
+3000291:Hanging Flower Basket
+3000292:Wedding Bell
+3000293:Rainbow Photo Frame
+3000294:Window Origamy
+3000295:Love Sofa
+3000296:Small Flower Rack
+3000297:Golden Clock
+3000298:Piggy Sofa
+3000299:Double Drawer
+3000300:Celebration Flowers
+3000301:Framed Happiness
+3000302:Twisted Window Origamy
+3000303:Painting - Carp and Lotus.
+3000304:Layered Bookshelf
+3000305:Piggy Bed
+3000306:Farewell from Dad &amp; Grampa
+3000307:Moritz
+3000308:Painting - Sea Lion
+3000309:Aadit's Present
+3000310:Hydrangea Dance
+3000311:Jumping Waves
+3000312:Painting - Me
+3000313:Painting - Crescent Moon
+3000314:Pumpkin Room
+3000315:Incredible Mandy
+3000316:Home Station
+3010001:Worktable
+3010002:Worktable
+3010003:Worktable
+3011001:Stable
+3012001:Factory
+3012002:Factory
+3020001:Assembly Station
+3020002:Assembly Station
+3020003:Assembly Station
+3030001:Home Lv1
+3030002:Home Lv2
+3030003:Home Lv3
+3030004:Home Lv4
+3030014:Home Lv4
+3030024:Home
+3031001:Television Stand
+3031002:Training Dummy
+3040001:Conductive Wooden Flooring
+3040002:Irrigation Flooring
+3040003:Marble Flooring
+3040004:Conductive Igneous Floor
+3041001:Small Planter Box
+3041002:Large Planter Box
+3042001:Small Mineral-Planter Box
+3042002:Large Mineral-Planter Box
+3043001:Irrigation Tower
+3044001
+3044002
+3044003
+3044004
+3045000:Simple Wallpaper
+3045001:Red Wallpaper
+3045002:Pink Wallpaper
+3045003:Wallpaper - Spring
+3045004:Wallpaper - Summer
+3045005:Autumn Wallpaper
+3045006:Winter Wallpaper
+3045007
+3045008:Wallpaper - Sky
+3045009:Wallpaper - Polka Dots
+3045010:Wallpaper - Sword and Shield
+3045011:Wallpaper - Purple Rhyme
+3045012:Wallpaper - Stripes
+3045013:Wallpaper - Ocean
+3045100:Simple Flooring
+3045101:Red Flooring
+3045102:Pink Flooring
+3045103:Spring Flooring
+3045104:Summer Flooring
+3045105:Autumn Flooring
+3045106:Winter Flooring
+3045107
+3045108:Floor - Sky
+3045109:Floor - Polka Dots
+3045110:Floor - Sword and Shield
+3045111:Floor - Purple Rhyme
+3045112:Floor - Stripes
+3045113:Floor - Ocean
+3046001:Wooden Gate
+3046002:Stone Gate
+3046003:Marble Gate
+3047001:Wooden Fence Portion
+3047002:Stone Fence Portion
+3047003:Marble Fence Portion
+3050001:Fire Powered Generator
+3070001:Cooking Set
+3071001:Recovery Machine
+3072001:Recycle Machine
+3080001:Fish Display
+3080002:Large Fish Tank
+3080003:Crystal Fish Tank
+4000001:Wood
+4000002:Cloth
+4000003:Cotton
+4000004:Stone
+4000005:Sand
+4000006:Egg
+4000007:Shell
+4000008:Soil
+4000009:Meat
+4000010:Blade Fish
+4000011:Animal Fat
+4000012:Tree Sap
+4000013:Copper Ore
+4000014:Aroma Apple
+4000015:Herbs
+4000016:Delicate Fur
+4000017:Rock Salt
+4000018:Lemon
+4000019:Glass
+4000020:Banner Fish
+4000021:Colorful Fur
+4000022:Bug Egg
+4000023:Lettuce
+4000024:Coral
+4000025:Carbon Steel Bar
+4000026:Sugar
+4000027:Fur
+4000028:Flour
+4000029:Potato Fruit
+4000030:Valve
+4000031:Wheat
+4000032:Golden Salmon
+4000033:Asteria
+4000034:Apricot
+4000035:Iron Ore
+4000036:Copper Coil
+4000037:Spines
+4000038:Nitre
+4000039:Salt
+4000040:Old Parts
+4000041:Steel Ball
+4000042:Rubber Fruit
+4000043:Bamboo Papaya
+4000044:Rainbow Flower
+4000045:Sulfate
+4000046:Dragon Heart
+4000047:Apple
+4000048:Chili Pepper
+4000049:Resin
+4000050:Honeybee Wax
+4000051:Worn Fur
+4000052:Seaweed
+4000053:Chrysanthemum
+4000054:Ginger
+4000055:Flower Pot
+4000056:Gladiator Fish
+4000057:Mustard
+4000058:Lobster Claw
+4000059:Lobster Meat
+4000061:Layered Carrot
+4000062:Blue Leather
+4000063:Ruby
+4000065:Yellow Bowtie
+4000066:Eye Glass
+4000067:Strenghtened Glass
+4000068:Bubble Fish
+4000069:Manganese Steel Bar
+4000070:Goliath
+4000071:Hardwood Plank
+4000072:Small Engine
+4000073:Tail Feather
+4000074:Pigments
+4000075:Spring
+4000076:Snake Berry
+4000077:Hardwood
+4000078:Cinnamon
+4000079:Blood Stone
+4000080:Fiber Cloth
+4000081:Mucus
+4000082:Steel Cable
+4000083:Small Silicon Chip
+4000084:Honey
+4000085:Ironwood
+4000086:Bird Nest
+4000088:Tea
+4000089:Coriander
+4000090:Cumin
+4000091:Pumpkin
+4000092:Snake's Gallblader
+4000093:Bandage
+4000094:Teeth
+4000095:Venom
+4000096:Animal Bones
+4000097:Eye Patch
+4000098:Animal Skeleton
+4000099:Rogue's Headband
+4000100:Carbon Fiber
+4000101:Industrial Engine
+4000102:Stone Brick
+4000103:Milk
+4000104:Rice
+4000105:Frog Fish
+4000106:Compressor
+4000107:Iron Bar
+4000108:Silicon Chipset
+4000109:Wild Cocoon
+4000110:Copper Bar
+4000111:Starlight Coral
+4000112:Coconut
+4000113:Rope
+4000114:Gunpowder
+4000115:Power Stone
+4000116:Rubber Tire
+4000117:Gear
+4000118:Lead Ore
+4000119:Manganese Ore
+4000120:Crystal
+4000121:Marble
+4000122:Orange
+4000123:Wrench
+4000124:Cactus Fruit
+4000125:Koi Fish
+4000126:Blue Mackerel
+4000127:Catfish
+4000128:Lantern Fish
+4000129:Wise Fish
+4000131:Firefish
+4000132:Lubricant
+4000133:Quality Leather
+4000135:Animal Feces
+4000136:Single Seat
+4000138:Plant Fiber
+4000139:Tin Ore
+4000140:Spider's Web
+4000141:Simple Circuits
+4000142:Bronze Bar
+4000143:Leather
+4000144:Copper Blade
+4000145:Copper Plate
+4000146:Bronze Pipe
+4000147:Topaz
+4000148:Sapphire
+4000149:Bronze Plate
+4000150:Copper Pipe
+4000151:Upgrade Kit
+4000152:Red Mushroom
+4000153:Thread
+4000154:Copper Wire
+4000155:Aluminum Wires
+4000156:Grinding Stone
+4000157:Marble Plank
+4000158:Charcoal
+4000159:Pulley
+4000160:Grinding Saw
+4000161:Bat's Wing
+4000162:Titanium Ore
+4000163:Perfect Fur
+4000164:Snake Meat
+4000165:Snake Skin
+4000166:Shaggy Mane
+4000171:Diamond
+4000173:Chicken
+4000175:Palm Jujube
+4000176:Linen
+4000177:Cornball
+4000185:Industrial Core
+4000186:Grinding Blade
+4000187:Leather Horn
+4000196:Cultivated Soil
+4000197:Bearing
+4000198:Cheese
+4000200:Small Bomb
+4000203:Tempering Liquid
+4000204:Cassette Box
+4000206:Lead Bar
+4000211:Welding Rod
+4000212:Tin Alloy
+4000216:Steel Plate
+4000219:Iron Wooden Plank
+4000220:Large Iron Bucket
+4000221:Trap Box
+4000222:Advanced Trap Box
+4000224:Wicker Basket
+4000226:Sand Tea
+4000228:Ceramic Jug
+4000229:Fire Stone
+4000230:Steel Frame
+4000231:Elegant Fur
+4000240:Jet Tube
+4000241:Metal Jar
+4000242:Jumbo Tire
+4000243:Steel Shell
+4000244:Emperor Banner Fish
+4000245:Emperor Golden Salmon
+4000246:Emperor Catfish
+4000247:Emperor Firefish
+4000248:Emperor Blade Fish
+4000249:Emperor Bubblefish
+4000250:Emperor Frog Fish
+4000252:Emperor Koi Fish
+4000253:Emperor Gladiator Fish
+4000254:Emperor Lantern Fish
+4000255:Emperor Goliath
+4000256:Emperor Wise Fish
+4000257:Emperor Blue Mackerel
+4000258:Game Cartridge - Protoform
+4000259:Broom
+4000260:Mop
+4000261:Plunger
+4000262:Cooking Pot
+4000263:Racket
+4000264:Porcelain Plate
+4000265:Bridge Tower
+4000266:Steel Beam
+4000267:Cable
+4000268:Eye of the Tiger
+4000269:Hardened Clay
+4000270:Bridge Light
+4000271:Windwheel
+4000272:Magician's Hat
+4000273:Control Panel
+4000274:Advanced Engine
+4000275:Large Pipe
+4000276:Wooden Pillar
+4000277:Display
+4000278:Showcase
+4000279:Poplar Wood
+4000280:Hoister
+4000281:Large Drill Tip
+4000282:Royal Honey
+4000283:Aluminum Ore
+4000284:Magnesium Ore
+4000285:Condensed Power Stone
+4000286:Hard Aluminum
+4000287:Stainless Aluminum
+4000288:Aluminum Plate
+4000289:Composite Wooden Board
+4000290:Rubber Belt
+4000292:Colossal Balloon
+4000293:Flexible Fiber
+4000294:A Wildflower
+4000295:Apple on a Stick
+4000296:White Hibiscus Flower
+4000297:Igneous Rock
+4000299:Zeolite
+4000300:Concrete
+4000301:Waterproof Cloth
+4000302:Beef
+4000303:Strawberry
+4000304:Igneous Brick
+4000305:Sewing Head
+4000306:Lhama Hair
+4000307:Mucus Pile
+4000308:Poison Fang
+4000309:Military Engine
+4000310:Golden Ginseng
+4000311:AI Chipset
+4000312:Purple Resin
+4000313:Pine Cone
+4000314:Agarwood
+4000315:Hard Shell
+4000316:Advanced Composite Board
+4000317:Magnesium Powder
+4000318:Precision Parts
+4000319:Treeheart
+4000320:Blueberry
+4000321:Blackberry
+4000322:Koi King
+4000323:Blue Mackerel King
+4000324:Blade Fish King
+4000325:Lantern Fish King
+4000326:Wiser Fish
+4000327:Bubblefish King
+4000329:Smart Console
+4000330:Titanium Bar
+4000331:Titanium Plate
+4000332:Jet Engine
+4000333:Fuel Pack
+4000334:Banner Fish King
+4000335:Golden Salmon King
+4000336:Catfish King
+4000337:Firefish King
+4000338:Frog Fish King
+4000339:Gladiator Fish King
+4000340:Lantern Fish King
+4000341:Goliath King
+4000342:Honeycomb
+4010011:Owl Clock Piece 1
+4010012:Owl Clock Piece 2
+4010013:Owl Clock Piece 3
+4010014:Owl Clock Piece 4
+4010021:Monument Model Piece 1
+4010022:Monument Model Piece 2
+4010023:Monument Model Piece 3
+4010024:Monument Model Piece 4
+4010025:Soldier with Scepter Piece 1
+4010026:Soldier with Scepter Piece 2
+4010027:Soldier with Scepter Piece 3
+4010028:Soldier with Scepter Piece 4
+4010029:Soldier with Scepter Piece 5
+4010030:Soldier with Axe Piece 1
+4010031:Soldier with Axe Piece 2
+4010032:Soldier with Axe Piece 3
+4010033:Soldier with Axe Piece 4
+4010034:Soldier with Axe Piece 5
+4010035:Soldier with Blade Piece 1
+4010036:Soldier with Blade Piece 2
+4010037:Soldier with Blade Piece 3
+4010038:Soldier with Blade Piece 4
+4010039:Soldier with Blade Piece 5
+4010040:Soldier with Lance Piece 1
+4010041:Soldier with Lance Piece 2
+4010042:Soldier with Lance Piece 3
+4010043:Soldier with Lance Piece 4
+4010044:Soldier with Lance Piece 5
+4010045:Porcelain Waterholder Piece 1
+4010046:Porcelain Waterholder Piece 2
+4010047:The Thinking Can Piece 1
+4010048:The Thinking Can Piece 2
+4010049:The Thinking Can Piece 3
+4010050:The Thinking Can Piece 4
+4010051:Fish Sub Piece 1
+4010052:Fish Sub Piece 2
+4010053:Fish Sub Piece 3
+4010054:Old Talker Piece 1
+4010055:Old Talker Piece 2
+4010056:Old Talker Piece 3
+4010057:Old Thermos Piece 1
+4010058:Old Thermos Piece 2
+4010059:Weird Glass Jar Piece 1
+4010060:Weird Glass Jar Piece 2
+4010061:Weird Glass Jar Piece 3
+4010062:Galloping Horse Piece 1
+4010063:Galloping Horse Piece 2
+4010064:Galloping Horse Piece 3
+4010065:Galloping Horse Piece 4
+4010066:Magic Lamp Piece 1
+4010067:Magic Lamp Piece 2
+4010068:Magic Lamp Piece 3
+4010069:Power Lamp Piece 1
+4010070:Power Lamp Piece 2
+4010071:Power Lamp Piece 3
+4010072:Sunny Side Piece 1
+4010073:Sunny Side Piece 2
+4010074:Joystick Piece 1
+4010075:Joystick Piece 2
+4010076:Performance Center Model Piece 1
+4010077:Performance Center Model Piece 2
+4010078:Performance Center Model Piece 3
+4010079:Performance Center Model Piece 4
+</DropDownList>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>flag+10</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>477</ID>
+                  <Description>"value"</Description>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>flag+14</Address>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>478</ID>
+              <Description>"AddAllItem"</Description>
+              <LastState/>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>[ENABLE]
+Addres+2:
+dq "CCC_Cmd:AddAllItem"
+flag+10:
+dd 0
+flag:
+db 1
+
+[DISABLE]
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>479</ID>
+              <Description>"AddExp"</Description>
+              <LastState/>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>[ENABLE]
+Addres+2:
+dq "CCC_Cmd:AddExp"
+flag+10:
+dd #10000
+flag:
+db 1
+
+[DISABLE]
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>480</ID>
+              <Description>"AddMoney"</Description>
+              <LastState/>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>[ENABLE]
+Addres+2:
+dq "CCC_Cmd:AddMoney"
+flag+10:
+dd #10000
+flag:
+db 1
+
+[DISABLE]
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>481</ID>
+              <Description>"ClearPackage"</Description>
+              <LastState/>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>[ENABLE]
+Addres+2:
+dq "CCC_Cmd:ClearPackage"
+flag+10:
+dd 0
+flag:
+db 1
+
+[DISABLE]
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>482</ID>
+              <Description>"DisableStamina"</Description>
+              <LastState/>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>[ENABLE]
+Addres+2:
+dq "CCC_Cmd:DisableStamina"
+flag+10:
+dd 0
+flag:
+db 1
+
+[DISABLE]
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>483</ID>
+              <Description>"EndFreeMove"</Description>
+              <LastState/>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>[ENABLE]
+Addres+2:
+dq "CCC_Cmd:EndFreeMove"
+flag+10:
+dd 0
+flag:
+db 1
+
+[DISABLE]
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>484</ID>
+              <Description>"35 Tabs Inventory (Save your items somewhere else first)"</Description>
+              <LastState/>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>[ENABLE]
+Addres+2:
+dq "CCC_Cmd:ExtraPackage"
+flag+10:
+dd 0
+flag:
+db 1
+
+[DISABLE]
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>485</ID>
+              <Description>"FarmAnimalGorwUpAll"</Description>
+              <LastState/>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>[ENABLE]
+Addres+2:
+dq "CCC_Cmd:FarmAnimalGorwUpAll"
+flag+10:
+dd 0
+flag:
+db 1
+
+[DISABLE]
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>486</ID>
+              <Description>"GiveGift_Like"</Description>
+              <LastState/>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>[ENABLE]
+Addres+2:
+dq "CCC_Cmd:GiveGift_Like"
+flag+10:
+dd 0
+flag:
+db 1
+
+[DISABLE]
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>487</ID>
+              <Description>"GiveGift_Normal"</Description>
+              <LastState/>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>[ENABLE]
+Addres+2:
+dq "CCC_Cmd:GiveGift_Normal"
+flag+10:
+dd 0
+flag:
+db 1
+
+[DISABLE]
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>488</ID>
+              <Description>"GoHome"</Description>
+              <LastState/>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>[ENABLE]
+Addres+2:
+dq "CCC_Cmd:GoHome"
+flag+10:
+dd 0
+flag:
+db 1
+
+[DISABLE]
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>489</ID>
+              <Description>"StartJetPack"</Description>
+              <LastState/>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>[ENABLE]
+Addres+2:
+dq "CCC_Cmd:StartJetPack"
+flag+10:
+dd 0
+flag:
+db 1
+
+[DISABLE]
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>490</ID>
+              <Description>"Activate ?"</Description>
+              <Options moManualExpandCollapse="1"/>
+              <DropDownList DescriptionOnly="1" DisplayValueAsItem="1">1:Yes
+0:No
+</DropDownList>
+              <VariableType>4 Bytes</VariableType>
+              <Address>flag</Address>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>491</ID>
+                  <Description>"value"</Description>
+                  <VariableType>4 Bytes</VariableType>
+                  <Address>flag+10</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>492</ID>
+                  <Description>"value"</Description>
+                  <ShowAsHex>1</ShowAsHex>
+                  <VariableType>8 Bytes</VariableType>
+                  <Address>Addres</Address>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
       </CheatEntries>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>503</ID>
+      <Description>"FreeSkillPoints"</Description>
+      <LastState/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+// search for skill points, associate point to skill &amp; search for new number
+// Item is 4 bit
+aobscan(skillPts,49 63 46 44 FF C8 41 89 46 44 49 8B 46 18 48 8B C8)
+label(_skillPts)
+registersymbol(_skillPts)
+
+skillPts+4:
+_skillPts:
+db 90 90
+
+
+
+/*
+
+2DAAF07778B - 49 63 46 44  - movsxd  rax,dword ptr [r14+44]
+2DAAF07778F - FF C8  - dec eax
+2DAAF077791 - 41 89 46 44  - mov [r14+44],eax &lt;&lt;
+2DAAF077795 - 49 8B 46 18  - mov rax,[r14+18]
+2DAAF077799 - 48 8B C8  - mov rcx,rax
+
+*/
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+_skillPts:
+db FF C8
+</AssemblerScript>
     </CheatEntry>
   </CheatEntries>
   <UserdefinedSymbols>
     <SymbolEntry>
+      <Name>jetPack_ptr</Name>
+      <Address>261295C0000</Address>
+    </SymbolEntry>
+    <SymbolEntry>
       <Name>player_ptr</Name>
-      <Address>04F90000</Address>
+      <Address>2DA0AE90000</Address>
     </SymbolEntry>
     <SymbolEntry>
       <Name>setFavorGradeName_ptr</Name>
-      <Address>04F90010</Address>
+      <Address>20316DB0000</Address>
     </SymbolEntry>
     <SymbolEntry>
       <Name>abilityStat_ptr</Name>
-      <Address>03930030</Address>
+      <Address>2DA0AE90010</Address>
     </SymbolEntry>
     <SymbolEntry>
       <Name>playerAbility_ptr</Name>
-      <Address>03930020</Address>
+      <Address>06020020</Address>
     </SymbolEntry>
     <SymbolEntry>
       <Name>abilityItem_ptr</Name>
-      <Address>03930010</Address>
+      <Address>2DA0AE90020</Address>
     </SymbolEntry>
     <SymbolEntry>
       <Name>timeManager_ptr</Name>
-      <Address>03930000</Address>
+      <Address>2DA0AE90030</Address>
+    </SymbolEntry>
+    <SymbolEntry>
+      <Name>playerWorkshopRep_ptr</Name>
+      <Address>22792D10000</Address>
     </SymbolEntry>
   </UserdefinedSymbols>
-  <Signature>
-    <SignedHash HashSize="132">01%v6Z*y2V/%n)]47/Bw$/GSK)WA$S!5(Hrcr8TR%pN.2U.Oi%QYPX.F:AHg9H[Umc0@:LzZavY%WhorpLhXbUGbWraKbEOIO%8!bMbW?mrE*.l=1XZ;/cu;NTZ]s,2Z$K,$?+]z_nk]3^@7P];lqUIFZ.xP8f(.k!{D]</SignedHash>
-    <PublicKey Size="1630">5(!?IQ*y;zWn;@=c[3zCZgg+LVRMWC0suurQ#C;W0000clpc14@EkL1ZUH)FyDWEIM3o^@zHE:PK]0pw)J0{dR6pWng}Ip_$r^T#mP7By]qwjOIH7MA9ilt3h-*[?0b]._Yhlia,G-pj#]m[#(;z#y%}Tv7xVJSDN,nMYaqn5E;TEFB.fa^!nPZd+auo-Nijfkk.%QJcox6c8xUB@%1pokvP*/h.3K_Lk000e1NJLTq000.O000.W1@?s6.CDUv00006VoOIv0RI600RN!9r.]8x010qNS#tmY3ljhU3ljkVnw%H[000McNliru.R,NECI}}Eobmtw1h]2:K}zY]wUo[o9LEvGf8EnFJ2U%1a#u?oMOu/(NtOi%2w;zEAc%d+A.;=G_0uUybIaL4ZZTju1]Gr-a+(f*ax9wilFR+=C3ok0x,^m3DGA6aR@Fu:RY1R2uL]Ap[xnGHLLmsV+[;sv!il1*D*OS;;gtNTXvp*NJkJrawA+cVdOg}4M5i6mj$]6DB90/DamcUhb5@_{/SAx,]YmzP!HYb=ULUtuQa6@etVy$iG_kA%hAd4H6j}_DqF^_8?B@#]C+Yi.X(S?^r:NUG[3#6V+#,j-=YmfO5e2j571lY+vLq]C)kx?WNvW!asw)hI3#C1)szL/xDnTpoeNEsSbmWm%761O#ZwXo/*jfw9@miHbcM+XHw!zv+G]7K7N7GoErp7rzoI]sCtra4IQd=tNVMyTn7-I.-0OthX575T2+/_pqC+R2b3m4OwXr(bE@;akPS[;lNS(BG@h}Qqt/$R6,o6QChK{5+25*q-PDnu-,WCehT0BpN[cJf;^t53OebeC4_1OEK,pLqADk9hpoFDY9cjt{-)CsPiOj]^lOx7/2DVwGi;q9*4/j[:;+;6iZ=I+fU6[dct2!{R::Uw-r/WmTchCW$:z^5RYm9(,R7e=%$unu4OJ2+Ut=vMf/3nx-OZceqSeG{h8-cTq}nvW#{?@L#uZZue-nW7LyxPQ*v_BJexhxb-vs@2ulT-46NYioj?!yrI+HXmxum((H@+gQ.]q[K97_U@L:lGG:vE?ZP(]Q/WuW/0,lp9Ui^[6VzA#^8{D8d.oy6mg#K9/uV}]x7i.KS/L4s(oP@:8I6Ycp3h:Ar^C_RjZd.n7#$q2n9pdWB*O}?=seGd56Q9(!]2M_nx@6G/b,DMcx!LK/m8lfwt,yCrWLcPP-PZBfJ7/g@Evn4xyQxnb2j,}:LzY$rW@YVw4rHg3]$*S7-QIf;kgY[4z?sdd-Qu/y1kfeo#Vuzb^*zOxJnX6gFTk36_Fer(g}/^(%WoKw_k6@M%x**YP56qnxL,0R,kA]S]bGO%Vf#/[orM.E+PI)pn(OQ!uk1xAPiV66Qa.3EgI)21.,Q8EoRrN;UkboUa=4f8sF1srC2Q1w45XAMrhSyryG%FDb6XnyFHA8u*D];GN%(:b//GhDTg:r]Qr00m_V.d5sbXbAP}lFd?rE4w?0ouE*YULMynQ@qGEV;0KTE6gp:/k9Niq!-Pxr_E+TvjP+{%{^ULD{vQE=237oUcCkvDmoP2l6hadfdS25(u=2m3/zxVosmxY6ENQ*99=j=coeU6V0)Y}RdW(Btu1x8-kQ[nLTj1FF=9b8_^^{pvzW6H85djo0#tbp2%a!XKE7.7DMUH_ys1s/._#5t5wI241TL[2YBME!hSa)6GJo6a}i4M*2XS9y*$4Z-s=/LQ$5JRvL^CTnO10j4Z,n#OL.])gS(bS+Cv;c6{4BCqI$nx]9se_!%MR8Hv8VE+;@$1IZ#N@7+%h[iT{2Wor(5g]adJgq@4RvM*;#xrcPj8/R;TM/fYl,rjfzHjKpF.B*5^sZD:,;K;?FB_^;002ovPDHLkV1k4I0002*m}:Z?fAo=tCW%KPySvJt+WMr}C=][PmC*lpMVh)R?#fEFW[fe5jC$mfXHhr3QeYD422PbH*4%Xu:T7a80ghVAv#_vxsof0ipRm^Ej0T5$,u$2;jslnin_u!0nTn^-T?c385UgCi7=bTG,]r_*3{YW7oVZh{N?btxq5c</PublicKey>
-  </Signature>
+  <LuaScript>function cycleFullCompact(sender,force)
+  local state = not(compactmenuitem.Caption == 'Compact View Mode')
+  if force~=nil then state = not force end
+  compactmenuitem.Caption = state and 'Compact View Mode' or 'Full View Mode'
+  getMainForm().Splitter1.Visible = state
+  getMainForm().Panel4.Visible    = state
+  getMainForm().Panel5.Visible    = state
+end
+
+function addCompactMenu()
+  if compactmenualreadyexists then return end
+  local parent = getMainForm().Menu.Items
+  compactmenuitem = createMenuItem(parent); parent.add(compactmenuitem)
+  compactmenuitem.Caption = 'Compact View Mode'
+  compactmenuitem.OnClick = cycleFullCompact
+  compactmenualreadyexists = 'yes'
+end
+addCompactMenu()
+cycleFullCompact(nil, true)
+</LuaScript>
 </CheatTable>
