@@ -13,7 +13,7 @@
 // full == larger than 1 (starting: 2)(size depends on any jetpack improvements) eg. '7.496'
 // 0 == empty
 
-aobscan(cheat01,F3 44 0F 59 DF F3 41 0F 5C D3 F3 0F 11 97 ?? ?? ?? ??)
+aobscan(cheat01,F3 44 0F 59 CF F3 41 0F 5C D1 F3 0F 11 97 ?? ?? ?? ??)
 label(_cheat01)
 registersymbol(_cheat01)
 
@@ -22,25 +22,12 @@ _cheat01:
 db 90 90 90 90 90
 
 /*
-NMS.exe+10FF1A0:
-7FF6C404F196 - F3 44 0F59 DF  - mulss xmm11,xmm7
-7FF6C404F19B - F3 41 0F5C D3  - subss xmm2,xmm11
-7FF6C404F1A0 - F3 0F11 97 D4350000  - movss [rdi+000035D4],xmm2 &lt;&lt;
-7FF6C404F1A8 - 44 0F2F 8F D4350000  - comiss xmm9,[rdi+000035D4]
-7FF6C404F1B0 - 72 4E - jb NMS.exe+10FF200
-
-NMS.exe+10FD8D6:
-7FF70A0ED8CC - F3 44 0F59 DF  - mulss xmm11,xmm7
-7FF70A0ED8D1 - F3 41 0F5C D3  - subss xmm2,xmm11
-7FF70A0ED8D6 - F3 0F11 97 C4350000  - movss [rdi+000035C4],xmm2 &lt;&lt;
-7FF70A0ED8DE - 44 0F2F 8F C4350000  - comiss xmm9,[rdi+000035C4]
-7FF70A0ED8E6 - 72 56 - jb NMS.exe+10FD93E
-
-7FF7AFA8254B - F3 45 0F59 D8  - mulss xmm11,xmm8
-7FF7AFA82550 - F3 41 0F5C C3  - subss xmm0,xmm11
-7FF7AFA82555 - F3 0F11 87 A4330000  - movss [rdi+000033A4],xmm0 &lt;&lt;
-7FF7AFA8255D - 44 0F2F 8F A4330000  - comiss xmm9,[rdi+000033A4]
-7FF7AFA82565 - 72 56 - jb NMS.exe+10325BD
+NMS.exe+114F3B4:
+7FF665B8F3AA - F3 44 0F59 CF  - mulss xmm9,xmm7
+7FF665B8F3AF - F3 41 0F5C D1  - subss xmm2,xmm9
+7FF665B8F3B4 - F3 0F11 97 D4350000  - movss [rdi+000035D4],xmm2 &lt;&lt;
+7FF665B8F3BC - 44 0F2F 9F D4350000  - comiss xmm11,[rdi+000035D4]
+7FF665B8F3C4 - 72 4E - jb NMS.exe+114F414
 
 */
 
@@ -49,7 +36,7 @@ NMS.exe+10FD8D6:
 //code from here till the end of the code will be used to disable the cheat
 
 _cheat01:
-db F3 41 0F 5C D3
+db F3 41 0F5C D1
 
 unregistersymbol(_cheat01)
 
@@ -67,7 +54,7 @@ unregistersymbol(_cheat01)
 // Shield value: 4 Byte 0 - 100 (full)
 //
 
-aobscan(cheat02,8B 95 B0 03 00 00 44 01 3B)
+aobscan(cheat02,8B 95 C0 03 00 00 44 01 3B)
 label(_cheat02)
 registersymbol(_cheat02)
 
@@ -77,6 +64,15 @@ db 90 90 90
 
 
 /*
+
+NMS.exe+114809F:
+7FF665B88097 - 75 2A - jne NMS.exe+11480C3
+7FF665B88099 - 8B 95 C0030000  - mov edx,[rbp+000003C0]
+7FF665B8809F - 44 01 3B  - add [rbx],r15d &lt;&lt;
+7FF665B880A2 - E8 D9FD29FF - call NMS.exe+3E7E80
+7FF665B880A7 - 8B 0B  - mov ecx,[rbx]
+
+
 NMS.exe+10F5EC9:
 7FF7091C5EC1 - 75 2A - jne NMS.exe+10F5EED
 7FF7091C5EC3 - 8B 95 B0030000  - mov edx,[rbp+000003B0]
@@ -274,6 +270,12 @@ unregistersymbol(_cheat06)
           <ID>0</ID>
         </Hotkey>
       </Hotkeys>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>13</ID>
+      <Description>"No description"</Description>
+      <VariableType>4 Bytes</VariableType>
+      <Address>1C9D0CC0490</Address>
     </CheatEntry>
   </CheatEntries>
   <UserdefinedSymbols/>
