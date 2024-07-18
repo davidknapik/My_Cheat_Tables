@@ -3,49 +3,39 @@
   <CheatEntries>
     <CheatEntry>
       <ID>3</ID>
-      <Description>"Inf Jetpack"</Description>
+      <Description>"InfJetpack"</Description>
       <VariableType>Auto Assembler Script</VariableType>
       <AssemblerScript>[ENABLE]
 //code from here to '[DISABLE]' will be used to enable the cheat
-
 // Infinate Jetpack
 // float
-// full == larger than 1 (starting: 3)(size depends on any jetpack improvements) eg. '7.496'
-// 0 == empty
+// full == larger than 1 (starting: ~2.5)(size depends on any jetpack improvements) eg. '7.496'
+// empty == 0
 
-aobscan(cheat01,F3 45 0F59 D8 F3 41 0F5C C3 F3 0F 11 87 A4 33 00 00 )
-label(_cheat01)
-registersymbol(_cheat01)
+aobScanmodule(aob_jetpack, NMS.exe, F3 45 0F 59 D5 F3 41 0F 5C C2 F3 0F 11 87 44 2D 00 00 44 0F 2F 03)
+registersymbol(aob_jetpack)
 
-cheat01+5:
-_cheat01:
-db 90 90 90 90 90
+aob_jetpack+5:
+   db 90 90 90 90 90
 
-/*
+/**
+7FF6B90AE611 - F3 45 0F59 D5  - mulss xmm10,xmm13
+7FF6B90AE616 - F3 41 0F5C C2  - subss xmm0,xmm10
+7FF6B90AE61B - F3 0F11 87 442D0000  - movss [rdi+00002D44],xmm0 &lt;&lt;
+7FF6B90AE623 - 44 0F2F 03  - comiss xmm8,[rbx]
+7FF6B90AE627 - 72 53 - jb NMS.exe+112E67C
 
-7FF7AFA8254B - F3 45 0F59 D8  - mulss xmm11,xmm8
-7FF7AFA82550 - F3 41 0F5C C3  - subss xmm0,xmm11
-7FF7AFA82555 - F3 0F11 87 A4330000  - movss [rdi+000033A4],xmm0 &lt;&lt;
-7FF7AFA8255D - 44 0F2F 8F A4330000  - comiss xmm9,[rdi+000033A4]
-7FF7AFA82565 - 72 56 - jb NMS.exe+10325BD
-
-*/
-
-
+**/
+ 
 [DISABLE]
 //code from here till the end of the code will be used to disable the cheat
-
-_cheat01:
-db F3 41 0F 5C C3
-
-unregistersymbol(_cheat01)
-
-
+aob_jetpack+5:
+   db F3 41 0F 5C C2
 </AssemblerScript>
     </CheatEntry>
     <CheatEntry>
       <ID>5</ID>
-      <Description>"Inf Shield"</Description>
+      <Description>"InfShield"</Description>
       <VariableType>Auto Assembler Script</VariableType>
       <AssemblerScript>[ENABLE]
 //code from here to '[DISABLE]' will be used to enable the cheat
@@ -53,24 +43,21 @@ unregistersymbol(_cheat01)
 // Infinate Shield
 // Shield value: 4 Byte 0 - 100 (full)
 //
+//aobScanmodule(aob_shield, NMS.exe, 45 01 A6 B0 01 00 00 41 8B D7)
+aobScanmodule(aob_shield, NMS.exe, 45 01 A6 ?? ?? ?? ?? 41 8B D7)
+registersymbol(aob_shield)
 
-aobscan(cheat02,8B 54 24 60 44 01 33)
-label(_cheat02)
-registersymbol(_cheat02)
-
-cheat02+4:
-_cheat02:
-db 90 90 90
+aob_shield:
+db 90 90 90 90 90 90 90
 
 
 /*
-
-NMS.exe+102A727:
-7FF7AFA7A721 - 75 28 - jne NMS.exe+102A74B
-7FF7AFA7A723 - 8B 54 24 60  - mov edx,[rsp+60]
-7FF7AFA7A727 - 44 01 33  - add [rbx],r14d &lt;&lt;
-7FF7AFA7A72A - E8 01133AFF - call NMS.exe+3CBA30
-7FF7AFA7A72F - 8B 0B  - mov ecx,[rbx]
+NMS.exe+11281EF:
+7FF6B90A81E8 - 48 39 74 24 58  - cmp [rsp+58],rsi
+7FF6B90A81ED - 75 35 - jne NMS.exe+1128224
+7FF6B90A81EF - 45 01 A6 B0010000  - add [r14+000001B0],r12d &lt;&lt;
+7FF6B90A81F6 - 41 8B D7  - mov edx,r15d
+7FF6B90A81F9 - E8 426337FF - call NMS.exe+49E540
 
 */
 
@@ -78,16 +65,74 @@ NMS.exe+102A727:
 [DISABLE]
 //code from here till the end of the code will be used to disable the cheat
 
-_cheat02:
-db 44 01 33
+aob_shield:
+db 45 01 A6 B0 01 00 00
 
-unregistersymbol(_cheat02)
 
 
 </AssemblerScript>
     </CheatEntry>
     <CheatEntry>
-      <ID>8</ID>
+      <ID>2</ID>
+      <Description>"InfAmmo"</Description>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+//aobScan(aob_scan02, 44 39 B8 8C 40 20 00 76 0A FF 4B 18)
+aobScanmodule(aob_ammo, NMS.exe, 44 0F4C E0 41 2B C4 42 89 84 BF C8 1E 00 00)
+registersymbol(aob_ammo)
+
+aob_ammo+4:
+   db 90 90 90
+
+
+
+/**
+NMS.exe+10E4A56:
+7FF6B9064A4F - 44 0F4C E0  - cmovl r12d,eax
+7FF6B9064A53 - 41 2B C4  - sub eax,r12d
+7FF6B9064A56 - 42 89 84 BF C81E0000  - mov [rdi+r15*4+00001EC8],eax &lt;&lt;
+7FF6B9064A5E - 4C 8B 15 23C5FA03  - mov r10,[NMS.exe+5090F88]
+7FF6B9064A65 - 66 66 66 0F1F 84 00 00000000  - nop word ptr [rax+rax+00000000]
+**/
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+aob_ammo+4:
+   db 41 2B C4
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>1</ID>
+      <Description>"InfBomb"</Description>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+aobScanmodule(aob_scan01, NMS.exe, 44 39 B8 8C 40 20 00 76 0A FF 4B 18)
+//aobScan(aob_scan01, 44 39 B8 8C 40 20 00 76 0A FF 4B 18)
+registersymbol(aob_scan01)
+
+aob_scan01+9:
+   db 90 90 90
+
+
+
+/**
+7FF7B0E97D53 - 44 39 B8 8C402000  - cmp [rax+0020408C],r15d
+7FF7B0E97D5A - 76 0A - jna NMS.exe+1127D66
+7FF7B0E97D5C - FF 4B 18  - dec [rbx+18] &lt;&lt;
+7FF7B0E97D5F - 48 8B 05 62712F04  - mov rax,[NMS.exe+541EEC8]
+7FF7B0E97D66 - 4C 89 64 24 38  - mov [rsp+38],r12
+**/
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+aob_scan01+9:
+   db FF 4B 18
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>6</ID>
       <Description>"Inf Geology Cannon"</Description>
       <VariableType>Auto Assembler Script</VariableType>
       <AssemblerScript>[ENABLE]
@@ -125,7 +170,7 @@ unregistersymbol(_cheat04)
 </AssemblerScript>
     </CheatEntry>
     <CheatEntry>
-      <ID>10</ID>
+      <ID>7</ID>
       <Description>"Inf Ammo"</Description>
       <VariableType>Auto Assembler Script</VariableType>
       <AssemblerScript>[ENABLE]
@@ -163,7 +208,7 @@ unregistersymbol(_cheat05)
 </AssemblerScript>
     </CheatEntry>
     <CheatEntry>
-      <ID>6</ID>
+      <ID>8</ID>
       <Description>"Inf Scan"</Description>
       <VariableType>Auto Assembler Script</VariableType>
       <AssemblerScript>[ENABLE]
@@ -203,7 +248,7 @@ unregistersymbol(_cheat03)
 </AssemblerScript>
     </CheatEntry>
     <CheatEntry>
-      <ID>12</ID>
+      <ID>9</ID>
       <Description>"Inf Upgrades"</Description>
       <VariableType>Auto Assembler Script</VariableType>
       <AssemblerScript>[ENABLE]
@@ -254,6 +299,35 @@ unregistersymbol(_cheat06)
       </Hotkeys>
     </CheatEntry>
   </CheatEntries>
+  <CheatCodes>
+    <CodeEntry>
+      <Description>Change of add [r14+000001B0],r12d</Description>
+      <AddressString>NMS.exe+11281EF</AddressString>
+      <Before>
+        <Byte>74</Byte>
+        <Byte>24</Byte>
+        <Byte>58</Byte>
+        <Byte>75</Byte>
+        <Byte>35</Byte>
+      </Before>
+      <Actual>
+        <Byte>45</Byte>
+        <Byte>01</Byte>
+        <Byte>A6</Byte>
+        <Byte>B0</Byte>
+        <Byte>01</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Actual>
+      <After>
+        <Byte>41</Byte>
+        <Byte>8B</Byte>
+        <Byte>D7</Byte>
+        <Byte>E8</Byte>
+        <Byte>42</Byte>
+      </After>
+    </CodeEntry>
+  </CheatCodes>
   <UserdefinedSymbols/>
   <Structures StructVersion="2">
     <Structure Name="unnamed structure" AutoFill="0" AutoCreate="1" DefaultHex="0" AutoDestroy="0" DoNotSaveLocal="0" RLECompression="1" AutoCreateStructsize="4096">
