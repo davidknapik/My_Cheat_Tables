@@ -2,43 +2,6 @@
 <CheatTable CheatEngineTableVersion="34">
   <CheatEntries>
     <CheatEntry>
-      <ID>6</ID>
-      <Description>"NoCost"</Description>
-      <LastState Activated="1"/>
-      <VariableType>Auto Assembler Script</VariableType>
-      <AssemblerScript>[ENABLE]
-// Cancel out deduct items
-// Change dec (44) to inc (40)
-//code from here to '[DISABLE]' will be used to enable the cheat
-aobscan(invqty,49 63 46 30 41 2B C7 41 89 46 30 41 2B F7 48 8B C6)
-label(_invqty)
-registersymbol(_invqty)
-
-invqty+4:
-_invqty:
-db 90 90 90
-
-/*
-
-14A5D49670C - 49 63 46 30  - movsxd  rax,dword ptr [r14+30]
-14A5D496710 - 41 2B C7  - sub eax,r15d
-14A5D496713 - 41 89 46 30  - mov [r14+30],eax &lt;&lt;
-14A5D496717 - 41 2B F7  - sub esi,r15d
-14A5D49671A - 48 8B C6  - mov rax,rsi
-
-*/
-
-
-[DISABLE]
-//code from here till the end of the code will be used to disable the cheat
-_invqty:
-db 41 2B C7
-
-unregistersymbol(_invqty)
-
-</AssemblerScript>
-    </CheatEntry>
-    <CheatEntry>
       <ID>9</ID>
       <Description>"NoStamina"</Description>
       <LastState Activated="1"/>
@@ -47,7 +10,7 @@ unregistersymbol(_invqty)
 // Cancel out deduct items
 // Change dec (44) to inc (40)
 //code from here to '[DISABLE]' will be used to enable the cheat
-aobscan(stamina,F2 0F 5C C1 F2 0F 5A E8 F3 0F 11 AE B8 05 00 00 F3 0F 10 86 B8 05 00 00 F3 0F 5A C0)
+aobscan(stamina,F2 0F 5C C1 F2 0F 5A E8 F3 0F11 AE 10 06 00 00 F3 0F 10 86 10 06 00 00 F3 0F 5A C0 )
 label(_stamina)
 registersymbol(_stamina)
 
@@ -57,11 +20,11 @@ db 90 90 90 90 90 90 90 90
 
 /*
 
-23936DBCD24 - F2 0F5C C1  - subsd xmm0,xmm1
-23936DBCD28 - F2 0F5A E8  - cvtsd2ss xmm5,xmm0
-23936DBCD2C - F3 0F11 AE B8050000  - movss [rsi+000005B8],xmm5 &lt;&lt;
-23936DBCD34 - F3 0F10 86 B8050000  - movss xmm0,[rsi+000005B8]
-23936DBCD3C - F3 0F5A C0  - cvtss2sd xmm0,xmm0
+1A1EBF2ACA4 - F2 0F5C C1  - subsd xmm0,xmm1
+1A1EBF2ACA8 - F2 0F5A E8  - cvtsd2ss xmm5,xmm0
+1A1EBF2ACAC - F3 0F11 AE 10060000  - movss [rsi+00000610],xmm5 &lt;&lt;
+1A1EBF2ACB4 - F3 0F10 86 10060000  - movss xmm0,[rsi+00000610]
+1A1EBF2ACBC - F3 0F5A C0  - cvtss2sd xmm0,xmm0
 
 */
 
@@ -69,118 +32,241 @@ db 90 90 90 90 90 90 90 90
 [DISABLE]
 //code from here till the end of the code will be used to disable the cheat
 _stamina:
-db F3 0F 11 AE B8 05 00 00
+db F3 0F11 AE 10 06 00 00
 
 unregistersymbol(_stamina)
 
 </AssemblerScript>
     </CheatEntry>
+    <CheatEntry>
+      <ID>6</ID>
+      <Description>"NoCost"</Description>
+      <LastState Activated="1"/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+// Find an item (like wood) (4 Bytes)
+// Craft something and watch what modifies the item.
+//code from here to '[DISABLE]' will be used to enable the cheat
+aobscan(invqty,49 63 45 38 2B C6 41 89 45 38 2B FE 48 8B C7 )
+label(_invqty)
+registersymbol(_invqty)
+
+invqty+4:
+_invqty:
+db 90 90
+
+/*
+
+1A1EBB65CEC - 49 63 45 38  - movsxd  rax,dword ptr [r13+38]
+1A1EBB65CF0 - 2B C6  - sub eax,esi
+1A1EBB65CF2 - 41 89 45 38  - mov [r13+38],eax &lt;&lt;
+1A1EBB65CF6 - 2B FE  - sub edi,esi
+1A1EBB65CF8 - 48 8B C7  - mov rax,rdi
+
+*/
+
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+_invqty:
+db 2B C6
+
+unregistersymbol(_invqty)
+
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>19</ID>
+      <Description>"NoCost2"</Description>
+      <LastState Activated="1"/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+// Find an item (like wood) (4 Bytes)
+// Craft something and watch what modifies the item.
+//code from here to '[DISABLE]' will be used to enable the cheat
+aobscan(nocost2,EB 00 4C 8B F7 49 63 44 24 38 2B C7 41 89 44 24 38 29 BD 20 FF FF FF 49 8B CD 41 83 7D 00 00 48 8D 64 24 00)
+label(_nocost2)
+registersymbol(_nocost2)
+
+nocost2+a:
+_nocost2:
+db 90 90
+
+/*
+21CD046F5C2 - EB 00                 - jmp 21CD046F5C4
+
+21CD046F5C4 - 4C 8B F7              - mov r14,rdi
+
+1C4266B1DF7 - 49 63 44 24 38  - movsxd  rax,dword ptr [r12+38]
+1C4266B1DFC - 2B C7  - sub eax,edi
+1C4266B1DFE - 41 89 44 24 38  - mov [r12+38],eax &lt;&lt;
+1C4266B1E03 - 29 BD 20FFFFFF  - sub [rbp-000000E0],edi
+1C4266B1E09 - 49 8B CD  - mov rcx,r13
+
+21CD046F5DC - 41 83 7D 00 00        - cmp dword ptr [r13+00],00
+21CD046F5E1 - 48 8D 64 24 00        - lea rsp,[rsp+00]
+
+*/
+
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+_nocost2:
+db 2B C7
+
+unregistersymbol(_nocost2)
+
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>15</ID>
+      <Description>"NoFood2"</Description>
+      <LastState Activated="1"/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+// Find an item (like wood) (4 Bytes)
+// Craft something and watch what modifies the item.
+//code from here to '[DISABLE]' will be used to enable the cheat
+aobscan(eatme2,7E 1D 48 63 46 38 FF C8 89 46 38 48 8B CF  )
+label(_eatme2)
+registersymbol(_eatme2)
+
+eatme2+6:
+_eatme2:
+db 90 90
+
+/*
+
+1C3AD6C5750 - 48 63 46 38  - movsxd  rax,dword ptr [rsi+38]
+1C3AD6C5754 - FF C8  - dec eax
+1C3AD6C5756 - 89 46 38  - mov [rsi+38],eax &lt;&lt;
+1C3AD6C5759 - 48 8B CF  - mov rcx,rdi
+1C3AD6C575C - 66 90 - nop 2
+
+*/
+
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+_eatme2:
+db FF C8
+
+unregistersymbol(_eatme2)
+
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>17</ID>
+      <Description>"NoAmmo2"</Description>
+      <LastState Activated="1"/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+// Find an item (like wood) (4 Bytes)
+// Craft something and watch what modifies the item.
+//code from here to '[DISABLE]' will be used to enable the cheat
+aobscan(ammo2,48 63 47 38 2B C6 89 47 38 49 8B CF 48 8D 64 24 00 )
+label(_ammo2)
+registersymbol(_ammo2)
+
+ammo2+4:
+_ammo2:
+db 90 90
+
+/*
+
+1C3AD6C5D64 - 48 63 47 38  - movsxd  rax,dword ptr [rdi+38]
+1C3AD6C5D68 - 2B C6  - sub eax,esi
+1C3AD6C5D6A - 89 47 38  - mov [rdi+38],eax &lt;&lt;
+1C3AD6C5D6D - 49 8B CF  - mov rcx,r15
+1C3AD6C5D70 - 48 8D 64 24 00  - lea rsp,[rsp+00]
+
+*/
+
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+_ammo2:
+db 2B C6
+
+unregistersymbol(_ammo2)
+
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>11</ID>
+      <Description>"NoFood"</Description>
+      <LastState/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+// Find an item (like wood) (4 Bytes)
+// Craft something and watch what modifies the item.
+//code from here to '[DISABLE]' will be used to enable the cheat
+aobscan(eatme,48 63 46 38 FF C8 89 46 38 48 8B CF )
+label(_eatme)
+registersymbol(_eatme)
+
+eatme+4:
+_eatme:
+db 90 90
+
+/*
+
+1CF7876B407 - 48 63 46 38  - movsxd  rax,dword ptr [rsi+38]
+1CF7876B40B - FF C8  - dec eax
+1CF7876B40D - 89 46 38  - mov [rsi+38],eax &lt;&lt;
+1CF7876B410 - 48 8B CF  - mov rcx,rdi
+1CF7876B413 - 66 66 90 - nop 3
+
+*/
+
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+_eatme:
+db FF C8
+
+unregistersymbol(_eatme)
+
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>13</ID>
+      <Description>"NoAmmo"</Description>
+      <LastState/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+// Find an item (like wood) (4 Bytes)
+// Craft something and watch what modifies the item.
+//code from here to '[DISABLE]' will be used to enable the cheat
+aobscan(ammo,48 63 47 38 2B C6 89 47 38 49 8B CF 48 8D AD 00 00 00 00 )
+label(_ammo)
+registersymbol(_ammo)
+
+ammo+4:
+_ammo:
+db 90 90
+
+/*
+
+1CF78456493 - 48 63 47 38  - movsxd  rax,dword ptr [rdi+38]
+1CF78456497 - 2B C6  - sub eax,esi
+1CF78456499 - 89 47 38  - mov [rdi+38],eax &lt;&lt;
+1CF7845649C - 49 8B CF  - mov rcx,r15
+1CF7845649F - 48 8D AD 00000000  - lea rbp,[rbp+00000000]
+
+*/
+
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+_ammo:
+db 2B C6
+
+unregistersymbol(_ammo)
+
+</AssemblerScript>
+    </CheatEntry>
   </CheatEntries>
-  <CheatCodes>
-    <CodeEntry Color="20000000">
-      <Description>Change of movss [rsi+38],xmm5</Description>
-      <AddressString>14A6541BAF1</AddressString>
-      <Before>
-        <Byte>C0</Byte>
-        <Byte>F2</Byte>
-        <Byte>0F</Byte>
-        <Byte>5A</Byte>
-        <Byte>E8</Byte>
-      </Before>
-      <Actual>
-        <Byte>F3</Byte>
-        <Byte>0F</Byte>
-        <Byte>11</Byte>
-        <Byte>6E</Byte>
-        <Byte>38</Byte>
-      </Actual>
-      <After>
-        <Byte>F3</Byte>
-        <Byte>0F</Byte>
-        <Byte>10</Byte>
-        <Byte>45</Byte>
-        <Byte>F4</Byte>
-      </After>
-    </CodeEntry>
-    <CodeEntry Color="20000000">
-      <Description>Change of movss [rax+0C],xmm5</Description>
-      <AddressString>148CDCA0D08</AddressString>
-      <Before>
-        <Byte>C0</Byte>
-        <Byte>F2</Byte>
-        <Byte>0F</Byte>
-        <Byte>5A</Byte>
-        <Byte>E8</Byte>
-      </Before>
-      <Actual>
-        <Byte>F3</Byte>
-        <Byte>0F</Byte>
-        <Byte>11</Byte>
-        <Byte>68</Byte>
-        <Byte>0C</Byte>
-      </Actual>
-      <After>
-        <Byte>49</Byte>
-        <Byte>63</Byte>
-        <Byte>47</Byte>
-        <Byte>44</Byte>
-        <Byte>FF</Byte>
-      </After>
-    </CodeEntry>
-    <CodeEntry Color="80000008">
-      <Description>Change of movss [rax+0C],xmm5</Description>
-      <AddressString>23936F2EE1D</AddressString>
-      <Before>
-        <Byte>C0</Byte>
-        <Byte>F2</Byte>
-        <Byte>0F</Byte>
-        <Byte>5A</Byte>
-        <Byte>E8</Byte>
-      </Before>
-      <Actual>
-        <Byte>F3</Byte>
-        <Byte>0F</Byte>
-        <Byte>11</Byte>
-        <Byte>68</Byte>
-        <Byte>0C</Byte>
-      </Actual>
-      <After>
-        <Byte>49</Byte>
-        <Byte>63</Byte>
-        <Byte>47</Byte>
-        <Byte>44</Byte>
-        <Byte>FF</Byte>
-      </After>
-    </CodeEntry>
-    <CodeEntry Color="80000008">
-      <Description>Change of movss [rsi+000005B8],xmm5</Description>
-      <AddressString>23936DBCD2C</AddressString>
-      <Before>
-        <Byte>C1</Byte>
-        <Byte>F2</Byte>
-        <Byte>0F</Byte>
-        <Byte>5A</Byte>
-        <Byte>E8</Byte>
-      </Before>
-      <Actual>
-        <Byte>F3</Byte>
-        <Byte>0F</Byte>
-        <Byte>11</Byte>
-        <Byte>AE</Byte>
-        <Byte>B8</Byte>
-        <Byte>05</Byte>
-        <Byte>00</Byte>
-        <Byte>00</Byte>
-      </Actual>
-      <After>
-        <Byte>F3</Byte>
-        <Byte>0F</Byte>
-        <Byte>10</Byte>
-        <Byte>86</Byte>
-        <Byte>B8</Byte>
-      </After>
-    </CodeEntry>
-  </CheatCodes>
   <UserdefinedSymbols/>
   <Structures StructVersion="2">
     <Structure Name="unnamed structure" AutoFill="0" AutoCreate="1" DefaultHex="0" AutoDestroy="0" DoNotSaveLocal="0" RLECompression="1" AutoCreateStructsize="4096">

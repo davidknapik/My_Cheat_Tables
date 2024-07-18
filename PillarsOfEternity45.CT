@@ -1,0 +1,579 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheatTable CheatEngineTableVersion="24">
+  <CheatEntries>
+    <CheatEntry>
+      <ID>1</ID>
+      <Description>"Pillars of Eternity (Steam Edition)"</Description>
+      <Options moHideChildren="1"/>
+      <GroupHeader>1</GroupHeader>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>10</ID>
+          <Description>"Enable"</Description>
+          <Options moHideChildren="1"/>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>[ENABLE]
+{$lua}
+LaunchMonoDataCollector()
+{$asm}		  
+
+assert(UICurrencyLabel:Update+32,83 C4 10 8B 40 40 D9 40 08 D9 5D F4)
+alloc(newmem,1024,UICurrencyLabel:Update)
+
+assert(UICharacterSheetContentManager:LoadCharacter+375,39 36 8B 86 30 01 00 00)
+alloc(newmem2,1024,UICharacterSheetContentManager:LoadCharacter)
+
+assert(UICharacterCreationManager:GetRemainingAttributePoints+52,8B 05 ?? ?? ?? ?? 8B 80 EC 00 00 00 2B 45 F0)
+alloc(newmem3,1024,UICharacterCreationManager:GetRemainingAttributePoints)
+
+///
+label(MoneyPtr)
+registersymbol(MoneyPtr)
+label(PlayerInventoryPtr)
+registersymbol(PlayerInventoryPtr)
+
+///
+label(CharacterPtr)
+registersymbol(CharacterPtr)
+
+///
+label(CharCreationTotalPointBuyInPtr)
+registersymbol(CharCreationTotalPointBuyInPtr)
+
+newmem:
+  add esp,10
+  mov [PlayerInventoryPtr],eax
+  mov eax,[eax+40]
+  mov [MoneyPtr],eax
+  add [MoneyPtr],8
+  jmp return
+
+MoneyPtr:
+dq 0
+PlayerInventoryPtr:
+dq 0
+
+newmem2:
+  mov [CharacterPtr],esi
+  mov eax,[esi+00000130]
+  jmp return2
+  
+CharacterPtr:
+dq 0
+
+newmem3:
+  mov [CharCreationTotalPointBuyInPtr],eax
+  mov eax,[eax+000000EC]
+  jmp return3
+  
+CharCreationTotalPointBuyInPtr:
+dq 0
+
+UICurrencyLabel:Update+32:
+  jmp newmem
+  nop
+  return:
+
+UICharacterSheetContentManager:LoadCharacter+377:
+  jmp newmem2
+  nop
+  return2:
+  
+UICharacterCreationManager:GetRemainingAttributePoints+58:
+  jmp newmem3
+  nop
+  return3:
+  
+[DISABLE]
+
+UICurrencyLabel:Update+32:
+  db 83 C4 10 8B 40 40
+  
+unregistersymbol(MoneyPtr)
+unregistersymbol(PlayerInventoryPtr)
+
+UICharacterSheetContentManager:LoadCharacter+377:
+  db 8B 86 30 01 00 00
+
+unregistersymbol(CharacterPtr)
+  
+UICharacterCreationManager:GetRemainingAttributePoints+58:
+  db 8B 80 EC 00 00 00
+  
+unregistersymbol(CharCreationTotalPointBuyInPtr)
+
+dealloc(newmem)
+dealloc(newmem2)
+dealloc(newmem3)
+</AssemblerScript>
+			<CheatEntries>
+			  <CheatEntry>
+				  <ID>100</ID>
+				  <Description>"[Scripts]"</Description>
+				  <Options moHideChildren="1"/>
+				  <GroupHeader>1</GroupHeader>
+				  <CheatEntries>
+					<CheatEntry>
+					  <ID>201</ID>
+					  <Description>"Damage Modifier (God Mode,One Hit Kill, etc)"</Description>
+					  <Options moHideChildren="1"/>
+					  <VariableType>Auto Assembler Script</VariableType>
+					  <AssemblerScript>[ENABLE]
+
+assert(AttackBase:CalcDamage+62,83 C4 10 85 C0)
+alloc(newmem,1024,AttackBase:CalcDamage)
+
+assert(AttackBase:CalcDamage+39C,D9 45 B0 D9 58 34)
+alloc(newmem2,2048,AttackBase:CalcDamage)
+
+///
+label(PartyMemberAIPtr)
+registersymbol(PartyMemberAIPtr)
+label(GodMode)
+registersymbol(GodMode)
+label(OneHitKill)
+registersymbol(OneHitKill)
+label(fEnemyDamageMult)
+registersymbol(fEnemyDamageMult)
+label(fHeroDamageMult)
+registersymbol(fHeroDamageMult)
+
+newmem:
+  mov [PartyMemberAIPtr],eax
+  add esp,10
+  test eax,eax
+  jmp return
+
+PartyMemberAIPtr:
+dq 0
+
+newmem2:
+  cmp [PartyMemberAIPtr],0
+  jne EnemyHit
+HeroHit:
+  cmp [GodMode],1
+  jne SkipGodMode
+  fld dword ptr [ZeroDamage]
+  jmp SkipRegularDamage
+SkipGodMode:
+  cmp [fHeroDamageMult],(float)0.0
+  je originalcode2
+  fld dword ptr [ebp-50]
+  fmul dword ptr [fHeroDamageMult]
+  fstp dword ptr [ebp-50]
+  jmp originalcode2
+EnemyHit:
+  cmp [OneHitKill],1
+  jne SkipOneHitKill
+  fld dword ptr [OneHitKillDamage]
+  jmp SkipRegularDamage
+SkipOneHitKill:
+  cmp [fEnemyDamageMult],(float)0.0
+  je originalcode2
+  fld dword ptr [ebp-50]
+  fmul dword ptr [fEnemyDamageMult]
+  fstp dword ptr [ebp-50]
+  
+originalcode2:
+  fld dword ptr [ebp-50]
+SkipRegularDamage:
+  fstp dword ptr [eax+34]
+  jmp return2
+
+ZeroDamage:
+dq (float)0.0
+OneHitKillDamage:
+dq (float)999.0
+GodMode:
+dq 1
+fHeroDamageMult:
+dq (float)0.5
+fEnemyDamageMult:
+dq (float)2.0
+OneHitKill:
+dq 0
+  
+AttackBase:CalcDamage+62:
+  jmp newmem
+  return:
+
+AttackBase:CalcDamage+39C:
+  jmp newmem2
+  nop
+  return2:
+  
+[DISABLE]
+
+AttackBase:CalcDamage+62:
+  db 83 C4 10 85 C0
+  
+unregistersymbol(PartyMemberAIPtr)
+unregistersymbol(GodMode)
+unregistersymbol(fHeroDamageMult)
+unregistersymbol(fEnemyDamageMult)
+unregistersymbol(OneHitKill)
+
+AttackBase:CalcDamage+39C:
+  db D9 45 B0 D9 58 34
+  
+dealloc(newmem)
+dealloc(newmem2)
+</AssemblerScript>
+					  <CheatEntries>
+						<CheatEntry>
+						  <ID>201</ID>
+						  <Description>"God Mode"</Description>
+						  <DropDownList DescriptionOnly="1" DisplayValueAsItem="1">0:Off
+1:On
+</DropDownList>
+						  <VariableType>4 Bytes</VariableType>
+						  <Address>GodMode</Address>
+						</CheatEntry>
+						<CheatEntry>
+						  <ID>202</ID>
+						  <Description>"Hero Damage Multiplier (Set to 0.0 = Off; Otherwise multiplier so 0.5 is half damage to hero party)"</Description>
+						  <VariableType>Float</VariableType>
+						  <Address>fHeroDamageMult</Address>
+						</CheatEntry>
+						<CheatEntry>
+						  <ID>205</ID>
+						  <Description>"One Hit Kill"</Description>
+						  <DropDownList DescriptionOnly="1" DisplayValueAsItem="1">0:Off
+1:On
+</DropDownList>
+						  <VariableType>4 Bytes</VariableType>
+						  <Address>OneHitKill</Address>
+						</CheatEntry>
+						<CheatEntry>
+						  <ID>206</ID>
+						  <Description>"Enemy Damage Multiplier (Set to Zero = Off; Otherwise multiplier to damage you deal to enemies)"</Description>
+						  <VariableType>Float</VariableType>
+						  <Address>fEnemyDamageMult</Address>
+						</CheatEntry>
+					  </CheatEntries>
+					</CheatEntry>
+					<CheatEntry>
+					  <ID>210</ID>
+					  <Description>"No Ability Cooldown"</Description>
+					  <Options moHideChildren="1"/>
+					  <VariableType>Auto Assembler Script</VariableType>
+					  <AssemblerScript>[ENABLE]
+
+assert(GenericAbility:ActivateCooldown+A,8B 47 70 85 C0 74 1F)
+ 
+GenericAbility:ActivateCooldown+F:
+  db EB
+ 
+[DISABLE]
+
+GenericAbility:ActivateCooldown+F:
+  db 74
+    
+</AssemblerScript>
+					</CheatEntry>
+					<CheatEntry>
+					  <ID>215</ID>
+					  <Description>"Infinite Item Usage"</Description>
+					  <Options moHideChildren="1"/>
+					  <VariableType>Auto Assembler Script</VariableType>
+					  <AssemblerScript>[ENABLE]
+
+assert(BaseInventory:DestroyItem+94,85 C0 0F 84 84 00 00 00 8B 47 0C)
+
+BaseInventory:DestroyItem+96:
+  db E9 85 00 00 00 90
+
+[DISABLE]
+
+BaseInventory:DestroyItem+96:
+  db 0F 84 84 00 00 00
+</AssemblerScript>
+					</CheatEntry>
+					<CheatEntry>
+					  <ID>220</ID>
+					  <Description>"Keep Achievements Enabled When Using Console Commands (IRoll20s To Update Pointer)"</Description>
+					  <Options moHideChildren="1"/>
+					  <VariableType>Auto Assembler Script</VariableType>
+					  <AssemblerScript>[ENABLE]
+{$lua}
+mono_compile_method(mono_getJitInfo(getAddress('CommandLine:IRoll20s')).method)
+{$asm}		  
+
+aobscanregion(CommandLineIRoll20sAOB,CommandLine:IRoll20s,CommandLine:IRoll20s+9C, 8B 05 ?? ?? ?? ?? 83 EC 08 6A 01 50 39 00)
+registersymbol(CommandLineIRoll20sAOB)
+alloc(newmem,1024,CommandLine:IRoll20s)
+
+label(AchievementTrackerPtr)
+registersymbol(AchievementTrackerPtr)
+
+newmem:
+AchievementTrackerPtr:
+  readmem(CommandLineIRoll20sAOB+2,4)
+  dd 0
+  
+CommandLineIRoll20sAOB+A:
+  db 00
+  
+[DISABLE]
+
+CommandLineIRoll20sAOB+A:
+  db 01
+
+unregistersymbol(CommandLineIRoll20sAOB)
+unregistersymbol(AchievementTrackerPtr)
+
+dealloc(newmem)  
+</AssemblerScript>
+					  <CheatEntries>
+						<CheatEntry>
+						  <ID>231</ID>
+						  <Description>"Disable Achievements Flag"</Description>
+						  <DropDownList DescriptionOnly="1" DisplayValueAsItem="1">0:Off
+1:On
+</DropDownList>
+						  <VariableType>4 Bytes</VariableType>
+						  <Address>AchievementTrackerPtr</Address>
+						  <Offsets>
+							<Offset>20</Offset>
+							<Offset>0</Offset>
+						  </Offsets>
+						</CheatEntry>
+					  </CheatEntries>
+					</CheatEntry>					
+				  </CheatEntries>
+			  </CheatEntry>
+				<CheatEntry>
+				  <ID>4000</ID>
+				  <Description>"Pointers"</Description>
+				  <Options moHideChildren="1"/>
+				  <GroupHeader>1</GroupHeader>
+				  <CheatEntries>
+					<CheatEntry>
+					  <ID>4001</ID>
+					  <Description>"Character Creation Attribute Points"</Description>
+					  <VariableType>4 Bytes</VariableType>
+					  <Address>CharCreationTotalPointBuyInPtr</Address>
+					  <Offsets>
+						<Offset>EC</Offset>
+					  </Offsets>
+					</CheatEntry>
+					<CheatEntry>
+					  <ID>4002</ID>
+					  <Description>"Character Creation Stat Hard Maximum"</Description>
+					  <VariableType>4 Bytes</VariableType>
+					  <Address>CharCreationTotalPointBuyInPtr</Address>
+					  <Offsets>
+						<Offset>F8</Offset>
+					  </Offsets>
+					</CheatEntry>
+					<CheatEntry>
+					  <ID>4005</ID>
+					  <Description>"Currency"</Description>
+					  <VariableType>Float</VariableType>
+					  <Address>MoneyPtr</Address>
+					  <Offsets>
+						<Offset>0</Offset>
+					  </Offsets>
+					</CheatEntry>
+					<CheatEntry>
+					  <ID>4006</ID>
+					  <Description>"Camping Supplies"</Description>
+					  <VariableType>4 Bytes</VariableType>
+					  <Address>PlayerInventoryPtr</Address>
+					  <Offsets>
+						<Offset>54</Offset>
+					  </Offsets>
+					</CheatEntry>
+					<CheatEntry>
+					  <ID>5000</ID>
+					  <Description>"Character Editor (View Character Sheet to Update Pointer)"</Description>
+					  <Options moHideChildren="1"/>
+					  <GroupHeader>1</GroupHeader>
+					  <CheatEntries>
+						<CheatEntry>
+						  <ID>5001</ID>
+						  <Description>"Experience"</Description>
+						  <VariableType>4 Bytes</VariableType>
+						  <Address>CharacterPtr</Address>
+						  <Offsets>
+							<Offset>130</Offset>
+						  </Offsets>
+						</CheatEntry>
+						<CheatEntry>
+						  <ID>5002</ID>
+						  <Description>"Remaining Skill Points"</Description>
+						  <VariableType>4 Bytes</VariableType>
+						  <Address>CharacterPtr</Address>
+						  <Offsets>
+							<Offset>134</Offset>
+						  </Offsets>
+						</CheatEntry>
+						<CheatEntry>
+						  <ID>5003</ID>
+						  <Description>"Current Fatigue Level"</Description>
+						  <DropDownList DisplayValueAsItem="1">0:None
+1:Minor
+2:Major
+3:Critical
+</DropDownList>
+						  <VariableType>4 Bytes</VariableType>
+						  <Address>CharacterPtr</Address>
+						  <Offsets>
+							<Offset>1C0</Offset>
+						  </Offsets>
+						</CheatEntry>						
+						<CheatEntry>
+						  <ID>5010</ID>
+						  <Description>"Base Might"</Description>
+						  <VariableType>4 Bytes</VariableType>
+						  <Address>CharacterPtr</Address>
+						  <Offsets>
+							<Offset>138</Offset>
+						  </Offsets>
+						</CheatEntry>
+						<CheatEntry>
+						  <ID>5011</ID>
+						  <Description>"Base Constitution"</Description>
+						  <VariableType>4 Bytes</VariableType>
+						  <Address>CharacterPtr</Address>
+						  <Offsets>
+							<Offset>13C</Offset>
+						  </Offsets>
+						</CheatEntry>
+						<CheatEntry>
+						  <ID>5012</ID>
+						  <Description>"Base Dexterity"</Description>
+						  <VariableType>4 Bytes</VariableType>
+						  <Address>CharacterPtr</Address>
+						  <Offsets>
+							<Offset>140</Offset>
+						  </Offsets>
+						</CheatEntry>
+						<CheatEntry>
+						  <ID>5013</ID>
+						  <Description>"Base Perception"</Description>
+						  <VariableType>4 Bytes</VariableType>
+						  <Address>CharacterPtr</Address>
+						  <Offsets>
+							<Offset>144</Offset>
+						  </Offsets>
+						</CheatEntry>
+						<CheatEntry>
+						  <ID>5014</ID>
+						  <Description>"Base Intellect"</Description>
+						  <VariableType>4 Bytes</VariableType>
+						  <Address>CharacterPtr</Address>
+						  <Offsets>
+							<Offset>148</Offset>
+						  </Offsets>
+						</CheatEntry>
+						<CheatEntry>
+						  <ID>5015</ID>
+						  <Description>"Base Resolve"</Description>
+						  <VariableType>4 Bytes</VariableType>
+						  <Address>CharacterPtr</Address>
+						  <Offsets>
+							<Offset>14C</Offset>
+						  </Offsets>
+						</CheatEntry>
+						<CheatEntry>
+						  <ID>5021</ID>
+						  <Description>"Athletics Skill"</Description>
+						  <VariableType>4 Bytes</VariableType>
+						  <Address>CharacterPtr</Address>
+						  <Offsets>
+							<Offset>168</Offset>
+						  </Offsets>
+						</CheatEntry>
+						<CheatEntry>
+						  <ID>5022</ID>
+						  <Description>"Lore Skill"</Description>
+						  <VariableType>4 Bytes</VariableType>
+						  <Address>CharacterPtr</Address>
+						  <Offsets>
+							<Offset>16C</Offset>
+						  </Offsets>
+						</CheatEntry>
+						<CheatEntry>
+						  <ID>5023</ID>
+						  <Description>"Mechanics Skill"</Description>
+						  <VariableType>4 Bytes</VariableType>
+						  <Address>CharacterPtr</Address>
+						  <Offsets>
+							<Offset>170</Offset>
+						  </Offsets>
+						</CheatEntry>
+						<CheatEntry>
+						  <ID>5024</ID>
+						  <Description>"Survival Skill"</Description>
+						  <VariableType>4 Bytes</VariableType>
+						  <Address>CharacterPtr</Address>
+						  <Offsets>
+							<Offset>174</Offset>
+						  </Offsets>
+						</CheatEntry>
+						<CheatEntry>
+						  <ID>5025</ID>
+						  <Description>"Stealth Skill"</Description>
+						  <VariableType>4 Bytes</VariableType>
+						  <Address>CharacterPtr</Address>
+						  <Offsets>
+							<Offset>178</Offset>
+						  </Offsets>
+						</CheatEntry>
+						<CheatEntry>
+						  <ID>5026</ID>
+						  <Description>"Crafting Skill"</Description>
+						  <VariableType>4 Bytes</VariableType>
+						  <Address>CharacterPtr</Address>
+						  <Offsets>
+							<Offset>17C</Offset>
+						  </Offsets>
+						</CheatEntry>
+					  </CheatEntries>
+					</CheatEntry>					
+				  </CheatEntries>
+				</CheatEntry>
+		  </CheatEntries>
+		</CheatEntry>
+      </CheatEntries>
+	</CheatEntry>
+</CheatEntries>
+<LuaScript>function lua_aobscan(name,module,bytes,index)
+  index = index - 1
+  if(module == "") then
+    local resultSet = AOBScan(bytes)
+      if(resultSet == nil) then
+        unregisterSymbol(name)
+        print(name.." not found")
+      else
+        unregisterSymbol(name)
+        registerSymbol(name,resultSet[index])
+        resultSet.destroy()
+      end
+  else
+    if(getModuleSize(module) == nil) then
+      print("Module "..module.." not found")
+    else
+      local memScanner = createMemScan()
+      local memFoundList = createFoundList(memScanner)
+      memScanner.firstScan(
+        soExactValue,vtByteArray,rtRounded,bytes,nil,
+        getAddress(module),(getAddress(module)+getModuleSize(module)),"",
+        fsmNotAligned,"",true,false,false,false)
+      memScanner.waitTillDone()
+      memFoundList.initialize()
+        if(memFoundList.Count == 0) then
+          unregisterSymbol(name)
+          print(name.." in module "..module.." not found")
+        else
+          unregisterSymbol(name)
+          registerSymbol(name,memFoundList.Address[index])
+        end
+      memScanner.destroy()
+      memFoundList.destroy()
+    end
+  end
+end
+</LuaScript>	
+</CheatTable>			  

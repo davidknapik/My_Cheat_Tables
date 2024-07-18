@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheatTable CheatEngineTableVersion="45">
+  <CheatEntries>
+    <CheatEntry>
+      <ID>1</ID>
+      <Description>"Infinate Arrows"</Description>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+aobscan(aob_InfinateArrows,F2 0F 10 47 20 F2 0F 11 83 FC 00 00 00 89 B3 04 01 00 00)
+registersymbol(aob_InfinateArrows)
+aob_InfinateArrows+d:
+nop
+nop
+nop
+nop
+nop
+nop
+
+
+ /*
+ Palworld-Win64-Shipping.exe+2B2AF42:
+7FF793D7AF35 - F2 0F10 47 20  - movsd xmm0,[rdi+20]
+7FF793D7AF3A - F2 0F11 83 FC000000  - movsd [rbx+000000FC],xmm0
+7FF793D7AF42 - 89 B3 04010000  - mov [rbx+00000104],esi &lt;&lt;
+7FF793D7AF48 - 85 F6  - test esi,esi
+7FF793D7AF4A - 7F 2C - jg Palworld-Win64-Shipping.exe+2B2AF78
+*/
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+aob_InfinateArrows+d:
+mov [rbx+00000104],esi
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>5</ID>
+      <Description>"NoHunger"</Description>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+aobscan(aob_NoHunger,48 8D 8F 98 00 00 00 F3 0F 11 87 70 03 00 00 48 8D 54 24 60 F3 0F 11 44 24 60 )
+registersymbol(aob_NoHunger)
+aob_NoHunger+7:
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+
+
+ /*
+Palworld-Win64-Shipping.exe+2AEF269:
+7FF793D3F25C - 0F84 4B010000 - je Palworld-Win64-Shipping.exe+2AEF3AD
+7FF793D3F262 - 48 8D 8F 98000000  - lea rcx,[rdi+00000098]
+7FF793D3F269 - F3 0F11 87 70030000  - movss [rdi+00000370],xmm0 &lt;&lt;
+7FF793D3F271 - 48 8D 54 24 60  - lea rdx,[rsp+60]
+7FF793D3F276 - F3 0F11 44 24 60  - movss [rsp+60],xmm0
+*/
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+aob_NoHunger+7:
+movss [rdi+00000370],xmm0
+</AssemblerScript>
+    </CheatEntry>
+  </CheatEntries>
+  <CheatCodes>
+    <CodeEntry>
+      <Description>Change of mov [rbx+00000104],esi</Description>
+      <AddressString>Palworld-Win64-Shipping.exe+2B2AF42</AddressString>
+      <Before>
+        <Byte>83</Byte>
+        <Byte>FC</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Before>
+      <Actual>
+        <Byte>89</Byte>
+        <Byte>B3</Byte>
+        <Byte>04</Byte>
+        <Byte>01</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Actual>
+      <After>
+        <Byte>85</Byte>
+        <Byte>F6</Byte>
+        <Byte>7F</Byte>
+        <Byte>2C</Byte>
+        <Byte>0F</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry>
+      <Description>Change of movss [rdi+00000370],xmm0</Description>
+      <AddressString>Palworld-Win64-Shipping.exe+2AEF269</AddressString>
+      <Before>
+        <Byte>8F</Byte>
+        <Byte>98</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Before>
+      <Actual>
+        <Byte>F3</Byte>
+        <Byte>0F</Byte>
+        <Byte>11</Byte>
+        <Byte>87</Byte>
+        <Byte>70</Byte>
+        <Byte>03</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Actual>
+      <After>
+        <Byte>48</Byte>
+        <Byte>8D</Byte>
+        <Byte>54</Byte>
+        <Byte>24</Byte>
+        <Byte>60</Byte>
+      </After>
+    </CodeEntry>
+  </CheatCodes>
+  <UserdefinedSymbols/>
+</CheatTable>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheatTable CheatEngineTableVersion="24">
+  <CheatEntries>
+    <CheatEntry>
+      <ID>3</ID>
+      <Description>"Inf Nitro"</Description>
+      <LastState Activated="1"/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+
+aobscanmodule(infnitro,JustCause3.exe,F3 0F 11 83 C8 4C 00 00) // should be unique
+registersymbol(infnitro)
+
+infnitro:
+  db 90 90 90 90 90 90 90 90
+
+[DISABLE]
+
+infnitro:
+  db F3 0F 11 83 C8 4C 00 00
+
+unregistersymbol(infnitro)
+
+</AssemblerScript>
+    </CheatEntry>
+  </CheatEntries>
+  <CheatCodes>
+    <CodeEntry>
+      <Description>Code :Inf Nitro</Description>
+      <Address>1449680BD</Address>
+      <ModuleName>JustCause3.exe</ModuleName>
+      <ModuleNameOffset>49680BD</ModuleNameOffset>
+      <Before>
+        <Byte>28</Byte>
+        <Byte>C1</Byte>
+        <Byte>0F</Byte>
+        <Byte>2F</Byte>
+        <Byte>C1</Byte>
+      </Before>
+      <Actual>
+        <Byte>90</Byte>
+        <Byte>90</Byte>
+        <Byte>90</Byte>
+        <Byte>90</Byte>
+        <Byte>90</Byte>
+        <Byte>90</Byte>
+        <Byte>90</Byte>
+        <Byte>90</Byte>
+      </Actual>
+      <After>
+        <Byte>77</Byte>
+        <Byte>78</Byte>
+        <Byte>44</Byte>
+        <Byte>8B</Byte>
+        <Byte>83</Byte>
+      </After>
+    </CodeEntry>
+  </CheatCodes>
+  <UserdefinedSymbols>
+    <SymbolEntry>
+      <Name>infnitro</Name>
+      <Address> 1449680BD</Address>
+    </SymbolEntry>
+  </UserdefinedSymbols>
+</CheatTable>

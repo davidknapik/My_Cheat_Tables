@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheatTable CheatEngineTableVersion="29">
+  <CheatEntries>
+    <CheatEntry>
+      <ID>1</ID>
+      <Description>"Free Crafting"</Description>
+      <LastState Activated="1"/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+aobscan(craft, 8B 45 10 8D 4C 0F 30 01 01 B0 01 5F)
+label(_craft)
+registersymbol(_craft)
+
+craft+7:
+_craft:
+db 90 90
+
+
+
+
+/*
+0097F769 - 8B 45 10  - mov eax,[ebp+10]
+0097F76C - 8D 4C 0F 30  - lea ecx,[edi+ecx+30]
+0097F770 - 01 01  - add [ecx],eax &lt;&lt;
+0097F772 - B0 01 - mov al,01
+0097F774 - 5F - pop edi
+*/
+
+
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+_craft:
+db 01 01
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>0</ID>
+      <Description>"No description"</Description>
+      <LastState Value="4877" RealAddress="4CE51108"/>
+      <VariableType>4 Bytes</VariableType>
+      <Address>4CE51108</Address>
+    </CheatEntry>
+  </CheatEntries>
+  <UserdefinedSymbols/>
+</CheatTable>

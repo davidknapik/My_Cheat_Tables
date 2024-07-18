@@ -1,0 +1,662 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheatTable CheatEngineTableVersion="28">
+  <CheatEntries>
+    <CheatEntry>
+      <ID>1137</ID>
+      <Description>"Graveyard Keeper"</Description>
+      <Options moHideChildren="1"/>
+      <LastState/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+{$lua}
+LaunchMonoDataCollector()
+{$asm}
+[DISABLE]
+
+</AssemblerScript>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>1101</ID>
+          <Description>"Durability 100%"</Description>
+          <LastState/>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>[ENABLE]
+assert(Item:set_durability,55 8B EC 83 EC 28)
+alloc(newmem,2048)
+label(returnhere)
+
+newmem:
+push ebp
+mov ebp,esp
+sub esp,28
+mov [ebp+0C],(float)1
+jmp returnhere
+
+Item:set_durability:
+jmp newmem
+nop
+returnhere:
+ 
+[DISABLE]
+dealloc(newmem)
+Item:set_durability:
+//push ebp
+//mov ebp,esp
+//sub esp,28
+db 55 8B EC 83 EC 28
+</AssemblerScript>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1103</ID>
+          <Description>"IsEnoughItems (buggy)"</Description>
+          <LastState/>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>[ENABLE]
+assert(MultiInventory:IsEnoughItems,55 8B EC 53 57 56)
+MultiInventory:IsEnoughItems:
+mov eax,01
+ret
+ 
+[DISABLE]
+dealloc(newmem)
+MultiInventory:IsEnoughItems:
+//push ebp
+//mov ebp,esp
+//push ebx
+//push edi
+//push esi
+db 55 8B EC 53 57 56
+</AssemblerScript>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1105</ID>
+          <Description>"Get Player"</Description>
+          <Options moHideChildren="1"/>
+          <LastState/>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>[ENABLE]
+assert(PlayerComponent:Update,55 8B EC 57 83 EC 64)
+alloc(newmem,2048)
+label(returnhere)
+label(_player)
+registersymbol(_player)
+
+newmem:
+push ebp
+mov ebp,esp
+push edi
+sub esp,64
+mov edi,[ebp+08]
+mov [_player],edi
+jmp returnhere
+_player:
+dq 0
+PlayerComponent:Update:
+jmp newmem
+nop
+nop
+returnhere:
+ 
+[DISABLE]
+dealloc(newmem)
+PlayerComponent:Update:
+//push ebp
+//mov ebp,esp
+//push edi
+//sub esp,64
+db 55 8B EC 57 83 EC 64
+unregistersymbol(_player)
+</AssemblerScript>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>1113</ID>
+              <Description>"res"</Description>
+              <Options moHideChildren="1"/>
+              <LastState Value="" RealAddress="00000000"/>
+              <GroupHeader>1</GroupHeader>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>1109</ID>
+                  <Description>"0"</Description>
+                  <ShowAsHex>1</ShowAsHex>
+                  <VariableType>String</VariableType>
+                  <Length>30</Length>
+                  <Unicode>1</Unicode>
+                  <CodePage>0</CodePage>
+                  <ZeroTerminate>1</ZeroTerminate>
+                  <Address>_player</Address>
+                  <Offsets>
+                    <Offset>C</Offset>
+                    <Offset>10</Offset>
+                    <Offset>8</Offset>
+                    <Offset>8</Offset>
+                    <Offset>24</Offset>
+                    <Offset>5C</Offset>
+                    <Offset>20</Offset>
+                  </Offsets>
+                  <CheatEntries>
+                    <CheatEntry>
+                      <ID>1114</ID>
+                      <Description>"value"</Description>
+                      <VariableType>Float</VariableType>
+                      <Address>_player</Address>
+                      <Offsets>
+                        <Offset>10</Offset>
+                        <Offset>8</Offset>
+                        <Offset>C</Offset>
+                        <Offset>24</Offset>
+                        <Offset>5C</Offset>
+                        <Offset>20</Offset>
+                      </Offsets>
+                    </CheatEntry>
+                  </CheatEntries>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>1115</ID>
+                  <Description>"1"</Description>
+                  <ShowAsHex>1</ShowAsHex>
+                  <VariableType>String</VariableType>
+                  <Length>30</Length>
+                  <Unicode>1</Unicode>
+                  <CodePage>0</CodePage>
+                  <ZeroTerminate>1</ZeroTerminate>
+                  <Address>_player</Address>
+                  <Offsets>
+                    <Offset>C</Offset>
+                    <Offset>14</Offset>
+                    <Offset>8</Offset>
+                    <Offset>8</Offset>
+                    <Offset>24</Offset>
+                    <Offset>5C</Offset>
+                    <Offset>20</Offset>
+                  </Offsets>
+                  <CheatEntries>
+                    <CheatEntry>
+                      <ID>1116</ID>
+                      <Description>"value"</Description>
+                      <VariableType>Float</VariableType>
+                      <Address>_player</Address>
+                      <Offsets>
+                        <Offset>14</Offset>
+                        <Offset>8</Offset>
+                        <Offset>C</Offset>
+                        <Offset>24</Offset>
+                        <Offset>5C</Offset>
+                        <Offset>20</Offset>
+                      </Offsets>
+                    </CheatEntry>
+                  </CheatEntries>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>1117</ID>
+                  <Description>"2"</Description>
+                  <ShowAsHex>1</ShowAsHex>
+                  <VariableType>String</VariableType>
+                  <Length>30</Length>
+                  <Unicode>1</Unicode>
+                  <CodePage>0</CodePage>
+                  <ZeroTerminate>1</ZeroTerminate>
+                  <Address>_player</Address>
+                  <Offsets>
+                    <Offset>C</Offset>
+                    <Offset>18</Offset>
+                    <Offset>8</Offset>
+                    <Offset>8</Offset>
+                    <Offset>24</Offset>
+                    <Offset>5C</Offset>
+                    <Offset>20</Offset>
+                  </Offsets>
+                  <CheatEntries>
+                    <CheatEntry>
+                      <ID>1118</ID>
+                      <Description>"value"</Description>
+                      <VariableType>Float</VariableType>
+                      <Address>_player</Address>
+                      <Offsets>
+                        <Offset>18</Offset>
+                        <Offset>8</Offset>
+                        <Offset>C</Offset>
+                        <Offset>24</Offset>
+                        <Offset>5C</Offset>
+                        <Offset>20</Offset>
+                      </Offsets>
+                    </CheatEntry>
+                  </CheatEntries>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>1119</ID>
+                  <Description>"3"</Description>
+                  <ShowAsHex>1</ShowAsHex>
+                  <VariableType>String</VariableType>
+                  <Length>30</Length>
+                  <Unicode>1</Unicode>
+                  <CodePage>0</CodePage>
+                  <ZeroTerminate>1</ZeroTerminate>
+                  <Address>_player</Address>
+                  <Offsets>
+                    <Offset>C</Offset>
+                    <Offset>1C</Offset>
+                    <Offset>8</Offset>
+                    <Offset>8</Offset>
+                    <Offset>24</Offset>
+                    <Offset>5C</Offset>
+                    <Offset>20</Offset>
+                  </Offsets>
+                  <CheatEntries>
+                    <CheatEntry>
+                      <ID>1120</ID>
+                      <Description>"value"</Description>
+                      <VariableType>Float</VariableType>
+                      <Address>_player</Address>
+                      <Offsets>
+                        <Offset>1C</Offset>
+                        <Offset>8</Offset>
+                        <Offset>C</Offset>
+                        <Offset>24</Offset>
+                        <Offset>5C</Offset>
+                        <Offset>20</Offset>
+                      </Offsets>
+                    </CheatEntry>
+                  </CheatEntries>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>1121</ID>
+                  <Description>"4"</Description>
+                  <ShowAsHex>1</ShowAsHex>
+                  <VariableType>String</VariableType>
+                  <Length>30</Length>
+                  <Unicode>1</Unicode>
+                  <CodePage>0</CodePage>
+                  <ZeroTerminate>1</ZeroTerminate>
+                  <Address>_player</Address>
+                  <Offsets>
+                    <Offset>C</Offset>
+                    <Offset>20</Offset>
+                    <Offset>8</Offset>
+                    <Offset>8</Offset>
+                    <Offset>24</Offset>
+                    <Offset>5C</Offset>
+                    <Offset>20</Offset>
+                  </Offsets>
+                  <CheatEntries>
+                    <CheatEntry>
+                      <ID>1122</ID>
+                      <Description>"value"</Description>
+                      <VariableType>Float</VariableType>
+                      <Address>_player</Address>
+                      <Offsets>
+                        <Offset>20</Offset>
+                        <Offset>8</Offset>
+                        <Offset>C</Offset>
+                        <Offset>24</Offset>
+                        <Offset>5C</Offset>
+                        <Offset>20</Offset>
+                      </Offsets>
+                    </CheatEntry>
+                  </CheatEntries>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>1123</ID>
+                  <Description>"5"</Description>
+                  <ShowAsHex>1</ShowAsHex>
+                  <VariableType>String</VariableType>
+                  <Length>30</Length>
+                  <Unicode>1</Unicode>
+                  <CodePage>0</CodePage>
+                  <ZeroTerminate>1</ZeroTerminate>
+                  <Address>_player</Address>
+                  <Offsets>
+                    <Offset>C</Offset>
+                    <Offset>24</Offset>
+                    <Offset>8</Offset>
+                    <Offset>8</Offset>
+                    <Offset>24</Offset>
+                    <Offset>5C</Offset>
+                    <Offset>20</Offset>
+                  </Offsets>
+                  <CheatEntries>
+                    <CheatEntry>
+                      <ID>1124</ID>
+                      <Description>"value"</Description>
+                      <VariableType>Float</VariableType>
+                      <Address>_player</Address>
+                      <Offsets>
+                        <Offset>24</Offset>
+                        <Offset>8</Offset>
+                        <Offset>C</Offset>
+                        <Offset>24</Offset>
+                        <Offset>5C</Offset>
+                        <Offset>20</Offset>
+                      </Offsets>
+                    </CheatEntry>
+                  </CheatEntries>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>1125</ID>
+                  <Description>"6"</Description>
+                  <ShowAsHex>1</ShowAsHex>
+                  <VariableType>String</VariableType>
+                  <Length>30</Length>
+                  <Unicode>1</Unicode>
+                  <CodePage>0</CodePage>
+                  <ZeroTerminate>1</ZeroTerminate>
+                  <Address>_player</Address>
+                  <Offsets>
+                    <Offset>C</Offset>
+                    <Offset>28</Offset>
+                    <Offset>8</Offset>
+                    <Offset>8</Offset>
+                    <Offset>24</Offset>
+                    <Offset>5C</Offset>
+                    <Offset>20</Offset>
+                  </Offsets>
+                  <CheatEntries>
+                    <CheatEntry>
+                      <ID>1126</ID>
+                      <Description>"value"</Description>
+                      <VariableType>Float</VariableType>
+                      <Address>_player</Address>
+                      <Offsets>
+                        <Offset>28</Offset>
+                        <Offset>8</Offset>
+                        <Offset>C</Offset>
+                        <Offset>24</Offset>
+                        <Offset>5C</Offset>
+                        <Offset>20</Offset>
+                      </Offsets>
+                    </CheatEntry>
+                  </CheatEntries>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>1127</ID>
+                  <Description>"7"</Description>
+                  <ShowAsHex>1</ShowAsHex>
+                  <VariableType>String</VariableType>
+                  <Length>30</Length>
+                  <Unicode>1</Unicode>
+                  <CodePage>0</CodePage>
+                  <ZeroTerminate>1</ZeroTerminate>
+                  <Address>_player</Address>
+                  <Offsets>
+                    <Offset>C</Offset>
+                    <Offset>2C</Offset>
+                    <Offset>8</Offset>
+                    <Offset>8</Offset>
+                    <Offset>24</Offset>
+                    <Offset>5C</Offset>
+                    <Offset>20</Offset>
+                  </Offsets>
+                  <CheatEntries>
+                    <CheatEntry>
+                      <ID>1128</ID>
+                      <Description>"value"</Description>
+                      <VariableType>Float</VariableType>
+                      <Address>_player</Address>
+                      <Offsets>
+                        <Offset>2C</Offset>
+                        <Offset>8</Offset>
+                        <Offset>C</Offset>
+                        <Offset>24</Offset>
+                        <Offset>5C</Offset>
+                        <Offset>20</Offset>
+                      </Offsets>
+                    </CheatEntry>
+                  </CheatEntries>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>1129</ID>
+                  <Description>"8"</Description>
+                  <ShowAsHex>1</ShowAsHex>
+                  <VariableType>String</VariableType>
+                  <Length>30</Length>
+                  <Unicode>1</Unicode>
+                  <CodePage>0</CodePage>
+                  <ZeroTerminate>1</ZeroTerminate>
+                  <Address>_player</Address>
+                  <Offsets>
+                    <Offset>C</Offset>
+                    <Offset>30</Offset>
+                    <Offset>8</Offset>
+                    <Offset>8</Offset>
+                    <Offset>24</Offset>
+                    <Offset>5C</Offset>
+                    <Offset>20</Offset>
+                  </Offsets>
+                  <CheatEntries>
+                    <CheatEntry>
+                      <ID>1130</ID>
+                      <Description>"value"</Description>
+                      <VariableType>Float</VariableType>
+                      <Address>_player</Address>
+                      <Offsets>
+                        <Offset>30</Offset>
+                        <Offset>8</Offset>
+                        <Offset>C</Offset>
+                        <Offset>24</Offset>
+                        <Offset>5C</Offset>
+                        <Offset>20</Offset>
+                      </Offsets>
+                    </CheatEntry>
+                  </CheatEntries>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>1131</ID>
+                  <Description>"9"</Description>
+                  <ShowAsHex>1</ShowAsHex>
+                  <VariableType>String</VariableType>
+                  <Length>30</Length>
+                  <Unicode>1</Unicode>
+                  <CodePage>0</CodePage>
+                  <ZeroTerminate>1</ZeroTerminate>
+                  <Address>_player</Address>
+                  <Offsets>
+                    <Offset>C</Offset>
+                    <Offset>34</Offset>
+                    <Offset>8</Offset>
+                    <Offset>8</Offset>
+                    <Offset>24</Offset>
+                    <Offset>5C</Offset>
+                    <Offset>20</Offset>
+                  </Offsets>
+                  <CheatEntries>
+                    <CheatEntry>
+                      <ID>1132</ID>
+                      <Description>"value"</Description>
+                      <VariableType>Float</VariableType>
+                      <Address>_player</Address>
+                      <Offsets>
+                        <Offset>34</Offset>
+                        <Offset>8</Offset>
+                        <Offset>C</Offset>
+                        <Offset>24</Offset>
+                        <Offset>5C</Offset>
+                        <Offset>20</Offset>
+                      </Offsets>
+                    </CheatEntry>
+                  </CheatEntries>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>1107</ID>
+              <Description>"_hp"</Description>
+              <VariableType>Float</VariableType>
+              <Address>_player</Address>
+              <Offsets>
+                <Offset>10</Offset>
+                <Offset>24</Offset>
+                <Offset>5C</Offset>
+                <Offset>20</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>1108</ID>
+              <Description>"_money"</Description>
+              <VariableType>Float</VariableType>
+              <Address>_player</Address>
+              <Offsets>
+                <Offset>18</Offset>
+                <Offset>24</Offset>
+                <Offset>5C</Offset>
+                <Offset>20</Offset>
+              </Offsets>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1133</ID>
+          <Description>"Get Environment"</Description>
+          <Options moHideChildren="1"/>
+          <LastState/>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>[ENABLE]
+assert(EnvironmentEngine:Update,55 8B EC 57 56)
+alloc(newmem,2048)
+label(returnhere)
+label(_environment)
+registersymbol(_environment)
+
+newmem:
+push ebp
+mov ebp,esp
+push edi
+push esi
+mov edi,[ebp+08]
+mov [_environment],edi
+jmp returnhere
+_environment:
+dq 0
+EnvironmentEngine:Update:
+jmp newmem
+returnhere:
+ 
+ 
+[DISABLE]
+dealloc(newmem)
+EnvironmentEngine:Update:
+//push ebp
+//mov ebp,esp
+//push edi
+//push esi
+db 55 8B EC 57 56
+unregistersymbol(_environment)
+</AssemblerScript>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>1135</ID>
+              <Description>"_cur_time"</Description>
+              <VariableType>Float</VariableType>
+              <Address>_environment</Address>
+              <Offsets>
+                <Offset>28</Offset>
+              </Offsets>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1136</ID>
+          <Description>"Ignore Tech points"</Description>
+          <LastState/>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>[ENABLE]
+assert(Item:IsEnoughParams,55 8B EC 57 83 EC 24)
+assert(Item:SubFromParams,55 8B EC 83 EC 28)
+
+Item:IsEnoughParams:
+mov eax,01
+ret
+nop
+
+alloc(newmem,2048)
+label(returnhere)
+
+newmem:
+push ebp
+mov ebp,esp
+sub esp,28
+mov edx,[ebp+0C]
+mov [edx+0C],0           // Turn to 0
+
+//fld dword ptr [edx+0C] // This will add
+//fchs                   // instead of
+//fstp dword ptr [edx+0C]// subtract
+
+jmp returnhere
+
+Item:SubFromParams:
+jmp newmem
+nop
+returnhere:
+
+
+[DISABLE]
+Item:IsEnoughParams:
+//push ebp
+//mov ebp,esp
+//push edi
+//sub esp,24
+db 55 8B EC 57 83 EC 24
+dealloc(newmem)
+Item:SubFromParams:
+//push ebp
+//mov ebp,esp
+//sub esp,28
+db 55 8B EC 83 EC 28
+</AssemblerScript>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>1141</ID>
+          <Description>"Set Item value (Warning!)"</Description>
+          <LastState/>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>[ENABLE]
+assert(Item:IsEmpty,55 8B EC 53 56 83 EC 20)
+alloc(newmem,2048)
+label(returnhere)
+
+
+newmem:
+push ebp
+mov ebp,esp
+push ebx
+push esi
+sub esp,20
+mov eax,[ebp+08]
+cmp [eax+08],FFFFFFFF
+je short @f
+cmp [eax+44],0
+jle short @f
+
+
+mov [eax+44],#100  // value
+
+
+@@:
+jmp returnhere
+
+Item:IsEmpty:
+jmp newmem
+nop
+nop
+nop
+returnhere:
+
+
+ 
+ 
+[DISABLE]
+dealloc(newmem)
+Item:IsEmpty:
+//push ebp
+//mov ebp,esp
+//push ebx
+//push esi
+//sub esp,20
+db 55 8B EC 53 56 83 EC 20
+</AssemblerScript>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+  </CheatEntries>
+  <UserdefinedSymbols/>
+</CheatTable>

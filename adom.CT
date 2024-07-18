@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheatTable CheatEngineTableVersion="34">
+  <CheatEntries>
+    <CheatEntry>
+      <ID>2</ID>
+      <Description>"Inf Ammo"</Description>
+      <LastState Activated="1"/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>// search for qty of ammo (4 bytes)
+//
+
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+aobscan(ammo,83 C8 FF 83 C4 04 01 87 90 00 00 00 8B 8F 90 00 00 00 11 87 94 00 00 00)
+label(_ammo)
+registersymbol(_ammo)
+
+ammo+6:
+_ammo:
+db 90 90 90 90 90 90
+
+
+ /*
+0044D772 - 83 C8 FF - or eax,-01
+0044D775 - 83 C4 04 - add esp,04
+0044D778 - 01 87 90000000  - add [edi+00000090],eax &lt;&lt;
+0044D77E - 8B 8F 90000000  - mov ecx,[edi+00000090]
+0044D784 - 11 87 94000000  - adc [edi+00000094],eax
+*/
+
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+_ammo:
+db 01 87 90 00 00 00
+
+//unregistersymbol(_ammo)
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>4</ID>
+      <Description>"Inf Health"</Description>
+      <LastState Activated="1"/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>// search for HP (4 bytes)
+//
+
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+aobscan(health,55 8B EC 83 EC 08 53 56 57 8B F8 E8 ?? ?? ?? ?? 8B 0D ?? ?? ?? ?? 33 D2 )
+label(_health)
+registersymbol(_health)
+
+health+0:
+_health:
+db c3
+
+
+ /*
+adom.exe+12B360 - 55                    - push ebp
+adom.exe+12B361 - 8B EC                 - mov ebp,esp
+adom.exe+12B363 - 83 EC 08              - sub esp,08 { 8 }
+adom.exe+12B366 - 53                    - push ebx
+adom.exe+12B367 - 56                    - push esi
+adom.exe+12B368 - 57                    - push edi
+adom.exe+12B369 - 8B F8                 - mov edi,eax
+adom.exe+12B36B - E8 30960100           - call adom.exe+1449A0
+adom.exe+12B370 - 8B 0D 80AF3401        - mov ecx,[adom.exe+8CAF80] { (31) }
+adom.exe+12B376 - 33 D2                 - xor edx,edx
+adom.exe+12B378 - 3B C8                 - cmp ecx,eax
+adom.exe+12B37A - 0F9C C2               - setl dl
+
+
+*/
+
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+_health:
+db 55
+
+//unregistersymbol(_ammo)
+</AssemblerScript>
+    </CheatEntry>
+  </CheatEntries>
+  <CheatCodes>
+    <CodeEntry Color="20000000">
+      <Description>Change of push ebp</Description>
+      <AddressString>adom.exe+12B360</AddressString>
+      <Before>
+        <Byte>CC</Byte>
+        <Byte>CC</Byte>
+        <Byte>CC</Byte>
+        <Byte>CC</Byte>
+        <Byte>CC</Byte>
+      </Before>
+      <Actual>
+        <Byte>55</Byte>
+      </Actual>
+      <After>
+        <Byte>8B</Byte>
+        <Byte>EC</Byte>
+        <Byte>83</Byte>
+        <Byte>EC</Byte>
+        <Byte>08</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry Color="20000000">
+      <Description>Change of add [edi+00000090],eax</Description>
+      <AddressString>adom.exe+19D778</AddressString>
+      <Before>
+        <Byte>C8</Byte>
+        <Byte>FF</Byte>
+        <Byte>83</Byte>
+        <Byte>C4</Byte>
+        <Byte>04</Byte>
+      </Before>
+      <Actual>
+        <Byte>01</Byte>
+        <Byte>87</Byte>
+        <Byte>90</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Actual>
+      <After>
+        <Byte>8B</Byte>
+        <Byte>8F</Byte>
+        <Byte>90</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </After>
+    </CodeEntry>
+  </CheatCodes>
+  <UserdefinedSymbols/>
+</CheatTable>

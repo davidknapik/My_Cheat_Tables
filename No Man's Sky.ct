@@ -271,12 +271,6 @@ unregistersymbol(_cheat06)
         </Hotkey>
       </Hotkeys>
     </CheatEntry>
-    <CheatEntry>
-      <ID>13</ID>
-      <Description>"No description"</Description>
-      <VariableType>4 Bytes</VariableType>
-      <Address>1C9D0CC0490</Address>
-    </CheatEntry>
   </CheatEntries>
   <UserdefinedSymbols/>
   <Structures StructVersion="2">

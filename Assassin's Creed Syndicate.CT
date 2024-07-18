@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheatTable CheatEngineTableVersion="45">
+  <CheatEntries/>
+  <CheatCodes>
+    <CodeEntry>
+      <Description>Code :sub eax,edx</Description>
+      <AddressString>ACS.exe+B7B61A</AddressString>
+      <Before>
+        <Byte>28</Byte>
+        <Byte>3B</Byte>
+        <Byte>C2</Byte>
+        <Byte>72</Byte>
+        <Byte>09</Byte>
+      </Before>
+      <Actual>
+        <Byte>2B</Byte>
+        <Byte>C2</Byte>
+      </Actual>
+      <After>
+        <Byte>41</Byte>
+        <Byte>89</Byte>
+        <Byte>41</Byte>
+        <Byte>28</Byte>
+        <Byte>B0</Byte>
+      </After>
+    </CodeEntry>
+  </CheatCodes>
+  <UserdefinedSymbols/>
+</CheatTable>
