@@ -7,11 +7,14 @@
       <VariableType>Auto Assembler Script</VariableType>
       <AssemblerScript>[ENABLE]
 //code from here to '[DISABLE]' will be used to enable the cheat
-// Infinate Jetpack
-// float
-// full == larger than 1 (starting: ~2.5)(size depends on any jetpack improvements) eg. '7.496'
-// empty == 0
 
+/**
+ Desription: Infinate Jetpack
+ Type: float
+ Value: full == larger than 1 (starting: ~2.5)
+ empty == 0
+ size depends on any jetpack improvements, eg. '7.496'
+**/
 aobScanmodule(aob_jetpack, NMS.exe, F3 45 0F 59 D5 F3 41 0F 5C C2 F3 0F 11 87 44 2D 00 00 44 0F 2F 03)
 registersymbol(aob_jetpack)
 
@@ -40,10 +43,11 @@ aob_jetpack+5:
       <AssemblerScript>[ENABLE]
 //code from here to '[DISABLE]' will be used to enable the cheat
 
-// Infinate Shield
-// Shield value: 4 Byte 0 - 100 (full)
-//
-//aobScanmodule(aob_shield, NMS.exe, 45 01 A6 B0 01 00 00 41 8B D7)
+/**
+ Description: Infinate Shield
+ Type: 4 byte
+ Value Range: 0 - 100 (full)
+**/
 aobScanmodule(aob_shield, NMS.exe, 45 01 A6 ?? ?? ?? ?? 41 8B D7)
 registersymbol(aob_shield)
 
@@ -78,7 +82,12 @@ db 45 01 A6 B0 01 00 00
       <VariableType>Auto Assembler Script</VariableType>
       <AssemblerScript>[ENABLE]
 //code from here to '[DISABLE]' will be used to enable the cheat
-//aobScan(aob_scan02, 44 39 B8 8C 40 20 00 76 0A FF 4B 18)
+
+/**
+ Description: Inf Ammo/boltcaster
+ Type: 4 byte
+ Value: #of ammo
+**/
 aobScanmodule(aob_ammo, NMS.exe, 44 0F4C E0 41 2B C4 42 89 84 BF C8 1E 00 00)
 registersymbol(aob_ammo)
 
@@ -104,107 +113,35 @@ aob_ammo+4:
     </CheatEntry>
     <CheatEntry>
       <ID>1</ID>
-      <Description>"InfBomb"</Description>
+      <Description>"InfGernade"</Description>
       <VariableType>Auto Assembler Script</VariableType>
       <AssemblerScript>[ENABLE]
 //code from here to '[DISABLE]' will be used to enable the cheat
-aobScanmodule(aob_scan01, NMS.exe, 44 39 B8 8C 40 20 00 76 0A FF 4B 18)
-//aobScan(aob_scan01, 44 39 B8 8C 40 20 00 76 0A FF 4B 18)
-registersymbol(aob_scan01)
-
-aob_scan01+9:
-   db 90 90 90
-
-
 
 /**
-7FF7B0E97D53 - 44 39 B8 8C402000  - cmp [rax+0020408C],r15d
-7FF7B0E97D5A - 76 0A - jna NMS.exe+1127D66
-7FF7B0E97D5C - FF 4B 18  - dec [rbx+18] &lt;&lt;
-7FF7B0E97D5F - 48 8B 05 62712F04  - mov rax,[NMS.exe+541EEC8]
-7FF7B0E97D66 - 4C 89 64 24 38  - mov [rsp+38],r12
+ Description: Inf Gernade
+ Type: 4 byte
+ Value: #of ammo
+**/
+aobScanmodule(aob_gernade, NMS.exe, 44 39 A0 D4 E3 1F 00 76 0A FF 4B 18 )
+registersymbol(aob_gernade)
+
+aob_gernade+9:
+   db 90 90 90
+
+/**
+NMS.exe+10E532C:
+7FF75B865323 - 44 39 A0 D4E31F00  - cmp [rax+001FE3D4],r12d
+7FF75B86532A - 76 0A - jna NMS.exe+10E5336
+7FF75B86532C - FF 4B 18  - dec [rbx+18] &lt;&lt;
+7FF75B86532F - 48 8B 05 52BCFA03  - mov rax,[NMS.exe+5090F88]
+7FF75B865336 - 4C 89 7C 24 38  - mov [rsp+38],r15
 **/
  
 [DISABLE]
 //code from here till the end of the code will be used to disable the cheat
-aob_scan01+9:
+aob_gernade+9:
    db FF 4B 18
-</AssemblerScript>
-    </CheatEntry>
-    <CheatEntry>
-      <ID>6</ID>
-      <Description>"Inf Geology Cannon"</Description>
-      <VariableType>Auto Assembler Script</VariableType>
-      <AssemblerScript>[ENABLE]
-//code from here to '[DISABLE]' will be used to enable the cheat
-
-// Infinate Scanner / no cooldown
-// Ammo value: 4 byte, #of ammo
-//
-aobscan(cheat04,44 39 A0 ?? ?? ?? ?? 76 ?? FF 4B 18 48 8B 05 ?? ?? ?? ??)
-label(_cheat04)
-registersymbol(_cheat04)
-
-cheat04+9:
-_cheat04:
-db 90 90 90
-
-/*
-NMS.exe+FEDBF8:
-7FF7AFA3DBEF - 44 39 A0 982A1D00  - cmp [rax+001D2A98],r12d
-7FF7AFA3DBF6 - 76 0A - jna NMS.exe+FEDC02
-7FF7AFA3DBF8 - FF 4B 18  - dec [rbx+18] &lt;&lt;
-7FF7AFA3DBFB - 48 8B 05 16EB9D03  - mov rax,[NMS.exe+49CC718]
-7FF7AFA3DC02 - 48 89 74 24 38  - mov [rsp+38],rsi
-
-*/
-
-
-[DISABLE]
-//code from here till the end of the code will be used to disable the cheat
-_cheat04:
-db FF 4B 18
-
-unregistersymbol(_cheat04)
-
-</AssemblerScript>
-    </CheatEntry>
-    <CheatEntry>
-      <ID>7</ID>
-      <Description>"Inf Ammo"</Description>
-      <VariableType>Auto Assembler Script</VariableType>
-      <AssemblerScript>[ENABLE]
-//code from here to '[DISABLE]' will be used to enable the cheat
-
-// Inf Ammo/boltcaster
-// Ammo value: 4 byte, #of ammo
-//
-aobscan(cheat05,44 0F 4C E0 41 2B C4 42 89 84 BF 90 25 00 00)
-label(_cheat05)
-registersymbol(_cheat05)
-
-cheat05+4:
-_cheat05:
-db 90 90 90
-
-/*
-
-NMS.exe+FED276:
-7FF7AFA3D26F - 44 0F4C E0  - cmovl r12d,eax
-7FF7AFA3D273 - 41 2B C4  - sub eax,r12d
-7FF7AFA3D276 - 42 89 84 BF 90250000  - mov [rdi+r15*4+00002590],eax &lt;&lt;
-7FF7AFA3D27E - 41 8B F5  - mov esi,r13d
-7FF7AFA3D281 - 0F28 7D 90  - movaps xmm7,[rbp-70]
-
-*/
-
-
-[DISABLE]
-_cheat05:
-db 41 2B C4
-
-unregistersymbol(_cheat05)
-
 </AssemblerScript>
     </CheatEntry>
     <CheatEntry>
