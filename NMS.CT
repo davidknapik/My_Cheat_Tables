@@ -37,6 +37,41 @@ aob_jetpack+5:
 </AssemblerScript>
     </CheatEntry>
     <CheatEntry>
+      <ID>12</ID>
+      <Description>"InfMinatorJetpack"</Description>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+
+/**
+ Desription: Infinate Minator Jetpack
+ Type: float
+ Value: full == 1
+ empty == 0
+**/
+aobScanmodule(aob_minator_jetpack, NMS.exe, F3 41 0F 59 CA F3 0F 5C C1 F3 0F 11 87 F4 00 00 00 42 8B 04 36)
+registersymbol(aob_minator_jetpack)
+
+aob_minator_jetpack+5:
+   db 90 90 90 90
+
+/**
+NMS.exe+13AAFBD:
+7FF7A01FAFB4 - F3 41 0F59 CA  - mulss xmm1,xmm10
+7FF7A01FAFB9 - F3 0F5C C1  - subss xmm0,xmm1
+7FF7A01FAFBD - F3 0F11 87 F4000000  - movss [rdi+000000F4],xmm0 &lt;&lt;
+7FF7A01FAFC5 - 42 8B 04 36   - mov eax,[rsi+r14]
+7FF7A01FAFC9 - 0F57 C9  - xorps xmm1,xmm1
+
+**/
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+aob_minator_jetpack+5:
+   db F3 0F 5C C1
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
       <ID>5</ID>
       <Description>"InfShield"</Description>
       <VariableType>Auto Assembler Script</VariableType>
@@ -123,13 +158,20 @@ aob_ammo+4:
  Type: 4 byte
  Value: #of ammo
 **/
-aobScanmodule(aob_gernade, NMS.exe, 44 39 A0 D4 E3 1F 00 76 0A FF 4B 18 )
+aobScanmodule(aob_gernade, NMS.exe, 44 39 A0 ?? ?? ?? ?? 76 0A FF 4B 18 )
 registersymbol(aob_gernade)
 
 aob_gernade+9:
    db 90 90 90
 
 /**
+NMS.exe+10E5BEC:
+7FF68B565BE3 - 44 39 A0 54E41F00  - cmp [rax+001FE454],r12d
+7FF68B565BEA - 76 0A - jna NMS.exe+10E5BF6
+7FF68B565BEC - FF 4B 18  - dec [rbx+18] &lt;&lt;
+7FF68B565BEF - 48 8B 05 D277FC03  - mov rax,[NMS.exe+50AD3C8]
+7FF68B565BF6 - 4C 89 7C 24 38  - mov [rsp+38],r15
+
 NMS.exe+10E532C:
 7FF75B865323 - 44 39 A0 D4E31F00  - cmp [rax+001FE3D4],r12d
 7FF75B86532A - 76 0A - jna NMS.exe+10E5336
@@ -196,17 +238,24 @@ unregistersymbol(_cheat03)
 // Move upgrade item in place of searched item
 // See what writes to this address
 // Perform upgrade
+aobScanmodule(aob_upgrades, NMS.exe, 0F 4C D8 E8 * * * * 29 58 18 44 2B E3)
+//aobscan(cheat06,0F 4C D8 E8 * * * * 29 58 18 44 2B E3)
+//label(_cheat06)
+registersymbol(aob_upgrades)
 
-aobscan(cheat06,49 8B CF E8 * * * * 29 58 18 2B F3)
-label(_cheat06)
-registersymbol(_cheat06)
-
-cheat06+8:
-_cheat06:
+aob_upgrades+8:
 db 90 90 90
 
 
 /*
+NMS.exe+49CDD0:
+7FF68A91CDC8 - 0F4C D8  - cmovl ebx,eax
+7FF68A91CDCB - E8 F0EA0200 - call NMS.exe+4CB8C0
+7FF68A91CDD0 - 29 58 18  - sub [rax+18],ebx &lt;&lt;
+7FF68A91CDD3 - 44 2B E3  - sub r12d,ebx
+7FF68A91CDD6 - EB 07 - jmp NMS.exe+49CDDF
+
+
 NMS.exe+777165 - 49 8B CF              - mov rcx,r15
 NMS.exe+777168 - E8 E39DFBFF           - call NMS.exe+730F50
 NMS.exe+77716D - 29 58 18              - sub [rax+18],ebx
@@ -218,10 +267,8 @@ NMS.exe+777174 - 0F8E 7D010000         - jng NMS.exe+7772F7
 
 
 [DISABLE]
-_cheat06:
+aob_upgrades+8:
 db 29 58 18
-
-unregistersymbol(_cheat06)
 
 
 </AssemblerScript>
@@ -262,6 +309,30 @@ unregistersymbol(_cheat06)
         <Byte>D7</Byte>
         <Byte>E8</Byte>
         <Byte>42</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry>
+      <Description>Change of subss xmm0,xmm1</Description>
+      <AddressString>NMS.exe+13AAFB9</AddressString>
+      <Before>
+        <Byte>F3</Byte>
+        <Byte>41</Byte>
+        <Byte>0F</Byte>
+        <Byte>59</Byte>
+        <Byte>CA</Byte>
+      </Before>
+      <Actual>
+        <Byte>F3</Byte>
+        <Byte>0F</Byte>
+        <Byte>5C</Byte>
+        <Byte>C1</Byte>
+      </Actual>
+      <After>
+        <Byte>F3</Byte>
+        <Byte>0F</Byte>
+        <Byte>11</Byte>
+        <Byte>87</Byte>
+        <Byte>F4</Byte>
       </After>
     </CodeEntry>
   </CheatCodes>
