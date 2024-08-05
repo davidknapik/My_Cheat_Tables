@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheatTable CheatEngineTableVersion="45">
+  <CheatEntries>
+    <CheatEntry>
+      <ID>2</ID>
+      <Description>"NoDecrementItems"</Description>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+
+
+Game.GAME::ItemRelic::DecrementStack:
+ret
+nop
+nop
+nop
+nop
+
+/**
+Game.GAME::ItemRelic::DecrementStack+28:
+7FFF8CC8AEB4 - 76 1B - jna Game.GAME::ItemRelic::DecrementStack+41
+7FFF8CC8AEB6 - 2B C7  - sub eax,edi
+7FFF8CC8AEB8 - 89 83 74070000  - mov [rbx+00000774],eax &lt;&lt;
+7FFF8CC8AEBE - 89 83 F4050000  - mov [rbx+000005F4],eax
+7FFF8CC8AEC4 - B0 01 - mov al,01
+**/
+
+
+ /**
+
+ Game.GAME::ItemRelic::RemoveFromCharacter - 48 89 5C 24 08        - mov [rsp+08],rbx
+**/
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+Game.GAME::ItemRelic::DecrementStack:
+mov [rsp+08],rbx
+
+/*
+Game.GAME::ItemRelic::DecrementStack - 48 89 5C 24 08        - mov [rsp+08],rbx
+*/
+
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>4</ID>
+      <Description>"FreeRecovery"</Description>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+
+
+Game.GAME::EnchanterRecoveryConfigCmd::Execute+2C1:
+nop
+nop
+nop
+nop
+nop
+nop
+
+/**
+Game.GAME::EnchanterRecoveryConfigCmd::Execute+2B7 - B9 00000000           - mov ecx,00000000 { 0 }
+Game.GAME::EnchanterRecoveryConfigCmd::Execute+2BC - 2B C5                 - sub eax,ebp
+Game.GAME::EnchanterRecoveryConfigCmd::Execute+2BE - 0F49 C8               - cmovns ecx,eax
+Game.GAME::EnchanterRecoveryConfigCmd::Execute+2C1 - 89 8F FC150000        - mov [rdi+000015FC],ecx
+Game.GAME::EnchanterRecoveryConfigCmd::Execute+2C7 - 4C 8D 9C 24 90010000  - lea r11,[rsp+00000190]
+Game.GAME::EnchanterRecoveryConfigCmd::Execute+2CF - 49 8B 5B 20           - mov rbx,[r11+20]
+Game.GAME::EnchanterRecoveryConfigCmd::Execute+2D3 - 49 8B 6B 28           - mov rbp,[r11+28]
+Game.GAME::EnchanterRecoveryConfigCmd::Execute+2D7 - 49 8B 73 30           - mov rsi,[r11+30]
+
+
+Game.GAME::EnchanterRecoveryConfigCmd::Execute+2C1:
+7FFF6181153C - 2B C5  - sub eax,ebp
+7FFF6181153E - 0F49 C8  - cmovns ecx,eax
+7FFF61811541 - 89 8F FC150000  - mov [rdi+000015FC],ecx &lt;&lt;
+7FFF61811547 - 4C 8D 9C 24 90010000  - lea r11,[rsp+00000190]
+7FFF6181154F - 49 8B 5B 20  - mov rbx,[r11+20]
+
+**/
+
+
+ /**
+
+ Game.GAME::ItemRelic::RemoveFromCharacter - 48 89 5C 24 08        - mov [rsp+08],rbx
+**/
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+Game.GAME::ItemRelic::DecrementStack:
+mov [rdi+000015FC],ecx
+
+
+
+</AssemblerScript>
+    </CheatEntry>
+  </CheatEntries>
+  <CheatCodes>
+    <CodeEntry>
+      <Description>Change of mov [rsp+08],rbx</Description>
+      <AddressString>Game.dll+29AE90</AddressString>
+      <Before>
+        <Byte>CC</Byte>
+        <Byte>CC</Byte>
+        <Byte>CC</Byte>
+        <Byte>CC</Byte>
+        <Byte>CC</Byte>
+      </Before>
+      <Actual>
+        <Byte>48</Byte>
+        <Byte>89</Byte>
+        <Byte>5C</Byte>
+        <Byte>24</Byte>
+        <Byte>08</Byte>
+      </Actual>
+      <After>
+        <Byte>57</Byte>
+        <Byte>48</Byte>
+        <Byte>83</Byte>
+        <Byte>EC</Byte>
+        <Byte>20</Byte>
+      </After>
+    </CodeEntry>
+  </CheatCodes>
+  <UserdefinedSymbols/>
+</CheatTable>
