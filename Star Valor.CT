@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<CheatTable CheatEngineTableVersion="34">
+<CheatTable CheatEngineTableVersion="45">
   <CheatEntries>
     <CheatEntry>
       <ID>115868</ID>
       <Description>"Star.Valor.v1.2.5a"</Description>
-      <Options moHideChildren="1" moDeactivateChildrenAsWell="1"/>
-      <LastState/>
+      <Options moDeactivateChildrenAsWell="1"/>
       <Color>808000</Color>
       <VariableType>Auto Assembler Script</VariableType>
       <AssemblerScript>{======================
@@ -48,7 +47,6 @@ memrec.Color=0x00808000
           <ID>116469</ID>
           <Description>"Enable"</Description>
           <Options moHideChildren="1" moDeactivateChildrenAsWell="1"/>
-          <LastState/>
           <Color>808000</Color>
           <VariableType>Auto Assembler Script</VariableType>
           <AssemblerScript>{======================
@@ -276,7 +274,6 @@ memrec.Color=0x00808000
             <CheatEntry>
               <ID>116479</ID>
               <Description>"Inf HP"</Description>
-              <LastState/>
               <Color>008000</Color>
               <VariableType>Auto Assembler Script</VariableType>
               <AssemblerScript>{$lua}
@@ -303,7 +300,6 @@ memrec.Color=0x00008000
             <CheatEntry>
               <ID>116480</ID>
               <Description>"Inf Energy"</Description>
-              <LastState/>
               <Color>008000</Color>
               <VariableType>Auto Assembler Script</VariableType>
               <AssemblerScript>{$lua}
@@ -330,7 +326,6 @@ memrec.Color=0x00008000
             <CheatEntry>
               <ID>116481</ID>
               <Description>"Inf Shield"</Description>
-              <LastState/>
               <Color>008000</Color>
               <VariableType>Auto Assembler Script</VariableType>
               <AssemblerScript>{$lua}
@@ -357,7 +352,6 @@ memrec.Color=0x00008000
             <CheatEntry>
               <ID>116482</ID>
               <Description>"Can Equip All"</Description>
-              <LastState/>
               <Color>008000</Color>
               <VariableType>Auto Assembler Script</VariableType>
               <AssemblerScript>{$LUA}
@@ -384,7 +378,6 @@ memrec.Color=0x00008000
             <CheatEntry>
               <ID>116483</ID>
               <Description>"Can Wrap"</Description>
-              <LastState/>
               <Color>008000</Color>
               <VariableType>Auto Assembler Script</VariableType>
               <AssemblerScript>{$LUA}
@@ -412,7 +405,6 @@ memrec.Color=0x00008000
             <CheatEntry>
               <ID>116484</ID>
               <Description>"Weapon Always Cool"</Description>
-              <LastState/>
               <Color>008000</Color>
               <VariableType>Auto Assembler Script</VariableType>
               <AssemblerScript>{$LUA}
@@ -438,7 +430,6 @@ memrec.Color=0x00008000
             <CheatEntry>
               <ID>116485</ID>
               <Description>"+Max Tech Lv"</Description>
-              <LastState/>
               <Color>008000</Color>
               <VariableType>Auto Assembler Script</VariableType>
               <AssemblerScript>{$LUA}
@@ -464,7 +455,6 @@ memrec.Color=0x00008000
             <CheatEntry>
               <ID>116487</ID>
               <Description>"Max Move + Scanner lua"</Description>
-              <LastState/>
               <Color>008000</Color>
               <VariableType>Auto Assembler Script</VariableType>
               <AssemblerScript>{$LUA}
@@ -495,7 +485,6 @@ memrec.Color=0x00008000
             <CheatEntry>
               <ID>116953</ID>
               <Description>"Max Equipment Space"</Description>
-              <LastState/>
               <Color>008000</Color>
               <VariableType>Auto Assembler Script</VariableType>
               <AssemblerScript>{======================
@@ -592,7 +581,6 @@ memrec.Color=0x00008000
             <CheatEntry>
               <ID>116509</ID>
               <Description>"Max Weapon Space"</Description>
-              <LastState/>
               <Color>008000</Color>
               <VariableType>Auto Assembler Script</VariableType>
               <AssemblerScript>{======================
@@ -690,7 +678,6 @@ memrec.Color=0x00008000
             <CheatEntry>
               <ID>116955</ID>
               <Description>"Ignore Cargo Space"</Description>
-              <LastState/>
               <Color>008000</Color>
               <VariableType>Auto Assembler Script</VariableType>
               <AssemblerScript>{======================
@@ -779,7 +766,6 @@ memrec.Color=0x00008000
             <CheatEntry>
               <ID>116495</ID>
               <Description>"Max Credit"</Description>
-              <LastState/>
               <Color>008000</Color>
               <VariableType>Auto Assembler Script</VariableType>
               <AssemblerScript>{$LUA}
@@ -805,7 +791,6 @@ memrec.Color=0x00008000
             <CheatEntry>
               <ID>116494</ID>
               <Description>"Ship Tweak (Max Hull, En, Shield)"</Description>
-              <LastState/>
               <Color>008000</Color>
               <VariableType>Auto Assembler Script</VariableType>
               <AssemblerScript>{$LUA}
@@ -837,7 +822,6 @@ memrec.Color=0x00008000
             <CheatEntry>
               <ID>116486</ID>
               <Description>"Mining/scavenge Tweak"</Description>
-              <LastState/>
               <Color>008000</Color>
               <VariableType>Auto Assembler Script</VariableType>
               <AssemblerScript>{$LUA}
@@ -868,7 +852,6 @@ memrec.Color=0x00008000
               <ID>116613</ID>
               <Description>"Pointer"</Description>
               <Options moHideChildren="1"/>
-              <LastState Value="" RealAddress="00000000"/>
               <Color>FF0000</Color>
               <GroupHeader>1</GroupHeader>
               <CheatEntries>
@@ -876,7 +859,6 @@ memrec.Color=0x00008000
                   <ID>116779</ID>
                   <Description>"Player"</Description>
                   <Options moHideChildren="1"/>
-                  <LastState Value="" RealAddress="00000000"/>
                   <GroupHeader>1</GroupHeader>
                   <CheatEntries>
                     <CheatEntry>
@@ -900,7 +882,6 @@ memrec.Color=0x00008000
                       <ID>116782</ID>
                       <Description>"Current Character"</Description>
                       <Options moHideChildren="1"/>
-                      <LastState Value="" RealAddress="00000000"/>
                       <GroupHeader>1</GroupHeader>
                       <CheatEntries>
                         <CheatEntry>
@@ -928,14 +909,12 @@ memrec.Color=0x00008000
                           <ID>116785</ID>
                           <Description>"Reputation"</Description>
                           <Options moHideChildren="1"/>
-                          <LastState Value="" RealAddress="00000000"/>
                           <GroupHeader>1</GroupHeader>
                           <CheatEntries>
                             <CheatEntry>
                               <ID>116786</ID>
                               <Description>"Current"</Description>
                               <Options moHideChildren="1"/>
-                              <LastState Value="" RealAddress="00000000"/>
                               <GroupHeader>1</GroupHeader>
                               <CheatEntries>
                                 <CheatEntry>
@@ -1018,7 +997,6 @@ memrec.Color=0x00008000
                                 <CheatEntry>
                                   <ID>116794</ID>
                                   <Description>"======================================"</Description>
-                                  <LastState Value="" RealAddress="00000000"/>
                                   <Color>808000</Color>
                                   <GroupHeader>1</GroupHeader>
                                 </CheatEntry>
@@ -1028,7 +1006,6 @@ memrec.Color=0x00008000
                               <ID>116795</ID>
                               <Description>"Max Limits Value"</Description>
                               <Options moHideChildren="1"/>
-                              <LastState Value="" RealAddress="00000000"/>
                               <GroupHeader>1</GroupHeader>
                               <CheatEntries>
                                 <CheatEntry>
@@ -1114,7 +1091,6 @@ memrec.Color=0x00008000
                               <ID>116943</ID>
                               <Description>"========================================"</Description>
                               <Options moHideChildren="1"/>
-                              <LastState Value="" RealAddress="00000000"/>
                               <Color>808000</Color>
                               <GroupHeader>1</GroupHeader>
                             </CheatEntry>
@@ -1356,7 +1332,6 @@ memrec.Color=0x00008000
                         <CheatEntry>
                           <ID>116842</ID>
                           <Description>"=========================================="</Description>
-                          <LastState Value="" RealAddress="00000000"/>
                           <Color>808000</Color>
                           <GroupHeader>1</GroupHeader>
                         </CheatEntry>
@@ -1366,7 +1341,6 @@ memrec.Color=0x00008000
                       <ID>116941</ID>
                       <Description>"============================================"</Description>
                       <Options moHideChildren="1"/>
-                      <LastState Value="" RealAddress="00000000"/>
                       <Color>808000</Color>
                       <GroupHeader>1</GroupHeader>
                     </CheatEntry>
@@ -1376,7 +1350,6 @@ memrec.Color=0x00008000
                   <ID>116614</ID>
                   <Description>"Highlighted Market Item"</Description>
                   <Options moHideChildren="1"/>
-                  <LastState Value="" RealAddress="00000000"/>
                   <GroupHeader>1</GroupHeader>
                   <CheatEntries>
                     <CheatEntry>
@@ -1398,7 +1371,6 @@ memrec.Color=0x00008000
                     <CheatEntry>
                       <ID>116519</ID>
                       <Description>"============================================"</Description>
-                      <LastState Value="" RealAddress="00000000"/>
                       <Color>808000</Color>
                       <GroupHeader>1</GroupHeader>
                     </CheatEntry>
@@ -1715,7 +1687,6 @@ memrec.Color=0x00008000
                     <CheatEntry>
                       <ID>116524</ID>
                       <Description>"============================================"</Description>
-                      <LastState Value="" RealAddress="00000000"/>
                       <Color>808000</Color>
                       <GroupHeader>1</GroupHeader>
                     </CheatEntry>
@@ -1758,7 +1729,6 @@ memrec.Color=0x00008000
                     <CheatEntry>
                       <ID>116529</ID>
                       <Description>"============================================"</Description>
-                      <LastState Value="" RealAddress="00000000"/>
                       <Color>808000</Color>
                       <GroupHeader>1</GroupHeader>
                     </CheatEntry>
@@ -1768,7 +1738,6 @@ memrec.Color=0x00008000
                   <ID>116615</ID>
                   <Description>"Highlighted Cargo Item"</Description>
                   <Options moHideChildren="1"/>
-                  <LastState Value="" RealAddress="00000000"/>
                   <GroupHeader>1</GroupHeader>
                   <CheatEntries>
                     <CheatEntry>
@@ -1800,7 +1769,6 @@ memrec.Color=0x00008000
                       <ID>115882</ID>
                       <Description>"============================================"</Description>
                       <Options moHideChildren="1"/>
-                      <LastState Value="" RealAddress="00000000"/>
                       <Color>808000</Color>
                       <GroupHeader>1</GroupHeader>
                     </CheatEntry>
@@ -2123,7 +2091,6 @@ memrec.Color=0x00008000
                     <CheatEntry>
                       <ID>116429</ID>
                       <Description>"============================================"</Description>
-                      <LastState Value="" RealAddress="00000000"/>
                       <Color>808000</Color>
                       <GroupHeader>1</GroupHeader>
                     </CheatEntry>
@@ -2190,7 +2157,6 @@ memrec.Color=0x00008000
                     <CheatEntry>
                       <ID>116430</ID>
                       <Description>"============================================"</Description>
-                      <LastState Value="" RealAddress="00000000"/>
                       <Color>808000</Color>
                       <GroupHeader>1</GroupHeader>
                     </CheatEntry>
@@ -2200,13 +2166,11 @@ memrec.Color=0x00008000
                   <ID>116616</ID>
                   <Description>"Crafting"</Description>
                   <Options moHideChildren="1"/>
-                  <LastState Value="" Activated="1" RealAddress="00000000"/>
                   <GroupHeader>1</GroupHeader>
                   <CheatEntries>
                     <CheatEntry>
                       <ID>116531</ID>
                       <Description>"Crafting Tweak ( DISABLE OUTSIDE CRAFTING )"</Description>
-                      <LastState/>
                       <Color>008000</Color>
                       <VariableType>Auto Assembler Script</VariableType>
                       <AssemblerScript>{$lua}
@@ -2244,7 +2208,6 @@ memrec.Color=0x00008000
                       <ID>116574</ID>
                       <Description>"Stats"</Description>
                       <Options moHideChildren="1" moDeactivateChildrenAsWell="1"/>
-                      <LastState Value="" RealAddress="00000000"/>
                       <GroupHeader>1</GroupHeader>
                       <CheatEntries>
                         <CheatEntry>
@@ -2332,7 +2295,6 @@ memrec.Color=0x00008000
                         <CheatEntry>
                           <ID>116581</ID>
                           <Description>"================================================"</Description>
-                          <LastState Value="" RealAddress="00000000"/>
                           <Color>808000</Color>
                           <GroupHeader>1</GroupHeader>
                         </CheatEntry>
@@ -2376,7 +2338,6 @@ memrec.Color=0x00008000
                         <CheatEntry>
                           <ID>116585</ID>
                           <Description>"================================================"</Description>
-                          <LastState Value="" RealAddress="00000000"/>
                           <Color>808000</Color>
                           <GroupHeader>1</GroupHeader>
                         </CheatEntry>
@@ -2515,7 +2476,6 @@ memrec.Color=0x00008000
                         <CheatEntry>
                           <ID>116598</ID>
                           <Description>"boosterRangeMod"</Description>
-                          <Color>000000</Color>
                           <VariableType>Float</VariableType>
                           <Address>_Crafting</Address>
                           <Offsets>
@@ -2526,7 +2486,6 @@ memrec.Color=0x00008000
                         <CheatEntry>
                           <ID>116599</ID>
                           <Description>"boosterSpeedMod"</Description>
-                          <Color>000000</Color>
                           <VariableType>Float</VariableType>
                           <Address>_Crafting</Address>
                           <Offsets>
@@ -2537,7 +2496,6 @@ memrec.Color=0x00008000
                         <CheatEntry>
                           <ID>116600</ID>
                           <Description>"burst"</Description>
-                          <Color>000000</Color>
                           <VariableType>Byte</VariableType>
                           <Address>_Crafting</Address>
                           <Offsets>
@@ -2548,7 +2506,6 @@ memrec.Color=0x00008000
                         <CheatEntry>
                           <ID>116601</ID>
                           <Description>"turnSpeed"</Description>
-                          <Color>000000</Color>
                           <VariableType>4 Bytes</VariableType>
                           <Address>_Crafting</Address>
                           <Offsets>
@@ -2666,7 +2623,6 @@ memrec.Color=0x00008000
               <ID>116938</ID>
               <Description>" ================================================"</Description>
               <Options moHideChildren="1"/>
-              <LastState Value="" RealAddress="00000000"/>
               <Color>808000</Color>
               <GroupHeader>1</GroupHeader>
             </CheatEntry>
@@ -2674,10 +2630,123 @@ memrec.Color=0x00008000
         </CheatEntry>
       </CheatEntries>
     </CheatEntry>
+    <CheatEntry>
+      <ID>116958</ID>
+      <Description>"FreeTrade"</Description>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+
+aobscan(aob_freetrade, D9 04 24 83 C4 04 DE C9 DE E9 D9 58 34 )
+registersymbol(aob_freetrade)
+
+
+aob_freetrade+a:
+db 90 90 90
+
+/*
+Market:BuyMarketItem+37a - D9 04 24              - fld dword ptr [esp]
+Market:BuyMarketItem+37d - 83 C4 04              - add esp,04 { 4 }
+Market:BuyMarketItem+380 - DEC9                  - fmulp st(1),st(0)
+Market:BuyMarketItem+382 - DEE9                  - fsubp st(1),st(0)
+Market:BuyMarketItem+384 - D9 58 34              - fstp dword ptr [eax+34]   &lt;&lt;
+Market:BuyMarketItem+387 - 8B 43 0C              - mov eax,[ebx+0C]
+Market:BuyMarketItem+38a - 3D 03000000           - cmp eax,00000003 { 3 }
+
+*/
+
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+aob_freetrade+a:
+db D9 58 34
+
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>116961</ID>
+      <Description>"FreeAmmo"</Description>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+
+aobscan(aob_freeammo, 7C 13 8B 45 08 8B 48 0C 2B 4D 0C 89 48 0C )
+registersymbol(aob_freeammo)
+
+
+aob_freeammo+8:
+db 90 90 90
+
+/*
+AmmoBuffer:PayAmmo+c - 3B 45 0C              - cmp eax,[ebp+0C]
+AmmoBuffer:PayAmmo+f - 7C 13                 - jl AmmoBuffer:PayAmmo+24
+AmmoBuffer:PayAmmo+11- 8B 45 08              - mov eax,[ebp+08]
+AmmoBuffer:PayAmmo+14- 8B 48 0C              - mov ecx,[eax+0C]
+AmmoBuffer:PayAmmo+17- 2B 4D 0C              - sub ecx,[ebp+0C]
+AmmoBuffer:PayAmmo+1a- 89 48 0C              - mov [eax+0C],ecx
+AmmoBuffer:PayAmmo+1d- B8 01000000           - mov eax,00000001 { 1 }
+AmmoBuffer:PayAmmo+22- EB 02                 - jmp AmmoBuffer:PayAmmo+26
+AmmoBuffer:PayAmmo+24- 33 C0                 - xor eax,eax
+AmmoBuffer:PayAmmo+26- C9                    - leave
+
+
+*/
+
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+aob_freeammo+8:
+db 2B 4D 0C
+
+</AssemblerScript>
+    </CheatEntry>
   </CheatEntries>
+  <CheatCodes>
+    <CodeEntry>
+      <Description>Change of fsubp st(1),st(0)</Description>
+      <AddressString>00E86772</AddressString>
+      <Before>
+        <Byte>83</Byte>
+        <Byte>C4</Byte>
+        <Byte>04</Byte>
+        <Byte>DE</Byte>
+        <Byte>C9</Byte>
+      </Before>
+      <Actual>
+        <Byte>DE</Byte>
+        <Byte>E9</Byte>
+      </Actual>
+      <After>
+        <Byte>D9</Byte>
+        <Byte>58</Byte>
+        <Byte>34</Byte>
+        <Byte>8B</Byte>
+        <Byte>43</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry>
+      <Description>Change of fstp dword ptr [eax+34]</Description>
+      <AddressString>00E86774</AddressString>
+      <Before>
+        <Byte>04</Byte>
+        <Byte>DE</Byte>
+        <Byte>C9</Byte>
+        <Byte>DE</Byte>
+        <Byte>E9</Byte>
+      </Before>
+      <Actual>
+        <Byte>D9</Byte>
+        <Byte>58</Byte>
+        <Byte>34</Byte>
+      </Actual>
+      <After>
+        <Byte>8B</Byte>
+        <Byte>43</Byte>
+        <Byte>0C</Byte>
+        <Byte>3D</Byte>
+        <Byte>03</Byte>
+      </After>
+    </CodeEntry>
+  </CheatCodes>
   <UserdefinedSymbols/>
-  <Signature>
-    <SignedHash HashSize="132">0nIiDL;%PXn?74vAPQ[j.mk@R5}gy7447hPS8wJh#eBBh:;0o_,sUMN8Y#iQf_:fC5DQX@FH$L6YuiVrm$3n%x{,]w$)rb;j!wIx]U%w+34A52Oflr.g:BYAEgGaaB;VEp:D@zy-#,erCE[bWitBb1C^J:Qgxr,O.06:t</SignedHash>
-    <PublicKey Size="6360">00000i}s?vMMG0HLI3}(02_$UnKVWp^:})-*6le1vYO_I#4OPi,%He{$/RM8sv2/R($/2@Yk#NMNstIb.A2H6s5x^fj+](%azFn*gc_],]L^qfP,71w_Ktc)#^u%@){0dr8;RST0+-$yT,I!4fRafB2/[Cnmki6@l,.x%6RV(zRy3h5*dl0F^S(op2DcXg0EtjeM-2*Z3IG5A4M_8uQUCw_X8-@ICI_*q007xVg*jgB00d]2O,f$vv5tKEQIh{w03c(XQcVB:hYtV%j1K=,^Zaq]fj_HNeR%*=;5BjWJmmlY8O)D$g=9h_3NL9xLr[UWLm+IcZ*Rz1WdHz3$DNjUR8-d%htIutdZEoQ)iwV[E---fE,8EQQ5a=h7_H.^3^7l@s6a#!5dlSzpnw6Rp-8NVVj)D}U:K)TP,}BOsHkK^*:GSNdGF:r[s6}8,Gp:][t_?(wJrc8PaiHX1)pIJnJ3?{dN_Wpg-6h[^Qw4dfB}ieFj=uTzCrH6KqN0W7kawL3H+!R3.^@_zGdj=Pp5/bPtvSZz5oEoU(Q8YPC84)]65or6r[snGa^zOB#IeEiJ31-P^eX#j$7oVpM4hDQOxXQ9$UoXoKxA!Y%%wUczcGBBVxoy#042#PNs-(i(!(Bn9LRNTXAeMhnWrliX@rRIIMUPn}0di4-Rw??p1rgq[^6Q/[i^ZvIOEoxum3K@SN;H0:h0sk8Wyh(7ga7GLtw0fuTQ;mB^3=:]JbBsZ3rr0E:h-EE#ca;7pWAnp#[08k!lIeo=6Zy7*IG=)HJI3i#YJh{QRq=XUb(;HuKOifXg#4[nNB06Mk.Ab0-^o8{/@Bt=B_zwyO,XySQ@7YI@qjEyrhGmW=$mXWxizw3WG^0*8aJtOgUzn6#Z%86wPlLT}e-B;9{DMCIyJ)bDg(/,1Q#Q!,)uk%/M$cg3fIXqEBsA$T#yf^)2d2FtLo5G]WdH/:2_1j*NTAXW/DD_HJHOdG]-Jk.G:RSa/5CIZ-P}7$3]^siW1;(0+raG{W[n!s+];t=[[;s/y]yA(I7**mg]5B9A.%f:efB,-]703e;paFD(Aut10z!o=HH=RWufnX30*(drY2g!gBGC=lb3/@LI+ah}2N;BspK[h4ZCqM?^4K9Go.5xVo=tlki1dM}^U/SMa@AH4KAu;dP/RMi@3o=MrAO;U*xj^ZqAQTQoLvauf5//Dq7N]g,g)^)1s1f:WIt5+Tu0jLQJ!lk}f[^bG!w5]+sjxDv4I9G?+a]NAgW*xB9GnK^!1=e[xB^,(kHPKm1@7CA2Ofc,!=OrLhzJc*LktlH.*3]g5lAe.M;ZgZNI6o6v;.tbFLDbRL8g(,C:7}%qN5B@wkS[j2#SSDLv276qbgBHQSGQ6*GgE}Y6kTQO-3uB4bV1dFZ3#O96A$SfG$Tjpxe-w)09/_:r/S*hKA9;SYbRd.g_%;I!rO/0Hzgl9y5R$!@}o[Sb3{g*)-23Wnu-]0[:Y5G3,[*Aa*%47DvRX.;;XFxCk5%mxn9IHQ}/U25{R)dAt-{3vYw;!=W=)[!4_Qz6+Z=KaQU#NE37jc7$L.0%0=ug3v.@M0iMeMI.i^iPppbBA2+^SV25ayh0o$z9Y$y@hqwHNRp7WlXQf1o@,4(icBVJlO4$sWC3_6xsiO4^FwY!f,Arg.U(SA+eFpY)JnD4?j=/WsU[)oxmGeqvRv_^/PFJbDZG?nl#3KoYJ+gj*G4W9saa]=w5hb8bh31?bd(T_:{8%@jJAxM3_l5(:CI5}nK24N)V*0cSd:Z4ddelrI2A,Hp=Xmhs72IosQuI#SsB?7vZ1nBvQ?HYWJhQSO]GOLOQMy}PSA#E?0TbqaazJzvSUfhlEEc(a+A={avZrrxmLM5a[^Bo?@12p@1J0b/R2-Z6!aAW6fzYKDqK;SR-]K0DzX#^6.CMMSAv!Fl;)L4DIHeoQ/[y*QT9,yRo/[BQF(U0rsAlQpi-uCR%J=,qH3=oRV]CJr{}U8OLw9t)JSaZ@cgiJHBU96TCG}Y,Pu1sdWd=SdaL;*4T1)kBUYnKqg!J{Q(rPfGgq?(@S%}di:h;-wNI.8Yff87J4{0/c8B)*j,}B^PL58q(O:=Yu7hrxZk[IJJ(YbhFH!G,-c5a2-$FlLze?jx0c;Dtz%?8vFt8N8*OsmzY2DIcLz1DBVTNI_.iwVK$j2zpsKe-mv8Hi@?owW?/4-0QCP@msCJ#)yOjnrZnRc1{YNl[-GOIGXZB90KH^WR9Y5sDV!7_RWgUjw)P%L}cwpnyre6,N)/Xg5[PFZPMMO#%^4Kt[:e=}FmiZ$BW+=Ob)Y3p{3mNo+L6E=rt8rmk;HrY-t+ICY4UcY=IPTh]aS8F$7Pq(Y?KV)1Rpyt4IsB=JYsNu,VY.c?#)sN31I[C7k+}FRe,}z#zV(k(j/-9B6;fu]G,V3Xg7UEXv[SjwBJ/h$@ea6GWW1Yu(Pqe4E:WfqoFJ(+5SEJX:3ab[CSM,$3yo0/ey]T8#]_y3bd_{?ezI%KhuGCt_TiM_U^Ji{3[(xI1?lW(rJ@(NoA5azWG_*6KH=TK_5*;8G6!a$8Ik,VFL5OaMFr,)FGBh%?F=24;HLNsjWR;x%@^cLjD{-}yJ0q_Wp%D!cv#Z?!=[E6{X%SfvIkZM,P1c(LYZcZetvwSZ8O4k]8I6t)i+Abk!1QC+F:u1EVya[iST3x6tmkY.b^Tt$W5,4wOvKv7mc}xT+}RUNn}HacFOQ$+x@OGGFB3cyY7+uW^SuEPE,mB_wI/[_qmxhZWO#_Zo*ndotdxONgVci5ku.mMy:gOiZ,:5Ml*fgtQ$Q8^O!WzMg/FNA8TJ]f8E-Q}Gf!qoXYsQ7vh{lfWKZO^:X_^mwT]u{J6A1tbMEMRr{ecPpbaq[x.JWU%-:Y@$z#+e(4kT}n{5hN$t%r!y)Mf+SH5!oru=z39$T9WBntQi!]p1P*oe#=:Wg%cVZLMkj!%W]!fQn*Mdd^widn[izB2u*..V)7u^--qEK3gV!tCPh8rto!]*H_jX-=[b9@XCfW%RPbve$c}[FgStR$jA?uur(eq^647bHC;PUHd.(##i2^a._EvR.u1nJ$Hb8VDO.h!Im23nxdNbhq#CC*[T.o+J./4AI2QcIQ,Cew7(Oi#?CGv3JpaKACK@kj2sO-,S6#(+x01hRMHGL3!A5oMIO8Pjq5j@Eru/%t,dvn/KVdP[[J?Lza2W@eWLp$/7CTsTHjT-QQ8XIq4w/dnU465k/ReWfm16@b$8izwS8}(^gKmZr;oA$o,(v=IGcZV.atwS,4HIAr!T{@80)JeesFQs#oIjrJ@h!wFI}Cpe*)drQ{4Mec2]bcwYhrg8sl2Wb/6AReHMLfKUn/G*@FM0e#7cU:S{OIT=5Mp(JH;ZUby9Y;,*?^,t:?]yfZKqGIV!1a)Lt{]_jkuq/b(#XWXBEu/0TCVc^dGN9B*_9?qV-[hajb/.a.*+U]QwK}ElxvBsYNl;XC*?%+Rcr^xo;6OEH+lc%TLr+1x5^cQYs;ht.Of{f;-u708W.:5lQf9ac9H8cK[_8n8i.#cyoj:Wy;x[j1t[VJtKH{i9aZ^@/{eaCp$]#$Xb#C,xl=1zevdLO$!d4GDiki4,*8}23s]!?tB9smFU32.bRa^vG=A@-p]A[1!6-I4$R4Dv{tK}!i%=OF,RRmB.enfunfyd+$03xp6LAuO8Yy)AVCBuL%B/63Re,GCZbmK5=^mbSLm4Nomu9+Iz.)iUm09O^A#*()0I3YH]/3lJnAvI/0(knQDd[fEgLxp0hymKIE2a],CHnfYh#ynFv_^$:KdT+4+v8x{1p9H()WJ+ZX:2^.RiWzP9xO6e})kqXGxxynm!+P4R^LxP-z1qDeuB7LTCUc?LZ0U3WIoIL1qmFyG!PG_AA?un_xPTq5sFS$^?X%K+E/*DTj280v{VuAspgOyxI8U0jPlISllU$UmNqs;SuxgIj@a2BsqZwzq@335QpeQ.%@s2-?ST%r.JNVwGZ6NFeJhWS7m!]MTFC?).!h]vz9kRS*X]52V]Dy}LNM0]Z1/z-7$w,.E?oRBFfMJwM]Ub-HAOc3OB7KLmAF^sHwW}PIJgHU-Xtl{/M(vYS(%wyzi4cymLq7C]uV5m@k)b}}l!rg%(,]HaUP}4*4LJEVH94K?;lW3dI,bv=ul_sf9K6[Dq)Il:YKLR6n6B1mV=/}9)T_Jc0*7jcXTB!o{roz9=5w6eSC:S:emvAmPoJFx)[21xd6h@6vEGW+:M99X9dO+T;QO_c2(2tnKRjM5tU@%LL198ci](X+*ED#pwa1;pyH3u9al{bY}cOlDK3m5bvr{RENoDSk^xSpM.J5m1(.zkgweWZHBIgsxxnuhT!!O8=m[#ULyt+EEVT*DcUymYHJ=5qH;J79qoOI?WaG_[,_WXQpaUX7:TBMQ%;jP2xH5rMlx@yTE[u:I=}n=cIkqMh$37_WQn:XAjTDiCY7!(ZbP8E@$LPL$@jSkPfvQLe9Wm2THW1A;r:Iq+EQ38%wRz97pyiBk3q2;T7LUx1iL5HnVy^w+.UEBhE=%}:(LJQ*5;M%4)5d9Aa9kI2t2F!%PJA3$cj#8{h*[ZJQ5.ti#QAP#E)lcMlD86(gdzE)ps55Za%iwp8uP/s[)(4G%F@3LVUmj_?[]an(WxtxM;9VdLHHG.M-U0T,obqfnUXUzFBf@yIn9ZlZUngfDRa%-/cq01O$Z{[MjWh9axYWDAL+:bHrna}Jgbet%6%0d5bNoRaTQIsD?659hV4sl9uTv{FgK%1%$5PzPboIK{pmF(.YFO0-+46mpt,pBep1S8qyD(4I$]vC4uxI[^61[YsFIXvjVTA7U1zGQh;Sx]}rIaoRRq?,aXo]mDSB*GjhD:RByxUTD%#CBo46^ICILiZyMU7c.uEWx!?Ot*}6BOJ:?pqxG.h.cd#:Za,G%ftx4eJ.hqSOMa}Q1.34K.%0{QWCXhzawPGQ79XUSYbi6TeP9Hr:Xm,+49;p4$_cJc85dBPm4aZje..#jv^e+29jz/r4:CUR;/Cil6Oc/ipHvsz_0SWqyQ($8mD_Q;I$rBftV+hzv!M5Cr.jis+XzZeYnqsxc39mCm[pm%Ez0lCuz-o$JgT4Y(Kge-u78S]O7tRb-(ldeINpNR*,lvRAxYdvuoUL8HxiRya9d57?{=n)QZc?N,!x[7Xt-84[PjHPbji76GTdTcDKCJdi028,KibLN^)BQS2*sWU/cs{k;!:XEABguxpU@eG()V9p3!7lCI?^.)G5^dA{?7zbULh7%K:Qc]QZM2BQf7Fzt]7NQ)u;g:g^u%KU^Rn$,Bk[f_y?{7zs:751P0S)$mw8a6bnKqu7t_je-}/hXQVa)$l#Tu:.#nzUiZ=eYKl6iD2$Q?45#bct8+%R]=HnK92,_iJ%f_JbwJ--V=]/jRw)(.O0CS)[t^sP37fF+jI[k(dl8YMQdxeyXK#bxW8SeH}E.3e5Ykc@Tgv^9DNtWJpA#-zgHoq4fFf]]$35}KphZVG_L$sAJ1ar.*UB0b0+Zd;,V%MzJiSO@l:7BUj[2o6)j)*Zg-!{o@U)ur%v6!t+IWCK[a1SwxzCiis+AV3m,w%t#rAT91-o*m}qYYBLTnP04w[Lv{/Rshc)0?HXYTvRm8?_)!?}-El}DwBna=w#D^rDi9RF,sXMlBYnG5/2-8iTklIsST?[:LbQ;[V6@ln40rfjB3OV*,TRdKDBdlNttiL(,$UnnAA,65sK66SekZrf$1^YL]F$TDsA9s5@Zy1fnn1.s2gW3:;fBwVQetu}Go8BI8xX07I6WN/PYwFdjJf5!iw$^7FZvTrd=pnCQUS!,svkXS#hk..l_Fr4XCTyy%,JZ6q9(gX:ZOzT=V$4.OCQ*v-ya=.F.+{Hd)g[f6#yn?fj$UQYd:/o5gIvk(:.,uxA{Z:[uF(q9]r3Q6A@naEc57KSTM}jVh+8adWXGwt#_%u]A]$B99YIJ,N^S%n4+c9a5EH}MvKSl5:I{7fGQFfL)uR=YD;KYZ@;q)fEY@swuFg.3T1dCoQ{pr1j{n^QZe)XrFXg(SyFE,PC#I%aU_8i$l6YifR07:K91IA?lIt.;!d?3,5dW,oW+zRVg+D#{i]^}H3zq_nM85!?Ef2*Vcn2d}?@6Pn4todB+-[h2H)/mFTo5?}Hv3dq!qc!A.V!mfXMb/Ru.E,bGlp_Y*$@_?Q;Kt8YviA=V#V)MD2Vw!VuO){[7f.k^J#3pD;XIMq{NN8a3k*@V:lh}mKX/RnXF-!n-GUYMutr#z*64,wm3a4JuD+JT8lAa4!P}+$r}[k8S3}AYD8)svSm*yQML-3)h=B!thgO6Z9L^VP{A6WAj?t}MC[{BbQ1dS#(au{F9km]zP8=tg^1zXAo!xk:JNrb/@P9m?=@8l6b6NGD[-LjOtuipdmqZj3MB=acoB?n3A5PE8!(Dge$s@c6_y2f0gDsI[g*aP0eh935rZ}BDQ^*lY]2-hEUyIvfg@goKHAgWGa0M,Q)IbEtWIZmnNqIj!a_7h0Tk+ro6SW:lX)WL[Eji)G}8@QMCnS+=T3r}d3^4ebEeHU3NEq$vLrm]5j?**oU#Wo$BT$5;X^vg,Kd:C4$m$H6+(X0Sr75@xV9nd6!-QkE?)yQpb#irhpgDhC_v-nC]8*%Bwly{R.V9Dd.]NepbS[6jl^}vo]EJ3zi+zqp]l5+AN0eWup1S@-xkEE6El^Fv0M)yos,J)@3iK?a)+Yo@-WDj5v%?,st$xMhEm1h+NlMAe=liotFX{5h:5+K=;?Z6U3W9C,XOM^l$6:/,Y=b0XL9in%$K;c.7i18#GK3EHvfpG4)?F$EU+Swz}l95AL^xS7i2kjp*wRPqAmydBkm@mnIjaW*Dsw2y4$,CJ_7klu=}t83+j+Q#*7*Kx{X;^cI.S(z=%pcco?lpPsl)Df[(yKCNX2WJ@SEu(pmsMke;[L[N-5@Kt45?%)L3NIz{]#HF;qJKESgIw@ss-kzwVVU{1S$mzd+CkY0k!aieG;rrm,Xl/D#IJk^LXeCAxPzi}n2WM+dSDCa47sWYE](xVYQj1eew4Gj(gy@^Y75c=RcaQXC^;srgpO3t}?u-okvG35{9/t;XP^Cic@AD#2]8P7]LI)HF8d9bG5U9E^j8W%+*+9{KO?jh6@7+_/_Ch3bwsi{Ia#kw2rXziGB/L9qkyJncyH6$/}S.%:qQLe!1QP0{WhA=wD.s{8_q(Hn26T81xI(:]y/hWd:oyf,[xw+M#wQz)d5#Xt$lOptb-Kt+c([QTh4uGuBWU*kGFG5Ieu6nHhq^CU/yJw+!hEpPs8:ssY2mR](f{w/vjyb2^bQbSMs:XB%*Mto6xnKqRC4T#!T]eox,fL0+vuFLZvZ736jzbEAf+b*?%wAXu[BS+hncPgI#g%ycbeYTFtSB$rpbZ.R7(PPvAodu.ED]=zF[By$1tyd9p*U{Sx.rIiGI@z7P-2RSN)RO#[x1jX0W{$jUzWM#BQj$F#pg3*OV+}uL]TcJcI@(}8I!0SJ9bQ7y=V9yWTD.?Di{26q?_@inX[)**iFK:DolWji$*3@g*Z==E*17APt#+ZFCmhG9W9/x:v+P#cybw+Cm0i)T?PGi7g5v=c[$Rg56XVucD-JIq@ztgWEdK-4?v)kKn^z)=6L%j)W!*!bSQlylr8:=EeZ88Q1(P:5s$jK.wa@?C{TONF}{-nVN5aTS7mC,QBralt_,1qi86M=*7@F4=RJL?IfKfr/;lo]lF1Yn?c7L-ozbk/D/*YXM#LclEJ.rph2;zuF$I/b;HyA!/-m40,!{#jBRqiplV6gE(!.FpJ({4m0k4My0zE5MtWb{YF5wdX3kdlaZJ=6rtdBUS00000NkvXXu0mjfga7}l0YH,WXXC{3^7+?)HAUlfo{1mDko=.K4wLc9YGaRYLpVIkdy:@^g.X{ESSnB;#H9*_HnK5v:ej5k%ee3e(!hkfeh3J}2Q?$Wt4d5g6gJ::nIry.)-@rLQD}uaGW0Wp6U:pgXVxkZ%18Ojuq72VlRzZQ8iUCzZH[4xq3L7_</PublicKey>
-  </Signature>
 </CheatTable>

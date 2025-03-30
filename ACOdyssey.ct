@@ -6,28 +6,70 @@
       <Description>"Experience"</Description>
       <VariableType>Auto Assembler Script</VariableType>
       <AssemblerScript>[ENABLE]
+//
+// Experience required for next level
+//
 // Level  1
 // Level  2
 // Level  3
 // Level  4
 // Level  5
 // Level  6
-// Level  7  9700
-// Level  8 11200
-// Level  9 13300
-// Level 10 15600
-// Level 11 17700
-// Level 12 19800
-// Level 13 22200
-// Level 14 25100
-// Level 15 27600
-// Level 16 30600
-// Level 17 33700
-// Level 18 37500
+// Level  7   9700
+// Level  8  11200
+// Level  9  13300
+// Level 10  15600
+// Level 11  17700
+// Level 12  19800
+// Level 13  22200
+// Level 14  25100
+// Level 15  27600
+// Level 16  30600
+// Level 17  33700
+// Level 18  37500
 // Level 19
-// Level 20 44700
-// Level 21 48600
-// Level 22 53400
+// Level 20  44700
+// Level 21  48600
+// Level 22  53400
+// Level 23  58400
+// Level 24  63500
+// Level 25  69500
+// Level 26  75600
+// Level 27
+// Level 28  88300
+// Level 29  95700
+// Level 30 103200
+// Level 31 110900
+// Level 32 118800
+// Level 33 127700
+// Level 34 136800
+// Level 35 148300
+// Level 36 157900
+// Level 37 168600
+// Level 38 179500
+// Level 39 190700
+// Level 40 204800
+// Level 41 225900
+// Level 42 248100
+// Level 43 277500
+// Level 44 305200
+// Level 45 338700
+// Level 46 377400
+// Level 47 421700
+// Level 48 472100
+// Level 49 530500
+// Level 50 571600
+// Level 51 593700
+// Level 52 615900
+// Level 53 638300
+// Level 54 660800
+// Level 55 683300
+// Level 56 706000
+// Level 57 728900
+// Level 58 751800
+// Level 59 774900
+// Level 60 798000
+
 
 [DISABLE]
 </AssemblerScript>

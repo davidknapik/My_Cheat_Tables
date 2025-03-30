@@ -1,0 +1,2683 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheatTable CheatEngineTableVersion="45">
+  <CheatEntries>
+    <CheatEntry>
+      <ID>2</ID>
+      <Description>"-=- Coral Island -=-"</Description>
+      <GroupHeader>1</GroupHeader>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>3</ID>
+      <Description>"Game Version v1.1b-1233 (Non-Steam Version)"</Description>
+      <Color>0000FF</Color>
+      <GroupHeader>1</GroupHeader>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>974</ID>
+      <Description>"Full View Mode"</Description>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+
+luacall(function cycleFullCompact(sender,force); local state = not(compactmenuitem.Caption == 'Compact View Mode'); if force~=nil then state = not force end; compactmenuitem.Caption = state and 'Compact View Mode' or 'Full view Mode'; getMainForm().Splitter1.Visible = state; getMainForm().Panel4.Visible = state; getMainForm().Panel5.Visible = state; end; function addCompactMenu(); if compactmenualreadyexists then return end; local parent = getMainForm().Menu.Items; compactmenuitem = createMenuItem(parent); parent.add(compactmenuitem); compactmenuitem.Caption = 'Compact View Mode'; compactmenuitem.OnClick = cycleFullCompact; compactmenualreadyexists = 'yes'; end; addCompactMenu(); cycleFullCompact(nil,true))
+
+[DISABLE]
+
+luacall(cycleFullCompact(nil,false))
+
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>105582</ID>
+      <Description>"Disable Time"</Description>
+      <Options moHideChildren="1" moDeactivateChildrenAsWell="1"/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+aobscanmodule(TimeStop,$Process,83 B9 00 02 00 00 00 0F 9F C0 C3)
+alloc(newmem,$100,TimeStop)
+label(code)
+label(return)
+label(TimeStopON)
+label(TimeStopOFF)
+registersymbol(TimeStop)
+registersymbol(TimeStopON)
+registersymbol(TimeStopOFF)
+
+newmem:
+  cmp [TimeStopON],0
+  je TimeStopOFF
+  mov [rcx+00000200],01
+  jmp code
+
+TimeStopOFF:
+  mov [rcx+00000200],00
+  jmp code
+
+code:
+  cmp dword ptr [rcx+00000200],00
+  jmp return
+
+TimeStopON:
+  dq 0
+
+TimeStop:
+  jmp newmem
+  nop 2
+return:
+
+[DISABLE]
+TimeStop:
+  db 83 B9 00 02 00 00 00
+
+unregistersymbol(*)
+dealloc(*)
+
+{
+// ---------- INJECTING HERE ----------
+ProjectCoral-Win64-Shipping.UCurveLinearColor::HasAnyAlphaKeys: 83 B9 00 02 00 00 00  - cmp dword ptr [rcx+00000200],00
+// ---------- DONE INJECTING  ----------
+ProjectCoral-Win64-Shipping.UCurveLinearColor::HasAnyAlphaKeys+7: 0F 9F C0              - setg al
+ProjectCoral-Win64-Shipping.UCurveLinearColor::HasAnyAlphaKeys+A: C3                    - ret
+}
+</AssemblerScript>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>105586</ID>
+          <Description>"Time Stop On/Off"</Description>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>[ENABLE]
+TimeStopON:
+ dd 1
+
+[DISABLE]
+TimeStopON:
+ dd 0
+</AssemblerScript>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>9393</ID>
+      <Description>"Infinite Health and Stamina"</Description>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+aobscanmodule(InfiniteStaminaAndHealth,$Process,F3 0F 11 89 B0 00 00 00 E9 AF)
+alloc(newmem,$100,InfiniteStaminaAndHealth)
+label(code)
+label(return)
+registersymbol(InfiniteStaminaAndHealth)
+
+newmem:
+  cmp [rcx+C8],#0             // 0 = Enemies
+  je code
+  movss [rcx+000000B0],xmm2   //Health and Stamina no decrease
+  jmp return
+
+code:
+  movss [rcx+000000B0],xmm1
+  jmp return
+
+InfiniteStaminaAndHealth:
+  jmp newmem
+  nop 3
+return:
+
+[DISABLE]
+InfiniteStaminaAndHealth:
+  db F3 0F 11 89 B0 00 00 00
+
+unregistersymbol(*)
+dealloc(*)
+
+{
+// ---------- INJECTING HERE ----------
+ProjectCoral-Win64-Shipping.UC_FillableStatisticComponent::RemoveAmount+34: F3 0F 11 89 B0 00 00 00  - movss [rcx+000000B0],xmm1
+// ---------- DONE INJECTING  ----------
+}
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>9</ID>
+      <Description>"Highlighted Item (only have ID for No Rarity Items)"</Description>
+      <Options moHideChildren="1" moDeactivateChildrenAsWell="1"/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+aobscanmodule(InventoryAob,$Process,8B 41 08 48 8B D9 89 42)
+alloc(newmem,$100,InventoryAob)
+label(code)
+label(return)
+label(ItemPtr)
+registersymbol(InventoryAob)
+registersymbol(ItemPtr)
+
+newmem:
+  mov [ItemPtr],rcx
+
+code:
+  mov eax,[rcx+08]
+  mov rbx,rcx
+  jmp return
+
+ItemPtr:
+  dq 0
+
+InventoryAob:
+  jmp newmem
+  nop
+return:
+
+[DISABLE]
+InventoryAob:
+  db 8B 41 08 48 8B D9
+
+unregistersymbol(*)
+dealloc(*)
+
+{
+// ---------- INJECTING HERE ----------
+ProjectCoral-Win64-Shipping.FC_InventorySlot::GetSlotData+20: 8B 41 08           - mov eax,[rcx+08]
+// ---------- DONE INJECTING  ----------
+}
+</AssemblerScript>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>10</ID>
+          <Description>"Item Quantity"</Description>
+          <ShowAsSigned>0</ShowAsSigned>
+          <VariableType>2 Bytes</VariableType>
+          <Address>ItemPtr</Address>
+          <Offsets>
+            <Offset>8</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>2291</ID>
+          <Description>"Item ID (Normal Item)"</Description>
+          <DropDownList ReadOnly="1" DescriptionOnly="1" DisplayValueAsItem="1">10003:Pink Diamond
+21002:Potato
+21003:Strawberry
+21004:Radish
+21005:Carrot
+21006:Turnip
+21007:Cauliflower
+21008:Peas
+21009:Sugarcane
+21010:Cucumber
+21011:Chard
+21012:Lettuce
+21013:Grass
+21014:Peony
+21015:Daisy
+21016:Soybean
+21017:Snowdrop
+21018:Durian
+21019:Orange
+21020:Plum
+21021:Lychee
+21022:Banana
+21023:Potato Seeds
+21024:Strawberry Seeds
+21025:Radish Seeds
+21026:Carrot Seeds
+21027:Turnip Seeds
+21028:Cauliflower Seeds
+21029:Peas Seeds
+21030:Sugarcane Seeds
+21031:Cucumber Seeds
+21032:Chard Seeds
+21033:Lettuce Seeds
+21034:Grass Starter
+21035:Peony Seeds
+21036:Daisy Seeds
+21037:Soybean Seeds
+21038:Snowdrop Seeds
+21039:Durian Sapling
+21040:Orange Sapling
+21041:Plum Seedling
+21042:Avocado Seedling
+21043:Banana Seedling
+21044:Rambutan Seedling
+21045:Rambutan
+21046:Poppy
+21047:Poppy Seeds
+21048:Maple Seeds
+21049:Oak Seeds
+21050:Wilds Seeds
+21051:Spring Foraged Seeds
+21052:Festival Tree Sapling
+21053:Mythical Pet Seed
+21054:Mahogany Seeds
+21055:Poplar Seeds
+22002:Blueberry
+22003:Hot Pepper
+22004:Corn
+22005:Melon
+22006:Tomato
+22007:Red Cabbage
+22008:Wheat
+22009:Bell Pepper
+22010:Pineapple
+22011:Okra
+22012:Blackberry
+22013:Coffee Bean
+22014:Starfruit
+22015:Gardenia
+22016:Sunflower
+22017:Rose
+22018:Lily
+22019:Iris
+22020:Mango
+22021:Peach
+22022:Jackfruit
+22023:Dragonfruit
+22024:Papaya
+22025:Blueberry Seeds
+22026:Hot Pepper Seeds
+22027:Corn Seeds
+22028:Melon Seeds
+22029:Tomato Seeds
+22030:Red Cabbage Seeds
+22031:Wheat Seeds
+22032:Bell Pepper Seeds
+22033:Pineapple Seeds
+22034:Okra Seeds
+22035:Blackberry Seeds
+22036:Coffee Bean Seeds
+22037:Starfruit Seeds
+22038:Gardenia Seeds
+22039:Sunflower Seeds
+22040:Rose Seeds
+22041:Lily Seeds
+22042:Iris Seeds
+22043:Mango Seedling
+22044:Peach Seedling
+22045:Jackfruit Seedling
+22046:Dragonfruit Seedling
+22047:Papaya Seedling
+22048:Coconut Seedling
+22049:Summer Foraged Seeds
+23002:Rice
+23003:Barley
+23004:Basil
+23005:Amaranth
+23006:Artichoke
+23007:Beet
+23008:Grape
+23009:Bok Choy
+23010:Cranberry
+23011:Eggplant
+23012:Pumpkin
+23013:Taro Root
+23014:Sweet Potato
+23015:Blue Dahlia
+23016:Cactus
+23017:Orchid
+23018:Apple
+23019:Olive
+23020:Cocoa Bean
+23021:Lemon
+23022:Pear
+23023:Rice Seeds
+23024:Barley Seeds
+23025:Basil Seeds
+23026:Amaranth Seeds
+23027:Artichoke Seeds
+23028:Beet Seeds
+23029:Grape Seeds
+23030:Bok Choy Seeds
+23031:Cranberry Seeds
+23032:Eggplant Seeds
+23033:Pumpkin Seeds
+23034:Taro Root Seeds
+23035:Sweet Potato Seeds
+23036:Fairy Rose Seeds
+23037:Cactus Flower Seeds
+23038:Orchid Seeds
+23039:Apple Seedling
+23040:Olive Seedling
+23041:Cocoa Bean Seedling
+23042:Lemon Seedling
+23043:Pear Seedling
+23044:Garlic
+23045:Garlic Seeds
+23046:Fairy Rose
+23047:Watermelon
+23048:Watermelon Seeds
+23049:Blue Dahlia Seeds
+23050:Fall Foraged Seeds
+24002:Cotton
+24003:Tea Leaf
+24004:Almond
+24005:Avocado
+24006:Snake Fruit
+24007:Cotton Seed
+24008:Tea Seed
+24009:Almond Seedling
+24010:Lychee Seedling
+24011:Snake Fruit Seedling
+24012:Winter Foraged Seeds
+41002:Cheese
+41003:Goat Cheese
+41004:Mayonnaise
+41005:Duck Mayonnaise
+41006:Black Truffle Oil
+41007:Olive Oil
+41008:Almond Oil
+41009:Canola Oil
+41010:Rice Vinegar
+41017:Yogurt
+41019:Canola Mead
+41020:Coffee
+41021:Gesha Coffee
+41022:Green Tea
+41023:Kombucha
+41024:Bear
+41025:Apple Wine
+41026:Sake
+41027:Wheat Flour
+41028:Sugar
+41029:Syrup
+41030:Resin
+41031:Hummus
+41032:Ketchup
+41033:Kiracha Sauce
+41034:Guacamole
+41035:Peanut Butter
+41036:Wasabi Paste
+41037:Puree
+41038:Fermented Cheese
+41039:Tempeh
+41040:Butter
+41041:Goat Butter
+41042:Cheese Wheel
+41043:Goat Cheese Wheel
+41044:Large Mayonnaise
+41045:Large Duck Mayonnaise
+41046:Large Quail Mayonnaise
+41050:Large Butter
+41051:Large Goat Butter
+41053:Large Gesha Coffee
+41054:Avocado Juice
+41055:Banana Juice
+41056:Carrot Juice
+41057:Cauliflower Juice
+41058:Chard Juice
+41059:Cucumber Juice
+41060:Durian Juice
+41061:Lettuce Juice
+41062:Lychee Juice
+41063:Orange Juice
+41064:Peas Juice
+41065:Plum Juice
+41066:Potato Juice
+41067:Radish Juice
+41068:Rambutan Juice
+41069:Snake Fruit Juice
+41070:Strawberry Juice
+41071:Turnip Juice
+41072:Pickled Cucumber
+41073:Pickled Lettuce
+41074:Pickled Peas
+41075:Pickled Okra
+41076:Pickled Bok Choy
+41077:Cactus Honey
+41078:Pickled Artichokes
+41079:Pickled Chard
+41080:Pickled Red Cabbage
+41081:Pickled Beets
+41083:Pickled Radishes
+41084:Pickled Cauliflower
+41085:Pickled Eggplant
+41086:Pickled Garlic
+41087:Pickled Potatoes
+41088:Pickled Carrots
+41089:Maple Syrup
+41090:Pickled Bell Peppers
+41091:Pickled Corn
+41092:Plum Jam
+41093:Snake Fruit Jam
+41094:Blueberry Jam
+41095:Blackberry Jam
+41096:Grape Jam
+41097:Avocado Jam
+41098:Melon Jam
+41099:Pear Jam
+41100:Apple Jam
+41101:Watermelon Jam
+41102:Tomato Jam
+41103:Rambutan Jam
+41104:Lychee Jam
+41105:Strawberry Jam
+41106:Dragonfruit Jam
+41107:Papaya Jam
+41108:Cranberry Jam
+41109:Orange Jam
+41110:Durian Jam
+41111:Starfruit Jam
+41112:Jackfruit Jam
+41113:Lemon Jam
+41114:Pineapple Jam
+41115:Mango Jam
+41116:Banana Jam
+41117:Peach Jam
+41118:Blackberry Juice
+41119:Melon Juice
+41120:Tomato Juice
+41121:Cranberry Juice
+41122:Starfruit Juice
+41123:Pineapple Juice
+41124:Grape Juice
+41125:Watermelon Juice
+41126:Dragonfruit Juice
+41127:Lemon Juice
+41128:Jackfruit Juice
+41129:Papaya Juice
+41130:Pear Juice
+41131:Apple Juice
+41132:Mango Juice
+41133:Peach Juice
+41134:Basil Juice
+41135:Bok Choy Juice
+41136:Artichoke Juice
+41137:Sweet Potato Juice
+41138:Beet Juice
+41139:Taro Root Juice
+41140:Red Cabbage Juice
+41141:Amaranth Juice
+41142:Bell Pepper Juice
+41143:Corn Juice
+41144:Pumpkin Juice
+41145:Okra Juice
+41146:Hot Pepper Juice
+41147:Eggplant Juice
+41148:Garlic Juice
+41149:Daisy Honey Juice
+41150:Peony Honey
+41151:Poppy Honey
+41152:Snowdrop Honey
+41153:Sunflower Honey
+41154:Gardenia Honey
+41155:Rose Honey
+41156:Lily Honey
+41157:Iris Honey
+41158:Orchid Honey
+41159:Blue Dahlia Honey
+41160:Tulip Honey
+41161:Violet Honey
+41162:Daffodil Honey
+41163:Canola Honey
+41164:White Hibiscus Honey
+41165:Larkspur Honey
+41166:Cosmo Honey
+41167:Hibiscus Honey
+41168:Lotus Honey
+41170:Titan Arum Black Honey
+41171:Jepun Honey
+41172:Pansy Honey
+41173:Rafflesia Black Honey
+41174:Barley Beer
+41175:White Truffle Oil
+41177:Fermented Cheese Wheel
+41178:Fermented Goat Cheese
+41179:Fermented Goat Cheese Wheel
+41180:Large Yogurt
+41181:Goat Yogurt
+41182:Large Goat Yogurt
+41183:Rice Flour
+41184:Almond Flour
+41185:Fairy Rose Honey
+41186:Pickled Black Beauty Eggplant
+41193:Pickled Ginseng
+41201:Candied Tree Seed
+41202:Ball of Goop
+41203:Scuba Snack
+41229:Bamboo Shoot Kimchi
+41278:Aged Barley Beer
+41284:Century Duck Egg
+41285:Century Egg
+41286:Century Quail Egg
+41287:Large Century Duck Egg
+41288:Large Century Egg
+41289:Large Century Quail Egg
+41290:Large Salted Duck Egg
+41296:Dried Steamer Clam
+41333:Grape Wine
+41334:Amaranth Flour
+42002:Llama Yarn
+42003:Cotton Cloth
+42004:Red Dye
+42005:Yellow Dye
+42006:Green Dye
+42007:Blue Dye
+42008:Purple Dye
+42009:Gourmet Salt
+42010:Wakame
+42011:Tofu
+42012:Wool Cloth
+42013:Raisins
+42014:Vegetable Jerky
+42015:Potato Chips
+42016:Beet Chips
+42017:Kale Chips
+42018:Sweet Potato Chips
+42019:Mushroom Jerky
+42020:Quail Mayonnaise
+42021:Large Cotton Cloth
+42022:Large Wool Cloth
+42023:Large Llama Yarn
+42024:Nutty Sap
+50202:Clam Shell
+50203:Jumonia Shell
+50204:Cockle
+50205:Murex
+50206:Purple Cowry Shell
+50207:Sunray Venus Shell
+50208:Flame Scallop
+50302:Pearl
+50303:Black Sea Urchin
+50304:Seaweed
+50305:Silver Coin
+50306:Gold Coin
+50307:Sea Mushroom
+50308:Giant Clam
+50309:Blue Mussel
+50310:Calico Scallop
+50311:Blood Calm
+50312:Pacific Oyster
+50313:Sea Salt
+50314:Steamer Clam
+50315:Wakame Seed
+50316:jackknife Clam
+50317:Duck Mussel
+50319:Mediterranean Scallop
+50321:Arame
+50323:Cherrystone Clam
+50324:Amber Pen Shell
+50325:Zebra Mussel
+50327:Eastern Oyster
+50328:Belon Oyster
+50330:Purple Urchin
+50331:Razor Clam
+50332:Green Lipped Mussel
+50333:Blue Oyster
+50334:Kumamoto Oyster
+50335:Bay Scallop
+50336:Potagonian Scallop
+50337:Kombu
+50338:Sea Lettuce
+50339:Green Sea Urchin
+50340:Quahog
+50341:Geoduck
+50342:Horse Mussel
+50343:Olympia Oyster
+50344:Queen Scallop
+50345:King Scallop
+50346:Sea Grapes
+50347:Red Sea Urchin
+50348:Heart Urchin
+50349:Gooseneck Barnacle
+50402:Silver Spoon
+50403:Silver Fork
+50404:Oversized Spoon
+50405:Small Figurine
+50406:Ship's Wheel
+50407:Rusty Anchor
+50408:Snow Globe
+50409:Hammerstone
+50410:Stone Hand Axe
+50411:Harpoon
+50412:Rusty Spear
+50413:Terracotta Soldier
+50414:Underwater Tablet
+50415:Green Mask
+50416:Red Mask
+50417:Blue Mask
+50418:Prehistoric Bowl
+50419:Ancient Map
+50420:Stone Portrait
+50421:Bronze Hammer
+50422:Ruby Hairpin
+50423:Sky Disk
+50424:Clay Vessel
+50425:Ancient Battery
+50426:Golden Bell
+50427:Optical Glass Prism
+50428:Leather Parchment
+50429:Wood Carving
+50430:Shadow Puppet
+50431:Golden Keris
+50432:Ceramic Vase
+50433:Chipped Pottery Jug
+50434:Ancient Compass
+50435:Wooden Hand Fan
+50436:Bronze Statue
+50437:Chipped Helmet
+50438:Unfinished Clay Statue
+50439:Beaded Necklace
+50440:Metal Boot
+50441:Fossil Node 1
+50442:Earth Geode
+50443:Fossil Node 2
+50444:Fossil Node 3
+50445:Fossil Node 4
+50446:Fossil Node 5
+50447:Fire Geode
+50448:Water Geode
+50449:Brontosaurus Skull
+50450:Brontosaurus Torso
+50451:Brontosaurus Hip
+50452:Brontosaurus Spine
+50453:Brontosaurus Tail
+50454:Brontosaurus Leg
+50455:Tyrannosaurus Claw
+50456:Tyrannosaurus Leg
+50457:Tyrannosaurus Torso
+50458:Tyrannosaurus Spine
+50459:Tyrannosaurus Skull
+50460:Tyrannosaurus Arm
+50461:Mosasaurus Skull
+50462:Mosasaurus Arm
+50463:Mosasaurus Leg
+50464:Mosasaurus Torso
+50465:Mosasaurus Spine
+50466:Mosasaurus Tail
+50467:Triceratops Skull
+50468:Triceratops Torso
+50469:Triceratops Arm
+50470:Triceratops Leg
+50471:Triceratops Pelvis
+50472:Triceratops Tail
+50473:Pterodactyl Skull
+50474:Pterodactyl Leg
+50475:Mystery Geode
+50476:Manganese Node
+50477:Mystery Nodule (Unused)
+50478:Pterodactyl Arm
+50479:Pterodactyl Spine
+50480:Pterodactyl Torso
+50481:Pterodactyl Tail
+50482:Wind Geode
+50483:Gardonite Ring
+50484:Jasmine Crown
+50485:Jade Locket
+50486:Masquerade Mask
+50487:Pearl Chain
+50488:Gold Earring
+50489:Shell Anklet
+50490:Ancient Rainbow Armband
+50491:Gemstone Beads
+50492:Stingray Jewel Plate
+50493:Terrarium Pendant
+50494:Moonlight Earrings
+50495:Dragon's Tears
+50496:Jade Hair Stick
+50497:Pearl Brooch
+50498:Carved Ring Holder
+50499:Dragon's Trisula
+50500:Broken Blade
+50502:Mucus
+50503:Bait Meat
+50504:Bone
+50505:Flame Essence
+50506:Dark Essence
+50507:Slime Goop
+50508:Silky Fur
+50509:Bat Wing
+50510:Tough Meat
+50511:Monster Essence
+50512:Cursed Fragment
+50513:Earth Essence
+50514:Water Essence
+50515:Wind Essence
+50516:Poison Sac
+50517:Stinger
+50602:Batik Shawl
+50603:Royal Bowl
+50604:Beach Snow Globe
+50605:Glass Bowl
+50606:Flying Dragon Teapot
+50607:Town Model
+50608:Gemstone Bonsai
+50609:Gold Fish
+50610:Crystal Ball
+50611:Gemstone Hourglass
+50612:Gemstone Candlestick
+50613:Magic Lamp
+50614:Fossil Node 6
+50615:Velociraptor Skull
+50616:Velociraptor Torso
+50617:Velociraptor Spine
+50618:Velociraptor Claw
+50619:Velociraptor Leg
+50620:Velociraptor Tail
+50621:Fossil Node 7
+50622:Plesiosaurus Skull
+50623:Plesiosaurus Torso
+50624:Plesiosaurus Spine
+50625:Plesiosaurus Leg
+50626:Plesiosaurus Pelvis
+50627:Plesiosaurus Tail
+50628:Fossil Node 8
+50629:Mammoth Skull
+50630:Mammoth Torso
+50631:Mammoth Spine
+50632:Mammoth Claw
+50633:Mammoth Leg
+50634:Mammoth Tail
+50635:Fossil Node 9
+50636:Stegosaurus Skull
+50637:Stegosaurus Torso
+50638:Stegosaurus Spine
+50639:Stegosaurus Claw
+50640:Stegosaurus Leg
+50641:Stegosaurus Tail
+50642:Fossil Node 10
+50643:Gallimimus Skill
+50644:Gallimimus Torso
+50645:Gallimimus Spine
+50646:Gallimimus Claw
+50647:Gallimimus Pelvis
+50648:Gallimimus Tail
+50649:Broken Sundial
+50650:Salt Lamp
+50651:Glass Star
+50652:Silver Sandal
+50653:Cassete Player
+50654:C.I. Jo
+50655:Dumbphone
+50656:Water Bottle
+50657:Vinyl Record
+51102:Bamboo Shoot
+51103:Canola
+51104:Wasabi
+51105:Tulip
+51106:Violet
+51107:Daffodil
+51108:Morel
+51109:Shiitake
+51110:Cherry
+51111:Mangosteen
+51302:Coffer
+51303:Ornate Coffer
+51304:Shimmering Coffer
+51305:Marble Coffer
+51306:Pirate Coffer
+51338:Mysterious Coffer
+52102:Watercress
+52103:Shallot
+52104:Cosmo
+52105:Larkspur
+52106:Hibiscus
+52107:White Hibiscus
+52108:Coconut
+52109:Coral Tall Coconut
+53102:Chestnut
+53103:Celery
+53104:Lotus
+53105:Black Trumpet
+53106:Matsutake
+53107:Fig
+53108:Titan Arum
+53109:Jepun
+53110:Macapuno Coconut
+53111:Ginseng
+54102:Black Beauty Eggplant
+54103:Brussel Sprouts
+54104:Kale
+54105:Pansy
+54106:Rafflesia
+54107:Coconut de Mer
+54108:Tea Berry
+54109:Rose Hip
+61002:Bronze Ore
+61003:Gold Ore
+61005:Osmium Ore
+61006:Bronze Bar
+61007:Gold Bar
+61009:Osmium Bar
+61010:Emeral
+61011:Aquamarine
+61012:Ruby
+61013:Amethyst
+61014:Topaz
+61015:Jade
+61016:Diamond Gem
+61017:Opal
+61018:Peridot
+61019:Moonstone
+61020:Onyx
+61021:Morganite
+61022:Lepidolite
+61023:Fire Agate
+61024:Quartz
+61025:Labradorite
+61026:Rose Quartz
+61027:Blue Quartz
+61028:Variscite
+61029:Azurite
+61030:Serpentine
+61031:Rhodonite
+61032:Amber
+61033:Garnet
+61034:Beryl
+61035:Diorite
+61036:Jasper
+61037:Granite
+61038:Marble
+61039:Crystal Gem
+61040:Black Opal
+61041:Red Beryl
+61042:Pink Crystal
+61043:Purple Crystal
+61044:Ginger
+61045:Silver Bar
+61046:Silver Ore
+61047:Geode
+62002:Bronze Kelp
+62003:Gold Kelp
+62004:Silver Kelp
+62005:Osmium Kelp
+62006:Bronze Kelp Essence
+62007:Gold Kelp Essence
+62008:Silver Kelp Essence
+62009:Osmium Kelp Essence
+62010:Vaquatic
+63002:Explosive 1
+63003:Explosive 2
+63004:Explosive 3
+63005:The Lost Umbrella
+63006:Rusty Frying Pan
+63007:Golden Dagger
+63008:Crystal Sword
+63009:Blunt Sword
+63010:Steel Blade
+63011:Katana
+63012:Blue Goblin (Level 2 Katana)
+63013:Saber
+63014:Gnome Saber
+63015:Bow and Arrow
+63016:Crossbow
+63017:Wooden Bat
+63018:Iron Bat
+63019:Iron Morning Star
+63020:Dark Mace
+63021:Hiking Boots
+63022:Combat Boots
+63023:Purple Boots
+63024:Gold-Plated Boots
+63025:Light Ring
+63026:Pearl Ring
+63027:Boda Blessing Ring
+63028:Diamond Ring
+63029:Kelp Essence Ring
+63030:Spikes
+63031:Slime Trap
+63032:Spring Trap
+63033:Glue Trap
+63034:Shock Trap
+63035:Decoy
+63036:Vortexnator 1
+63037:Vortexnator 2
+63038:Vortexnator 3
+63039:Decoy 2
+63040:Decoy 3
+63041:Flying Insect Trap
+63042:Ground Insect Trap
+63043:Underground Insect Trap
+63044:Crowler Trap
+63045:Float Trap
+63046:Moonhaze Club
+63047:Sus Club
+63048:Feros-Tail Club
+63049:Naganian Morningstar
+63050:Keeper's Club
+63051:Gold-Encrusted Club
+63052:Wicked Witch Club
+63053:Spike Bubble Morningstar
+63054:Moonhaze Shield
+63055:Sus Shield
+63056:Feros-Fin Shield
+63057:Naganian Shield
+63058:Keeper's Barricade
+63059:Doomshadow Shield
+63060:Rhodonite Wings Barricade
+63061:Gold-Encrusted Shield
+63062:Moonhaze Spear
+63063:Sus Spear
+63064:Feros-Tail Trident
+63065:Naganian Harpoon
+63066:Keeper's Spear
+63067:Doomshadow Spear
+63068:Rhodonite Wings Wing Spear
+63069:Gold-Encrusted Spear
+63070:Flameguard Greatsword
+63071:Sus Sword
+63072:Feros Sword
+63073:Naganian Sword
+63074:Keeper's Greatsword
+63075:Doomshadow Sword
+63076:Rhodonite Wings Sword
+63077:Moonhaze Sword
+63078:Flameguard Axe
+63079:Sus Axe
+63080:Feros Axe
+63081:Axe of Naganian
+63082:Keeper's Axe
+63083:Soldier Axe
+63084:Moonhaze Axe
+63085:Defender Axe
+63086:Moonhaze Hammer
+63087:Sus Hammer
+63088:Feros Hammer
+63089:Naganian Hammer
+63090:Keeper's Hammer
+63091:Doomshadow Hammer
+63092:Rhodonite Wings Hammer
+63093:Gold-Encrusted Hammer
+63094:Gold-Encrusted Sword
+63095:Flameguard Spear
+63096:Flameguard Hammer
+63097:Flameguard Shield
+63098:Flameguard Club
+64002:Bait
+64003:Tackle
+64004:Spring Bait
+64005:Bug Bait
+64006:Ground Insect Scent
+64007:Crawling Critter Scent
+64008:Flying Insect Scent
+64009:Floating Critter Scent
+64010:Bamboo Net Small
+64011:Monster Lure Scent 1
+64012:Monster Scent
+64013:Monster Lure Scent 2
+64014:Monster Scent 2
+64015:Bamboo Net Medium
+64016:Bamboo Net Large
+64017:Farm Stats Component
+64018:Fishing Information Component
+64019:Catching Information Component
+64020:Artisan Production Component
+64021:Artisan Speed Component
+65002:Pine Cone
+65003:Fallen Seed
+65004:Wood
+65005:Stone
+65006:Battery
+65007:Coal
+65008:Clay
+65009:Ordinary Scarecrow
+65010:Wooden Gate
+65011:Wooden Fence
+65012:Stone Fence
+65013:Gold Fence
+65014:Sprinkler 1
+65015:Sprinkler 2
+65016:Mayonnaise Machine
+65017:Bee House
+65018:Mason Jar
+65019:Cheese Press
+65020:Loom
+65021:Keg
+65022:Oil Press
+65023:Aging Barrel
+65024:Torch
+65025:Campfire
+65026:Brazier
+65027:Iron Lamp Post
+65028:Wooden Chest
+65029:Wood Sign
+65030:Stone Sign
+65031:Gold Sign
+65032:Garden Pot
+65033:Fiber
+65034:Hay
+65035:Furnace
+65036:Extractor
+65037:Hoe
+65038:Pickaxe
+65039:Axe
+65040:Watering Can
+65041:Fishing Pole
+65042:Scythe
+65043:Milk Pail
+65044:Shears
+65045:Heater
+65046:Copper Pan
+65048:Yogurt Machine
+65049:Seed Maker
+65050:Recycling Machine
+65051:Tap
+65053:Trash
+65054:Old Newspaper
+65055:Plastic Gallon
+65056:Can
+65057:Plastic Bag
+65058:Monster Scarecrow
+65059:Fish Kate Scarecrow
+65060:Dye-Making Machine
+65061:Fishing Nets
+65062:Glass Bottle
+65063:Wood Plank
+65064:Hardwood
+65065:Bronze Pickaxe
+65066:Gold Pickaxe
+65067:Silver Pickaxe
+65068:Osmium Pickaxe
+65069:Bronze Axe
+65070:Gold Axe
+65071:Silver Axe
+65072:Osmium Axe
+65073:Bronze Watering Can
+65074:Gold Watering Can
+65075:Silver Watering Can
+65076:Osmium Watering Can
+65077:Bronze Hoe
+65078:Gold Hoe
+65079:Silver Hoe
+65080:Osmium Hoe
+65081:Bronze Scythe
+65082:Gold Scythe
+65083:Silver Scythe
+65084:Osmium Scythe
+65085:Wood Path
+65086:Stone Path
+65087:Mole
+65088:Iron Fence
+65089:Picket Fence
+65090:Stone Gate
+65091:Gold Gate
+65092:Picket Gate
+65093:Brick Path
+65094:Path 4
+65095:Path 5
+65096:Path 6
+65097:Path 7
+65098:Wood Floor Tile
+65099:Stone Floor Tile
+65100:Brick Floor Tile
+65101:Floor Tile 4
+65102:Floor Tile 5
+65103:Floor Tile 6
+65104:Floor Tile 7
+65105:Iron Gate
+65106:Concrete Fence
+65107:Concrete Gate
+65108:Scrap
+65109:Sap
+65110:Makeshift Chest
+65111:Rickety Fence
+65112:Rickety Gate
+65113:Hedge Fence
+65114:Scrap Fence
+65115:Hedge Gate
+65116:Scrap Scarecrow
+65117:Earth Totem
+65118:Wind Totem
+65119:Water Totem
+65120:Scrap Gate
+65121:Kunti Ghost Scarecrow
+65122:Poci Ghost Scarecrow
+65123:Deluxe Chest
+65124:Iron Floor Tile
+65125:Trash Gate
+65126:Trash Fence
+65127:Trash Floor Tile
+65128:Scrap Floor Tile
+65131:Bug Net
+65132:Hammer
+65133:Bronze Hammer (Tool Still Unused)
+65134:Gold Hammer
+65135:Titanium Hammer
+65136:Osmium Hammer
+65137:Mushroom Log
+65138:Silver Bug Net
+65139:Gold Bug Net
+65140:Osmium Bug Net
+65142:Stone Bench
+65143:Stone Desk
+65144:Round Stone Flower Pot
+65145:Square Stone Flower Pot
+65146:Flower Rock Arch
+65147:Wooden Flower Arch Gate
+65148:Stone Waterfall
+65149:Wooden Swing
+65150:Stone Pebble Floor Tile
+65151:Tribal Hut
+65152:Log Chair
+65153:Log Desk
+65154:Camp Bonfire
+65155:Camp Grill
+65156:Log Bench
+65157:White Flowering Bush
+65158:Pink Flowering Bush
+65159:Lamppost
+65160:Rickety Arch
+65161:Log Gate
+65162:Log Arch
+65163:Gather Totem 1
+65164:Gather Totem 2
+65165:Gather Totem 3
+65166:Water Totem 1
+65167:Water Totem 2
+65168:Water Totem 3
+65169:Harvest Totem
+65170:Water Totem
+65171:Animal Totem
+65172:Harvest Water Totem
+65173:Harvest Animal Totem
+65174:Animal Water Totem
+65175:Harvest Water Animal Totem
+65176:Javanese Fence
+65177:Javanese Gate
+65178:Javanese Arch
+65179:Pendopo
+65180:Lisung
+65181:Clinging Orchid
+65182:Javanese Lady Statue
+65183:Javanese Garden Lamp
+65184:Javanese Stone Fountain
+65185:Javanese Outdoor Bench
+65186:Umbul-Umbul
+65187:Wooden Bird Cage
+65188:Javanese Flower Pillar
+65189:Wayang Stage
+65190:Javanesse Outdoor Table
+65191:Batik Hanging
+65192:Bakulan
+65193:Delman
+65194:Colorful Boat Flowerpot
+65195:White and Purple Boat Flowerpot
+65196:Beach Gazebo
+65197:Beach Outdoor Table
+65198:Boat Couch
+65220:Silver Fishing Pole
+65221:Gold Fishing Pole
+65222:Osmium Fishing Pole
+65223:Tombstone
+65224:Spooky Waterfall
+65248:Brush
+65249:Rope
+65250:Pagoda Gazebo
+65251:Regal Stone Fence
+65252:Regal Gate
+65253:Regal Wide Gate
+65254:Regal Garden Lamp
+65255:Regal Bonsai
+65256:Regal Dragon Garden Statue
+65257:Regal Bridge
+65266:Pufferfish Oil Barrel
+65267:Peat
+65268:Cauldron
+65269:Slime Replication
+65272:Baroque Fence
+65273:Baroque Iron Gate
+65275:Baroque Golden Gate
+65277:Baroque Stone Arch
+65300:Compost Bin
+65301:Compost
+65302:Aquaculture Tank
+65303:Trash Collector
+65304:Solar Panel
+65305:Transfer Totem
+65306:Fertilizer 1
+65307:Fertilizer 2
+65308:Fertilizer 3
+65309:Flash 1
+65310:Flash 2
+65311:Flash 3
+65312:Hydro 1
+65313:Hydro 2
+65314:Hydro 3
+65315:Forage Bed
+65316:Soft Bristle Brush
+65317:Slime of Transmutation
+65318:Makeshift Scarecrow
+65319:Makeshift Fence
+65320:Makeshift Gate
+65321:Makeshift Path
+65322:Art Nouveau Fence
+65323:Art Nouveau Arch
+65324:Art Nouveau Gate
+65339:Auto Fertilizer
+65340:Auto Seed
+65341:Auto SFH (All-In-One)
+65342:Sprinkler 3
+65343:Makeshift Sign
+65344:Stone Chest
+65345:Hay Path
+65352:Scrap Arch
+65356:Farmer Scarecrow
+65357:Stone Arch
+65358:Small Fish Bait
+65359:Medium Fish Bait
+65360:Large Fish Bait
+65361:Makeshift Arch
+65366:Improved Makeshift Chest
+65367:Chieftain Statue
+65371:Big Neoclassical Arch
+65394:Bauhaus Plant Pots
+65419:Gaming Tile
+65445:Insect House
+65446:Farming Tools Treasure Chest
+65448:Coral Sofa
+65466:Ronda Gazebo
+65491:Sprinkler Attachment D
+65492:Medieval Gazebo
+65508:Ocean Guardian Chest
+65509:Ocean Guardian Scarecrow
+65510:Auto Petter
+65511:Auto Collector
+65512:Auto Feeder
+65513:Temperature Machine
+65514:Auto Trash Collector
+65515:Stone Age Tent
+65528:Sturdy Computer
+65529:Sturdy Music Player
+65531:Auto Harvest
+65532:Architect Desk
+65533:Ocean Explorer Scarecrow
+65534:Ocean Explorer Chest
+65535:Ultimate Scarecrow
+65536:Auto Chest
+65537:Animal Medicine
+65538:Snowflake Spruce Tree
+65540:Polar Express
+65574:Primitive Big Stone Path
+65575:Pufferfish Oil Rig
+65576:Pufferfish Gas Cans
+65577:Pufferfish Oil Tank
+65594:Mermaid Scarecrow
+65595:Chef Scarecrow
+65596:Humpty Scarecrow
+65597:Prankenstein Scarecrow
+65598:Walnutcracker Scarecrow
+65599:Ondel-Ondel Pretty Scarecrow
+65600:Ondel-Ondel Handsome Scarecrow
+65601:Pino Scarecrow
+65602:Mummy Scarecrow
+65603:Alien Scarecrow
+65604:Jolly Stalk Scarecrow
+65605:Gingerbread Scarecrow
+65606:Coral Hero Scarecrow
+65607:Undead Scarecrow
+65608:Chieftain Scarecrow
+65609:Party Pillar Vase Scarecrow
+65643:Disco Neion Flamingo
+65666:Gothic Main Arch
+65692:Basic Lumina Wand
+65693:Bronze Lumina Wand
+65694:Silver Lumina Wand
+65695:Gold Lumina Wand
+65696:Osmium Lumina Wand
+65697:Blue Fire Flambeau
+65698:Wizard Garden Bench
+65720:Bronze Bug Net ???
+65721:Bronze Fishing Pole ???
+71002:Giant Snakehead
+71003:Catfish
+71004:Flowerhorn
+71005:Tilapia
+71006:Silver Arowana
+71007:Koi
+71008:Black Phantom Ghost Fish
+71009:Gator Gar
+71010:Cobia
+71011:Rainbow Fish
+71012:Tiger Barb
+71013:Crayfish
+71014:Freshwater Eel
+71015:Goldfish
+71016:Snakehead
+71017:Bluegill
+71018:Arapaima
+71019:Zebra fish
+71020:Golden Gar
+71021:Chub
+71022:Brown Trout
+72002:Frogfish
+72003:Yellowtail
+72004:Tuna
+72005:Pufferfish
+72006:Pink Snapper
+72007:Ruby Red Dragonet
+72008:Squid
+72009:Octopus
+72010:Giant Mudskipper
+72011:Grouper
+72012:Sea Cucumber
+72013:Parrotfish
+72014:Polka-dot Batfish
+72015:Flameback Fish
+72016:Lobster
+72017:Lionfish
+72018:Damselfish
+72019:Mandarin
+72020:Archer
+72021:Angelfish
+72022:Blue Tang
+72023:Clownfish
+72024:Firefish
+72025:Asian Sheepshead
+72026:Boxfish
+72027:Mackerel
+72028:Yellowfin Tuna
+72029:Crab
+72030:Swordfish
+72031:Salmon
+72032:Jellyfish
+72033:Arrow Crab
+72034:Common Starfish
+72035:Flowerhat Jellyfish
+72036:Tigertail Seahorse
+72037:Jayakar's Seahorse
+72038:Skunk Cleaner Shrimp
+72039:Eight-Armed Sea Star
+72040:Whelk
+72041:Mantis Shrimp
+72042:Blue Lobster
+72043:Giraffe Seahorse
+72044:Hermit Crab
+72045:Mauve Stinger Jellyfish
+72046:Cardinal Shrimp
+72047:Cannonball Jellyfish
+72048:Upside-down Jellyfish
+72049:Pom-pom Crab
+72050:Sea Slug
+72051:Venus's Flower Basket
+72052:Bloodbelly Comb Jellyfish
+72053:Pink Meanie Jellyfish
+72054:Atolla Jellyfish
+72055:White-Spotted Jellyfish
+72056:Cauliflower Jellyfish
+72057:Horseshoe Crab
+72058:Blue Crab
+72059:Sexy Shrimp
+72060:Harlequin Shrimp
+72061:Calice Lobster
+72062:Split-Colored Lobster
+72063:Cotton candy Lobster
+72064:Sunflower Sea Star
+72065:Crown-of-Thorns Starfish
+72066:Brisingida Starfish
+72067:Red Knob Starfish
+72068:Blue Starfish
+72069:Leafy Seadragon
+72070:Hedgehog Seahorse
+72071:Shiho's Seahorse
+72072:Sea Anemone
+72073:Chambered Nautilus
+72074:Giant Isopod
+72075:Fuchsia Flatworm
+72076:Ruby Seadragon
+72077:Stone Crab
+72078:Yeti Crab
+73002:Cod
+73003:Shrimp
+73004:Barracuda
+73005:Giant Sea Bass
+73006:Sardine
+73007:Red Snapper
+73008:Sturgeon
+73009:Sockeye Salmon
+73010:Barramundi
+74002:Red King Arowana
+74003:Monkfish
+74004:Yellow Moray Eel
+75002:Giant Stingray
+75003:Green Sawfish
+75004:Hammerhead
+75005:Great White Shark
+75006:Raja Ampat Shark
+80002:Bread
+80003:Tortilla
+80004:Mooncake
+80005:Red Velvet Cake
+80006:Cookies
+80007:Basil Pesto Pasta
+80008:Gnocchi
+80009:Sushi
+80010:Sashimi
+80011:Fish Taco
+80012:Vegan Taco
+80013:Burrito
+80014:Pineapple Upside-down Cake
+80015:Fruit Tart
+80016:Seafood Ramen
+80017:Veggie Ramen
+80018:Edamame
+80019:Banana Fritter
+80020:Pancakes
+80021:Omurice
+80022:Pepper and Mushroom Flatbread
+80023:Cane Nectar
+80024:Hawaiian Pizza
+80025:Assorted Grilled Platter
+80026:Pumpkin Pie
+80027:Tomato Soup
+80028:Butter Croissant
+80029:Stew
+80030:Clam Chowder
+80031:Hash Browns
+80032:Ratatouille
+80033:Roasted Mushroom
+80034:Sunny-side-up Eggs
+80035:Eggplant Lasagna
+80036:Scrambled Eggs
+80037:Roasted Almonds
+80038:Cauliflower Casserole
+80039:Onigiri
+80040:Falafel
+80041:Fried Rice
+80042:Green Smoothie
+80043:Spring Frittata
+80044:Artichoke Kimchi
+80045:Sauteed Chard
+80046:Smoothie
+80047:Chocolate Chip Muffins
+80048:Jackfruit Casserole
+80049:Hot Cocoa
+80050:Spicy Sauerkraut
+80051:Red Curry
+80052:Green Curry
+80053:Sweet Potato Poutine
+80054:Slimy Okra
+80055:Fresh Salad
+80056:Corn on the Cob
+80057:Summer Burger
+80058:Herbed Tempeh
+80059:Grilled Fish
+80060:Wild Mushroom Polenta
+80061:Oven-baked Risotto
+80062:Roasted Chestnuts
+80063:Lettuce Wrap
+80064:Rainbow Sandwich
+80065:Smoked Salmon
+80066:Flower Bouquet
+80067:Fish Soup
+80068:Donut
+80069:Lodeh
+80070:Fried Tempeh
+80071:Pad Thai
+80072:Popiah
+80073:Smoked Fish
+80074:Fish Sandwich
+80075:Minced Jackfruit Pie
+80076:Fruit Juice
+80078:Ice Cream
+80079:Apple Pie
+80080:Pizza
+80081:Egg Custard
+80082:Whole Coconut Drink
+80083:Vitamin Drink
+80084:Medicine
+80085:???
+80086:Cenil
+80087:Serabi
+80088:Hard-Boiled Egg
+80089:Stone Soup
+80090:Jamu
+80091:Questionable Dish
+80092:Pink Potion
+80093:Kue Lapis
+80094:Es Doger
+80095:Es Cendol
+80096:Kue Kancing
+80097:Klepon
+80098:Bug Jerky
+80099:Peyek
+80100:Spider Tempura
+80101:Hard-Boiled Duck Egg
+80102:Hard-Boiled Quail Egg
+80103:Catching Elixir
+80104:Combat Elixir
+80105:Diving Elixir
+80106:Farming Elixir
+80107:Fishing Elixir
+80108:Foraging Elixir
+80109:Mining Elixir
+80110:Ranching Elixir
+120002:Basic Farmer Outfit
+120487:Fantasy Farmer Outfit
+131002:Maple Leafcutter Moth
+131003:Polyphemus Moth
+131004:Ghost Mantis
+131005:Tiger Beetle
+131006:Harpalus Beetle
+131007:Firefly
+131008:Cecropia Caterpillar
+131009:Pipevine Swallowtail Butterfly
+131010:Little Wood Satyr Butterfly
+131011:Wolf Spider
+131012:Man-Faced Stink Bug
+131013:Wasp
+131014:Cricket
+131015:Moth
+131016:Pine Sphinx
+131017:Luna Moth
+131018:Striped Garden Caterpillar
+131019:Magnolia Green Jumper
+132002:Yucco Moth
+132003:Puss Moth
+132004:Lady Beetle
+132005:Violin Beetle
+132006:Scarites Beetle
+132007:Orchid Mantis
+132008:Fly Bug
+132009:Blue Morpho Butterfly
+132010:Crowned Hairstreak Butterfly
+132011:Widow Spider
+132012:Snail Bug
+132013:Centipede
+132014:Hickory Horned Devil
+132015:Western Tiger Swallowtail
+132016:Saddleback
+133002:Assam Silk Moth
+133003:Dragonfly
+133004:Rove Beetle
+133005:Soldier Beetle
+133006:Praying Mantis
+133007:Tiger Swallowtail Butterfly
+133008:Janetta Forester Butterfly
+133009:Tarantula
+133010:Eastern Black Swallowtail
+133011:Gulf Fritillary
+133012:Red Admiral
+133013:Olivewing Butterfly
+134002:Atlas Moth
+134003:Grasshopper
+134004:Ground Beetle
+134005:Leaf Beetle
+134006:Monarch Caterpillar
+134007:Spicebush Swallowtail Butterfly
+134008:Birdwing Butterfly
+</DropDownList>
+          <ShowAsSigned>0</ShowAsSigned>
+          <VariableType>4 Bytes</VariableType>
+          <Address>ItemPtr</Address>
+          <Offsets>
+            <Offset>4</Offset>
+          </Offsets>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>9420</ID>
+          <Description>"Quality Item Changing"</Description>
+          <Options moHideChildren="1"/>
+          <GroupHeader>1</GroupHeader>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>9414</ID>
+              <Description>"Quality Item ID (Bronze &gt; Silver &gt; Gold &gt; Osmium Item)"</Description>
+              <ShowAsSigned>0</ShowAsSigned>
+              <VariableType>4 Bytes</VariableType>
+              <Address>ItemPtr</Address>
+              <Offsets>
+                <Offset>4</Offset>
+              </Offsets>
+              <Hotkeys>
+                <Hotkey>
+                  <Action>Toggle Activation</Action>
+                  <Keys/>
+                  <ID>0</ID>
+                </Hotkey>
+              </Hotkeys>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>9419</ID>
+              <Description>"*** ID is Different for each user ***"</Description>
+              <Color>0000FF</Color>
+              <GroupHeader>1</GroupHeader>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>9417</ID>
+              <Description>"Note: -7/+7 for Lower or Higher Quality"</Description>
+              <Color>0000FF</Color>
+              <GroupHeader>1</GroupHeader>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>9421</ID>
+              <Description>"Example Below"</Description>
+              <Options moHideChildren="1" moManualExpandCollapse="1"/>
+              <GroupHeader>1</GroupHeader>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>9425</ID>
+                  <Description>"11433235 is Bronze Peas"</Description>
+                  <GroupHeader>1</GroupHeader>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>9424</ID>
+                  <Description>"11433242 is Silver Peas"</Description>
+                  <GroupHeader>1</GroupHeader>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>9423</ID>
+                  <Description>"11433249 is Gold Peas"</Description>
+                  <GroupHeader>1</GroupHeader>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>9422</ID>
+                  <Description>"11433256 is Osmium Peas"</Description>
+                  <GroupHeader>1</GroupHeader>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>9394</ID>
+      <Description>"Find Money (Open and Close Inventory)"</Description>
+      <Options moHideChildren="1" moDeactivateChildrenAsWell="1"/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+aobscanmodule(FindMoney,$Process,8B 80 B8 00 00 00 48 83 C4 20 5B C3 48)
+alloc(newmem,$100,FindMoney)
+label(code)
+label(return)
+label(MoneyValue)
+registersymbol(FindMoney)
+registersymbol(MoneyValue)
+
+newmem:
+  mov [MoneyValue],rax
+
+code:
+  mov eax,[rax+000000B8]
+  jmp return
+
+MoneyValue:
+  dd 0
+
+FindMoney:
+  jmp newmem
+  nop
+return:
+
+[DISABLE]
+FindMoney:
+  db 8B 80 B8 00 00 00
+
+unregistersymbol(*)
+dealloc(*)
+
+{
+// ---------- INJECTING HERE ----------
+ProjectCoral-Win64-Shipping.UC_MainHUDWidget::GetCurrentRealGold+27: 8B 80 B8 00 00 00     - mov eax,[rax+000000B8]
+// ---------- DONE INJECTING  ----------
+}
+</AssemblerScript>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>9384</ID>
+          <Description>"Current Money"</Description>
+          <ShowAsSigned>0</ShowAsSigned>
+          <VariableType>4 Bytes</VariableType>
+          <Address>MoneyValue</Address>
+          <Offsets>
+            <Offset>B8</Offset>
+          </Offsets>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>9390</ID>
+      <Description>"Find Merit (Open and Close Inventory)"</Description>
+      <Options moHideChildren="1" moDeactivateChildrenAsWell="1"/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+aobscanmodule(FindMerits,$Process,8B 90 CC 00 00 00 E8)
+alloc(newmem,$100,FindMerits)
+label(code)
+label(return)
+label(MeritValue)
+registersymbol(FindMerits)
+registersymbol(MeritValue)
+
+newmem:
+  mov [MeritValue],rax
+
+code:
+  mov edx,[rax+000000CC]
+  jmp return
+
+MeritValue:
+  dd 0
+
+FindMerits:
+  jmp newmem
+  nop
+return:
+
+[DISABLE]
+FindMerits:
+  db 8B 90 CC 00 00 00
+
+unregistersymbol(*)
+dealloc(*)
+
+{
+// ---------- INJECTING HERE ----------
+ProjectCoral-Win64-Shipping.UC_MeritPointWidget::OnAddedToViewport+36: 8B 90 CC 00 00 00     - mov edx,[rax+000000CC]
+// ---------- DONE INJECTING  ----------
+}
+</AssemblerScript>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>9391</ID>
+          <Description>"Current Merit"</Description>
+          <ShowAsSigned>0</ShowAsSigned>
+          <VariableType>4 Bytes</VariableType>
+          <Address>MeritValue</Address>
+          <Offsets>
+            <Offset>CC</Offset>
+          </Offsets>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>9395</ID>
+      <Description>"Instant 999 Items on Move"</Description>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+aobscanmodule(MaxItem,$Process,41 89 44 24 08 E8 90)
+alloc(newmem,$100,MaxItem)
+label(code)
+label(return)
+registersymbol(MaxItem)
+
+newmem:
+  mov eax,#999
+code:
+  mov [r12+08],eax
+  jmp return
+
+MaxItem:
+  jmp newmem
+return:
+
+[DISABLE]
+MaxItem:
+  db 41 89 44 24 08
+
+unregistersymbol(*)
+dealloc(*)
+
+{
+// ---------- INJECTING HERE ----------
+ProjectCoral-Win64-Shipping.UC_ItemStorageComponent::AddSlotData+146: 41 89 44 24 08  - mov [r12+08],eax
+// ---------- DONE INJECTING  ----------
+}
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>43</ID>
+      <Description>"EXP Multiplier"</Description>
+      <Options moHideChildren="1" moDeactivateChildrenAsWell="1"/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+aobscanmodule(ExpValue,$Process,F3 0F 58 43 04 0F)
+alloc(newmem,$100,ExpValue)
+label(code)
+label(return)
+label(ExpMultiplier)
+registersymbol(ExpValue)
+registersymbol(ExpMultiplier)
+
+newmem:
+  mulss xmm0,[ExpMultiplier]
+
+code:
+  addss xmm0,[rbx+04]
+  jmp return
+
+ExpMultiplier:
+  dd (float)10.0
+
+ExpValue:
+  jmp newmem
+return:
+
+[DISABLE]
+ExpValue:
+  db F3 0F 58 43 04
+
+unregistersymbol(*)
+dealloc(*)
+
+{
+// ---------- INJECTING HERE ----------
+ProjectCoral-Win64-Shipping.FC_MasteryCategory::DepositExp+26: F3 0F 58 43 04           - addss xmm0,[rbx+04]
+// ---------- DONE INJECTING  ----------
+}
+</AssemblerScript>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>44</ID>
+          <Description>"EXP Multiplier"</Description>
+          <ShowAsSigned>0</ShowAsSigned>
+          <VariableType>Float</VariableType>
+          <Address>ExpMultiplier</Address>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>2289</ID>
+      <Description>"Animal &amp; Crop"</Description>
+      <Options moHideChildren="1"/>
+      <Color>FF8000</Color>
+      <GroupHeader>1</GroupHeader>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>9433</ID>
+          <Description>"Fast Growth Crop [Activate &gt; Water Crop &gt; Go to Sleep]"</Description>
+          <Options moHideChildren="1" moDeactivateChildrenAsWell="1"/>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>[ENABLE]
+aobscanmodule(FastGrowthCrop,$Process,44 38 AB 8C 00 00 00)
+alloc(newmem,$100,FastGrowthCrop)
+label(code)
+label(return)
+label(FastGrowthON)
+label(FastGrowthOFF)
+registersymbol(FastGrowthCrop)
+registersymbol(FastGrowthON)
+
+newmem:
+  cmp [FastGrowthON],0
+  je FastGrowthOFF
+  mov [rbx+0000008C],#1
+  jmp code
+
+FastGrowthOFF:
+  mov [rbx+0000008C],#0
+  jmp code
+
+code:
+  cmp [rbx+0000008C],r13b
+  jmp return
+
+FastGrowthON:
+  dd 0
+
+FastGrowthCrop:
+  jmp newmem
+  nop 2
+return:
+
+[DISABLE]
+FastGrowthCrop:
+  db 44 38 AB 8C 00 00 00
+
+unregistersymbol(*)
+dealloc(newmem)
+
+{
+// ---------- INJECTING HERE ----------
+ProjectCoral-Win64-Shipping.AC_CropManager::GrowCrop+AC: 44 38 AB 8C 00 00 00     - cmp [rbx+0000008C],r13b
+// ---------- DONE INJECTING  ----------
+}
+</AssemblerScript>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>9434</ID>
+              <Description>"Fast Growth On/Off"</Description>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>[ENABLE]
+FastGrowthON:
+ dd 1
+
+[DISABLE]
+FastGrowthON:
+ dd 0
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>9435</ID>
+              <Description>"Will make Visual Bug for your Crop, visually it not ripe but you can harvest it"</Description>
+              <Color>4080FF</Color>
+              <GroupHeader>1</GroupHeader>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>2290</ID>
+          <Description>"Max Animal Heart [Activate &gt; Go to Sleep]"</Description>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>[ENABLE]
+aobscanmodule(FarmAnimalHeart,$Process,8B 4B 10 89 43 14)
+alloc(newmem,$100,FarmAnimalHeart)
+label(code)
+label(return)
+registersymbol(FarmAnimalHeart)
+
+newmem:
+  mov [rbx+10],#10
+
+code:
+  mov ecx,[rbx+10]
+  mov [rbx+14],eax
+  jmp return
+
+FarmAnimalHeart:
+  jmp newmem
+  nop
+return:
+
+[DISABLE]
+FarmAnimalHeart:
+  db 8B 4B 10 89 43 14
+
+unregistersymbol(FarmAnimalHeart)
+dealloc(newmem)
+
+{
+// ---------- INJECTING HERE ----------
+ProjectCoral-Win64-Shipping.UC_RanchingManagerComponent::HandleFriendshipOnDayBegan+108: 8B 4B 10              - mov ecx,[rbx+10]
+// ---------- DONE INJECTING  ----------
+ProjectCoral-Win64-Shipping.UC_RanchingManagerComponent::HandleFriendshipOnDayBegan+10B: 89 43 14              - mov [rbx+14],eax
+}
+</AssemblerScript>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>9415</ID>
+          <Description>"1 Hit Tree"</Description>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>[ENABLE]
+aobscanmodule(1HitTree,$Process,41 89 86 84 00 00 00 48)
+alloc(newmem,$100,1HitTree)
+label(code)
+label(return)
+registersymbol(1HitTree)
+
+newmem:
+  mov eax,#0
+
+code:
+  mov [r14+00000084],eax
+  jmp return
+
+1HitTree:
+  jmp newmem
+  nop 2
+return:
+
+[DISABLE]
+1HitTree:
+  db 41 89 86 84 00 00 00
+
+unregistersymbol(*)
+dealloc(*)
+
+{
+$Process+148CD30: 41 8B BE 84 00 00 00     - mov edi,[r14+00000084]
+$Process+148CD37: 48 8B CE                 - mov rcx,rsi
+$Process+148CD3A: 4C 8B BC 24 60 02 00 00  - mov r15,[rsp+00000260]
+$Process+148CD42: 8B C7                    - mov eax,edi
+$Process+148CD44: 41 2B 47 04              - sub eax,[r15+04]
+// ---------- INJECTING HERE ----------
+$Process+148CD48: 41 89 86 84 00 00 00     - mov [r14+00000084],eax
+// ---------- DONE INJECTING  ----------
+$Process+148CD4F: 48 8B 06                 - mov rax,[rsi]
+$Process+148CD52: FF 90 60 01 00 00        - call qword ptr [rax+00000160]
+}
+</AssemblerScript>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>9416</ID>
+          <Description>"Infinite Water"</Description>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>[ENABLE]
+aobscanmodule(InfiniteWater,$Process,FF 89 50 03 00 00)
+alloc(newmem,$100,InfiniteWater)
+label(code)
+label(return)
+registersymbol(InfiniteWater)
+
+newmem:
+  inc [rcx+00000350]
+code:
+  dec [rcx+00000350]
+  jmp return
+
+InfiniteWater:
+  jmp newmem
+  nop
+return:
+
+[DISABLE]
+InfiniteWater:
+  db FF 89 50 03 00 00
+
+unregistersymbol(*)
+dealloc(*)
+
+{
+// ---------- INJECTING HERE ----------
+ProjectCoral-Win64-Shipping.UC_ItemToolWateringCan::PreUsageAOEloop+2B: FF 89 50 03 00 00              - dec [rcx+00000350]
+// ---------- DONE INJECTING  ----------
+}
+</AssemblerScript>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>420</ID>
+      <Description>"Mastery Skill"</Description>
+      <Options moHideChildren="1"/>
+      <Color>FF8000</Color>
+      <GroupHeader>1</GroupHeader>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>419</ID>
+          <Description>"Mastery Exp [Activate &gt; Open Mastery Menu]"</Description>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>[ENABLE]
+aobscanmodule(MasteryExp,$Process,F3 41 0F 10 40 0C C3)
+alloc(newmem,$100,MasteryExp)
+label(code)
+label(return)
+registersymbol(MasteryExp)
+
+newmem:
+  mov [r8+0C],(float)99999
+code:
+  movss xmm0,[r8+0C]
+  jmp return
+
+MasteryExp:
+  jmp newmem
+  nop
+return:
+
+[DISABLE]
+MasteryExp:
+  db F3 41 0F 10 40 0C
+
+unregistersymbol(*)
+dealloc(*)
+
+{
+// ---------- INJECTING HERE ----------
+ProjectCoral-Win64-Shipping.UC_MasteryComponent::GetCurrentExp+37: F3 41 0F 10 40 0C     - movss xmm0,[r8+0C]
+// ---------- DONE INJECTING  ----------
+}
+</AssemblerScript>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>418</ID>
+          <Description>"Mastery Point [Activate &gt; Open Mastery Menu]"</Description>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>[ENABLE]
+aobscanmodule(MasteryPoint,$Process,F8 8B 40 14 C3 CC)
+alloc(newmem,$100,MasteryPoint)
+label(code)
+label(return)
+registersymbol(MasteryPoint)
+
+newmem:
+  mov [rax+14],#90
+code:
+  mov eax,[rax+14]
+  ret
+  int 3
+  jmp return
+
+MasteryPoint+01:
+  jmp newmem
+return:
+
+[DISABLE]
+MasteryPoint+01:
+  db 8B 40 14 C3 CC
+
+unregistersymbol(*)
+dealloc(*)
+
+{
+// ---------- INJECTING HERE ----------
+ProjectCoral-Win64-Shipping.UC_MasteryComponent::GetCurrentPoints+35: 8B 40 14        - mov eax,[rax+14]
+// ---------- DONE INJECTING  ----------
+}
+</AssemblerScript>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>2272</ID>
+          <Description>"Mastery Point to 0 [Activate &gt; Open Mastery Menu]"</Description>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>[ENABLE]
+aobscanmodule(MasteryPoint,$Process,F8 8B 40 14 C3 CC)
+alloc(newmem,$100,MasteryPoint)
+label(code)
+label(return)
+registersymbol(MasteryPoint)
+
+newmem:
+  mov [rax+14],#0
+code:
+  mov eax,[rax+14]
+  ret
+  int 3
+  jmp return
+
+MasteryPoint+01:
+  jmp newmem
+return:
+
+[DISABLE]
+MasteryPoint+01:
+  db 8B 40 14 C3 CC
+
+unregistersymbol(*)
+dealloc(*)
+
+{
+// ---------- INJECTING HERE ----------
+ProjectCoral-Win64-Shipping.UC_MasteryComponent::GetCurrentPoints+35: 8B 40 14        - mov eax,[rax+14]
+// ---------- DONE INJECTING  ----------
+}
+</AssemblerScript>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>430</ID>
+      <Description>"Relationship"</Description>
+      <Options moHideChildren="1"/>
+      <Color>FF8000</Color>
+      <GroupHeader>1</GroupHeader>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>105587</ID>
+          <Description>"Set All Relationship to Max [Activate &gt; Go to Sleep]"</Description>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>[ENABLE]
+aobscanmodule(GetHeart,$Process,66 41 0F 6E 47 10)
+alloc(newmem,$100,GetHeart)
+label(code)
+label(return)
+registersymbol(GetHeart)
+
+newmem:
+ mov [r15+10],#5250
+
+code:
+  movd xmm0,[r15+10]
+  jmp return
+
+GetHeart:
+  jmp newmem
+  nop
+return:
+
+[DISABLE]
+GetHeart:
+  db 66 41 0F 6E 47 10
+
+unregistersymbol(*)
+dealloc(*)
+
+{
+// ORIGINAL CODE - INJECTION POINT: ProjectCoral-Win64-Shipping.UC_NpcRelationshipComponent::AddHeartPoint+C9
+
+ProjectCoral-Win64-Shipping.UC_NpcRelationshipComponent::AddHeartPoint+A2: 48 8B D3              - mov rdx,rbx
+ProjectCoral-Win64-Shipping.UC_NpcRelationshipComponent::AddHeartPoint+A5: 48 8B CE              - mov rcx,rsi
+ProjectCoral-Win64-Shipping.UC_NpcRelationshipComponent::AddHeartPoint+A8: E8 23 FD 00 00        - call ProjectCoral-Win64-Shipping.UC_NpcBaseReplicationComponent::GetNPC
+ProjectCoral-Win64-Shipping.UC_NpcRelationshipComponent::AddHeartPoint+AD: 48 85 C0              - test rax,rax
+ProjectCoral-Win64-Shipping.UC_NpcRelationshipComponent::AddHeartPoint+B0: 74 17                 - je ProjectCoral-Win64-Shipping.UC_NpcRelationshipComponent::AddHeartPoint+C9
+ProjectCoral-Win64-Shipping.UC_NpcRelationshipComponent::AddHeartPoint+B2: 48 8B 88 38 07 00 00  - mov rcx,[rax+00000738]
+ProjectCoral-Win64-Shipping.UC_NpcRelationshipComponent::AddHeartPoint+B9: E8 62 2D 31 00        - call ProjectCoral-Win64-Shipping.UC_NpcGiftComponent::IsBirthday
+ProjectCoral-Win64-Shipping.UC_NpcRelationshipComponent::AddHeartPoint+BE: 84 C0                 - test al,al
+ProjectCoral-Win64-Shipping.UC_NpcRelationshipComponent::AddHeartPoint+C0: 74 07                 - je ProjectCoral-Win64-Shipping.UC_NpcRelationshipComponent::AddHeartPoint+C9
+ProjectCoral-Win64-Shipping.UC_NpcRelationshipComponent::AddHeartPoint+C2: 0F AF AE 80 01 00 00  - imul ebp,[rsi+00000180]
+// ---------- INJECTING HERE ----------
+ProjectCoral-Win64-Shipping.UC_NpcRelationshipComponent::AddHeartPoint+C9: 66 41 0F 6E 47 10     - movd xmm0,[r15+10]
+// ---------- DONE INJECTING  ----------
+ProjectCoral-Win64-Shipping.UC_NpcRelationshipComponent::AddHeartPoint+CF: 41 B1 01              - mov r9b,01
+ProjectCoral-Win64-Shipping.UC_NpcRelationshipComponent::AddHeartPoint+D2: 66 0F 6E CD           - movd xmm1,ebp
+ProjectCoral-Win64-Shipping.UC_NpcRelationshipComponent::AddHeartPoint+D6: 48 8B D3              - mov rdx,rbx
+ProjectCoral-Win64-Shipping.UC_NpcRelationshipComponent::AddHeartPoint+D9: 0F 5B C9              - cvtdq2ps xmm1,xmm1
+ProjectCoral-Win64-Shipping.UC_NpcRelationshipComponent::AddHeartPoint+DC: 48 8B CE              - mov rcx,rsi
+ProjectCoral-Win64-Shipping.UC_NpcRelationshipComponent::AddHeartPoint+DF: 0F 5B C0              - cvtdq2ps xmm0,xmm0
+ProjectCoral-Win64-Shipping.UC_NpcRelationshipComponent::AddHeartPoint+E2: F3 0F 59 CE           - mulss xmm1,xmm6
+ProjectCoral-Win64-Shipping.UC_NpcRelationshipComponent::AddHeartPoint+E6: F3 0F 58 C8           - addss xmm1,xmm0
+ProjectCoral-Win64-Shipping.UC_NpcRelationshipComponent::AddHeartPoint+EA: F3 44 0F 2C C1        - cvttss2si r8d,xmm1
+ProjectCoral-Win64-Shipping.UC_NpcRelationshipComponent::AddHeartPoint+EF: E8 0C 62 02 00        - call ProjectCoral-Win64-Shipping.UC_NpcRelationshipComponent::SetHeartPoints
+}
+</AssemblerScript>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>424</ID>
+      <Description>"Craft"</Description>
+      <Options moHideChildren="1"/>
+      <Color>FF8000</Color>
+      <GroupHeader>1</GroupHeader>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>9439</ID>
+          <Description>"Free Carpenter (For Building not House Upgrade)"</Description>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>[ENABLE]
+aobscanmodule(FreeCarpenter,$Process,3B 83 F8 00 00 00 48)
+alloc(newmem,$100,FreeCarpenter)
+label(code)
+label(return)
+registersymbol(FreeCarpenter)
+
+newmem:
+  mov [rbx+000000F8],#0
+code:
+  cmp eax,[rbx+000000F8]
+  jmp return
+
+FreeCarpenter:
+  jmp newmem
+  nop
+return:
+
+[DISABLE]
+FreeCarpenter:
+  db 3B 83 F8 00 00 00
+
+unregistersymbol(*)
+dealloc(*)
+
+{
+// ---------- INJECTING HERE ----------
+ProjectCoral-Win64-Shipping.UC_CarpenterShopPanel::UpdateRequirementInfo+78: 3B 83 F8 00 00 00     - cmp eax,[rbx+000000F8]
+// ---------- DONE INJECTING  ----------
+}
+</AssemblerScript>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>105585</ID>
+          <Description>"Free Crafting"</Description>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>[ENABLE]
+aobscanmodule(FreeCraft,$Process,48 63 48 38 48 89 B4 24 D8 01 00 00)
+alloc(newmem,$100,FreeCraft)
+label(code)
+label(return)
+registersymbol(FreeCraft)
+
+newmem:
+  mov [rax+38],#0
+
+code:
+  movsxd  rcx,dword ptr [rax+38]
+  mov [rsp+000001D8],rsi
+  jmp return
+
+FreeCraft:
+  jmp newmem
+  nop 7
+return:
+
+[DISABLE]
+FreeCraft:
+  db 48 63 48 38 48 89 B4 24 D8 01 00 00
+
+unregistersymbol(*)
+dealloc(*)
+
+{
+// ORIGINAL CODE - INJECTION POINT: ProjectCoral-Win64-Shipping.UC_CraftingComponent::CanCraftRecipe+C5
+
+ProjectCoral-Win64-Shipping.UC_CraftingComponent::CanCraftRecipe+9B: 48 8B 41 30              - mov rax,[rcx+30]
+ProjectCoral-Win64-Shipping.UC_CraftingComponent::CanCraftRecipe+9F: 4C 39 04 D0              - cmp [rax+rdx*8],r8
+ProjectCoral-Win64-Shipping.UC_CraftingComponent::CanCraftRecipe+A3: 0F 85 A2 02 00 00        - jne ProjectCoral-Win64-Shipping.UC_CraftingComponent::CanCraftRecipe+34B
+ProjectCoral-Win64-Shipping.UC_CraftingComponent::CanCraftRecipe+A9: 48 8B D3                 - mov rdx,rbx
+ProjectCoral-Win64-Shipping.UC_CraftingComponent::CanCraftRecipe+AC: 48 8B CF                 - mov rcx,rdi
+ProjectCoral-Win64-Shipping.UC_CraftingComponent::CanCraftRecipe+AF: E8 8C 6E 3A 00           - call ProjectCoral-Win64-Shipping.UC_CraftingConfig::GetRecipe
+ProjectCoral-Win64-Shipping.UC_CraftingComponent::CanCraftRecipe+B4: 48 89 44 24 40           - mov [rsp+40],rax
+ProjectCoral-Win64-Shipping.UC_CraftingComponent::CanCraftRecipe+B9: 4C 8B C0                 - mov r8,rax
+ProjectCoral-Win64-Shipping.UC_CraftingComponent::CanCraftRecipe+BC: 48 85 C0                 - test rax,rax
+ProjectCoral-Win64-Shipping.UC_CraftingComponent::CanCraftRecipe+BF: 0F 84 86 02 00 00        - je ProjectCoral-Win64-Shipping.UC_CraftingComponent::CanCraftRecipe+34B
+// ---------- INJECTING HERE ----------
+ProjectCoral-Win64-Shipping.UC_CraftingComponent::CanCraftRecipe+C5: 48 63 48 38              - movsxd  rcx,dword ptr [rax+38]
+// ---------- DONE INJECTING  ----------
+ProjectCoral-Win64-Shipping.UC_CraftingComponent::CanCraftRecipe+C9: 48 89 B4 24 D8 01 00 00  - mov [rsp+000001D8],rsi
+ProjectCoral-Win64-Shipping.UC_CraftingComponent::CanCraftRecipe+D1: 48 8B 70 30              - mov rsi,[rax+30]
+ProjectCoral-Win64-Shipping.UC_CraftingComponent::CanCraftRecipe+D5: 4C 89 BC 24 A0 01 00 00  - mov [rsp+000001A0],r15
+ProjectCoral-Win64-Shipping.UC_CraftingComponent::CanCraftRecipe+DD: 48 8D 14 89              - lea rdx,[rcx+rcx*4]
+ProjectCoral-Win64-Shipping.UC_CraftingComponent::CanCraftRecipe+E1: 4C 89 A4 24 E8 01 00 00  - mov [rsp+000001E8],r12
+ProjectCoral-Win64-Shipping.UC_CraftingComponent::CanCraftRecipe+E9: 4C 89 AC 24 A8 01 00 00  - mov [rsp+000001A8],r13
+ProjectCoral-Win64-Shipping.UC_CraftingComponent::CanCraftRecipe+F1: 4C 8D 3C D6              - lea r15,[rsi+rdx*8]
+ProjectCoral-Win64-Shipping.UC_CraftingComponent::CanCraftRecipe+F5: 49 3B F7                 - cmp rsi,r15
+ProjectCoral-Win64-Shipping.UC_CraftingComponent::CanCraftRecipe+F8: 0F 84 9C 00 00 00        - je ProjectCoral-Win64-Shipping.UC_CraftingComponent::CanCraftRecipe+19A
+ProjectCoral-Win64-Shipping.UC_CraftingComponent::CanCraftRecipe+FE: 48 83 C6 08              - add rsi,08
+}
+</AssemblerScript>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>9431</ID>
+          <Description>"Free Lab Upgrade Seed/Sapling/Hay"</Description>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>[ENABLE]
+aobscanmodule(LabSeed,$Process,48 63 87 10 01 00 00 48 8B)
+alloc(newmem,$100,LabSeed)
+label(code)
+label(return)
+registersymbol(LabSeed)
+
+newmem:
+  mov [rdi+00000110],#0
+
+code:
+  movsxd  rax,dword ptr [rdi+00000110]
+  jmp return
+
+LabSeed:
+  jmp newmem
+  nop 2
+return:
+
+[DISABLE]
+LabSeed:
+  db 48 63 87 10 01 00 00
+
+unregistersymbol(*)
+dealloc(*)
+
+{
+// ---------- INJECTING HERE ----------
+ProjectCoral-Win64-Shipping.UC_LabUpgradeComponent::CheckIfHaveEnoughRequiredItem+178: 48 63 87 10 01 00 00        - movsxd  rax,dword ptr [rdi+00000110]
+// ---------- DONE INJECTING  ----------
+}
+</AssemblerScript>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>9428</ID>
+          <Description>"Free Lab Upgrade Tools (need town rank to unlock)"</Description>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>[ENABLE]
+aobscanmodule(FreeLabUpgrade,$Process,44 8B 43 20 48 8D 54 24 20)
+alloc(newmem,$100,FreeLabUpgrade)
+label(code)
+label(return)
+registersymbol(FreeLabUpgrade)
+
+newmem:
+  mov [rbx+20],#0
+code:
+  mov r8d,[rbx+20]
+  lea rdx,[rsp+20]
+  jmp return
+
+FreeLabUpgrade:
+  jmp newmem
+  nop 4
+return:
+
+[DISABLE]
+FreeLabUpgrade:
+  db 44 8B 43 20 48 8D 54 24 20
+
+unregistersymbol(*)
+dealloc(*)
+
+{
+ProjectCoral-Win64-Shipping.UC_ToolsUpgradeComponent::CheckIfHaveEnoughRequiredItem+45: 48 8D 4C 24 20  - lea rcx,[rsp+20]
+ProjectCoral-Win64-Shipping.UC_ToolsUpgradeComponent::CheckIfHaveEnoughRequiredItem+4A: E8 31 AB E3 FF  - call ProjectCoral-Win64-Shipping.FC_ItemData::FC_ItemData
+// ---------- INJECTING HERE ----------
+ProjectCoral-Win64-Shipping.UC_ToolsUpgradeComponent::CheckIfHaveEnoughRequiredItem+4F: 44 8B 43 20     - mov r8d,[rbx+20]
+// ---------- DONE INJECTING  ----------
+ProjectCoral-Win64-Shipping.UC_ToolsUpgradeComponent::CheckIfHaveEnoughRequiredItem+53: 48 8D 54 24 20  - lea rdx,[rsp+20]
+ProjectCoral-Win64-Shipping.UC_ToolsUpgradeComponent::CheckIfHaveEnoughRequiredItem+58: 45 33 C9        - xor r9d,r9d
+}
+</AssemblerScript>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>9398</ID>
+              <Description>"Lab Upgrade 0 Money"</Description>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>[ENABLE]
+aobscanmodule(LabUpgradeMoney,$Process,41 8B 87 E8 00 00 00 41)
+alloc(newmem,$100,LabUpgradeMoney)
+label(code)
+label(return)
+registersymbol(LabUpgradeMoney)
+
+newmem:
+  mov [r15+000000E8],#0
+
+code:
+  mov eax,[r15+000000E8]
+  jmp return
+
+LabUpgradeMoney:
+  jmp newmem
+  nop 2
+return:
+
+[DISABLE]
+LabUpgradeMoney:
+  db 41 8B 87 E8 00 00 00
+
+unregistersymbol(*)
+dealloc(*)
+
+{
+ProjectCoral-Win64-Shipping.UC_LabUpgradePanel::UpdateRequirementDisplay+44A: 4C 8B 7C 24 48        - mov r15,[rsp+48]
+ProjectCoral-Win64-Shipping.UC_LabUpgradePanel::UpdateRequirementDisplay+44F: 48 8D 56 08           - lea rdx,[rsi+08]
+ProjectCoral-Win64-Shipping.UC_LabUpgradePanel::UpdateRequirementDisplay+453: 48 8B 5C 24 40        - mov rbx,[rsp+40]
+ProjectCoral-Win64-Shipping.UC_LabUpgradePanel::UpdateRequirementDisplay+458: 4C 8D 44 24 30        - lea r8,[rsp+30]
+ProjectCoral-Win64-Shipping.UC_LabUpgradePanel::UpdateRequirementDisplay+45D: 44 0F B6 4C 24 68     - movzx r9d,byte ptr [rsp+68]
+// ---------- INJECTING HERE ----------
+ProjectCoral-Win64-Shipping.UC_LabUpgradePanel::UpdateRequirementDisplay+463: 41 8B 87 E8 00 00 00  - mov eax,[r15+000000E8]
+// ---------- DONE INJECTING  ----------
+ProjectCoral-Win64-Shipping.UC_LabUpgradePanel::UpdateRequirementDisplay+46A: 41 89 86 EC 00 00 00  - mov [r14+000000EC],eax
+ProjectCoral-Win64-Shipping.UC_LabUpgradePanel::UpdateRequirementDisplay+471: 8B 44 24 6C           - mov eax,[rsp+6C]
+ProjectCoral-Win64-Shipping.UC_LabUpgradePanel::UpdateRequirementDisplay+475: 41 89 86 F8 00 00 00  - mov [r14+000000F8],eax
+ProjectCoral-Win64-Shipping.UC_LabUpgradePanel::UpdateRequirementDisplay+47C: 48 8B 8B B0 05 00 00  - mov rcx,[rbx+000005B0]
+}
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>9399</ID>
+              <Description>"Lab Upgrade 0 Day"</Description>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>[ENABLE]
+aobscanmodule(LabUpgradeDay,$Process,41 8B 8F EC 00 00 00)
+alloc(newmem,$100,LabUpgradeDay)
+label(code)
+label(return)
+registersymbol(LabUpgradeDay)
+
+newmem:
+  mov [r15+000000EC],#0
+code:
+  mov ecx,[r15+000000EC]
+  jmp return
+
+LabUpgradeDay:
+  jmp newmem
+  nop 2
+return:
+
+[DISABLE]
+LabUpgradeDay:
+  db 41 8B 8F EC 00 00 00
+
+unregistersymbol(*)
+dealloc(*)
+
+{
+ProjectCoral-Win64-Shipping.UC_LabUpgradePanel::UpdateRequirementDisplay+488: 41 3B 86 F8 00 00 00     - cmp eax,[r14+000000F8]
+ProjectCoral-Win64-Shipping.UC_LabUpgradePanel::UpdateRequirementDisplay+48F: 49 8B D6                 - mov rdx,r14
+ProjectCoral-Win64-Shipping.UC_LabUpgradePanel::UpdateRequirementDisplay+492: 41 89 86 F4 00 00 00     - mov [r14+000000F4],eax
+ProjectCoral-Win64-Shipping.UC_LabUpgradePanel::UpdateRequirementDisplay+499: 49 8B F7                 - mov rsi,r15
+// ---------- INJECTING HERE ----------
+ProjectCoral-Win64-Shipping.UC_LabUpgradePanel::UpdateRequirementDisplay+49C: 41 8B 8F EC 00 00 00     - mov ecx,[r15+000000EC]
+// ---------- DONE INJECTING  ----------
+ProjectCoral-Win64-Shipping.UC_LabUpgradePanel::UpdateRequirementDisplay+4A3: 0F 9D C0                 - setge al
+ProjectCoral-Win64-Shipping.UC_LabUpgradePanel::UpdateRequirementDisplay+4A6: 41 89 8E 60 01 00 00     - mov [r14+00000160],ecx
+ProjectCoral-Win64-Shipping.UC_LabUpgradePanel::UpdateRequirementDisplay+4AD: 41 0F B6 8F B9 00 00 00  - movzx ecx,byte ptr [r15+000000B9]
+ProjectCoral-Win64-Shipping.UC_LabUpgradePanel::UpdateRequirementDisplay+4B5: 41 88 8E 64 01 00 00     - mov [r14+00000164],cl
+ProjectCoral-Win64-Shipping.UC_LabUpgradePanel::UpdateRequirementDisplay+4BC: 41 88 86 FD 00 00 00     - mov [r14+000000FD],al
+ProjectCoral-Win64-Shipping.UC_LabUpgradePanel::UpdateRequirementDisplay+4C3: 48 8B 8B F0 04 00 00     - mov rcx,[rbx+000004F0]
+}
+</AssemblerScript>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>9396</ID>
+          <Description>"Free Upgrade Tools"</Description>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>[ENABLE]
+aobscanmodule(FreeUpgradeTool,$Process,48 63 4F 08 48 8B F0)
+alloc(newmem,$100,FreeUpgradeTool)
+label(code)
+label(return)
+registersymbol(FreeUpgradeTool)
+
+newmem:
+  mov [rdi+08],#0
+code:
+  movsxd  rcx,dword ptr [rdi+08]
+  mov rsi,rax
+  jmp return
+
+FreeUpgradeTool:
+  jmp newmem
+  nop 2
+return:
+
+[DISABLE]
+FreeUpgradeTool:
+  db 48 63 4F 08 48 8B F0
+
+unregistersymbol(*)
+dealloc(*)
+
+{
+ProjectCoral-Win64-Shipping.UC_ToolsUpgradeComponent::CheckIfHaveEnoughRequiredItem+15: E8 A6 19 64 00        - call ProjectCoral-Win64-Shipping.UC_InventoryComponent::StaticClass
+ProjectCoral-Win64-Shipping.UC_ToolsUpgradeComponent::CheckIfHaveEnoughRequiredItem+1A: 4C 8B 0B              - mov r9,[rbx]
+ProjectCoral-Win64-Shipping.UC_ToolsUpgradeComponent::CheckIfHaveEnoughRequiredItem+1D: 48 8B D0              - mov rdx,rax
+ProjectCoral-Win64-Shipping.UC_ToolsUpgradeComponent::CheckIfHaveEnoughRequiredItem+20: 48 8B CB              - mov rcx,rbx
+ProjectCoral-Win64-Shipping.UC_ToolsUpgradeComponent::CheckIfHaveEnoughRequiredItem+23: 41 FF 91 20 06 00 00  - call qword ptr [r9+00000620]
+// ---------- INJECTING HERE ----------
+ProjectCoral-Win64-Shipping.UC_ToolsUpgradeComponent::CheckIfHaveEnoughRequiredItem+2A: 48 63 4F 08           - movsxd  rcx,dword ptr [rdi+08]
+// ---------- DONE INJECTING  ----------
+ProjectCoral-Win64-Shipping.UC_ToolsUpgradeComponent::CheckIfHaveEnoughRequiredItem+2E: 48 8B F0              - mov rsi,rax
+}
+</AssemblerScript>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>2261</ID>
+      <Description>"Fish &amp; Bug"</Description>
+      <Options moHideChildren="1"/>
+      <Color>FF8000</Color>
+      <GroupHeader>1</GroupHeader>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>9401</ID>
+          <Description>"Bugs Do Not Escape"</Description>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>[ENABLE]
+aobscanmodule(BugCatching,$Process,F3 0F 11 8B B8 00 00 00 48)
+alloc(newmem,$100,BugCatching)
+label(code)
+label(return)
+registersymbol(BugCatching)
+
+newmem:
+  xorps xmm1,xmm1
+code:
+  movss [rbx+000000B8],xmm1
+  jmp return
+
+BugCatching:
+  jmp newmem
+  nop 3
+return:
+
+[DISABLE]
+BugCatching:
+  db F3 0F 11 8B B8 00 00 00
+
+unregistersymbol(*)
+dealloc(*)
+
+{
+ProjectCoral-Win64-Shipping.UC_BugDefaultBehaviour::TickAwareBehaviour+1DA: F3 0F 58 8B B8 00 00 00  - addss xmm1,[rbx+000000B8]
+// ---------- INJECTING HERE ----------
+ProjectCoral-Win64-Shipping.UC_BugDefaultBehaviour::TickAwareBehaviour+1E2: F3 0F 11 8B B8 00 00 00  - movss [rbx+000000B8],xmm1
+// ---------- DONE INJECTING  ----------
+}
+</AssemblerScript>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>9402</ID>
+          <Description>"Instant Catch Fish"</Description>
+          <VariableType>Auto Assembler Script</VariableType>
+          <AssemblerScript>[ENABLE]
+aobscanmodule(InstantCatchFish,$Process,F3 0F 11 89 2C 04 00 00)
+alloc(newmem,$100,InstantCatchFish)
+label(code)
+label(return)
+label(Caught)
+registersymbol(InstantCatchFish)
+registersymbol(Caught)
+
+newmem:
+  movss xmm1,[Caught]
+
+code:
+  movss [rcx+0000042C],xmm1
+  jmp return
+
+Caught:
+  dq (float)75
+
+InstantCatchFish:
+  jmp newmem
+  nop 3
+return:
+
+[DISABLE]
+InstantCatchFish:
+  db F3 0F 11 89 2C 04 00 00
+
+unregistersymbol(*)
+dealloc(*)
+
+{
+// ORIGINAL CODE - INJECTION POINT: ProjectCoral-Win64-Shipping.UC_FishingComponent::UpdateReelingForceAndTension+9A
+
+ProjectCoral-Win64-Shipping.UC_FishingComponent::UpdateReelingForceAndTension+6C: F3 0F 5C DD              - subss xmm3,xmm5
+ProjectCoral-Win64-Shipping.UC_FishingComponent::UpdateReelingForceAndTension+70: F3 0F 10 A9 28 04 00 00  - movss xmm5,[rcx+00000428]
+ProjectCoral-Win64-Shipping.UC_FishingComponent::UpdateReelingForceAndTension+78: F3 0F 59 DC              - mulss xmm3,xmm4
+ProjectCoral-Win64-Shipping.UC_FishingComponent::UpdateReelingForceAndTension+7C: F3 0F 58 99 2C 04 00 00  - addss xmm3,[rcx+0000042C]
+ProjectCoral-Win64-Shipping.UC_FishingComponent::UpdateReelingForceAndTension+84: 0F 2F DD                 - comiss xmm3,xmm5
+ProjectCoral-Win64-Shipping.UC_FishingComponent::UpdateReelingForceAndTension+87: 73 05                    - jae ProjectCoral-Win64-Shipping.UC_FishingComponent::UpdateReelingForceAndTension+8E
+ProjectCoral-Win64-Shipping.UC_FishingComponent::UpdateReelingForceAndTension+89: 0F 28 CD                 - movaps xmm1,xmm5
+ProjectCoral-Win64-Shipping.UC_FishingComponent::UpdateReelingForceAndTension+8C: EB 0C                    - jmp ProjectCoral-Win64-Shipping.UC_FishingComponent::UpdateReelingForceAndTension+9A
+ProjectCoral-Win64-Shipping.UC_FishingComponent::UpdateReelingForceAndTension+8E: F3 0F 10 89 D4 03 00 00  - movss xmm1,[rcx+000003D4]
+ProjectCoral-Win64-Shipping.UC_FishingComponent::UpdateReelingForceAndTension+96: F3 0F 5D CB              - minss xmm1,xmm3
+// ---------- INJECTING HERE ----------
+ProjectCoral-Win64-Shipping.UC_FishingComponent::UpdateReelingForceAndTension+9A: F3 0F 11 89 2C 04 00 00  - movss [rcx+0000042C],xmm1
+// ---------- DONE INJECTING  ----------
+ProjectCoral-Win64-Shipping.UC_FishingComponent::UpdateReelingForceAndTension+A2: 48 8D 91 10 04 00 00     - lea rdx,[rcx+00000410]
+ProjectCoral-Win64-Shipping.UC_FishingComponent::UpdateReelingForceAndTension+A9: 84 C0                    - test al,al
+ProjectCoral-Win64-Shipping.UC_FishingComponent::UpdateReelingForceAndTension+AB: 74 0A                    - je ProjectCoral-Win64-Shipping.UC_FishingComponent::UpdateReelingForceAndTension+B7
+ProjectCoral-Win64-Shipping.UC_FishingComponent::UpdateReelingForceAndTension+AD: F3 0F 59 C4              - mulss xmm0,xmm4
+ProjectCoral-Win64-Shipping.UC_FishingComponent::UpdateReelingForceAndTension+B1: F3 0F 58 02              - addss xmm0,[rdx]
+ProjectCoral-Win64-Shipping.UC_FishingComponent::UpdateReelingForceAndTension+B5: EB 22                    - jmp ProjectCoral-Win64-Shipping.UC_FishingComponent::UpdateReelingForceAndTension+D9
+ProjectCoral-Win64-Shipping.UC_FishingComponent::UpdateReelingForceAndTension+B7: 0F 2F CD                 - comiss xmm1,xmm5
+ProjectCoral-Win64-Shipping.UC_FishingComponent::UpdateReelingForceAndTension+BA: F3 0F 10 1A              - movss xmm3,[rdx]
+ProjectCoral-Win64-Shipping.UC_FishingComponent::UpdateReelingForceAndTension+BE: 77 0A                    - ja ProjectCoral-Win64-Shipping.UC_FishingComponent::UpdateReelingForceAndTension+CA
+ProjectCoral-Win64-Shipping.UC_FishingComponent::UpdateReelingForceAndTension+C0: F3 0F 59 C4              - mulss xmm0,xmm4
+}
+</AssemblerScript>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+  </CheatEntries>
+  <UserdefinedSymbols/>
+</CheatTable>

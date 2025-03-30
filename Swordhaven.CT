@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheatTable CheatEngineTableVersion="45">
+  <CheatEntries>
+    <CheatEntry>
+      <ID>2</ID>
+      <Description>"FreeBarter"</Description>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+
+//aobscanmodule(aob_freebarter,"swordhaven.exe",45 33 F6 49 8B C6 48 8B D0 48 63 48 48 2B CE 89 48 48)
+aobscan(aob_freebarter,45 33 F6 49 8B C6 48 8B D0 48 63 48 48 2B CE 89 48 48)
+registersymbol(aob_freebarter)
+
+aob_freebarter+d:
+db 90 90 90
+
+
+
+ /*
+BarterHUD+&lt;&gt;c__DisplayClass93_0:&lt;DropToBackpack&gt;b__0+106 - 45 33 F6              - xor r14d,r14d
+BarterHUD+&lt;&gt;c__DisplayClass93_0:&lt;DropToBackpack&gt;b__0+109 - 49 8B C6              - mov rax,r14
+BarterHUD+&lt;&gt;c__DisplayClass93_0:&lt;DropToBackpack&gt;b__0+10c - 48 8B D0              - mov rdx,rax
+BarterHUD+&lt;&gt;c__DisplayClass93_0:&lt;DropToBackpack&gt;b__0+10f - 48 63 48 48           - movsxd  rcx,dword ptr [rax+48]
+BarterHUD+&lt;&gt;c__DisplayClass93_0:&lt;DropToBackpack&gt;b__0+113 - 2B CE                 - sub ecx,esi
+BarterHUD+&lt;&gt;c__DisplayClass93_0:&lt;DropToBackpack&gt;b__0+115 - 89 48 48              - mov [rax+48],ecx
+BarterHUD+&lt;&gt;c__DisplayClass93_0:&lt;DropToBackpack&gt;b__0+118 - 48 8B 4F 18           - mov rcx,[rdi+18]
+BarterHUD+&lt;&gt;c__DisplayClass93_0:&lt;DropToBackpack&gt;b__0+11c - 48 8B 57 10           - mov rdx,[rdi+10]
+BarterHUD+&lt;&gt;c__DisplayClass93_0:&lt;DropToBackpack&gt;b__0+120 - 48 8D 64 24 00        - lea rsp,[rsp+00]
+BarterHUD+&lt;&gt;c__DisplayClass93_0:&lt;DropToBackpack&gt;b__0+125 - 90                    - nop
+
+
+
+BarterHUD+&lt;&gt;c__DisplayClass93_0:&lt;DropToBackpack&gt;b__0+115:
+14AB2846F9F - 48 63 48 48  - movsxd  rcx,dword ptr [rax+48]
+14AB2846FA3 - 2B CE  - sub ecx,esi
+14AB2846FA5 - 89 48 48  - mov [rax+48],ecx &lt;&lt;
+14AB2846FA8 - 48 8B 4F 18  - mov rcx,[rdi+18]
+14AB2846FAC - 48 8B 57 10  - mov rdx,[rdi+10]
+ */
+
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+aob_freebarter+d:
+db 2B CE
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>5</ID>
+      <Description>"FreeSkills"</Description>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+
+//aobscanmodule(aob_freebarter,"swordhaven.exe",45 33 F6 49 8B C6 48 8B D0 48 63 48 48 2B CE 89 48 48)
+aobscan(aob_freeskills,48 8B D0 48 63 48 5C 2B CF 89 48 5C)
+registersymbol(aob_freeskills)
+
+aob_freeskills+7:
+db 90 90
+
+
+ /*
+SkillValueHUD:Inc+e5 - 48 8B 80 F0000000     - mov rax,[rax+000000F0]
+SkillValueHUD:Inc+ec - 48 8B 80 80000000     - mov rax,[rax+00000080]
+SkillValueHUD:Inc+f3 - 48 8B D0              - mov rdx,rax
+SkillValueHUD:Inc+f6 - 48 63 48 5C           - movsxd  rcx,dword ptr [rax+5C]
+SkillValueHUD:Inc+fa - 2B CF                 - sub ecx,edi
+SkillValueHUD:Inc+fc - 89 48 5C              - mov [rax+5C],ecx
+SkillValueHUD:Inc+ff - 48 63 46 54           - movsxd  rax,dword ptr [rsi+54]
+SkillValueHUD:Inc+103- 03 C7                 - add eax,edi
+SkillValueHUD:Inc+105- 89 46 54              - mov [rsi+54],eax
+
+
+2216233F71C:
+2216233F716 - 48 63 48 5C  - movsxd  rcx,dword ptr [rax+5C]
+2216233F71A - 2B CF  - sub ecx,edi
+2216233F71C - 89 48 5C  - mov [rax+5C],ecx &lt;&lt;
+2216233F71F - 48 63 46 54  - movsxd  rax,dword ptr [rsi+54]
+2216233F723 - 03 C7  - add eax,edi
+ */
+
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+aob_freeskills+7:
+db 2B CF
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>7</ID>
+      <Description>"FreeArrows"</Description>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+
+//aobscanmodule(aob_freebarter,"swordhaven.exe",45 33 F6 49 8B C6 48 8B D0 48 63 48 48 2B CE 89 48 48)
+aobscan(aob_freearrows,49 63 46 48 2B C7 )
+registersymbol(aob_freearrows)
+
+aob_freearrows+4:
+db 90 90
+
+
+ /*
+CharacterComponent:PrepareProjectile+3e1 - 41 83 3C 24  00       - cmp dword ptr [r12],00 { 0 }
+CharacterComponent:PrepareProjectile+3e6 - 49 BB F994CA6121020000 - mov r11,0000022161CA94F9 { (73) }
+CharacterComponent:PrepareProjectile+3f0 - 41 FF D3              - call r11
+CharacterComponent:PrepareProjectile+3f3 - E9 AB000000           - jmp CharacterComponent:PrepareProjectile+4a3
+CharacterComponent:PrepareProjectile+3f8 - 49 63 46 48           - movsxd  rax,dword ptr [r14+48]
+CharacterComponent:PrepareProjectile+3fc - 2B C7                 - sub eax,edi
+CharacterComponent:PrepareProjectile+3fe - 41 89 46 48           - mov [r14+48],eax
+CharacterComponent:PrepareProjectile+402 - 49 8B CC              - mov rcx,r12
+CharacterComponent:PrepareProjectile+405 - 41 83 3C 24  00       - cmp dword ptr [r12],00 { 0 }
+
+
+
+CharacterComponent:PrepareProjectile+3fe:
+221620D1538 - 49 63 46 48  - movsxd  rax,dword ptr [r14+48]
+221620D153C - 2B C7  - sub eax,edi
+221620D153E - 41 89 46 48  - mov [r14+48],eax &lt;&lt;
+221620D1542 - 49 8B CC  - mov rcx,r12
+221620D1545 - 41 83 3C 24  00 - cmp dword ptr [r12],00
+ */
+
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+aob_freearrows+4:
+db 2B CF
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>12</ID>
+      <Description>"FreeLockpicks"</Description>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+
+//aobscanmodule(aob_freebarter,"swordhaven.exe",45 33 F6 49 8B C6 48 8B D0 48 63 48 48 2B CE 89 48 48)
+aobscan(aob_freelockpicks,48 8B 46 20 48 8B D0 48 63 48 48 FF C9  )
+registersymbol(aob_freelockpicks)
+
+aob_freelockpicks+b:
+db 90 90
+
+
+ /*
+CharacterActions.LockpickAction+&lt;&gt;c__DisplayClass6_0:&lt;Do&gt;b__0+930 - 48 63 40 48           - movsxd  rax,dword ptr [rax+48]
+CharacterActions.LockpickAction+&lt;&gt;c__DisplayClass6_0:&lt;Do&gt;b__0+934 - 83 F8 01              - cmp eax,01 { 1 }
+CharacterActions.LockpickAction+&lt;&gt;c__DisplayClass6_0:&lt;Do&gt;b__0+937 - 7E 15                 - jle CharacterActions.LockpickAction+&lt;&gt;c__DisplayClass6_0:&lt;Do&gt;b__0+94e
+CharacterActions.LockpickAction+&lt;&gt;c__DisplayClass6_0:&lt;Do&gt;b__0+939 - 48 8B 46 20           - mov rax,[rsi+20]
+CharacterActions.LockpickAction+&lt;&gt;c__DisplayClass6_0:&lt;Do&gt;b__0+93d - 48 8B D0              - mov rdx,rax
+CharacterActions.LockpickAction+&lt;&gt;c__DisplayClass6_0:&lt;Do&gt;b__0+940 - 48 63 48 48           - movsxd  rcx,dword ptr [rax+48]
+CharacterActions.LockpickAction+&lt;&gt;c__DisplayClass6_0:&lt;Do&gt;b__0+944 - FF C9                 - dec ecx
+CharacterActions.LockpickAction+&lt;&gt;c__DisplayClass6_0:&lt;Do&gt;b__0+946 - 89 48 48              - mov [rax+48],ecx
+CharacterActions.LockpickAction+&lt;&gt;c__DisplayClass6_0:&lt;Do&gt;b__0+949 - E9 45000000           - jmp CharacterActions.LockpickAction+&lt;&gt;c__DisplayClass6_0:&lt;Do&gt;b__0+993
+CharacterActions.LockpickAction+&lt;&gt;c__DisplayClass6_0:&lt;Do&gt;b__0+94e - 48 8B 46 18           - mov rax,[rsi+18]
+CharacterActions.LockpickAction+&lt;&gt;c__DisplayClass6_0:&lt;Do&gt;b__0+952 - 48 8B C8              - mov rcx,rax
+
+
+
+
+
+UseConsumableHelper:UseConsumable+5fa:
+221623815E4 - 48 63 48 48  - movsxd  rcx,dword ptr [rax+48]
+221623815E8 - FF C9  - dec ecx
+221623815EA - 89 48 48  - mov [rax+48],ecx &lt;&lt;
+221623815ED - 48 8B CE  - mov rcx,rsi
+221623815F0 - 83 3E 00 - cmp dword ptr [rsi],00
+ */
+
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+aob_freelockpicks+b:
+db FF C9
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>11</ID>
+      <Description>"FreeConsumable"</Description>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+
+//aobscanmodule(aob_freebarter,"swordhaven.exe",45 33 F6 49 8B C6 48 8B D0 48 63 48 48 2B CE 89 48 48)
+aobscan(aob_freeconsumable,48 8B 45 B0 48 8B D0 48 63 48 48 FF C9  )
+registersymbol(aob_freeconsumable)
+
+aob_freeconsumable+b:
+db 90 90
+
+
+ /*
+UseConsumableHelper:UseConsumable+5e3 - 74 08                 - je UseConsumableHelper:UseConsumable+5ed
+UseConsumableHelper:UseConsumable+5e5 - 48 C7 45 B0 00000000  - mov qword ptr [rbp-50],00000000 { 0 }
+UseConsumableHelper:UseConsumable+5ed - 48 8B 45 B0           - mov rax,[rbp-50]
+UseConsumableHelper:UseConsumable+5f1 - 48 8B D0              - mov rdx,rax
+UseConsumableHelper:UseConsumable+5f4 - 48 63 48 48           - movsxd  rcx,dword ptr [rax+48]
+UseConsumableHelper:UseConsumable+5f8 - FF C9                 - dec ecx
+UseConsumableHelper:UseConsumable+5fa - 89 48 48              - mov [rax+48],ecx
+UseConsumableHelper:UseConsumable+5fd - 48 8B CE              - mov rcx,rsi
+UseConsumableHelper:UseConsumable+600 - 83 3E 00              - cmp dword ptr [rsi],00 { 0 }
+UseConsumableHelper:UseConsumable+603 - 66 66 90              - nop 3
+
+
+
+
+UseConsumableHelper:UseConsumable+5fa:
+221623815E4 - 48 63 48 48  - movsxd  rcx,dword ptr [rax+48]
+221623815E8 - FF C9  - dec ecx
+221623815EA - 89 48 48  - mov [rax+48],ecx &lt;&lt;
+221623815ED - 48 8B CE  - mov rcx,rsi
+221623815F0 - 83 3E 00 - cmp dword ptr [rsi],00
+ */
+
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+aob_freeconsumable+b:
+db FF C9
+</AssemblerScript>
+    </CheatEntry>
+  </CheatEntries>
+  <CheatCodes>
+    <CodeEntry>
+      <Description>Change of mov [rdi+000000B8],esi</Description>
+      <AddressString>14AAFA762B4</AddressString>
+      <Before>
+        <Byte>85</Byte>
+        <Byte>1F</Byte>
+        <Byte>02</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Before>
+      <Actual>
+        <Byte>89</Byte>
+        <Byte>B7</Byte>
+        <Byte>B8</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Actual>
+      <After>
+        <Byte>48</Byte>
+        <Byte>63</Byte>
+        <Byte>87</Byte>
+        <Byte>B8</Byte>
+        <Byte>00</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry>
+      <Description>Change of sub ecx,esi</Description>
+      <AddressString>14AB2846FA3</AddressString>
+      <Before>
+        <Byte>D0</Byte>
+        <Byte>48</Byte>
+        <Byte>63</Byte>
+        <Byte>48</Byte>
+        <Byte>48</Byte>
+      </Before>
+      <Actual>
+        <Byte>2B</Byte>
+        <Byte>CE</Byte>
+      </Actual>
+      <After>
+        <Byte>89</Byte>
+        <Byte>48</Byte>
+        <Byte>48</Byte>
+        <Byte>48</Byte>
+        <Byte>8B</Byte>
+      </After>
+    </CodeEntry>
+  </CheatCodes>
+  <UserdefinedSymbols/>
+</CheatTable>

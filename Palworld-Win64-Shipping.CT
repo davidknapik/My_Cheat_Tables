@@ -5,6 +5,76 @@
   </Files>
   <CheatEntries>
     <CheatEntry>
+      <ID>108826</ID>
+      <Description>"Freeze Hunger"</Description>
+      <Color>0000FF</Color>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>// Hunger
+// Type: Float
+
+[ENABLE]
+
+aobscanmodule(aob_hunger,$process,48 8D 8F 98 00 00 00 F3 0F 11 87 84 03 00 00 48 8D 54 24 60 F3 0F 11 44 24 60) // should be unique
+registersymbol(aob_hunger)
+
+
+aob_hunger+7:
+db 90 90 90 90 90 90 90 90
+
+
+
+/*
+Palworld-Win64-Shipping.exe+2B76959:
+7FF7705E694C - 0F84 4B010000 - je Palworld-Win64-Shipping.exe+2B76A9D
+7FF7705E6952 - 48 8D 8F 98000000  - lea rcx,[rdi+00000098]
+7FF7705E6959 - F3 0F11 87 84030000  - movss [rdi+00000384],xmm0 &lt;&lt;
+7FF7705E6961 - 48 8D 54 24 60  - lea rdx,[rsp+60]
+7FF7705E6966 - F3 0F11 44 24 60  - movss [rsp+60],xmm0
+*/
+
+
+[DISABLE]
+aob_hunger+7:
+movss [rdi+00000384],xmm0
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>108828</ID>
+      <Description>"Freeze Ammo"</Description>
+      <Color>0000FF</Color>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>// Ammo
+// Type: 4 byte
+
+[ENABLE]
+
+aobscanmodule(aob_ammo,$process,F2 0F 10 46 20 F2 0F 11 47 20 44 89 B3 54 01 00 00 ) // should be unique
+registersymbol(aob_ammo)
+
+
+aob_ammo+a:
+db 90 90 90 90 90 90 90
+
+
+
+/*
+Palworld-Win64-Shipping.exe+2BB4560:
+7FF770624556 - F2 0F10 46 20  - movsd xmm0,[rsi+20]
+7FF77062455B - F2 0F11 47 20  - movsd [rdi+20],xmm0
+
+7FF770624560 - 44 89 B3 54010000  - mov [rbx+00000154],r14d &lt;&lt;
+
+7FF770624567 - 45 85 F6  - test r14d,r14d
+7FF77062456A - 7F 22 - jg Palworld-Win64-Shipping.exe+2BB458E
+*/
+
+
+[DISABLE]
+aob_ammo+a:
+mov [rbx+00000154],r14d
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
       <ID>357</ID>
       <Description>"This is a free table. Accepts donation only."</Description>
       <Options moHideChildren="1" moManualExpandCollapse="1" moAllowManualCollapseAndExpand="1"/>
@@ -2143,7 +2213,82 @@ dealloc(newmem)
         </CheatEntry>
       </CheatEntries>
     </CheatEntry>
+    <CheatEntry>
+      <ID>108824</ID>
+      <Description>"No description"</Description>
+      <VariableType>4 Bytes</VariableType>
+      <Address>1FD960C5154</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>108825</ID>
+      <Description>"Hunger"</Description>
+      <VariableType>Float</VariableType>
+      <Address>1FD9433B924</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>108827</ID>
+      <Description>"No description"</Description>
+      <VariableType>4 Bytes</VariableType>
+      <Address>1FD960E6154</Address>
+    </CheatEntry>
   </CheatEntries>
+  <CheatCodes>
+    <CodeEntry>
+      <Description>Change of movss [rdi+00000384],xmm0</Description>
+      <AddressString>Palworld-Win64-Shipping.exe+2B76959</AddressString>
+      <Before>
+        <Byte>8F</Byte>
+        <Byte>98</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Before>
+      <Actual>
+        <Byte>F3</Byte>
+        <Byte>0F</Byte>
+        <Byte>11</Byte>
+        <Byte>87</Byte>
+        <Byte>84</Byte>
+        <Byte>03</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Actual>
+      <After>
+        <Byte>48</Byte>
+        <Byte>8D</Byte>
+        <Byte>54</Byte>
+        <Byte>24</Byte>
+        <Byte>60</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry>
+      <Description>Change of mov [rbx+00000154],r14d</Description>
+      <AddressString>Palworld-Win64-Shipping.exe+2BB4560</AddressString>
+      <Before>
+        <Byte>F2</Byte>
+        <Byte>0F</Byte>
+        <Byte>11</Byte>
+        <Byte>47</Byte>
+        <Byte>20</Byte>
+      </Before>
+      <Actual>
+        <Byte>44</Byte>
+        <Byte>89</Byte>
+        <Byte>B3</Byte>
+        <Byte>54</Byte>
+        <Byte>01</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Actual>
+      <After>
+        <Byte>45</Byte>
+        <Byte>85</Byte>
+        <Byte>F6</Byte>
+        <Byte>7F</Byte>
+        <Byte>22</Byte>
+      </After>
+    </CodeEntry>
+  </CheatCodes>
   <UserdefinedSymbols>
     <SymbolEntry>
       <Name>randomvalue</Name>

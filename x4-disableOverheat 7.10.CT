@@ -1,0 +1,740 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheatTable CheatEngineTableVersion="45">
+  <CheatEntries>
+    <CheatEntry>
+      <ID>115</ID>
+      <Description>"Open Map view right Info tab then select a ship (DON'T LOCK)"</Description>
+      <Options moHideChildren="1" moDeactivateChildrenAsWell="1"/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript Async="1">[ENABLE]
+aobscanmodule(ship,$process,74 ?? F3 0F 10 ?? ?? ?? 00 00 0F 57 C9 F3 0F 5A C8)
+alloc(newmem,$1000,ship)
+
+label(shipPtr)
+label(code)
+label(return)
+
+newmem:
+  mov [shipPtr],rbx
+code:
+  xorps xmm1,xmm1
+  cvtss2sd xmm1,xmm0
+  jmp return
+
+align 10
+shipPtr:
+  dq 0
+
+ship+0A:
+  jmp newmem
+  nop 2
+return:
+registersymbol(ship)
+registersymbol(shipPtr)
+
+[DISABLE]
+ship+0A:
+  db 0F 57 C9 F3 0F 5A C8
+unregistersymbol(ship)
+unregistersymbol(shipPtr)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: X4.exe+206A9F
+
+X4.exe+206A76: FF 15 4C 44 79 01        - call qword ptr [X4.exe+199AEC8]
+X4.exe+206A7C: E9 25 E7 FF FF           - jmp X4.exe+2051A6
+X4.exe+206A81: 48 8B 5C 24 68           - mov rbx,[rsp+68]
+X4.exe+206A86: 48 85 DB                 - test rbx,rbx
+X4.exe+206A89: 74 30                    - je X4.exe+206ABB
+X4.exe+206A8B: 48 8B CB                 - mov rcx,rbx
+X4.exe+206A8E: E8 7D 58 F2 FF           - call X4.GetNumAllBoardingPhases+6270
+X4.exe+206A93: 84 C0                    - test al,al
+X4.exe+206A95: 74 24                    - je X4.exe+206ABB
+X4.exe+206A97: F3 0F 10 83 F4 01 00 00  - movss xmm0,[rbx+000001F4]
+// ---------- INJECTING HERE ----------
+X4.exe+206A9F: 0F 57 C9                 - xorps xmm1,xmm1
+// ---------- DONE INJECTING  ----------
+X4.exe+206AA2: F3 0F 5A C8              - cvtss2sd xmm1,xmm0
+X4.exe+206AA6: 48 8B BD 70 2D 00 00     - mov rdi,[rbp+00002D70]
+X4.exe+206AAD: 48 8B CF                 - mov rcx,rdi
+X4.exe+206AB0: FF 15 12 44 79 01        - call qword ptr [X4.exe+199AEC8]
+X4.exe+206AB6: E9 EB E6 FF FF           - jmp X4.exe+2051A6
+X4.exe+206ABB: 41 0F 28 C0              - movaps xmm0,xmm8
+X4.exe+206ABF: 0F 57 C9                 - xorps xmm1,xmm1
+X4.exe+206AC2: F3 0F 5A C8              - cvtss2sd xmm1,xmm0
+X4.exe+206AC6: 48 8B BD 70 2D 00 00     - mov rdi,[rbp+00002D70]
+X4.exe+206ACD: 48 8B CF                 - mov rcx,rdi
+}
+</AssemblerScript>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>116</ID>
+          <Description>"Selected Ship Information Panel"</Description>
+          <ShowAsSigned>0</ShowAsSigned>
+          <GroupHeader>1</GroupHeader>
+          <Address>shipPtr</Address>
+          <Offsets>
+            <Offset>0</Offset>
+          </Offsets>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>26625</ID>
+              <Description>"gun-overheat"</Description>
+              <Color>498966</Color>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>{ Game   : X4.exe
+  Version: 
+  Date   : 2025-01-08
+  Author : super
+
+  This script does blah blah blah
+}
+
+[ENABLE]
+
+aobscanmodule(INJECT,X4.exe,58 18 89 50 10 55 56) // should be unique
+alloc(newmem,$1000,INJECT)
+
+label(exit)
+label(code)
+label(return)
+
+newmem:
+
+  push rbx
+  mov rbx, [rbp+20]
+  cmp rbx ,[shipPtr]
+  je exit
+  mov rbx, [rbp+2C0]
+  cmp rbx ,[shipPtr]
+  je exit
+  mov rbx, [rbp+278]
+  cmp rbx ,[shipPtr]
+  je exit
+  mov rbx, [rbp+2D8]
+  cmp rbx ,[shipPtr]
+  je exit
+  mov rbx, [rbp+138]
+  cmp rbx ,[shipPtr]
+  je exit
+
+code:
+  pop rbx
+  mov [rax+10],edx
+  push rbp
+  push rsi
+  jmp return
+
+exit:
+  mov edx,#0
+  jmp code
+
+
+INJECT+02:
+  jmp newmem
+return:
+registersymbol(INJECT)
+
+[DISABLE]
+
+INJECT+02:
+  db 89 50 10 55 56
+
+unregistersymbol(INJECT)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: X4.exe+7E1FE7
+
+X4.exe+7E1FD8: 5E                    - pop rsi
+X4.exe+7E1FD9: C3                    - ret 
+X4.exe+7E1FDA: CC                    - int 3 
+X4.exe+7E1FDB: CC                    - int 3 
+X4.exe+7E1FDC: CC                    - int 3 
+X4.exe+7E1FDD: CC                    - int 3 
+X4.exe+7E1FDE: CC                    - int 3 
+X4.exe+7E1FDF: CC                    - int 3 
+X4.exe+7E1FE0: 48 8B C4              - mov rax,rsp
+X4.exe+7E1FE3: 48 89 58 18           - mov [rax+18],rbx
+// ---------- INJECTING HERE ----------
+X4.exe+7E1FE7: 89 50 10              - mov [rax+10],edx
+// ---------- DONE INJECTING  ----------
+X4.exe+7E1FEA: 55                    - push rbp
+X4.exe+7E1FEB: 56                    - push rsi
+X4.exe+7E1FEC: 57                    - push rdi
+X4.exe+7E1FED: 41 54                 - push r12
+X4.exe+7E1FEF: 41 55                 - push r13
+X4.exe+7E1FF1: 41 56                 - push r14
+X4.exe+7E1FF3: 41 57                 - push r15
+X4.exe+7E1FF5: 48 81 EC 90 00 00 00  - sub rsp,00000090
+X4.exe+7E1FFC: 0F 29 70 B8           - movaps [rax-48],xmm6
+X4.exe+7E2000: 48 8B F1              - mov rsi,rcx
+}
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>608</ID>
+              <Description>"Player"</Description>
+              <ShowAsHex>1</ShowAsHex>
+              <ShowAsSigned>0</ShowAsSigned>
+              <VariableType>8 Bytes</VariableType>
+              <Address>+420</Address>
+              <Offsets>
+                <Offset>0</Offset>
+                <Offset>0</Offset>
+                <Offset>0</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>640</ID>
+              <Description>"ID"</Description>
+              <ShowAsSigned>0</ShowAsSigned>
+              <VariableType>String</VariableType>
+              <Length>8</Length>
+              <Unicode>0</Unicode>
+              <CodePage>0</CodePage>
+              <ZeroTerminate>1</ZeroTerminate>
+              <Address>+348</Address>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>620</ID>
+              <Description>"??"</Description>
+              <ShowAsSigned>0</ShowAsSigned>
+              <VariableType>Double</VariableType>
+              <Address>+300</Address>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>621</ID>
+              <Description>"owner faction"</Description>
+              <ShowAsHex>1</ShowAsHex>
+              <ShowAsSigned>0</ShowAsSigned>
+              <VariableType>Array of byte</VariableType>
+              <ByteLength>10</ByteLength>
+              <Address>+368</Address>
+              <Offsets>
+                <Offset>0</Offset>
+              </Offsets>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>623</ID>
+                  <Description>"name"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <VariableType>String</VariableType>
+                  <Length>10</Length>
+                  <Unicode>0</Unicode>
+                  <CodePage>0</CodePage>
+                  <ZeroTerminate>1</ZeroTerminate>
+                  <Address>+8</Address>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>622</ID>
+              <Description>"faction2?"</Description>
+              <ShowAsHex>1</ShowAsHex>
+              <ShowAsSigned>0</ShowAsSigned>
+              <VariableType>Array of byte</VariableType>
+              <ByteLength>10</ByteLength>
+              <Address>+380</Address>
+              <Offsets>
+                <Offset>0</Offset>
+              </Offsets>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>624</ID>
+                  <Description>"name"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <VariableType>String</VariableType>
+                  <Length>10</Length>
+                  <Unicode>0</Unicode>
+                  <CodePage>0</CodePage>
+                  <ZeroTerminate>1</ZeroTerminate>
+                  <Address>+8</Address>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>625</ID>
+              <Description>"speed1"</Description>
+              <ShowAsSigned>0</ShowAsSigned>
+              <VariableType>Float</VariableType>
+              <Address>+3d4</Address>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>626</ID>
+              <Description>"speed2"</Description>
+              <ShowAsSigned>0</ShowAsSigned>
+              <VariableType>Float</VariableType>
+              <Address>+3d8</Address>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>627</ID>
+              <Description>"acceleration"</Description>
+              <ShowAsSigned>0</ShowAsSigned>
+              <VariableType>Float</VariableType>
+              <Address>+3dc</Address>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>117</ID>
+              <Description>"Hull"</Description>
+              <ShowAsSigned>0</ShowAsSigned>
+              <VariableType>Float</VariableType>
+              <Address>+28c</Address>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>630</ID>
+              <Description>"Shield"</Description>
+              <Options moHideChildren="1"/>
+              <ShowAsSigned>0</ShowAsSigned>
+              <VariableType>Float</VariableType>
+              <Address>+298</Address>
+              <Offsets>
+                <Offset>0</Offset>
+              </Offsets>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>631</ID>
+                  <Description>"num shields"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <VariableType>Float</VariableType>
+                  <Address>+28</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>637</ID>
+                  <Description>"max"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <VariableType>Float</VariableType>
+                  <Address>+34</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>632</ID>
+                  <Description>"delay"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <VariableType>Float</VariableType>
+                  <Address>+38</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>633</ID>
+                  <Description>"regen"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <VariableType>Float</VariableType>
+                  <Address>+40</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>634</ID>
+                  <Description>"current"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <VariableType>Float</VariableType>
+                  <Address>+58</Address>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>128</ID>
+              <Description>"Macro"</Description>
+              <Options moHideChildren="1"/>
+              <ShowAsHex>1</ShowAsHex>
+              <ShowAsSigned>0</ShowAsSigned>
+              <VariableType>8 Bytes</VariableType>
+              <Address>+60</Address>
+              <Offsets>
+                <Offset>0</Offset>
+              </Offsets>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>639</ID>
+                  <Description>"Defaults"</Description>
+                  <ShowAsHex>1</ShowAsHex>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <VariableType>8 Bytes</VariableType>
+                  <Address>+18</Address>
+                  <Offsets>
+                    <Offset>0</Offset>
+                  </Offsets>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>638</ID>
+              <Description>"Name?"</Description>
+              <ShowAsSigned>0</ShowAsSigned>
+              <VariableType>String</VariableType>
+              <Length>32</Length>
+              <Unicode>0</Unicode>
+              <CodePage>0</CodePage>
+              <ZeroTerminate>1</ZeroTerminate>
+              <Address>+308</Address>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>610</ID>
+              <Description>"Equipments"</Description>
+              <ShowAsHex>1</ShowAsHex>
+              <ShowAsSigned>0</ShowAsSigned>
+              <VariableType>8 Bytes</VariableType>
+              <Address>+f0</Address>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>609</ID>
+              <Description>"EngineMod"</Description>
+              <ShowAsHex>1</ShowAsHex>
+              <ShowAsSigned>0</ShowAsSigned>
+              <VariableType>4 Bytes</VariableType>
+              <Address>+320</Address>
+              <Offsets>
+                <Offset>0</Offset>
+              </Offsets>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>279</ID>
+              <Description>"Inventory"</Description>
+              <Options moHideChildren="1"/>
+              <ShowAsSigned>0</ShowAsSigned>
+              <GroupHeader>1</GroupHeader>
+              <Address>+A8</Address>
+              <Offsets>
+                <Offset>0</Offset>
+                <Offset>350</Offset>
+                <Offset>0</Offset>
+                <Offset>1E0</Offset>
+                <Offset>0</Offset>
+              </Offsets>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>280</ID>
+                  <Description>"Item 1"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <VariableType>Custom</VariableType>
+                  <CustomType>X4 - 4 Bytes</CustomType>
+                  <Address>+0*10</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>281</ID>
+                  <Description>"Item 2"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <VariableType>Custom</VariableType>
+                  <CustomType>X4 - 4 Bytes</CustomType>
+                  <Address>+1*10</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>282</ID>
+                  <Description>"Item 3"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <VariableType>Custom</VariableType>
+                  <CustomType>X4 - 4 Bytes</CustomType>
+                  <Address>+2*10</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>283</ID>
+                  <Description>"Item 4"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <VariableType>Custom</VariableType>
+                  <CustomType>X4 - 4 Bytes</CustomType>
+                  <Address>+3*10</Address>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>284</ID>
+                  <Description>"Item 5"</Description>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <VariableType>Custom</VariableType>
+                  <CustomType>X4 - 4 Bytes</CustomType>
+                  <Address>+4*10</Address>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>137</ID>
+              <Description>"Service Crew Skills"</Description>
+              <Options moHideChildren="1"/>
+              <ShowAsSigned>0</ShowAsSigned>
+              <GroupHeader>1</GroupHeader>
+              <Address>+440</Address>
+              <Offsets>
+                <Offset>0</Offset>
+              </Offsets>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>329</ID>
+                  <Description>"Max Up All Crew Skills"</Description>
+                  <VariableType>Auto Assembler Script</VariableType>
+                  <AssemblerScript>[ENABLE]
+{$lua}
+local ship = readPointer("shipPtr")
+local last = readPointer(ship + 0x448)
+local crew = readPointer(ship + 0x440)
+local i = 0
+if crew == nil or crew &lt;= 0 then
+  return
+end
+while crew &lt; last do
+  writeInteger(crew + 0x14, 0x00FFFFF0)
+  crew = crew + 0x20
+  i = i + 1
+  if i &gt; 500 then
+    return
+  end
+end
+{$asm}
+assert(true)
+[DISABLE]
+</AssemblerScript>
+                  <Hotkeys>
+                    <Hotkey>
+                      <Action>Toggle Activation</Action>
+                      <Keys>
+                        <Key>18</Key>
+                        <Key>78</Key>
+                      </Keys>
+                      <ID>0</ID>
+                    </Hotkey>
+                  </Hotkeys>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>138</ID>
+                  <Description>"Service Crew 1"</Description>
+                  <Options moHideChildren="1"/>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <GroupHeader>1</GroupHeader>
+                  <Address>+0</Address>
+                  <CheatEntries>
+                    <CheatEntry>
+                      <ID>139</ID>
+                      <Description>"Boarding (15 is max)"</Description>
+                      <ShowAsSigned>0</ShowAsSigned>
+                      <VariableType>Binary</VariableType>
+                      <BitStart>4</BitStart>
+                      <BitLength>4</BitLength>
+                      <ShowAsBinary>0</ShowAsBinary>
+                      <Address>+14</Address>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>140</ID>
+                      <Description>"Engineering"</Description>
+                      <ShowAsSigned>0</ShowAsSigned>
+                      <VariableType>Binary</VariableType>
+                      <BitStart>0</BitStart>
+                      <BitLength>4</BitLength>
+                      <ShowAsBinary>0</ShowAsBinary>
+                      <Address>+15</Address>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>141</ID>
+                      <Description>"Management"</Description>
+                      <ShowAsSigned>0</ShowAsSigned>
+                      <VariableType>Binary</VariableType>
+                      <BitStart>4</BitStart>
+                      <BitLength>4</BitLength>
+                      <ShowAsBinary>0</ShowAsBinary>
+                      <Address>+15</Address>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>142</ID>
+                      <Description>"Morale"</Description>
+                      <ShowAsSigned>0</ShowAsSigned>
+                      <VariableType>Binary</VariableType>
+                      <BitStart>0</BitStart>
+                      <BitLength>4</BitLength>
+                      <ShowAsBinary>0</ShowAsBinary>
+                      <Address>+16</Address>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>143</ID>
+                      <Description>"Piloting"</Description>
+                      <ShowAsSigned>0</ShowAsSigned>
+                      <VariableType>Binary</VariableType>
+                      <BitStart>4</BitStart>
+                      <BitLength>4</BitLength>
+                      <ShowAsBinary>0</ShowAsBinary>
+                      <Address>+16</Address>
+                    </CheatEntry>
+                  </CheatEntries>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>144</ID>
+                  <Description>"Service Crew 2"</Description>
+                  <Options moHideChildren="1"/>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <GroupHeader>1</GroupHeader>
+                  <Address>+20</Address>
+                  <CheatEntries>
+                    <CheatEntry>
+                      <ID>145</ID>
+                      <Description>"Boarding (15 is max)"</Description>
+                      <ShowAsSigned>0</ShowAsSigned>
+                      <VariableType>Binary</VariableType>
+                      <BitStart>4</BitStart>
+                      <BitLength>4</BitLength>
+                      <ShowAsBinary>0</ShowAsBinary>
+                      <Address>+14</Address>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>146</ID>
+                      <Description>"Engineering"</Description>
+                      <ShowAsSigned>0</ShowAsSigned>
+                      <VariableType>Binary</VariableType>
+                      <BitStart>0</BitStart>
+                      <BitLength>4</BitLength>
+                      <ShowAsBinary>0</ShowAsBinary>
+                      <Address>+15</Address>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>147</ID>
+                      <Description>"Management"</Description>
+                      <ShowAsSigned>0</ShowAsSigned>
+                      <VariableType>Binary</VariableType>
+                      <BitStart>4</BitStart>
+                      <BitLength>4</BitLength>
+                      <ShowAsBinary>0</ShowAsBinary>
+                      <Address>+15</Address>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>148</ID>
+                      <Description>"Morale"</Description>
+                      <ShowAsSigned>0</ShowAsSigned>
+                      <VariableType>Binary</VariableType>
+                      <BitStart>0</BitStart>
+                      <BitLength>4</BitLength>
+                      <ShowAsBinary>0</ShowAsBinary>
+                      <Address>+16</Address>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>149</ID>
+                      <Description>"Piloting"</Description>
+                      <ShowAsSigned>0</ShowAsSigned>
+                      <VariableType>Binary</VariableType>
+                      <BitStart>4</BitStart>
+                      <BitLength>4</BitLength>
+                      <ShowAsBinary>0</ShowAsBinary>
+                      <Address>+16</Address>
+                    </CheatEntry>
+                  </CheatEntries>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>150</ID>
+                  <Description>"Service Crew 3"</Description>
+                  <Options moHideChildren="1"/>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <GroupHeader>1</GroupHeader>
+                  <Address>+40</Address>
+                  <CheatEntries>
+                    <CheatEntry>
+                      <ID>151</ID>
+                      <Description>"Boarding (15 is max)"</Description>
+                      <ShowAsSigned>0</ShowAsSigned>
+                      <VariableType>Binary</VariableType>
+                      <BitStart>4</BitStart>
+                      <BitLength>4</BitLength>
+                      <ShowAsBinary>0</ShowAsBinary>
+                      <Address>+14</Address>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>152</ID>
+                      <Description>"Engineering"</Description>
+                      <ShowAsSigned>0</ShowAsSigned>
+                      <VariableType>Binary</VariableType>
+                      <BitStart>0</BitStart>
+                      <BitLength>4</BitLength>
+                      <ShowAsBinary>0</ShowAsBinary>
+                      <Address>+15</Address>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>153</ID>
+                      <Description>"Management"</Description>
+                      <ShowAsSigned>0</ShowAsSigned>
+                      <VariableType>Binary</VariableType>
+                      <BitStart>4</BitStart>
+                      <BitLength>4</BitLength>
+                      <ShowAsBinary>0</ShowAsBinary>
+                      <Address>+15</Address>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>154</ID>
+                      <Description>"Morale"</Description>
+                      <ShowAsSigned>0</ShowAsSigned>
+                      <VariableType>Binary</VariableType>
+                      <BitStart>0</BitStart>
+                      <BitLength>4</BitLength>
+                      <ShowAsBinary>0</ShowAsBinary>
+                      <Address>+16</Address>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>155</ID>
+                      <Description>"Piloting"</Description>
+                      <ShowAsSigned>0</ShowAsSigned>
+                      <VariableType>Binary</VariableType>
+                      <BitStart>4</BitStart>
+                      <BitLength>4</BitLength>
+                      <ShowAsBinary>0</ShowAsBinary>
+                      <Address>+16</Address>
+                    </CheatEntry>
+                  </CheatEntries>
+                </CheatEntry>
+                <CheatEntry>
+                  <ID>156</ID>
+                  <Description>"Service Crew 4"</Description>
+                  <Options moHideChildren="1"/>
+                  <ShowAsSigned>0</ShowAsSigned>
+                  <GroupHeader>1</GroupHeader>
+                  <Address>+60</Address>
+                  <CheatEntries>
+                    <CheatEntry>
+                      <ID>157</ID>
+                      <Description>"Boarding (15 is max)"</Description>
+                      <ShowAsSigned>0</ShowAsSigned>
+                      <VariableType>Binary</VariableType>
+                      <BitStart>4</BitStart>
+                      <BitLength>4</BitLength>
+                      <ShowAsBinary>0</ShowAsBinary>
+                      <Address>+14</Address>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>158</ID>
+                      <Description>"Engineering"</Description>
+                      <ShowAsSigned>0</ShowAsSigned>
+                      <VariableType>Binary</VariableType>
+                      <BitStart>0</BitStart>
+                      <BitLength>4</BitLength>
+                      <ShowAsBinary>0</ShowAsBinary>
+                      <Address>+15</Address>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>159</ID>
+                      <Description>"Management"</Description>
+                      <ShowAsSigned>0</ShowAsSigned>
+                      <VariableType>Binary</VariableType>
+                      <BitStart>4</BitStart>
+                      <BitLength>4</BitLength>
+                      <ShowAsBinary>0</ShowAsBinary>
+                      <Address>+15</Address>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>160</ID>
+                      <Description>"Morale"</Description>
+                      <ShowAsSigned>0</ShowAsSigned>
+                      <VariableType>Binary</VariableType>
+                      <BitStart>0</BitStart>
+                      <BitLength>4</BitLength>
+                      <ShowAsBinary>0</ShowAsBinary>
+                      <Address>+16</Address>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>161</ID>
+                      <Description>"Piloting"</Description>
+                      <ShowAsSigned>0</ShowAsSigned>
+                      <VariableType>Binary</VariableType>
+                      <BitStart>4</BitStart>
+                      <BitLength>4</BitLength>
+                      <ShowAsBinary>0</ShowAsBinary>
+                      <Address>+16</Address>
+                    </CheatEntry>
+                  </CheatEntries>
+                </CheatEntry>
+              </CheatEntries>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+  </CheatEntries>
+  <UserdefinedSymbols/>
+</CheatTable>

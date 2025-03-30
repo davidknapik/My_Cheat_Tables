@@ -1,0 +1,451 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheatTable CheatEngineTableVersion="45">
+  <CheatEntries>
+    <CheatEntry>
+      <ID>2</ID>
+      <Description>"Energy"</Description>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+/**
+ Desription: Infinate Energy
+ Type: float
+ Value: full == larger than 1 (starting: ~12)
+ empty == 0
+**/
+//aobScanmodule(aob_energy, Starcom Unknown Space.exe, F3 0F 5A C0 F3 0F 10 4C 24 08 F3 0F 5A C9 F2 0F 5C C1)
+aobscan(aob_energy,F3 0F 5A C0 F3 0F 10 4C 24 08 F3 0F 5A C9 F2 0F 5C C1)
+registersymbol(aob_energy)
+
+aob_energy+e:
+   db 90 90 90 90
+
+
+/**
+
+ReactorSystem:AttemptDrawEnergy+28 - 76 13                 - jna ReactorSystem:AttemptDrawEnergy+3d
+ReactorSystem:AttemptDrawEnergy+2a - F3 0F10 46 28         - movss xmm0,[rsi+28]
+ReactorSystem:AttemptDrawEnergy+2f - F3 0F5A C0            - cvtss2sd xmm0,xmm0
+ReactorSystem:AttemptDrawEnergy+33 - F2 0F5A E8            - cvtsd2ss xmm5,xmm0
+ReactorSystem:AttemptDrawEnergy+37 - F3 0F11 6C 24 08      - movss [rsp+08],xmm5
+ReactorSystem:AttemptDrawEnergy+3d - F3 0F10 46 28         - movss xmm0,[rsi+28]
+aob_energy                         - F3 0F5A C0            - cvtss2sd xmm0,xmm0
+ReactorSystem:AttemptDrawEnergy+46 - F3 0F10 4C 24 08      - movss xmm1,[rsp+08]
+ReactorSystem:AttemptDrawEnergy+4c - F3 0F5A C9            - cvtss2sd xmm1,xmm1
+ReactorSystem:AttemptDrawEnergy+50 - F2 0F5C C1            - subsd xmm0,xmm1    &lt;&lt;&lt;
+ReactorSystem:AttemptDrawEnergy+54 - F2 0F5A E8            - cvtsd2ss xmm5,xmm0
+ReactorSystem:AttemptDrawEnergy+58 - F3 0F11 6E 28         - movss [rsi+28],xmm5
+ReactorSystem:AttemptDrawEnergy+5d - F3 0F10 44 24 08      - movss xmm0,[rsp+08]
+
+
+2CC7C409162 - F3 0F5A C0            - cvtss2sd xmm0,xmm0
+2CC7C409166 - F3 0F10 4C 24 08      - movss xmm1,[rsp+08]
+2CC7C40916C - F3 0F5A C9            - cvtss2sd xmm1,xmm1
+2CC7C409170 - F2 0F5C C1            - subsd xmm0,xmm1
+2CC7C409174 - F2 0F5A E8            - cvtsd2ss xmm5,xmm0
+2CC7C409178 - F3 0F11 6E 28         - movss [rsi+28],xmm5
+2CC7C40917D - F3 0F10 44 24 08      - movss xmm0,[rsp+08]
+2CC7C409183 - F3 0F5A C0            - cvtss2sd xmm0,xmm0
+**/
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+aob_energy+e:
+   db F2 0F 5C C1
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>5</ID>
+      <Description>"*Skills"</Description>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+/**
+ Desription: Infinate Skills
+ Type: 4 Byte
+ Value: Number of skills to apply
+**/
+
+/**
+//aobScanmodule(aob_energy, Starcom Unknown Space.exe, F3 0F 5A C0 F3 0F 10 4C 24 08 F3 0F 5A C9 F2 0F 5C C1)
+aobscan(aob_skills,49 63 46 74 2B C6 41 89 46 74)
+registersymbol(aob_skills)
+
+aob_skills+4:
+   db 90 90
+**/
+
+CrewManager:AssignSkillPoints+63:
+   db 90 90
+
+/**
+CrewManager:AssignSkillPoints+48 - 48 63 55 E0           - movsxd  rdx,dword ptr [rbp-20]
+CrewManager:AssignSkillPoints+4c - 4C 8B C6              - mov r8,rsi
+CrewManager:AssignSkillPoints+4f - 41 83 3F 00           - cmp dword ptr [r15],00 { 0 }
+CrewManager:AssignSkillPoints+53 - 66 66 90              - nop 3
+CrewManager:AssignSkillPoints+56 - 49 BB 903EF987C7010000 - mov r11,CrewMember:AdjustSkillPoints { (58394.28) }
+CrewManager:AssignSkillPoints+60 - 41 FF D3              - call r11
+aob_skills                       - 49 63 46 74           - movsxd  rax,dword ptr [r14+74]
+CrewManager:AssignSkillPoints+67 - 2B C6                 - sub eax,esi
+CrewManager:AssignSkillPoints+69 - 41 89 46 74           - mov [r14+74],eax   &lt;&lt;
+CrewManager:AssignSkillPoints+6d - 48 8B 75 E8           - mov rsi,[rbp-18]
+CrewManager:AssignSkillPoints+71 - 4C 8B 75 F0           - mov r14,[rbp-10]
+
+
+
+
+2CC64670639:
+2CC64670633 - 49 63 46 74  - movsxd  rax,dword ptr [r14+74]
+2CC64670637 - 2B C6  - sub eax,esi
+2CC64670639 - 41 89 46 74  - mov [r14+74],eax &lt;&lt;
+2CC6467063D - 48 8B 75 E8  - mov rsi,[rbp-18]
+2CC64670641 - 4C 8B 75 F0  - mov r14,[rbp-10]
+**/
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+/**
+aob_skills+4:
+   db 2B C6
+**/
+
+CrewManager:AssignSkillPoints+63:
+   db 2B C6
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>7</ID>
+      <Description>"*Research"</Description>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+/**
+ Desription: Infinate Research Points
+ Type: 4 Byte
+ Value: Number of Points
+**/
+//aobScanmodule(aob_energy, Starcom Unknown Space.exe, F3 0F 5A C0 F3 0F 10 4C 24 08 F3 0F 5A C9 F2 0F 5C C1)
+
+/**
+aobscan(aob_research,48 63 87 E8 00 00 00 03 C6 89 87 E8 00 00 00)
+registersymbol(aob_research)
+
+aob_research+7:
+   db 90 90
+**/
+
+Player:AdjustResearchPoints+1d:
+   db 90 90
+
+/**
+
+Player:AdjustResearchPoints+8 - 48 89 75 F0           - mov [rbp-10],rsi
+Player:AdjustResearchPoints+c - 48 89 7D F8           - mov [rbp-08],rdi
+Player:AdjustResearchPoints+10- 48 8B F9              - mov rdi,rcx
+Player:AdjustResearchPoints+13- 48 8B F2              - mov rsi,rdx
+aob_research                  - 48 63 87 E8000000     - movsxd  rax,dword ptr [rdi+000000E8]
+Player:AdjustResearchPoints+1d- 03 C6                 - add eax,esi
+Player:AdjustResearchPoints+1f- 89 87 E8000000        - mov [rdi+000000E8],eax
+Player:AdjustResearchPoints+25- 85 F6                 - test esi,esi
+Player:AdjustResearchPoints+27- 7E 0F                 - jle Player:AdjustResearchPoints+38
+
+
+
+2CC32915386 - 48 63 87 E8000000  - movsxd  rax,dword ptr [rdi+000000E8]
+2CC3291538D - 03 C6  - add eax,esi
+2CC3291538F - 89 87 E8000000  - mov [rdi+000000E8],eax &lt;&lt;
+2CC32915395 - 85 F6  - test esi,esi
+2CC32915397 - 7E 0F - jle 2CC329153A8
+**/
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+/**
+aob_research+7:
+   db 03 C6
+**/
+
+Player:AdjustResearchPoints+1d:
+   db 03 C6
+</AssemblerScript>
+    </CheatEntry>
+  </CheatEntries>
+  <CheatCodes>
+    <CodeEntry>
+      <Description>Change of subsd xmm0,xmm1</Description>
+      <AddressString>2CC7C409170</AddressString>
+      <Before>
+        <Byte>08</Byte>
+        <Byte>F3</Byte>
+        <Byte>0F</Byte>
+        <Byte>5A</Byte>
+        <Byte>C9</Byte>
+      </Before>
+      <Actual>
+        <Byte>F2</Byte>
+        <Byte>0F</Byte>
+        <Byte>5C</Byte>
+        <Byte>C1</Byte>
+      </Actual>
+      <After>
+        <Byte>F2</Byte>
+        <Byte>0F</Byte>
+        <Byte>5A</Byte>
+        <Byte>E8</Byte>
+        <Byte>F3</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry>
+      <Description>Change of mov [rax+34],ecx</Description>
+      <AddressString>2CC64665A4B</AddressString>
+      <Before>
+        <Byte>8B</Byte>
+        <Byte>D0</Byte>
+        <Byte>83</Byte>
+        <Byte>3A</Byte>
+        <Byte>00</Byte>
+      </Before>
+      <Actual>
+        <Byte>89</Byte>
+        <Byte>48</Byte>
+        <Byte>34</Byte>
+      </Actual>
+      <After>
+        <Byte>48</Byte>
+        <Byte>8B</Byte>
+        <Byte>CE</Byte>
+        <Byte>48</Byte>
+        <Byte>8D</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry>
+      <Description>Change of mov [rax+0C],ecx</Description>
+      <AddressString>2CC0B0AF57C</AddressString>
+      <Before>
+        <Byte>20</Byte>
+        <Byte>48</Byte>
+        <Byte>63</Byte>
+        <Byte>4D</Byte>
+        <Byte>98</Byte>
+      </Before>
+      <Actual>
+        <Byte>89</Byte>
+        <Byte>48</Byte>
+        <Byte>0C</Byte>
+      </Actual>
+      <After>
+        <Byte>49</Byte>
+        <Byte>63</Byte>
+        <Byte>46</Byte>
+        <Byte>44</Byte>
+        <Byte>FF</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry>
+      <Description>Change of add eax,esi</Description>
+      <AddressString>2CC3291538D</AddressString>
+      <Before>
+        <Byte>87</Byte>
+        <Byte>E8</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Before>
+      <Actual>
+        <Byte>03</Byte>
+        <Byte>C6</Byte>
+      </Actual>
+      <After>
+        <Byte>89</Byte>
+        <Byte>87</Byte>
+        <Byte>E8</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry>
+      <Description>Change of add eax,ecx</Description>
+      <AddressString>17E7DB5E0E3</AddressString>
+      <Before>
+        <Byte>CF</Byte>
+        <Byte>48</Byte>
+        <Byte>8D</Byte>
+        <Byte>0C</Byte>
+        <Byte>89</Byte>
+      </Before>
+      <Actual>
+        <Byte>03</Byte>
+        <Byte>C1</Byte>
+      </Actual>
+      <After>
+        <Byte>89</Byte>
+        <Byte>46</Byte>
+        <Byte>60</Byte>
+        <Byte>EB</Byte>
+        <Byte>0A</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry>
+      <Description>Change of add eax,r15d</Description>
+      <AddressString>17E7DB5E0EE</AddressString>
+      <Before>
+        <Byte>0A</Byte>
+        <Byte>48</Byte>
+        <Byte>63</Byte>
+        <Byte>46</Byte>
+        <Byte>60</Byte>
+      </Before>
+      <Actual>
+        <Byte>41</Byte>
+        <Byte>03</Byte>
+        <Byte>C7</Byte>
+      </Actual>
+      <After>
+        <Byte>89</Byte>
+        <Byte>46</Byte>
+        <Byte>60</Byte>
+        <Byte>48</Byte>
+        <Byte>63</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry>
+      <Description>Change of mov [rax+0C],ecx</Description>
+      <AddressString>17E0DE9481C</AddressString>
+      <Before>
+        <Byte>20</Byte>
+        <Byte>48</Byte>
+        <Byte>63</Byte>
+        <Byte>4D</Byte>
+        <Byte>98</Byte>
+      </Before>
+      <Actual>
+        <Byte>89</Byte>
+        <Byte>48</Byte>
+        <Byte>0C</Byte>
+      </Actual>
+      <After>
+        <Byte>49</Byte>
+        <Byte>63</Byte>
+        <Byte>46</Byte>
+        <Byte>44</Byte>
+        <Byte>FF</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry>
+      <Description>Change of inc eax</Description>
+      <AddressString>17E0DE94823</AddressString>
+      <Before>
+        <Byte>0C</Byte>
+        <Byte>49</Byte>
+        <Byte>63</Byte>
+        <Byte>46</Byte>
+        <Byte>44</Byte>
+      </Before>
+      <Actual>
+        <Byte>FF</Byte>
+        <Byte>C0</Byte>
+      </Actual>
+      <After>
+        <Byte>41</Byte>
+        <Byte>89</Byte>
+        <Byte>46</Byte>
+        <Byte>44</Byte>
+        <Byte>B8</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry>
+      <Description>Change of add [rbp+48],dl</Description>
+      <AddressString>17E0DE9469F</AddressString>
+      <Before>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Before>
+      <Actual>
+        <Byte>00</Byte>
+        <Byte>55</Byte>
+        <Byte>48</Byte>
+      </Actual>
+      <After>
+        <Byte>8B</Byte>
+        <Byte>EC</Byte>
+        <Byte>48</Byte>
+        <Byte>81</Byte>
+        <Byte>EC</Byte>
+      </After>
+    </CodeEntry>
+  </CheatCodes>
+  <UserdefinedSymbols/>
+  <Structures StructVersion="2">
+    <Structure Name="String" AutoFill="0" AutoCreate="1" DefaultHex="0" AutoDestroy="0" DoNotSaveLocal="0" RLECompression="1" AutoCreateStructsize="4096">
+      <Elements>
+        <Element Offset="16" Vartype="4 Bytes" Bytesize="4" OffsetHex="00000010" Description="m_stringLength" DisplayMethod="unsigned integer"/>
+        <Element Offset="20" Vartype="String" Bytesize="1" OffsetHex="00000014" Description="m_firstChar" DisplayMethod="unsigned integer"/>
+      </Elements>
+    </Structure>
+    <Structure Name="unnamed structure" AutoFill="0" AutoCreate="1" DefaultHex="0" AutoDestroy="0" DoNotSaveLocal="0" RLECompression="1" AutoCreateStructsize="4096">
+      <Elements>
+        <Element Offset="0" Vartype="Unicode String" Bytesize="95" OffsetHex="00000000" DisplayMethod="unsigned integer"/>
+        <Element Offset="95" Vartype="Byte" Bytesize="1" OffsetHex="0000005F" DisplayMethod="unsigned integer"/>
+        <Element Offset="96" Vartype="Unicode String" Bytesize="47" OffsetHex="00000060" DisplayMethod="unsigned integer"/>
+        <Element Offset="143" Vartype="Byte" Bytesize="1" OffsetHex="0000008F" DisplayMethod="unsigned integer"/>
+        <Element Offset="144" Vartype="Unicode String" Bytesize="23" OffsetHex="00000090" DisplayMethod="unsigned integer"/>
+        <Element Offset="167" Vartype="Byte" Bytesize="1" OffsetHex="000000A7" DisplayMethod="unsigned integer"/>
+        <Element Offset="168" Vartype="Unicode String" Bytesize="11" OffsetHex="000000A8" DisplayMethod="unsigned integer"/>
+        <Element Offset="179" Vartype="Byte" Bytesize="1" OffsetHex="000000B3" DisplayMethod="unsigned integer"/>
+        <Element Offset="180" Vartype="Unicode String" Bytesize="5" OffsetHex="000000B4" DisplayMethod="unsigned integer"/>
+        <Element Offset="185" Vartype="Byte" Bytesize="1" RLECount="3" OffsetHex="000000B9" DisplayMethod="unsigned integer"/>
+        <Element Offset="188" Vartype="4 Bytes" Bytesize="4" OffsetHex="000000BC" DisplayMethod="unsigned integer"/>
+        <Element Offset="192" Vartype="Pointer" Bytesize="8" OffsetHex="000000C0" DisplayMethod="unsigned integer"/>
+        <Element Offset="200" Vartype="4 Bytes" Bytesize="4" RLECount="9" OffsetHex="000000C8" DisplayMethod="unsigned integer"/>
+        <Element Offset="236" Vartype="4 Bytes" Bytesize="4" OffsetHex="000000EC" Description="Al" DisplayMethod="unsigned integer"/>
+        <Element Offset="240" Vartype="4 Bytes" Bytesize="4" RLECount="3" OffsetHex="000000F0" DisplayMethod="unsigned integer"/>
+        <Element Offset="252" Vartype="4 Bytes" Bytesize="4" OffsetHex="000000FC" Description="Pt" DisplayMethod="unsigned integer"/>
+        <Element Offset="256" Vartype="4 Bytes" Bytesize="4" RLECount="3" OffsetHex="00000100" DisplayMethod="unsigned integer"/>
+        <Element Offset="268" Vartype="4 Bytes" Bytesize="4" OffsetHex="0000010C" Description="Cu" DisplayMethod="unsigned integer"/>
+        <Element Offset="272" Vartype="4 Bytes" Bytesize="4" RLECount="3" OffsetHex="00000110" DisplayMethod="unsigned integer"/>
+        <Element Offset="284" Vartype="4 Bytes" Bytesize="4" OffsetHex="0000011C" Description="Yt" DisplayMethod="unsigned integer"/>
+        <Element Offset="288" Vartype="4 Bytes" Bytesize="4" RLECount="3" OffsetHex="00000120" DisplayMethod="unsigned integer"/>
+        <Element Offset="300" Vartype="4 Bytes" Bytesize="4" OffsetHex="0000012C" Description="Chr" DisplayMethod="unsigned integer"/>
+        <Element Offset="304" Vartype="4 Bytes" Bytesize="4" RLECount="3" OffsetHex="00000130" DisplayMethod="unsigned integer"/>
+        <Element Offset="316" Vartype="4 Bytes" Bytesize="4" OffsetHex="0000013C" Description="Au" DisplayMethod="unsigned integer"/>
+        <Element Offset="320" Vartype="4 Bytes" Bytesize="4" RLECount="3" OffsetHex="00000140" DisplayMethod="unsigned integer"/>
+        <Element Offset="332" Vartype="4 Bytes" Bytesize="4" OffsetHex="0000014C" Description="Ti" DisplayMethod="unsigned integer"/>
+        <Element Offset="336" Vartype="4 Bytes" Bytesize="4" RLECount="3" OffsetHex="00000150" DisplayMethod="unsigned integer"/>
+        <Element Offset="348" Vartype="4 Bytes" Bytesize="4" OffsetHex="0000015C" Description="Ir" DisplayMethod="unsigned integer"/>
+        <Element Offset="352" Vartype="4 Bytes" Bytesize="4" RLECount="3" OffsetHex="00000160" DisplayMethod="unsigned integer"/>
+        <Element Offset="364" Vartype="4 Bytes" Bytesize="4" OffsetHex="0000016C" Description="Ag" DisplayMethod="unsigned integer"/>
+        <Element Offset="368" Vartype="4 Bytes" Bytesize="4" RLECount="3" OffsetHex="00000170" DisplayMethod="unsigned integer"/>
+        <Element Offset="380" Vartype="4 Bytes" Bytesize="4" OffsetHex="0000017C" Description="U" DisplayMethod="unsigned integer"/>
+        <Element Offset="384" Vartype="4 Bytes" Bytesize="4" RLECount="3" OffsetHex="00000180" DisplayMethod="unsigned integer"/>
+        <Element Offset="396" Vartype="4 Bytes" Bytesize="4" OffsetHex="0000018C" Description="DBe" DisplayMethod="unsigned integer"/>
+        <Element Offset="400" Vartype="4 Bytes" Bytesize="4" RLECount="3" OffsetHex="00000190" DisplayMethod="unsigned integer"/>
+        <Element Offset="412" Vartype="4 Bytes" Bytesize="4" OffsetHex="0000019C" Description="Nu" DisplayMethod="unsigned integer"/>
+        <Element Offset="416" Vartype="4 Bytes" Bytesize="4" RLECount="3" OffsetHex="000001A0" DisplayMethod="unsigned integer"/>
+        <Element Offset="428" Vartype="4 Bytes" Bytesize="4" OffsetHex="000001AC" Description="Eth" DisplayMethod="unsigned integer"/>
+        <Element Offset="432" Vartype="4 Bytes" Bytesize="4" RLECount="3" OffsetHex="000001B0" DisplayMethod="unsigned integer"/>
+        <Element Offset="444" Vartype="4 Bytes" Bytesize="4" OffsetHex="000001BC" Description="Xen" DisplayMethod="unsigned integer"/>
+        <Element Offset="448" Vartype="4 Bytes" Bytesize="4" RLECount="3" OffsetHex="000001C0" DisplayMethod="unsigned integer"/>
+        <Element Offset="460" Vartype="4 Bytes" Bytesize="4" OffsetHex="000001CC" Description="Adm" DisplayMethod="unsigned integer"/>
+        <Element Offset="464" Vartype="4 Bytes" Bytesize="4" RLECount="8" OffsetHex="000001D0" DisplayMethod="unsigned integer"/>
+        <Element Offset="496" Vartype="Unicode String" Bytesize="5" OffsetHex="000001F0" DisplayMethod="unsigned integer"/>
+        <Element Offset="501" Vartype="Byte" Bytesize="1" RLECount="3" OffsetHex="000001F5" DisplayMethod="unsigned integer"/>
+        <Element Offset="504" Vartype="4 Bytes" Bytesize="4" RLECount="66" OffsetHex="000001F8" DisplayMethod="unsigned integer"/>
+        <Element Offset="768" Vartype="Pointer" Bytesize="8" OffsetHex="00000300" DisplayMethod="unsigned integer"/>
+        <Element Offset="776" Vartype="4 Bytes" Bytesize="4" RLECount="830" OffsetHex="00000308" DisplayMethod="unsigned integer"/>
+      </Elements>
+    </Structure>
+    <Structure Name="unnamed structure" AutoFill="0" AutoCreate="1" DefaultHex="0" AutoDestroy="0" DoNotSaveLocal="0" RLECompression="1" AutoCreateStructsize="4096">
+      <Elements>
+        <Element Offset="0" Vartype="4 Bytes" Bytesize="4" RLECount="68" OffsetHex="00000000" DisplayMethod="unsigned integer"/>
+        <Element Offset="272" Vartype="Unicode String" Bytesize="5" OffsetHex="00000110" DisplayMethod="unsigned integer"/>
+        <Element Offset="277" Vartype="Byte" Bytesize="1" RLECount="3" OffsetHex="00000115" DisplayMethod="unsigned integer"/>
+        <Element Offset="280" Vartype="4 Bytes" Bytesize="4" RLECount="66" OffsetHex="00000118" DisplayMethod="unsigned integer"/>
+        <Element Offset="544" Vartype="Pointer" Bytesize="8" OffsetHex="00000220" DisplayMethod="unsigned integer"/>
+        <Element Offset="552" Vartype="4 Bytes" Bytesize="4" RLECount="886" OffsetHex="00000228" DisplayMethod="unsigned integer"/>
+      </Elements>
+    </Structure>
+  </Structures>
+</CheatTable>

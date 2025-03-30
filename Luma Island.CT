@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheatTable CheatEngineTableVersion="45">
+  <CheatEntries>
+    <CheatEntry>
+      <ID>1</ID>
+      <Description>"FreeBuild"</Description>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+
+//aobscanmodule(aob_freecraft, "Luma Island.exe", 44 89 75 98 49 63 47 18 41 2B C6 41 89 47 18 41 2B DE 44 01 75 88 )
+
+//define(aob_freecraft,"Inventory:Take"+3db)
+aobscan(aob_freecraft, 44 89 75 98 49 63 47 18 41 2B C6 41 89 47 18 41 2B DE 44 01 75 88 )
+registersymbol(aob_freecraft)
+
+aob_freecraft+8:
+db 90 90 90
+
+/*
+Inventory:Take+3de:
+16EBFE450F7 - 49 63 47 18  - movsxd  rax,dword ptr [r15+18]
+16EBFE450FB - 41 2B C6  - sub eax,r14d
+16EBFE450FE - 41 89 47 18  - mov [r15+18],eax &lt;&lt;
+16EBFE45102 - 41 2B DE  - sub ebx,r14d
+16EBFE45105 - 44 01 75 88  - add [rbp-78],r14d
+*/
+
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+aob_freecraft+8:
+db 41 2B C6
+</AssemblerScript>
+      <Hotkeys>
+        <Hotkey>
+          <Action>Toggle Activation</Action>
+          <Keys>
+            <Key>113</Key>
+          </Keys>
+          <ID>0</ID>
+        </Hotkey>
+      </Hotkeys>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>3</ID>
+      <Description>"FreeBait"</Description>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+
+aobscan(aob_freebait, 49 63 44 24 18 FF C8 41 89 44 24 18 49 8B 46 30)
+registersymbol(aob_freebait)
+
+aob_freebait+5:
+db 90 90
+
+/*
+265680127EC:
+265680127E5 - 49 63 44 24 18  - movsxd  rax,dword ptr [r12+18]
+265680127EA - FF C8  - dec eax
+265680127EC - 41 89 44 24 18  - mov [r12+18],eax &lt;&lt;
+265680127F1 - 49 8B 46 30  - mov rax,[r14+30]
+265680127F5 - 48 63 CF  - movsxd  rcx,edi
+
+*/
+
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+aob_freebait+5:
+db FF C8
+</AssemblerScript>
+      <Hotkeys>
+        <Hotkey>
+          <Action>Toggle Activation</Action>
+          <Keys/>
+          <ID>0</ID>
+        </Hotkey>
+      </Hotkeys>
+    </CheatEntry>
+  </CheatEntries>
+  <UserdefinedSymbols/>
+  <Structures StructVersion="2">
+    <Structure Name="ItemStack" AutoFill="0" AutoCreate="1" DefaultHex="0" AutoDestroy="0" DoNotSaveLocal="0" RLECompression="1" AutoCreateStructsize="4096">
+      <Elements>
+        <Element Offset="16" Vartype="Pointer" Bytesize="8" OffsetHex="00000010" Description="item" DisplayMethod="unsigned integer">
+          <Structure Name="Autocreated from 16FBFAD4690" AutoFill="0" AutoCreate="1" DefaultHex="0" AutoDestroy="0" DoNotSaveLocal="0" RLECompression="1" AutoCreateStructsize="4096">
+            <Elements>
+              <Element Offset="16" Vartype="Pointer" Bytesize="8" OffsetHex="00000010" Description="type" DisplayMethod="unsigned integer"/>
+              <Element Offset="24" Vartype="Pointer" Bytesize="8" OffsetHex="00000018" Description="variation" DisplayMethod="unsigned integer"/>
+              <Element Offset="32" Vartype="String" Bytesize="1" OffsetHex="00000020" Description="pickedUpByPlayerID" DisplayMethod="unsigned integer"/>
+              <Element Offset="40" Vartype="Pointer" Bytesize="8" OffsetHex="00000028" Description="behaviour" DisplayMethod="unsigned integer"/>
+              <Element Offset="48" Vartype="Pointer" Bytesize="8" OffsetHex="00000030" Description="toolUpgradeConfig" DisplayMethod="unsigned integer"/>
+              <Element Offset="56" Vartype="Pointer" Bytesize="8" OffsetHex="00000038" Description="descriptiveNameBuilder" DisplayMethod="unsigned integer"/>
+              <Element Offset="64" Vartype="Pointer" Bytesize="8" OffsetHex="00000040" Description="globalReferenceID" DisplayMethod="unsigned integer"/>
+            </Elements>
+          </Structure>
+        </Element>
+        <Element Offset="24" Vartype="4 Bytes" Bytesize="4" OffsetHex="00000018" Description="amount" DisplayMethod="unsigned integer"/>
+      </Elements>
+    </Structure>
+    <Structure Name="String" AutoFill="0" AutoCreate="1" DefaultHex="0" AutoDestroy="0" DoNotSaveLocal="0" RLECompression="1" AutoCreateStructsize="4096">
+      <Elements>
+        <Element Offset="16" Vartype="4 Bytes" Bytesize="4" OffsetHex="00000010" Description="Length" DisplayMethod="unsigned integer"/>
+        <Element Offset="20" Vartype="Unicode String" Bytesize="128" OffsetHex="00000014" Description="Value" DisplayMethod="unsigned integer"/>
+      </Elements>
+    </Structure>
+  </Structures>
+</CheatTable>

@@ -15,6 +15,27 @@ _scan01+6:
    db 90 90 90 90 90 90
 
 /*
+
+Terraria.Player::ItemCheck+2ABA - 83 BD 20FFFFFF 00     - cmp dword ptr [ebp-000000E0],00 { 0 }
+Terraria.Player::ItemCheck+2AC1 - 74 49                 - je Terraria.Player::ItemCheck+2B0C
+Terraria.Player::ItemCheck+2AC3 - 8B 85 10FDFFFF        - mov eax,[ebp-000002F0]
+Terraria.Player::ItemCheck+2AC9 - 83 B8 B4000000 00     - cmp dword ptr [eax+000000B4],00 { 0 }
+Terraria.Player::ItemCheck+2AD0 - 7E 0C                 - jle Terraria.Player::ItemCheck+2ADE
+_scan01                         - 8B 85 10FDFFFF        - mov eax,[ebp-000002F0]
+
+Terraria.Player::ItemCheck+2AD8 - FF 88 B4000000        - dec [eax+000000B4]
+
+Terraria.Player::ItemCheck+2ADE - 8B 85 10FDFFFF        - mov eax,[ebp-000002F0]
+Terraria.Player::ItemCheck+2AE4 - 83 B8 B4000000 00     - cmp dword ptr [eax+000000B4],00 { 0 }
+Terraria.Player::ItemCheck+2AEB - 7F 1F                 - jg Terraria.Player::ItemCheck+2B0C
+Terraria.Player::ItemCheck+2AED - 8B 85 14FDFFFF        - mov eax,[ebp-000002EC]
+Terraria.Player::ItemCheck+2AF3 - 8B 80 00060000        - mov eax,[eax+00000600]
+Terraria.Player::ItemCheck+2AF9 - 8B 95 14FDFFFF        - mov edx,[ebp-000002EC]
+Terraria.Player::ItemCheck+2AFF - 89 82 08060000        - mov [edx+00000608],eax
+Terraria.Player::ItemCheck+2B05 - C6 05 E8121608 01     - mov byte ptr [081612E8],01 { (1),1 }
+
+
+
 2793C858 - 7E 0C - jle Terraria.Player::ItemCheck+2ADE
 2793C85A - 8B 85 10FDFFFF  - mov eax,[ebp-000002F0]
 2793C860 - FF 88 B4000000  - dec [eax+000000B4] &lt;&lt;
@@ -25,9 +46,8 @@ _scan01+6:
  
 [DISABLE]
 //code from here till the end of the code will be used to disable the cheat
-_scan01:
-   db 8B 85 10 FD FF FF FF 88 B4 00 00 00 8B 85 10 FD FF FF 83 B8 B4 00 00 00 00
-
+_scan01+6:
+dec [eax+000000B4]
 
 
 
@@ -45,16 +65,13 @@ registersymbol(_scan02)
 
 
 _scan02+4:
-nop
-nop
-nop
-nop
-nop
-nop
+db 90 90 90 90 90 90
 
 /*
 Terraria.UI.ItemSlot::PickupItemIntoMouse+F3 - 8B 4C B8 08           - mov ecx,[eax+edi*4+08]
+
 Terraria.UI.ItemSlot::PickupItemIntoMouse+F7 - FF 89 B4000000        - dec [ecx+000000B4]
+
 Terraria.UI.ItemSlot::PickupItemIntoMouse+FD - 8B 45 F0              - mov eax,[ebp-10]
 Terraria.UI.ItemSlot::PickupItemIntoMouse+100- 3B 78 04              - cmp edi,[eax+04]
 
@@ -64,8 +81,7 @@ Terraria.UI.ItemSlot::PickupItemIntoMouse+100- 3B 78 04              - cmp edi,[
  
 [DISABLE]
 //code from here till the end of the code will be used to disable the cheat
-_scan02:
-mov ecx,[eax+edi*4+08]
+_scan02+4:
 dec [ecx+000000B4]
 
 
@@ -84,26 +100,29 @@ registersymbol(_scan03)
 
 
 _scan03+3:
-nop
-nop
-nop
-nop
-nop
-nop
+db 90 90 90 90 90 90
 
 /*
-21091BEF - 74 26 - je Terraria.Player::PickAmmo+8D7
-21091BF1 - 8B 45 E0  - mov eax,[ebp-20]
-21091BF4 - FF 88 B4000000  - dec [eax+000000B4] &lt;&lt;
-21091BFA - 8B 45 E0  - mov eax,[ebp-20]
-21091BFD - 83 B8 B4000000 00 - cmp dword ptr [eax+000000B4],00
+Terraria.Player::PickAmmo+8A5 - 8B 45 E0              - mov eax,[ebp-20]
+Terraria.Player::PickAmmo+8A8 - 80 B8 66010000 00     - cmp byte ptr [eax+00000166],00 { 0 }
+Terraria.Player::PickAmmo+8AF - 74 26                 - je Terraria.Player::PickAmmo+8D7
+_scan03                       - 8B 45 E0              - mov eax,[ebp-20]
+
+Terraria.Player::PickAmmo+8B4 - FF 88 B4000000        - dec [eax+000000B4]
+
+Terraria.Player::PickAmmo+8BA - 8B 45 E0              - mov eax,[ebp-20]
+Terraria.Player::PickAmmo+8BD - 83 B8 B4000000 00     - cmp dword ptr [eax+000000B4],00 { 0 }
+Terraria.Player::PickAmmo+8C4 - 7F 11                 - jg Terraria.Player::PickAmmo+8D7
+Terraria.Player::PickAmmo+8C6 - 8B 45 E0              - mov eax,[ebp-20]
+Terraria.Player::PickAmmo+8C9 - C6 40 20 00           - mov byte ptr [eax+20],00 { 0 }
+Terraria.Player::PickAmmo+8CD - 8B 4D E0              - mov ecx,[ebp-20]
+
 */
  
  
 [DISABLE]
 //code from here till the end of the code will be used to disable the cheat
-_scan03:
-mov eax,[ebp-20]
+_scan03+3:
 dec [eax+000000B4]
 
 
@@ -123,27 +142,31 @@ registersymbol(_scan04)
 
 
 _scan04+4:
-nop
-nop
-nop
-nop
-nop
-nop
+db 90 90 90 90 90 90
+
 
 /*
-329886C5 - 3B C3  - cmp eax,ebx
-329886C7 - 7E 0A - jle Terraria.Recipe::Create+1F3
-329886C9 - 29 9E B4000000  - sub [esi+000000B4],ebx &lt;&lt;
-329886CF - 33 DB  - xor ebx,ebx
-329886D1 - EB 21 - jmp Terraria.Recipe::Create+214
+Terraria.Recipe::Create+1D6 - E8 FDFCFFFF           - call Terraria.Recipe::AcceptedByItemGroups
+Terraria.Recipe::Create+1DB - 85 C0                 - test eax,eax
+Terraria.Recipe::Create+1DD - 74 35                 - je Terraria.Recipe::Create+214
+Terraria.Recipe::Create+1DF - 8B 86 B4000000        - mov eax,[esi+000000B4]
+_scan04                     - 3B C3                 - cmp eax,ebx
+Terraria.Recipe::Create+1E7 - 7E 0A                 - jle Terraria.Recipe::Create+1F3
+
+Terraria.Recipe::Create+1E9 - 29 9E B4000000        - sub [esi+000000B4],ebx
+
+Terraria.Recipe::Create+1EF - 33 DB                 - xor ebx,ebx
+Terraria.Recipe::Create+1F1 - EB 21                 - jmp Terraria.Recipe::Create+214
+Terraria.Recipe::Create+1F3 - 2B D8                 - sub ebx,eax
+Terraria.Recipe::Create+1F5 - B9 780C7508           - mov ecx,08750C78 { (01000200) }
+Terraria.Recipe::Create+1FA - E8 C9A9F8C9           - call 048530C8
+
 */
  
  
 [DISABLE]
 //code from here till the end of the code will be used to disable the cheat
-_scan04:
-cmp eax,ebx
-jle Terraria.Recipe::Create+1F3
+_scan04+4:
 sub [esi+000000B4],ebx
 
 
@@ -157,12 +180,13 @@ sub [esi+000000B4],ebx
       <VariableType>Auto Assembler Script</VariableType>
       <AssemblerScript>[ENABLE]
 //code from here to '[DISABLE]' will be used to enable the cheat
-//aobScan(_scan04, 3B C3 7E 0A 29 9E B4 00 00 00 33 DB EB 21)
-//registersymbol(_scan04)
+
+aobScan(aob_damage, F2 0F 2C C0 8B 95 9C FD FF FF 29 82 08 04 00 00 83 7D 0C FF)
+registersymbol(aob_damage)
 
 
-Terraria.Player::Hurt:
-ret
+aob_damage+a:
+db 90 90 90 90 90 90
 
 /*
 
@@ -175,19 +199,69 @@ Terraria.Player::Hurt+6- 81 EC 70020000        - sub esp,00000270
 Terraria.Player::Hurt+C- 8B F1                 - mov esi,ecx
 
 
+Terraria.Player::Hurt+11E7 - 8B 8D 44FFFFFF        - mov ecx,[ebp-000000BC]
+Terraria.Player::Hurt+11ED - E8 565ECDE8           - call Terraria.CombatText::NewText
+Terraria.Player::Hurt+11F2 - F2 0F10 45 DC         - movsd xmm0,[ebp-24]
+Terraria.Player::Hurt+11F7 - F2 0F2C C0            - cvttsd2si eax,xmm0
+Terraria.Player::Hurt+11FB - 8B 95 9CFDFFFF        - mov edx,[ebp-00000264]
 
-2B4588AF - F2 0F2C C0  - cvttsd2si eax,xmm0
-2B4588B3 - 8B 95 9CFDFFFF  - mov edx,[ebp-00000264]
-2B4588B9 - 29 82 08040000  - sub [edx+00000408],eax &lt;&lt;
-2B4588BF - 83 7D 0C FF - cmp dword ptr [ebp+0C],-01
-2B4588C3 - 0F85 A2000000 - jne Terraria.Player::Hurt+12B3
+Terraria.Player::Hurt+1201 - 29 82 08040000        - sub [edx+00000408],eax
+
+Terraria.Player::Hurt+1207 - 83 7D 0C FF           - cmp dword ptr [ebp+0C],-01 { 255 }
+Terraria.Player::Hurt+120B - 0F85 A2000000         - jne Terraria.Player::Hurt+12B3
+Terraria.Player::Hurt+1211 - 8B 85 9CFDFFFF        - mov eax,[ebp-00000264]
+Terraria.Player::Hurt+1217 - C6 80 F9060000 01     - mov byte ptr [eax+000006F9],01 { 1 }
+Terraria.Player::Hurt+121E - 33 D2                 - xor edx,edx
+Terraria.Player::Hurt+1220 - 89 55 8C              - mov [ebp-74],edx
 */
  
  
 [DISABLE]
 //code from here till the end of the code will be used to disable the cheat
-Terraria.Player::Hurt:
-push ebp
+aob_damage+a:
+sub [edx+00000408],eax
+
+
+
+
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>11</ID>
+      <Description>"Negate Drowning"</Description>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+
+aobScan(aob_drown, 33 D2 89 90 60 03 00 00 83 80 08 04 00 00 FE 83 B8 08 04 00 00 00)
+registersymbol(aob_drown)
+
+
+aob_drown+8:
+db 83 80 08 04 00 00 00
+
+/*
+
+Terraria.Player::CheckDrowning+34C - D9EE                  - fldz
+Terraria.Player::CheckDrowning+34E - D9 98 20040000        - fstp dword ptr [eax+00000420]
+Terraria.Player::CheckDrowning+354 - 33 D2                 - xor edx,edx
+Terraria.Player::CheckDrowning+356 - 89 90 60030000        - mov [eax+00000360],edx
+
+Terraria.Player::CheckDrowning+35C - 83 80 08040000 FE     - add dword ptr [eax+00000408],-02 { 254 }
+
+Terraria.Player::CheckDrowning+363 - 83 B8 08040000 00     - cmp dword ptr [eax+00000408],00 { 0 }
+Terraria.Player::CheckDrowning+36A - 0F8F 85000000         - jg Terraria.Player::CheckDrowning+3F5
+Terraria.Player::CheckDrowning+370 - 8B 45 DC              - mov eax,[ebp-24]
+Terraria.Player::CheckDrowning+373 - 33 D2                 - xor edx,edx
+Terraria.Player::CheckDrowning+375 - 89 90 08040000        - mov [eax+00000408],edx
+
+*/
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+aob_drown+8:
+add dword ptr [eax+00000408],-02
 
 
 

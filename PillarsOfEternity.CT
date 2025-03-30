@@ -1,58 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<CheatTable CheatEngineTableVersion="29">
+<CheatTable CheatEngineTableVersion="45">
   <CheatEntries>
     <CheatEntry>
-      <ID>3</ID>
-      <Description>"Rest without using camping equipment"</Description>
-      <LastState Activated="1"/>
+      <ID>13</ID>
+      <Description>"README"</Description>
       <VariableType>Auto Assembler Script</VariableType>
       <AssemblerScript>[ENABLE]
-// Rest without using camping equipment
-//code from here to '[DISABLE]' will be used to enable the cheat
-aobscan(cheat01, 83 C4 10 8B C8 8B 45 08 89 48 54 C9 C3 )
-label(_cheat01)
-registersymbol(_cheat01)
-
-cheat01+8:
-_cheat01:
-db 90 90 90
-
+[DISABLE]
 /*
-1AFDE4C1 - 83 C4 10              - add esp,10 { 16 }
-1AFDE4C4 - 8B C8                 - mov ecx,eax
-1AFDE4C6 - 8B 45 08              - mov eax,[ebp+08]
-1AFDE4C9 - 89 48 54              - mov [eax+54],ecx  &lt;&lt;
-1AFDE4CC - C9                    - leave
-1AFDE4CD - C3                    - ret
+
+Experience
+Type: 4 bytes
+** can put large number in and player will go through as many level-up's as needed
+Level 12: 66000
+
+Money
+Type: Float
+Search value between 1 lower to 1 higher
+Best to do in a tavern the first time
 
 
 */
- 
- 
-[DISABLE]
-//code from here till the end of the code will be used to disable the cheat
-_cheat01:
-db 89 48 54
 </AssemblerScript>
     </CheatEntry>
     <CheatEntry>
       <ID>4</ID>
-      <Description>"* Dont pay in shops"</Description>
-      <LastState Activated="1"/>
+      <Description>"Dont pay in shops"</Description>
       <VariableType>Auto Assembler Script</VariableType>
       <AssemblerScript>[ENABLE]
 // Don't pay for anything in stores
+// Money: Float
+// Note: Turn off while exploring, affect +coin as well
+
 //code from here to '[DISABLE]' will be used to enable the cheat
-aobscan(cheat02, D9 45 BC DE E9 D9 58 08 8B 47 54 8B 40 48)
+aobscan(cheat02, F3 0F 5A C0 F3 0F 10 4D 94 F3 0F 5A C9 F2 0F 5C C1 F2 0F 5A E8 F3 0F 11 68 10 )
 label(_cheat02)
 registersymbol(_cheat02)
 
-cheat02+5:
+cheat02+d:
 _cheat02:
-db 90 90 90
+db 90 90 90 90
 
 
 /*
+
+UIStoreStorePage:FinalizeTransaction+7ff - F3 0F10 40 10         - movss xmm0,[rax+10]
+UIStoreStorePage:FinalizeTransaction+804 - F3 0F5A C0            - cvtss2sd xmm0,xmm0
+UIStoreStorePage:FinalizeTransaction+808 - F3 0F10 4D 94         - movss xmm1,[rbp-6C]
+UIStoreStorePage:FinalizeTransaction+80d - F3 0F5A C9            - cvtss2sd xmm1,xmm1
+UIStoreStorePage:FinalizeTransaction+811 - F2 0F5C C1            - subsd xmm0,xmm1   &lt;&lt;&lt;
+UIStoreStorePage:FinalizeTransaction+815 - F2 0F5A E8            - cvtsd2ss xmm5,xmm0
+UIStoreStorePage:FinalizeTransaction+819 - F3 0F11 68 10         - movss [rax+10],xmm5
+UIStoreStorePage:FinalizeTransaction+81e - 48 8B 86 A8000000     - mov rax,[rsi+000000A8]
+UIStoreStorePage:FinalizeTransaction+825 - 48 8B 40 78           - mov rax,[rax+78]
+UIStoreStorePage:FinalizeTransaction+829 - F3 0F10 40 10         - movss xmm0,[rax+10]
+
+
+
+
 
 Stores
 1AF61CCF - D9 45 BC  - fld dword ptr [ebp-44]
@@ -76,13 +81,156 @@ Rest
 [DISABLE]
 //code from here till the end of the code will be used to disable the cheat
 _cheat02:
-db D9 58 08
+db F2 0F 5C C1
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>15</ID>
+      <Description>"Dont pay in shops2"</Description>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+// Don't pay for anything in stores
+// Money: Float
+// Note: Turn off while exploring, affect +coin as well
+
+//code from here to '[DISABLE]' will be used to enable the cheat
+aobscan(aob_freestuff, F3 0F 10 40 10 F3 0F 5A C0 F3 0F 2A CE F3 0F 5A C9 F2 0F 5C C1 F2 0F 5A E8 F3 0F 11 68 10 )
+label(_aob_freestuff)
+registersymbol(_aob_freestuff)
+
+aob_freestuff+19:
+_aob_freestuff:
+db 90 90 90 90 90
+
+
+/*
+
+Scripts:RemovePlayerMoney+148 - 41 FF D3              - call r11
+Scripts:RemovePlayerMoney+14b - 48 8B 47 68           - mov rax,[rdi+68]
+Scripts:RemovePlayerMoney+14f - F3 0F10 40 10         - movss xmm0,[rax+10]
+Scripts:RemovePlayerMoney+154 - F3 0F5A C0            - cvtss2sd xmm0,xmm0
+Scripts:RemovePlayerMoney+158 - F3 0F2A CE            - cvtsi2ss xmm1,esi
+Scripts:RemovePlayerMoney+15c - F3 0F5A C9            - cvtss2sd xmm1,xmm1
+Scripts:RemovePlayerMoney+160 - F2 0F5C C1            - subsd xmm0,xmm1
+Scripts:RemovePlayerMoney+164 - F2 0F5A E8            - cvtsd2ss xmm5,xmm0
+
+Scripts:RemovePlayerMoney+168 - F3 0F11 68 10         - movss [rax+10],xmm5
+
+Scripts:RemovePlayerMoney+16d - E9 02010000           - jmp Scripts:RemovePlayerMoney+274
+Scripts:RemovePlayerMoney+172 - 48 B9 382C23DAE0010000 - mov rcx,000001E0DA232C38 { (1E0DA209988) }
+Scripts:RemovePlayerMoney+17c - BA 01000000           - mov edx,00000001 { 1 }
+Scripts:RemovePlayerMoney+181 - 48 8D 64 24 00        - lea rsp,[rsp+00]
+Scripts:RemovePlayerMoney+186 - 49 BB 602CD173DF010000 - mov r11,System.Object:__icall_wrapper_ves_icall_array_new_specific { (-326416299) }
+Scripts:RemovePlayerMoney+190 - 41 FF D3              - call r11
+
+*/
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+_aob_freestuff:
+db F3 0F 11 68 10
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>3</ID>
+      <Description>"FreeCraft"</Description>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+// Rest without using camping equipment
+// Equipment: 4 byte
+// Rest/QuickLoad/Rest/QuickLoad
+//code from here to '[DISABLE]' will be used to enable the cheat
+aobscan(aob_freecraft, 4D 63 6E 18 49 8B C5 2B C6 41 89 46 18 85 C0)
+label(_aob_freecraft)
+registersymbol(_aob_freecraft)
+
+aob_freecraft+7:
+_aob_freecraft:
+db 90 90
+
+/*
+
+BaseInventory:DestroyItem+d0 - 48 8D 64 24 00        - lea rsp,[rsp+00]
+BaseInventory:DestroyItem+d5 - 90                    - nop
+BaseInventory:DestroyItem+d6 - 49 BB D00F77E064010000 - mov r11,InventoryItem:Equals { (-326416299) }
+BaseInventory:DestroyItem+e0 - 41 FF D3              - call r11
+BaseInventory:DestroyItem+e3 - 85 C0                 - test eax,eax
+BaseInventory:DestroyItem+e5 - 0F84 05010000         - je BaseInventory:DestroyItem+1f0
+BaseInventory:DestroyItem+eb - 4D 63 6E 18           - movsxd  r13,dword ptr [r14+18]
+BaseInventory:DestroyItem+ef - 49 8B C5              - mov rax,r13
+BaseInventory:DestroyItem+f2 - 2B C6                 - sub eax,esi
+BaseInventory:DestroyItem+f4 - 41 89 46 18           - mov [r14+18],eax    &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+BaseInventory:DestroyItem+f8 - 85 C0                 - test eax,eax
+BaseInventory:DestroyItem+fa - 0F8F 98000000         - jg BaseInventory:DestroyItem+198
+BaseInventory:DestroyItem+100- 49 8B 56 10           - mov rdx,[r14+10]
+BaseInventory:DestroyItem+104- 41 83 3E 00           - cmp dword ptr [r14],00 { 0 }
+BaseInventory:DestroyItem+108- 45 0FB6 4E 20         - movzx r9d,byte ptr [r14+20]
+BaseInventory:DestroyItem+10d- 49 8B CF              - mov rcx,r15
+
+
+
+*/
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+_aob_freecraft:
+db 2B C6
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>12</ID>
+      <Description>"* Rest without using camping equipment"</Description>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+// Rest without using camping equipment
+// Equipment: 4 byte
+// Rest/QuickLoad/Rest/QuickLoad
+//code from here to '[DISABLE]' will be used to enable the cheat
+aobscan(cheat01, 66 90 49 BB ?? ?? ?? ?? ?? ?? ?? ?? 41 FF D3 48 8B C8 48 8B 45 F8 89 88 ?? ?? ?? ?? 48 8D 65 00 5D C3)
+label(_cheat01)
+registersymbol(_cheat01)
+
+cheat01+16:
+_cheat01:
+db 90 90 90 90 90 90
+
+/*
+
+PlayerInventory:set_CampingSuppliesTotal+2a - 33 D2                 - xor edx,edx
+PlayerInventory:set_CampingSuppliesTotal+2c - 66 90                 - nop 2
+PlayerInventory:set_CampingSuppliesTotal+2e - 49 BB 2014466C48020000 - mov r11,UnityEngine.Mathf:Clamp { (686588744) }
+PlayerInventory:set_CampingSuppliesTotal+38 - 41 FF D3              - call r11
+PlayerInventory:set_CampingSuppliesTotal+3b - 48 8B C8              - mov rcx,rax
+PlayerInventory:set_CampingSuppliesTotal+3e - 48 8B 45 F8           - mov rax,[rbp-08]
+PlayerInventory:set_CampingSuppliesTotal+42 - 89 88 90000000        - mov [rax+00000090],ecx &lt;&lt;&lt;&lt;&lt;&lt;
+PlayerInventory:set_CampingSuppliesTotal+48 - 48 8D 65 00           - lea rsp,[rbp+00]
+PlayerInventory:set_CampingSuppliesTotal+4c - 5D                    - pop rbp
+PlayerInventory:set_CampingSuppliesTotal+4d - C3                    - ret
+
+
+
+1AFDE4C1 - 83 C4 10              - add esp,10 { 16 }
+1AFDE4C4 - 8B C8                 - mov ecx,eax
+1AFDE4C6 - 8B 45 08              - mov eax,[ebp+08]
+1AFDE4C9 - 89 48 54              - mov [eax+54],ecx  &lt;&lt;
+1AFDE4CC - C9                    - leave
+1AFDE4CD - C3                    - ret
+
+
+*/
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+_cheat01:
+db 89 88 90 00 00 00
 </AssemblerScript>
     </CheatEntry>
     <CheatEntry>
       <ID>10</ID>
       <Description>"* Dont pay in stronghold upgrades"</Description>
-      <LastState Activated="1"/>
       <VariableType>Auto Assembler Script</VariableType>
       <AssemblerScript>[ENABLE]
 // Don't pay for anything in stores
@@ -116,13 +264,13 @@ db D9 58 08
     <CheatEntry>
       <ID>6</ID>
       <Description>"Lockpicks"</Description>
-      <LastState Activated="1"/>
       <VariableType>Auto Assembler Script</VariableType>
       <AssemblerScript>[ENABLE]
-// Don't pay for anything in stores
-//code from here to '[DISABLE]' will be used to enable the cheat
+// Don't consume lockpicks
 // Lockpicks: 4 byte
-aobscan(cheat03, 89 85 78 FF FF FF 8B 47 0C 2B 45 10 89 47 0C)
+
+//code from here to '[DISABLE]' will be used to enable the cheat
+aobscan(cheat03, 89 85 78 FF FF FF 8B 47 0C 2B 45 10 89 47 0C 85 C0 0F 8F ?? ?? ?? ?? )
 label(_cheat03)
 registersymbol(_cheat03)
 
@@ -151,12 +299,12 @@ db 89 47 0C
     <CheatEntry>
       <ID>8</ID>
       <Description>"Health"</Description>
-      <LastState Activated="1"/>
       <VariableType>Auto Assembler Script</VariableType>
       <AssemblerScript>[ENABLE]
 // Don't pay for anything in stores
+// Health: Float
+
 //code from here to '[DISABLE]' will be used to enable the cheat
-// Lockpicks: 4 byte
 aobscan(cheat04, D9 45 A0 DE E9 D9 5B 54)
 label(_cheat04)
 registersymbol(_cheat04)
@@ -184,5 +332,31 @@ db D9 5B 54
 </AssemblerScript>
     </CheatEntry>
   </CheatEntries>
+  <CheatCodes>
+    <CodeEntry>
+      <Description>Change of subsd xmm0,xmm1</Description>
+      <AddressString>21F5077EB93</AddressString>
+      <Before>
+        <Byte>E4</Byte>
+        <Byte>F3</Byte>
+        <Byte>0F</Byte>
+        <Byte>5A</Byte>
+        <Byte>C9</Byte>
+      </Before>
+      <Actual>
+        <Byte>F2</Byte>
+        <Byte>0F</Byte>
+        <Byte>5C</Byte>
+        <Byte>C1</Byte>
+      </Actual>
+      <After>
+        <Byte>F2</Byte>
+        <Byte>0F</Byte>
+        <Byte>5A</Byte>
+        <Byte>E8</Byte>
+        <Byte>F3</Byte>
+      </After>
+    </CodeEntry>
+  </CheatCodes>
   <UserdefinedSymbols/>
 </CheatTable>

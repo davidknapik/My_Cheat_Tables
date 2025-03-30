@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheatTable CheatEngineTableVersion="45">
+  <CheatEntries>
+    <CheatEntry>
+      <ID>2</ID>
+      <Description>"InfinateSpraks"</Description>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+//aobscan(aob_InfinateSparks,C6 05 ?? ?? ?? ?? 01 01 7B 38 B9 00 00 00 00)
+aobscanmodule(aob_InfinateSparks,GameAssembly.dll,C6 05 ?? ?? ?? ?? 01 01 7B 38 B9 00 00 00 00) // should be unique
+registersymbol(aob_InfinateSparks)
+
+aob_InfinateSparks+7:
+nop
+nop
+nop
+
+ /*
+GameAssembly.dll+6ED1BB:
+7FFB1234D1AF - E8 3C33ABFF - call GameAssembly.dll+1A04F0
+7FFB1234D1B4 - C6 05 A8C20902 01 - mov byte ptr [GameAssembly.dll+2789463],01
+7FFB1234D1BB - 01 7B 38  - add [rbx+38],edi &lt;&lt;
+7FFB1234D1BE - B9 00000000 - mov ecx,00000000
+7FFB1234D1C3 - 8B 43 38  - mov eax,[rbx+38]
+*/
+
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+aob_InfinateSparks+7:
+db 01 7B 38
+</AssemblerScript>
+    </CheatEntry>
+  </CheatEntries>
+  <CheatCodes>
+    <CodeEntry>
+      <Description>Change of subss xmm1,xmm0</Description>
+      <AddressString>GameAssembly.dll+DFE61F</AddressString>
+      <Before>
+        <Byte>6E</Byte>
+        <Byte>07</Byte>
+        <Byte>0F</Byte>
+        <Byte>5B</Byte>
+        <Byte>C0</Byte>
+      </Before>
+      <Actual>
+        <Byte>F3</Byte>
+        <Byte>0F</Byte>
+        <Byte>5C</Byte>
+        <Byte>C8</Byte>
+      </Actual>
+      <After>
+        <Byte>F3</Byte>
+        <Byte>0F</Byte>
+        <Byte>11</Byte>
+        <Byte>4B</Byte>
+        <Byte>18</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry>
+      <Description>Change of mov [rbx+38],eax</Description>
+      <AddressString>GameAssembly.dll+6ED1C9</AddressString>
+      <Before>
+        <Byte>43</Byte>
+        <Byte>38</Byte>
+        <Byte>0F</Byte>
+        <Byte>48</Byte>
+        <Byte>C1</Byte>
+      </Before>
+      <Actual>
+        <Byte>89</Byte>
+        <Byte>43</Byte>
+        <Byte>38</Byte>
+      </Actual>
+      <After>
+        <Byte>48</Byte>
+        <Byte>8B</Byte>
+        <Byte>05</Byte>
+        <Byte>0D</Byte>
+        <Byte>53</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry>
+      <Description>Change of add [rbx+38],edi</Description>
+      <AddressString>GameAssembly.dll+6ED1BB</AddressString>
+      <Before>
+        <Byte>A8</Byte>
+        <Byte>C2</Byte>
+        <Byte>09</Byte>
+        <Byte>02</Byte>
+        <Byte>01</Byte>
+      </Before>
+      <Actual>
+        <Byte>01</Byte>
+        <Byte>7B</Byte>
+        <Byte>38</Byte>
+      </Actual>
+      <After>
+        <Byte>B9</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </After>
+    </CodeEntry>
+  </CheatCodes>
+  <UserdefinedSymbols/>
+</CheatTable>
