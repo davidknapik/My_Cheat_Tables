@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheatTable CheatEngineTableVersion="45">
+  <CheatEntries>
+    <CheatEntry>
+      <ID>4</ID>
+      <Description>"README"</Description>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>/*
+
+What to do when there is a new version.
+
+
+Cinder Vault Coordinates (4 bytes):
+       Xcoord: 3695
+       Ycoord: 1216
+       Zcoord: 902
+
+
+Build Version 893400 (2026-01-26)
+      X Coordinate: enshrouded.exe+1D35782+2
+      Z Coordinate: enshrouded.exe+1D35782+A
+      Y Coordinate: enshrouded.exe+1D35782+12
+
+Build Version 890625
+      X Coordinate: enshrouded.exe+1D34782+2
+      Z Coordinate: enshrouded.exe+1D34782+A
+      Y Coordinate: enshrouded.exe+1D34782+12
+
+Build Version 874630
+      X Coordinate: enshrouded.exe+1D2C572+2
+      Z Coordinate: enshrouded.exe+1D2C572+A
+      Y Coordinate: enshrouded.exe+1D2C572+12
+
+Note:
+Be careful when searching for the x/y coordinates.
+The camera coordinate is very similar/close to the player position,
+The camera coordinates change values when looking around with the camera.
+
+Update LUA script with xyz coordinate addresses
+
+F5 to enable the gps tracking.
+Output to file d:\games\enshrouded\gps.txt
+
+
+
+*/
+
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>3</ID>
+      <Description>"aob_duplicate"</Description>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+/*
+Item: 4byte
+Find an item in inventory by searching for qty split stack and look for
+new qty.
+
+Find what writes to that address while splitting the stack.
+
+*/
+aobscanmodule(aob_duplicate,"enshrouded.exe", 5F 5D 5B C3 29 6E 04 EB C5)
+registersymbol(aob_duplicate)
+
+aob_duplicate+4:
+db 90 90 90
+
+ 
+
+/*
+enshrouded.exe+341670 - 5F                    - pop rdi
+enshrouded.exe+341671 - 5D                    - pop rbp
+enshrouded.exe+341672 - 5B                    - pop rbx
+enshrouded.exe+341673 - C3                    - ret
+
+enshrouded.exe+341674 - 29 6E 04              - sub [rsi+04],ebp  &lt;&lt;&lt;&lt;&lt;&lt;
+
+enshrouded.exe+341677 - EB C5                 - jmp enshrouded.exe+34163E
+enshrouded.exe+341679 - 0F57 C0               - xorps xmm0,xmm0
+enshrouded.exe+34167C - 0F11 47 04            - movups [rdi+04],xmm0
+enshrouded.exe+341680 - C6 07 27              - mov byte ptr [rdi],27 { 39 }
+enshrouded.exe+341683 - EB C5                 - jmp enshrouded.exe+34164A
+*/
+
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+aob_duplicate+4:
+db 29 6E 04
+
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>5</ID>
+      <Description>"Xcoord"</Description>
+      <VariableType>4 Bytes</VariableType>
+      <Address>enshrouded.exe+1D35782+2</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>6</ID>
+      <Description>"Ycoord"</Description>
+      <VariableType>2 Bytes</VariableType>
+      <Address>enshrouded.exe+1D35782+12</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>7</ID>
+      <Description>"Zcoord"</Description>
+      <VariableType>4 Bytes</VariableType>
+      <Address>enshrouded.exe+1D35782+A</Address>
+    </CheatEntry>
+  </CheatEntries>
+  <CheatCodes>
+    <CodeEntry>
+      <Description>Change of sub [rsi+04],ebp</Description>
+      <AddressString>enshrouded.exe+341674</AddressString>
+      <Before>
+        <Byte>5E</Byte>
+        <Byte>5F</Byte>
+        <Byte>5D</Byte>
+        <Byte>5B</Byte>
+        <Byte>C3</Byte>
+      </Before>
+      <Actual>
+        <Byte>29</Byte>
+        <Byte>6E</Byte>
+        <Byte>04</Byte>
+      </Actual>
+      <After>
+        <Byte>EB</Byte>
+        <Byte>C5</Byte>
+        <Byte>0F</Byte>
+        <Byte>57</Byte>
+        <Byte>C0</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry>
+      <Description>Change of sub [rsi+04],r15d</Description>
+      <AddressString>enshrouded.exe+33A87D</AddressString>
+      <Before>
+        <Byte>41</Byte>
+        <Byte>88</Byte>
+        <Byte>0E</Byte>
+        <Byte>EB</Byte>
+        <Byte>1D</Byte>
+      </Before>
+      <Actual>
+        <Byte>44</Byte>
+        <Byte>29</Byte>
+        <Byte>7E</Byte>
+        <Byte>04</Byte>
+      </Actual>
+      <After>
+        <Byte>41</Byte>
+        <Byte>2B</Byte>
+        <Byte>EF</Byte>
+        <Byte>41</Byte>
+        <Byte>C6</Byte>
+      </After>
+    </CodeEntry>
+  </CheatCodes>
+  <UserdefinedSymbols/>
+  <Structures StructVersion="2">
+    <Structure Name="Coordinates" AutoFill="0" AutoCreate="1" DefaultHex="0" AutoDestroy="0" DoNotSaveLocal="0" RLECompression="1" AutoCreateStructsize="4096">
+      <Elements>
+        <Element Offset="0" Vartype="Byte" Bytesize="1" RLECount="2" OffsetHex="00000000" DisplayMethod="unsigned integer"/>
+        <Element Offset="2" Vartype="4 Bytes" Bytesize="4" OffsetHex="00000002" Description="Xcoord" DisplayMethod="unsigned integer"/>
+        <Element Offset="6" Vartype="4 Bytes" Bytesize="4" OffsetHex="00000006" DisplayMethod="unsigned integer"/>
+        <Element Offset="10" Vartype="4 Bytes" Bytesize="4" OffsetHex="0000000A" Description="Zcoord" DisplayMethod="unsigned integer"/>
+        <Element Offset="14" Vartype="4 Bytes" Bytesize="4" OffsetHex="0000000E" DisplayMethod="hexadecimal"/>
+        <Element Offset="18" Vartype="2 Bytes" Bytesize="2" OffsetHex="00000012" Description="Ycoord" DisplayMethod="unsigned integer"/>
+      </Elements>
+    </Structure>
+  </Structures>
+  <LuaScript>-- CONFIGURATION
+local Xaddr = "enshrouded.exe+1D35782+2"
+local Zaddr = "enshrouded.exe+1D35782+A"
+local Yaddr = "enshrouded.exe+1D35782+12"
+
+
+local interval = 2000 -- 2 seconds
+local toggleKey = VK_F5 -- Change to VK_INSERT, VK_F1, etc.
+
+-- Global variable to track state
+if loggingActive == nil then loggingActive = false end
+
+-- 1. The Logging Function
+--[[ Log only
+local function logValues()
+    local val1 = readInteger(address1)
+    local val2 = readInteger(address2)
+    local timestamp = os.date("%X")
+    print(string.format("[%s] - %s,%s", timestamp, tostring(Xval), tostring(Yval)))
+end
+--]]
+
+-- log and write to file
+local function logValues(timer)
+    local Xval = readInteger(Xaddr)
+    local Yval = readInteger(Yaddr)
+    local Zval = readInteger(Zaddr)
+    local timestamp = os.date("%Y-%m-%d %X")
+
+    print(string.format("[%s] - %s,%s,%s", timestamp, tostring(Xval), tostring(Yval), tostring(Zval)))
+
+    local file = io.open("D:/games/enshrouded/gps.txt", "a") -- "a" means append
+    if file then
+--        file:write(string.format("%s, %s, %s\n", timestamp, tostring(val1), tostring(val2)))
+        file:write(string.format("%s,%s,%s\n", tostring(Xval), tostring(Yval), tostring(Zval)))
+        file:close()
+    end
+end
+
+-- 2. The Toggle Function
+function toggleLogger()
+    loggingActive = not loggingActive
+
+    if loggingActive then
+        myTimer.Enabled = true
+        print("&gt;&gt;&gt; LOGGING ENABLED")
+    else
+        myTimer.Enabled = false
+        print("&gt;&gt;&gt; LOGGING DISABLED")
+    end
+end
+
+-- 3. Cleanup (Prevents duplicate timers/hotkeys if you run script again)
+if myTimer then myTimer.destroy(); myTimer = nil end
+if myHotkey then myHotkey.destroy(); myHotkey = nil end
+
+-- 4. Initialization
+myTimer = createTimer(nil, false) -- Start disabled
+myTimer.Interval = interval
+myTimer.OnTimer = logValues
+
+
+
+myHotkey = createHotkey(toggleLogger, toggleKey)
+
+print("Script Loaded. Press F5 to Enable/Disable logging.")
+
+</LuaScript>
+</CheatTable>
