@@ -15,38 +15,40 @@
  empty == 0
  size depends on any jetpack improvements, eg. '7.496'
 **/
-aobScanmodule(aob_jetpack, NMS.exe, F3 0F 59 CE F3 0F 5C C1 F3 0F 11 87 ?? ?? ?? ?? )
+aobScanmodule(aob_jetpack, NMS.exe, F3 0F 58 CA F3 41 0F 59 CB F3 0F 59 CF F3 0F 5C C1 )
 registersymbol(aob_jetpack)
 
 aobScanmodule(aob_jetpack_uw, NMS.exe, F3 41 0F 59 D4 C6 87 ?? ?? ?? ?? 01 F3 0F 5C CA )
 registersymbol(aob_jetpack_uw)
 
-aob_jetpack+4:
+aob_jetpack+d:
    db 90 90 90 90
 
 aob_jetpack_uw+c:
    db 90 90 90 90
 
 /**
-NMS.exe+11B1F24 - F3 0F5C CA            - subss xmm1,xmm2
-NMS.exe+11B1F28 - F3 0F59 C8            - mulss xmm1,xmm0
-NMS.exe+11B1F2C - F3 0F10 87 E4320000   - movss xmm0,[rdi+000032E4]
-NMS.exe+11B1F34 - F3 0F58 CA            - addss xmm1,xmm2
-NMS.exe+11B1F38 - F3 41 0F59 CB         - mulss xmm1,xmm11
-NMS.exe+11B1F3D - F3 0F59 CE            - mulss xmm1,xmm6
+NMS.exe+12B924D - 48 8B CF              - mov rcx,rdi
+NMS.exe+12B9250 - E8 8B500000           - call NMS.exe+12BE2E0
+NMS.exe+12B9255 - F3 0F10 0D CFE2A203   - movss xmm1,[NMS.exe+4CE752C] { (2.50) }
+NMS.exe+12B925D - F3 0F10 15 E7343903   - movss xmm2,[NMS.exe+464C74C] { (1.00) }
+NMS.exe+12B9265 - F3 0F5C CA            - subss xmm1,xmm2
+NMS.exe+12B9269 - F3 0F59 C8            - mulss xmm1,xmm0
+NMS.exe+12B926D - F3 0F10 87 54310000   - movss xmm0,[rdi+00003154]
+NMS.exe+12B9275 - F3 0F58 CA            - addss xmm1,xmm2
+NMS.exe+12B9279 - F3 41 0F59 CB         - mulss xmm1,xmm11
+NMS.exe+12B927E - F3 0F59 CF            - mulss xmm1,xmm7
 
-NMS.exe+11B1F41 - F3 0F5C C1            - subss xmm0,xmm1
+NMS.exe+12B9282 - F3 0F5C C1            - subss xmm0,xmm1
 
-NMS.exe+11B1F45 - F3 0F11 87 E4320000   - movss [rdi+000032E4],xmm0
-NMS.exe+11B1F4D - E9 B4FDFFFF           - jmp NMS.exe+11B1D06
-NMS.exe+11B1F52 - 41 0F28 C3            - movaps xmm0,xmm11
-NMS.exe+11B1F56 - 48 8D 1D A3E0E4FE     - lea rbx,[NMS.exe] { (9460301) }
-NMS.exe+11B1F5D - F3 0F58 87 20330000   - addss xmm0,[rdi+00003320]
-NMS.exe+11B1F65 - 45 33 ED              - xor r13d,r13d
-NMS.exe+11B1F68 - 41 8B CD              - mov ecx,r13d
-NMS.exe+11B1F6B - F3 0F11 87 20330000   - movss [rdi+00003320],xmm0
-NMS.exe+11B1F73 - 0F57 C0               - xorps xmm0,xmm0
-NMS.exe+11B1F76 - 4C 8B 15 DBB43305     - mov r10,[NMS.exe+64ED458] { (1E3DD0B0010) }
+NMS.exe+12B9286 - F3 0F11 87 54310000   - movss [rdi+00003154],xmm0
+NMS.exe+12B928E - E9 41FFFFFF           - jmp NMS.exe+12B91D4
+NMS.exe+12B9293 - F3 0F10 15 B1343903   - movss xmm2,[NMS.exe+464C74C] { (1.00) }
+NMS.exe+12B929B - 45 33 FF              - xor r15d,r15d
+NMS.exe+12B929E - C6 85 60140000 01     - mov byte ptr [rbp+00001460],01 { 1 }
+NMS.exe+12B92A5 - 48 8D 15 0C022B03     - lea rdx,[NMS.exe+45694B8] { ("JETPACKON") }
+NMS.exe+12B92AC - 44 88 A7 4D310000     - mov [rdi+0000314D],r12b
+NMS.exe+12B92B3 - 48 8B 0D 1E996305     - mov rcx,[NMS.exe+68F2BD8] { (153685C0010) }
 
 
 
@@ -99,7 +101,7 @@ db F3 0F 5C CA
  Type: 4 byte
  Value Range: 0 - 100 (full)
 **/
-aobScanmodule(aob_shield, NMS.exe, 45 01 AE ?? ?? ?? ?? E8 ?? ?? ?? ??)
+aobScanmodule(aob_shield, NMS.exe, 41 01 8D B0 01 00 00 49 8B CD )
 registersymbol(aob_shield)
 
 aob_shield:
@@ -108,19 +110,31 @@ db 90 90 90 90 90 90 90
 
 /*
 
-NMS.exe+1179141:
-7FF6496E9139 - 75 35 - jne NMS.exe+1179170
-7FF6496E913B - 8B 95 80030000  - mov edx,[rbp+00000380]
-7FF6496E9141 - 45 01 AE B0010000  - add [r14+000001B0],r13d &lt;&lt;
-7FF6496E9148 - E8 A36334FF - call NMS.exe+4BF4F0
-7FF6496E914D - 41 8B 8E B0010000  - mov ecx,[r14+000001B0]
+NMS.exe+12B236F - 83 F9 FF              - cmp ecx,-01 { 255 }
+NMS.exe+12B2372 - 0F4F CB               - cmovg ecx,ebx
+NMS.exe+12B2375 - 89 4C 24 60           - mov [rsp+60],ecx
+NMS.exe+12B2379 - 48 39 7C 24 68        - cmp [rsp+68],rdi
+NMS.exe+12B237E - 75 3D                 - jne NMS.exe+12B23BD
 
-NMS.exe+11281EF:
-7FF6B90A81E8 - 48 39 74 24 58  - cmp [rsp+58],rsi
-7FF6B90A81ED - 75 35 - jne NMS.exe+1128224
-7FF6B90A81EF - 45 01 A6 B0010000  - add [r14+000001B0],r12d &lt;&lt;
-7FF6B90A81F6 - 41 8B D7  - mov edx,r15d
-7FF6B90A81F9 - E8 426337FF - call NMS.exe+49E540
+NMS.exe+12B2380 - 41 01 8D B0010000     - add [r13+000001B0],ecx
+
+NMS.exe+12B2387 - 49 8B CD              - mov rcx,r13
+NMS.exe+12B238A - 8B 95 10030000        - mov edx,[rbp+00000310]
+NMS.exe+12B2390 - E8 BB012AFF           - call NMS.exe+552550
+NMS.exe+12B2395 - 41 8B 8D B0010000     - mov ecx,[r13+000001B0]
+
+
+
+NMS.exe+12A2CFE - 0F4F C8               - cmovg ecx,eax
+NMS.exe+12A2D01 - 89 4C 24 50           - mov [rsp+50],ecx
+NMS.exe+12A2D05 - 48 39 7C 24 60        - cmp [rsp+60],rdi
+NMS.exe+12A2D0A - 75 39                 - jne NMS.exe+12A2D45
+
+NMS.exe+12A2D0C - 41 01 8D B0010000     - add [r13+000001B0],ecx
+
+NMS.exe+12A2D13 - 8B D3                 - mov edx,ebx
+NMS.exe+12A2D15 - 49 8B CD              - mov rcx,r13
+NMS.exe+12A2D18 - E8 93C72AFF           - call NMS.exe+54F4B0
 
 */
 
@@ -129,7 +143,7 @@ NMS.exe+11281EF:
 //code from here till the end of the code will be used to disable the cheat
 
 aob_shield:
-db 45 01 AE B0 01 00 00
+db 41 01 8D B0 01 00 00
 
 
 
@@ -302,7 +316,7 @@ aob_gernade+9:
 // Stamina value: Float 0(empty - 1(full)
 //
 
-aobScanmodule(aob_infrun, NMS.exe, F3 41 0F 5E F1 F3 0F 5C C6  )
+aobScanmodule(aob_infrun, NMS.exe, F3 41 0F 5E F0 F3 0F 5C C6  )
 registersymbol(aob_infrun)
 
 aob_infrun+5:
@@ -310,33 +324,20 @@ db 90 90 90 90
 
 
 /*
-NMS.exe+11B349F - 48 8D 0D 7A9F3305     - lea rcx,[NMS.exe+64ED420] { (7FF76CA19DA0) }
-NMS.exe+11B34A6 - E8 054A0DFF           - call NMS.exe+287EB0
-NMS.exe+11B34AB - 48 8D 88 883A2100     - lea rcx,[rax+00213A88]
-NMS.exe+11B34B2 - E8 C9F321FF           - call NMS.exe+3D2880
-NMS.exe+11B34B7 - F3 0F59 F0            - mulss xmm6,xmm0
-NMS.exe+11B34BB - F3 0F10 87 A0510000   - movss xmm0,[rdi+000051A0]
-NMS.exe+11B34C3 - F3 41 0F59 F3         - mulss xmm6,xmm11
-NMS.exe+11B34C8 - F3 41 0F5E F1         - divss xmm6,xmm9
+NMS.exe+12AB824 - E8 276218FF           - call NMS.exe+431A50
+NMS.exe+12AB829 - F3 0F59 F0            - mulss xmm6,xmm0
+NMS.exe+12AB82D - F3 0F10 87 504F0000   - movss xmm0,[rdi+00004F50]
+NMS.exe+12AB835 - F3 41 0F59 F3         - mulss xmm6,xmm11
+NMS.exe+12AB83A - F3 41 0F5E F0         - divss xmm6,xmm8
 
-NMS.exe+11B34CD - F3 0F5C C6            - subss xmm0,xmm6
+NMS.exe+12AB83F - F3 0F5C C6            - subss xmm0,xmm6
 
-NMS.exe+11B34D1 - F3 0F11 87 A0510000   - movss [rdi+000051A0],xmm0
-NMS.exe+11B34D9 - 44 0F2F 97 A0510000   - comiss xmm10,[rdi+000051A0]
-NMS.exe+11B34E1 - 72 50                 - jb NMS.exe+11B3533
-NMS.exe+11B34E3 - 48 8D 0D 369F3305     - lea rcx,[NMS.exe+64ED420] { (7FF76CA19DA0) }
-NMS.exe+11B34EA - 48 C7 87 9C510000 01000000 - mov qword ptr [rdi+0000519C],00000001 { 1 }
-NMS.exe+11B34F5 - E8 364A0DFF           - call NMS.exe+287F30
-NMS.exe+11B34FA - 4C 8B 87 C0020000     - mov r8,[rdi+000002C0]
-
-
-
-NMS.exe+1180A9C:
-7FF6496F0A93 - F3 41 0F5E F3  - divss xmm6,xmm11
-7FF6496F0A98 - F3 0F5C C6  - subss xmm0,xmm6
-7FF6496F0A9C - F3 0F11 87 704F0000  - movss [rdi+00004F70],xmm0 &lt;&lt;
-7FF6496F0AA4 - 44 0F2F 87 704F0000  - comiss xmm8,[rdi+00004F70]
-7FF6496F0AAC - 72 50 - jb NMS.exe+1180AFE
+NMS.exe+12AB843 - F3 0F11 87 504F0000   - movss [rdi+00004F50],xmm0
+NMS.exe+12AB84B - 44 0F2F 97 504F0000   - comiss xmm10,[rdi+00004F50]
+NMS.exe+12AB853 - 72 50                 - jb NMS.exe+12AB8A5
+NMS.exe+12AB855 - 48 8D 0D 042F6C05     - lea rcx,[NMS.exe+696E760] { (7FF79746B800) }
+NMS.exe+12AB85C - 48 C7 87 4C4F0000 01000000 - mov qword ptr [rdi+00004F4C],00000001 { 1 }
+NMS.exe+12AB867 - E8 64E301FF           - call NMS.exe+2C9BD0
 
 */
 
@@ -576,12 +577,6 @@ aob_minator_jetpack+5:
    db F3 0F 5C C1
 </AssemblerScript>
     </CheatEntry>
-    <CheatEntry>
-      <ID>24</ID>
-      <Description>"No description"</Description>
-      <VariableType>4 Bytes</VariableType>
-      <Address>20C1DAC63D8</Address>
-    </CheatEntry>
   </CheatEntries>
   <CheatCodes>
     <CodeEntry>
@@ -655,6 +650,113 @@ aob_minator_jetpack+5:
         <Byte>B0</Byte>
         <Byte>45</Byte>
         <Byte>33</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry>
+      <Description>Change of add [r13+000001B0],ecx</Description>
+      <AddressString>NMS.exe+12A2D0C</AddressString>
+      <Before>
+        <Byte>7C</Byte>
+        <Byte>24</Byte>
+        <Byte>60</Byte>
+        <Byte>75</Byte>
+        <Byte>39</Byte>
+      </Before>
+      <Actual>
+        <Byte>41</Byte>
+        <Byte>01</Byte>
+        <Byte>8D</Byte>
+        <Byte>B0</Byte>
+        <Byte>01</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Actual>
+      <After>
+        <Byte>8B</Byte>
+        <Byte>D3</Byte>
+        <Byte>49</Byte>
+        <Byte>8B</Byte>
+        <Byte>CD</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry>
+      <Description>Change of movss xmm0,[rdi+00003154]</Description>
+      <AddressString>NMS.exe+12B926D</AddressString>
+      <Before>
+        <Byte>CA</Byte>
+        <Byte>F3</Byte>
+        <Byte>0F</Byte>
+        <Byte>59</Byte>
+        <Byte>C8</Byte>
+      </Before>
+      <Actual>
+        <Byte>F3</Byte>
+        <Byte>0F</Byte>
+        <Byte>10</Byte>
+        <Byte>87</Byte>
+        <Byte>54</Byte>
+        <Byte>31</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Actual>
+      <After>
+        <Byte>F3</Byte>
+        <Byte>0F</Byte>
+        <Byte>58</Byte>
+        <Byte>CA</Byte>
+        <Byte>F3</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry>
+      <Description>Change of movss [rdi+00003154],xmm0</Description>
+      <AddressString>NMS.exe+12B9D54</AddressString>
+      <Before>
+        <Byte>FF</Byte>
+        <Byte>F3</Byte>
+        <Byte>0F</Byte>
+        <Byte>5D</Byte>
+        <Byte>C7</Byte>
+      </Before>
+      <Actual>
+        <Byte>F3</Byte>
+        <Byte>0F</Byte>
+        <Byte>11</Byte>
+        <Byte>87</Byte>
+        <Byte>54</Byte>
+        <Byte>31</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Actual>
+      <After>
+        <Byte>0F</Byte>
+        <Byte>2F</Byte>
+        <Byte>87</Byte>
+        <Byte>80</Byte>
+        <Byte>31</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry>
+      <Description>Change of subss xmm0,xmm1</Description>
+      <AddressString>NMS.exe+12B9282</AddressString>
+      <Before>
+        <Byte>CB</Byte>
+        <Byte>F3</Byte>
+        <Byte>0F</Byte>
+        <Byte>59</Byte>
+        <Byte>CF</Byte>
+      </Before>
+      <Actual>
+        <Byte>F3</Byte>
+        <Byte>0F</Byte>
+        <Byte>5C</Byte>
+        <Byte>C1</Byte>
+      </Actual>
+      <After>
+        <Byte>F3</Byte>
+        <Byte>0F</Byte>
+        <Byte>11</Byte>
+        <Byte>87</Byte>
+        <Byte>54</Byte>
       </After>
     </CodeEntry>
   </CheatCodes>

@@ -419,11 +419,18 @@ nop
 
 
 /*
-2EED5C32283 - 48 63 47 38  - movsxd  rax,dword ptr [rdi+38]
-2EED5C32287 - 2B C6  - sub eax,esi
-2EED5C32289 - 89 47 38  - mov [rdi+38],eax &lt;&lt;
-2EED5C3228C - 49 8B CF  - mov rcx,r15
-2EED5C3228F - 48 8D AD 00000000  - lea rbp,[rbp+00000000]
+Inventory:RemoveItem+6f - 33 C0                 - xor eax,eax
+Inventory:RemoveItem+71 - EB 25                 - jmp Inventory:RemoveItem+98
+Inventory:RemoveItem+73 - 48 63 47 38           - movsxd  rax,dword ptr [rdi+38]
+
+Inventory:RemoveItem+77 - 2B C6                 - sub eax,esi
+
+Inventory:RemoveItem+79 - 89 47 38              - mov [rdi+38],eax &lt;&lt;
+Inventory:RemoveItem+7c - 49 8B CF              - mov rcx,r15
+Inventory:RemoveItem+7f - 48 8D AD 00000000     - lea rbp,[rbp+00000000]
+Inventory:RemoveItem+86 - 49 BB 702E73272F020000 - mov r11,Inventory:Changed { (-326416299) }
+Inventory:RemoveItem+90 - 41 FF D3              - call r11
+
 */
  
 [DISABLE]
@@ -582,6 +589,12 @@ _scan04:
           </Hotkeys>
         </CheatEntry>
       </CheatEntries>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>22</ID>
+      <Description>"No description"</Description>
+      <VariableType>4 Bytes</VariableType>
+      <Address>22FA02E08F8</Address>
     </CheatEntry>
   </CheatEntries>
   <CheatCodes>

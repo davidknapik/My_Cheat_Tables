@@ -75,31 +75,21 @@ aob_skills+4:
    db 90 90
 **/
 
-CrewManager:AssignSkillPoints+63:
+CrewManager:AssignSkillPoints+67:
    db 90 90
 
 /**
-CrewManager:AssignSkillPoints+48 - 48 63 55 E0           - movsxd  rdx,dword ptr [rbp-20]
-CrewManager:AssignSkillPoints+4c - 4C 8B C6              - mov r8,rsi
-CrewManager:AssignSkillPoints+4f - 41 83 3F 00           - cmp dword ptr [r15],00 { 0 }
+
 CrewManager:AssignSkillPoints+53 - 66 66 90              - nop 3
-CrewManager:AssignSkillPoints+56 - 49 BB 903EF987C7010000 - mov r11,CrewMember:AdjustSkillPoints { (58394.28) }
+CrewManager:AssignSkillPoints+56 - 49 BB B0353E7FC2010000 - mov r11,CrewMember:AdjustSkillPoints { (58394.28) }
 CrewManager:AssignSkillPoints+60 - 41 FF D3              - call r11
-aob_skills                       - 49 63 46 74           - movsxd  rax,dword ptr [r14+74]
+CrewManager:AssignSkillPoints+63 - 49 63 46 74           - movsxd  rax,dword ptr [r14+74]
 CrewManager:AssignSkillPoints+67 - 2B C6                 - sub eax,esi
-CrewManager:AssignSkillPoints+69 - 41 89 46 74           - mov [r14+74],eax   &lt;&lt;
+CrewManager:AssignSkillPoints+69 - 41 89 46 74           - mov [r14+74],eax
 CrewManager:AssignSkillPoints+6d - 48 8B 75 E8           - mov rsi,[rbp-18]
 CrewManager:AssignSkillPoints+71 - 4C 8B 75 F0           - mov r14,[rbp-10]
+CrewManager:AssignSkillPoints+75 - 4C 8B 7D F8           - mov r15,[rbp-08]
 
-
-
-
-2CC64670639:
-2CC64670633 - 49 63 46 74  - movsxd  rax,dword ptr [r14+74]
-2CC64670637 - 2B C6  - sub eax,esi
-2CC64670639 - 41 89 46 74  - mov [r14+74],eax &lt;&lt;
-2CC6467063D - 48 8B 75 E8  - mov rsi,[rbp-18]
-2CC64670641 - 4C 8B 75 F0  - mov r14,[rbp-10]
 **/
  
 [DISABLE]
@@ -109,7 +99,7 @@ aob_skills+4:
    db 2B C6
 **/
 
-CrewManager:AssignSkillPoints+63:
+CrewManager:AssignSkillPoints+67:
    db 2B C6
 </AssemblerScript>
     </CheatEntry>
@@ -376,6 +366,94 @@ Player:AdjustResearchPoints+1d:
         <Byte>EC</Byte>
       </After>
     </CodeEntry>
+    <CodeEntry>
+      <Description>Change of sub ecx,eax</Description>
+      <AddressString>1C27F5E23CF</AddressString>
+      <Before>
+        <Byte>5C</Byte>
+        <Byte>48</Byte>
+        <Byte>63</Byte>
+        <Byte>46</Byte>
+        <Byte>60</Byte>
+      </Before>
+      <Actual>
+        <Byte>2B</Byte>
+        <Byte>C8</Byte>
+      </Actual>
+      <After>
+        <Byte>48</Byte>
+        <Byte>8D</Byte>
+        <Byte>64</Byte>
+        <Byte>24</Byte>
+        <Byte>00</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry>
+      <Description>Change of push rbp</Description>
+      <AddressString>1C27F3FF8A0</AddressString>
+      <Before>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Before>
+      <Actual>
+        <Byte>55</Byte>
+      </Actual>
+      <After>
+        <Byte>48</Byte>
+        <Byte>8B</Byte>
+        <Byte>EC</Byte>
+        <Byte>48</Byte>
+        <Byte>83</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry>
+      <Description>Change of mov [r15+5C],eax</Description>
+      <AddressString>1C27F3FFB9A</AddressString>
+      <Before>
+        <Byte>45</Byte>
+        <Byte>E8</Byte>
+        <Byte>48</Byte>
+        <Byte>8B</Byte>
+        <Byte>C2</Byte>
+      </Before>
+      <Actual>
+        <Byte>41</Byte>
+        <Byte>89</Byte>
+        <Byte>47</Byte>
+        <Byte>5C</Byte>
+      </Actual>
+      <After>
+        <Byte>0F</Byte>
+        <Byte>B6</Byte>
+        <Byte>45</Byte>
+        <Byte>E8</Byte>
+        <Byte>85</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry>
+      <Description>Change of push rbp</Description>
+      <AddressString>1C27F3FFB80</AddressString>
+      <Before>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Before>
+      <Actual>
+        <Byte>55</Byte>
+      </Actual>
+      <After>
+        <Byte>48</Byte>
+        <Byte>8B</Byte>
+        <Byte>EC</Byte>
+        <Byte>48</Byte>
+        <Byte>83</Byte>
+      </After>
+    </CodeEntry>
   </CheatCodes>
   <UserdefinedSymbols/>
   <Structures StructVersion="2">
@@ -445,6 +523,63 @@ Player:AdjustResearchPoints+1d:
         <Element Offset="280" Vartype="4 Bytes" Bytesize="4" RLECount="66" OffsetHex="00000118" DisplayMethod="unsigned integer"/>
         <Element Offset="544" Vartype="Pointer" Bytesize="8" OffsetHex="00000220" DisplayMethod="unsigned integer"/>
         <Element Offset="552" Vartype="4 Bytes" Bytesize="4" RLECount="886" OffsetHex="00000228" DisplayMethod="unsigned integer"/>
+      </Elements>
+    </Structure>
+    <Structure Name="ResourceQtyUI" AutoFill="0" AutoCreate="1" DefaultHex="0" AutoDestroy="0" DoNotSaveLocal="0" RLECompression="1" AutoCreateStructsize="4096">
+      <Elements>
+        <Element Offset="16" Vartype="4 Bytes" Bytesize="4" OffsetHex="00000010" Description="m_CachedPtr" DisplayMethod="unsigned integer"/>
+        <Element Offset="24" Vartype="Pointer" Bytesize="8" OffsetHex="00000018" Description="resourceNameText" DisplayMethod="unsigned integer"/>
+        <Element Offset="32" Vartype="Pointer" Bytesize="8" OffsetHex="00000020" Description="resourceQtyText" DisplayMethod="unsigned integer"/>
+        <Element Offset="40" Vartype="Pointer" Bytesize="8" OffsetHex="00000028" Description="combinedText" DisplayMethod="unsigned integer"/>
+        <Element Offset="48" Vartype="Pointer" Bytesize="8" OffsetHex="00000030" Description="resourceIcon" DisplayMethod="unsigned integer"/>
+        <Element Offset="56" Vartype="Pointer" Bytesize="8" OffsetHex="00000038" Description="tooltip" DisplayMethod="unsigned integer"/>
+        <Element Offset="64" Vartype="Pointer" Bytesize="8" OffsetHex="00000040" Description="info" DisplayMethod="unsigned integer"/>
+        <Element Offset="72" Vartype="4 Bytes" Bytesize="4" OffsetHex="00000048" Description="negativeColor" DisplayMethod="unsigned integer"/>
+        <Element Offset="88" Vartype="4 Bytes" Bytesize="4" OffsetHex="00000058" Description="resource" DisplayMethod="unsigned integer"/>
+        <Element Offset="92" Vartype="4 Bytes" Bytesize="4" OffsetHex="0000005C" Description="current" DisplayMethod="unsigned integer"/>
+        <Element Offset="96" Vartype="4 Bytes" Bytesize="4" OffsetHex="00000060" Description="displayed" DisplayMethod="unsigned integer"/>
+        <Element Offset="100" Vartype="4 Bytes" Bytesize="4" OffsetHex="00000064" Description="defaultColor" DisplayMethod="unsigned integer"/>
+        <Element Offset="116" Vartype="Byte" Bytesize="1" OffsetHex="00000074" Description="autosized" DisplayMethod="unsigned integer"/>
+        <Element Offset="120" Vartype="Float" Bytesize="4" OffsetHex="00000078" Description="nameSize" DisplayMethod="unsigned integer"/>
+        <Element Offset="124" Vartype="Float" Bytesize="4" OffsetHex="0000007C" Description="qtySize" DisplayMethod="unsigned integer"/>
+      </Elements>
+    </Structure>
+    <Structure Name="ResourceQtyUI2" AutoFill="0" AutoCreate="1" DefaultHex="0" AutoDestroy="0" DoNotSaveLocal="0" RLECompression="1" AutoCreateStructsize="4096">
+      <Elements>
+        <Element Offset="16" Vartype="4 Bytes" Bytesize="4" OffsetHex="00000010" Description="m_CachedPtr" DisplayMethod="unsigned integer"/>
+        <Element Offset="24" Vartype="Pointer" Bytesize="8" OffsetHex="00000018" Description="resourceNameText" DisplayMethod="unsigned integer"/>
+        <Element Offset="32" Vartype="Pointer" Bytesize="8" OffsetHex="00000020" Description="resourceQtyText" DisplayMethod="unsigned integer"/>
+        <Element Offset="40" Vartype="Pointer" Bytesize="8" OffsetHex="00000028" Description="combinedText" DisplayMethod="unsigned integer"/>
+        <Element Offset="48" Vartype="Pointer" Bytesize="8" OffsetHex="00000030" Description="resourceIcon" DisplayMethod="unsigned integer"/>
+        <Element Offset="56" Vartype="Pointer" Bytesize="8" OffsetHex="00000038" Description="tooltip" DisplayMethod="unsigned integer"/>
+        <Element Offset="64" Vartype="Pointer" Bytesize="8" OffsetHex="00000040" Description="info" DisplayMethod="unsigned integer"/>
+        <Element Offset="72" Vartype="4 Bytes" Bytesize="4" OffsetHex="00000048" Description="negativeColor" DisplayMethod="unsigned integer"/>
+        <Element Offset="88" Vartype="4 Bytes" Bytesize="4" OffsetHex="00000058" Description="resource" DisplayMethod="unsigned integer"/>
+        <Element Offset="92" Vartype="4 Bytes" Bytesize="4" OffsetHex="0000005C" Description="current" DisplayMethod="unsigned integer"/>
+        <Element Offset="96" Vartype="4 Bytes" Bytesize="4" OffsetHex="00000060" Description="displayed" DisplayMethod="unsigned integer"/>
+        <Element Offset="100" Vartype="4 Bytes" Bytesize="4" OffsetHex="00000064" Description="defaultColor" DisplayMethod="unsigned integer"/>
+        <Element Offset="116" Vartype="Byte" Bytesize="1" OffsetHex="00000074" Description="autosized" DisplayMethod="unsigned integer"/>
+        <Element Offset="120" Vartype="Float" Bytesize="4" OffsetHex="00000078" Description="nameSize" DisplayMethod="unsigned integer"/>
+        <Element Offset="124" Vartype="Float" Bytesize="4" OffsetHex="0000007C" Description="qtySize" DisplayMethod="unsigned integer"/>
+      </Elements>
+    </Structure>
+    <Structure Name="ResourceQtyUI" AutoFill="0" AutoCreate="1" DefaultHex="0" AutoDestroy="0" DoNotSaveLocal="0" RLECompression="1" AutoCreateStructsize="4096">
+      <Elements>
+        <Element Offset="16" Vartype="4 Bytes" Bytesize="4" OffsetHex="00000010" Description="m_CachedPtr" DisplayMethod="unsigned integer"/>
+        <Element Offset="24" Vartype="Pointer" Bytesize="8" OffsetHex="00000018" Description="resourceNameText" DisplayMethod="unsigned integer"/>
+        <Element Offset="32" Vartype="Pointer" Bytesize="8" OffsetHex="00000020" Description="resourceQtyText" DisplayMethod="unsigned integer"/>
+        <Element Offset="40" Vartype="Pointer" Bytesize="8" OffsetHex="00000028" Description="combinedText" DisplayMethod="unsigned integer"/>
+        <Element Offset="48" Vartype="Pointer" Bytesize="8" OffsetHex="00000030" Description="resourceIcon" DisplayMethod="unsigned integer"/>
+        <Element Offset="56" Vartype="Pointer" Bytesize="8" OffsetHex="00000038" Description="tooltip" DisplayMethod="unsigned integer"/>
+        <Element Offset="64" Vartype="Pointer" Bytesize="8" OffsetHex="00000040" Description="info" DisplayMethod="unsigned integer"/>
+        <Element Offset="72" Vartype="4 Bytes" Bytesize="4" OffsetHex="00000048" Description="negativeColor" DisplayMethod="unsigned integer"/>
+        <Element Offset="88" Vartype="4 Bytes" Bytesize="4" OffsetHex="00000058" Description="resource" DisplayMethod="unsigned integer"/>
+        <Element Offset="92" Vartype="4 Bytes" Bytesize="4" OffsetHex="0000005C" Description="current" DisplayMethod="unsigned integer"/>
+        <Element Offset="96" Vartype="4 Bytes" Bytesize="4" OffsetHex="00000060" Description="displayed" DisplayMethod="unsigned integer"/>
+        <Element Offset="100" Vartype="4 Bytes" Bytesize="4" OffsetHex="00000064" Description="defaultColor" DisplayMethod="unsigned integer"/>
+        <Element Offset="116" Vartype="Byte" Bytesize="1" OffsetHex="00000074" Description="autosized" DisplayMethod="unsigned integer"/>
+        <Element Offset="120" Vartype="Float" Bytesize="4" OffsetHex="00000078" Description="nameSize" DisplayMethod="unsigned integer"/>
+        <Element Offset="124" Vartype="Float" Bytesize="4" OffsetHex="0000007C" Description="qtySize" DisplayMethod="unsigned integer"/>
       </Elements>
     </Structure>
   </Structures>

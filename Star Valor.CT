@@ -5,7 +5,7 @@
       <ID>115868</ID>
       <Description>"Star.Valor.v1.2.5a"</Description>
       <Options moDeactivateChildrenAsWell="1"/>
-      <Color>808000</Color>
+      <Color>0000FF</Color>
       <VariableType>Auto Assembler Script</VariableType>
       <AssemblerScript>{======================
 Author   : aanpsx
@@ -2645,13 +2645,20 @@ aob_freetrade+a:
 db 90 90 90
 
 /*
-Market:BuyMarketItem+37a - D9 04 24              - fld dword ptr [esp]
-Market:BuyMarketItem+37d - 83 C4 04              - add esp,04 { 4 }
-Market:BuyMarketItem+380 - DEC9                  - fmulp st(1),st(0)
-Market:BuyMarketItem+382 - DEE9                  - fsubp st(1),st(0)
-Market:BuyMarketItem+384 - D9 58 34              - fstp dword ptr [eax+34]   &lt;&lt;
-Market:BuyMarketItem+387 - 8B 43 0C              - mov eax,[ebx+0C]
-Market:BuyMarketItem+38a - 3D 03000000           - cmp eax,00000003 { 3 }
+Market:BuyMarketItem+3de - D9 1C 24              - fstp dword ptr [esp]
+Market:BuyMarketItem+3e1 - D9 04 24              - fld dword ptr [esp]
+Market:BuyMarketItem+3e4 - 83 C4 04              - add esp,04 { 4 }
+Market:BuyMarketItem+3e7 - DEC9                  - fmulp st(1),st(0)
+Market:BuyMarketItem+3e9 - DEE9                  - fsubp st(1),st(0)
+
+Market:BuyMarketItem+3eb - D9 58 34              - fstp dword ptr [eax+34]
+
+Market:BuyMarketItem+3ee - 8B 43 0C              - mov eax,[ebx+0C]
+Market:BuyMarketItem+3f1 - 3D 03000000           - cmp eax,00000003 { 3 }
+Market:BuyMarketItem+3f6 - 75 24                 - jne Market:BuyMarketItem+41c
+Market:BuyMarketItem+3f8 - D9 47 34              - fld dword ptr [edi+34]
+Market:BuyMarketItem+3fb - 8B 45 0C              - mov eax,[ebp+0C]
+
 
 */
 
@@ -2660,6 +2667,89 @@ Market:BuyMarketItem+38a - 3D 03000000           - cmp eax,00000003 { 3 }
 //code from here till the end of the code will be used to disable the cheat
 aob_freetrade+a:
 db D9 58 34
+
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>116963</ID>
+      <Description>"aobFreeSkills"</Description>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+
+aobscan(aob_freeskills, 83 EC 18 8B 05 ?? ?? ?? ?? 8B 88 C8 00 00 00 49 )
+registersymbol(aob_freeskills)
+
+
+aob_freeskills+f:
+db 90
+
+/*
+PChar:AddSkillPoint - 55                    - push ebp
+PChar:AddSkillPoint+1- 8B EC                 - mov ebp,esp
+PChar:AddSkillPoint+3- 83 EC 18              - sub esp,18 { 24 }
+PChar:AddSkillPoint+6- 8B 05 4C7EFB06        - mov eax,[06FB7E4C] { (2CD66690) }
+PChar:AddSkillPoint+c- 8B 88 C8000000        - mov ecx,[eax+000000C8]
+
+PChar:AddSkillPoint+12- 49                    - dec ecx
+
+PChar:AddSkillPoint+13- 89 88 C8000000        - mov [eax+000000C8],ecx
+PChar:AddSkillPoint+19- 8B 05 4C7EFB06        - mov eax,[06FB7E4C] { (2CD66690) }
+PChar:AddSkillPoint+1f- 8B 80 90000000        - mov eax,[eax+00000090]
+PChar:AddSkillPoint+25- 8B 4D 08              - mov ecx,[ebp+08]
+PChar:AddSkillPoint+28- 39 48 0C              - cmp [eax+0C],ecx
+PChar:AddSkillPoint+2b- 0F86 71000000         - jbe PChar:AddSkillPoint+a2
+
+
+*/
+
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+aob_freeskills+f:
+db 49
+
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>116965</ID>
+      <Description>"aobDupItem"</Description>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+
+aobscan(aob_dupitem, 8D 44 88 10 8B 00 8B 48 18 2B 4D 10  )
+registersymbol(aob_dupitem)
+
+
+aob_dupitem+9:
+db 90 90 90
+
+/*
+CargoSystem:RemoveItem+98 - 8B 40 08              - mov eax,[eax+08]
+CargoSystem:RemoveItem+9b - 8B 4D DC              - mov ecx,[ebp-24]
+CargoSystem:RemoveItem+9e - 8D 44 88 10           - lea eax,[eax+ecx*4+10]
+CargoSystem:RemoveItem+a2 - 8B 00                 - mov eax,[eax]
+CargoSystem:RemoveItem+a4 - 8B 48 18              - mov ecx,[eax+18]
+
+CargoSystem:RemoveItem+a7 - 2B 4D 10              - sub ecx,[ebp+10]
+
+CargoSystem:RemoveItem+aa - 89 48 18              - mov [eax+18],ecx
+CargoSystem:RemoveItem+ad - 33 FF                 - xor edi,edi
+CargoSystem:RemoveItem+af - EB 18                 - jmp CargoSystem:RemoveItem+c9
+CargoSystem:RemoveItem+b1 - 8B 43 0C              - mov eax,[ebx+0C]
+CargoSystem:RemoveItem+b4 - 89 74 24 04           - mov [esp+04],esi
+CargoSystem:RemoveItem+b8 - 89 04 24              - mov [esp],eax
+
+
+
+*/
+
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+aob_dupitem+9:
+db 2B 4D 10
 
 </AssemblerScript>
     </CheatEntry>
@@ -2745,6 +2835,94 @@ db 2B 4D 0C
         <Byte>0C</Byte>
         <Byte>3D</Byte>
         <Byte>03</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry>
+      <Description>Change of dec ecx</Description>
+      <AddressString>016E823A</AddressString>
+      <Before>
+        <Byte>88</Byte>
+        <Byte>C8</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </Before>
+      <Actual>
+        <Byte>49</Byte>
+      </Actual>
+      <After>
+        <Byte>89</Byte>
+        <Byte>88</Byte>
+        <Byte>C8</Byte>
+        <Byte>00</Byte>
+        <Byte>00</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry>
+      <Description>Change of fsubp st(1),st(0)</Description>
+      <AddressString>31D442FF</AddressString>
+      <Before>
+        <Byte>43</Byte>
+        <Byte>30</Byte>
+        <Byte>D9</Byte>
+        <Byte>45</Byte>
+        <Byte>0C</Byte>
+      </Before>
+      <Actual>
+        <Byte>DE</Byte>
+        <Byte>E9</Byte>
+      </Actual>
+      <After>
+        <Byte>D9</Byte>
+        <Byte>5B</Byte>
+        <Byte>30</Byte>
+        <Byte>8B</Byte>
+        <Byte>45</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry>
+      <Description>Change of fsubp st(1),st(0)</Description>
+      <AddressString>321C2EEC</AddressString>
+      <Before>
+        <Byte>40</Byte>
+        <Byte>54</Byte>
+        <Byte>D9</Byte>
+        <Byte>45</Byte>
+        <Byte>0C</Byte>
+      </Before>
+      <Actual>
+        <Byte>DE</Byte>
+        <Byte>E9</Byte>
+      </Actual>
+      <After>
+        <Byte>D9</Byte>
+        <Byte>58</Byte>
+        <Byte>54</Byte>
+        <Byte>D9</Byte>
+        <Byte>45</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry>
+      <Description>Change of fstp dword ptr [eax+54]</Description>
+      <AddressString>321C2EEE</AddressString>
+      <Before>
+        <Byte>D9</Byte>
+        <Byte>45</Byte>
+        <Byte>0C</Byte>
+        <Byte>DE</Byte>
+        <Byte>E9</Byte>
+      </Before>
+      <Actual>
+        <Byte>D9</Byte>
+        <Byte>58</Byte>
+        <Byte>54</Byte>
+      </Actual>
+      <After>
+        <Byte>D9</Byte>
+        <Byte>45</Byte>
+        <Byte>0C</Byte>
+        <Byte>D9</Byte>
+        <Byte>05</Byte>
       </After>
     </CodeEntry>
   </CheatCodes>

@@ -1,6 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <CheatTable CheatEngineTableVersion="45">
-  <CheatEntries/>
+  <CheatEntries>
+    <CheatEntry>
+      <ID>1</ID>
+      <Description>"FreeShops"</Description>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+
+aobscanmodule(aob_scan01,acs.exe,44 8B C3 89 48 28 0F B6 44 24 70 8B D7 )
+registersymbol(aob_scan01)
+
+aob_scan01+3:
+//db 90 90 90
+
+
+ /**
+ACS.exe+B7B42F:
+140B7B426 - 41 B9 01000000 - mov r9d,00000001
+140B7B42C - 44 8B C3  - mov r8d,ebx
+140B7B42F - 89 48 28  - mov [rax+28],ecx &lt;&lt;
+140B7B432 - 0FB6 44 24 70  - movzx eax,byte ptr [rsp+70]
+140B7B437 - 8B D7  - mov edx,edi
+ **/
+
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+aob_scan01+3:
+//db 89 48 28
+</AssemblerScript>
+    </CheatEntry>
+  </CheatEntries>
   <CheatCodes>
     <CodeEntry>
       <Description>Code :sub eax,edx</Description>
