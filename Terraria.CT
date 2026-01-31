@@ -8,7 +8,7 @@
       <AssemblerScript>/*
 README
 
-v.1.4.5.2 (2026-01-28)
+v.1.4.5.3 (2026-01-31)
 
 
 */
@@ -220,6 +220,15 @@ aob_damage+a:
 db 90 90 90 90 90 90
 
 /*
+Terraria.Player::Hurt:
+db c3
+*/
+
+/*
+Terraria.Player::Hurt
+Terraria.Player::Hurt - 55                    - push ebp
+
+
 
 Terraria.Player::Hurt+DFE - 8B 8D 2CFFFFFF        - mov ecx,[ebp-000000D4]
 Terraria.Player::Hurt+E04 - E8 1773EAFF           - call Terraria.CombatText::NewText
@@ -243,6 +252,11 @@ Terraria.Player::Hurt+E2B - EB 65                 - jmp Terraria.Player::Hurt+E9
 aob_damage+a:
 sub [edx+0000042C],eax
 
+/*
+Terraria.Player::Hurt:
+push ebp
+
+*/
 
 
 
@@ -352,6 +366,52 @@ Terraria.Player::CheckDrowning - 55                    - push ebp
 //code from here till the end of the code will be used to disable the cheat
 Terraria.Player::CheckDrowning:
 push ebp
+
+
+
+
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>20</ID>
+      <Description>"Negate Poison"</Description>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+
+aobScan(aob_buffPosion, 83 EC 0C 8B F1 29 96 2C 04 00 00 D9 46 20 DD 5D E8)
+registersymbol(aob_buffPosion)
+
+
+aob_buffPosion+5:
+db 01 96 2C 04 00 00
+
+/*
+Terraria.Player::HurtLifeRegen+6 - 83 EC 0C              - sub esp,0C { 12 }
+Terraria.Player::HurtLifeRegen+9 - 8B F1                 - mov esi,ecx
+
+From:
+Terraria.Player::HurtLifeRegen+B - 29 96 2C040000        - sub [esi+0000042C],edx
+
+Too:
+Terraria.Player::HurtLifeRegen+B - 01 96 2C040000        - add [esi+0000042C],edx
+
+
+Terraria.Player::HurtLifeRegen+11- D9 46 20              - fld dword ptr [esi+20]
+Terraria.Player::HurtLifeRegen+14- DD 5D E8              - fstp qword ptr [ebp-18]
+Terraria.Player::HurtLifeRegen+17- F2 0F10 45 E8         - movsd xmm0,[ebp-18]
+Terraria.Player::HurtLifeRegen+1C- F2 0F2C F8            - cvttsd2si edi,xmm0
+
+
+
+*/
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+aob_buffPosion+5:
+sub [esi+0000042C],edx
+
 
 
 
@@ -472,6 +532,27 @@ push ebp
         <Byte>57</Byte>
         <Byte>56</Byte>
         <Byte>81</Byte>
+      </After>
+    </CodeEntry>
+    <CodeEntry>
+      <Description>Change of push ebp</Description>
+      <AddressString>178AB530</AddressString>
+      <Before>
+        <Byte>17</Byte>
+        <Byte>B0</Byte>
+        <Byte>76</Byte>
+        <Byte>97</Byte>
+        <Byte>08</Byte>
+      </Before>
+      <Actual>
+        <Byte>55</Byte>
+      </Actual>
+      <After>
+        <Byte>8B</Byte>
+        <Byte>EC</Byte>
+        <Byte>57</Byte>
+        <Byte>56</Byte>
+        <Byte>53</Byte>
       </After>
     </CodeEntry>
   </CheatCodes>
